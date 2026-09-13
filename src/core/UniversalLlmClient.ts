@@ -9,14 +9,43 @@ import { OpLog } from './OpLog.js';
 export type LlmProvider = 'google' | 'omniroute' | 'openrouter' | 'opencode';
 
 /**
+ * Strips reasoning tags (<think>...</think>, <thought>...</thought>) and internal planning artifacts.
+ */
+export function cleanLlmOutput(text: string): string {
+  if (!text) return '';
+  let cleaned = text
+    .replace(/<think>[\s\S]*?<\/think>/gi, '')
+    .replace(/<thought>[\s\S]*?<\/thought>/gi, '')
+    .trim();
+
+  if (cleaned.startsWith('<think>')) {
+    const endIdx = cleaned.indexOf('</think>');
+    if (endIdx !== -1) {
+      cleaned = cleaned.slice(endIdx + 8).trim();
+    }
+  }
+
+  const answerMarkerMatch = cleaned.match(/(?:^|\n\n)(?:Ответ|Відповідь|Answer|Response):\s*([\s\S]+)$/i);
+  if (answerMarkerMatch && answerMarkerMatch[1]) {
+    cleaned = answerMarkerMatch[1].trim();
+  }
+
+  return cleaned;
+}
+
+/**
  * Free-tier models occasionally return boilerplate moderation stubs instead
- * of real content ('User Safety: safe', etc.). Such junk must not reach the
- * chat — treat it like an empty response so the fallback chain engages.
+ * of real content ('User Safety: safe', etc.) or unrendered reasoning traces.
+ * Such junk must not reach the chat — treat it like an empty response so the fallback chain engages.
  */
 function isJunkResponse(text: string): boolean {
   const t = text.trim().toLowerCase();
   if (!t) return true;
-  return /^user safety[:\s]/.test(t) || /^(safe|unsafe)\.?$/.test(t) || /^\[?no content/i.test(t);
+  if (/^user safety[:\s]/.test(t) || /^(safe|unsafe)\.?$/.test(t) || /^\[?no content/i.test(t)) return true;
+  if (/^(?:we need to respond|i need to respond|let's craft answer|let's analyze the question|we must respond)/i.test(t) && !t.includes('eva') && !t.includes('evaline')) {
+    return true;
+  }
+  return false;
 }
 
 export interface UniversalMessage {
@@ -225,7 +254,8 @@ export class UniversalLlmClient {
       : this.executeGenerate(model, universalMsgs, options);
     const t0 = Date.now();
     try {
-      const result = await withTimeout(p, LLM_CALL_TIMEOUT_MS, `llm:${provider}:${model}`);
+      const rawResult = await withTimeout(p, LLM_CALL_TIMEOUT_MS, `llm:${provider}:${model}`);
+      const result = cleanLlmOutput(rawResult);
       if (isJunkResponse(result)) {
         throw new Error(`[JUNK_RESPONSE] ${model} returned boilerplate instead of content`);
       }
@@ -313,25 +343,62 @@ export class UniversalLlmClient {
     enableFallback: boolean = true
   ): Promise<string> {
     const universalMsgs = this.normalizeToUniversal(messages);
-    let chunksEmitted = 0;
-    const trackedOnChunk = (chunk: string) => {
-      chunksEmitted++;
-      onChunk(chunk);
+
+    const runAttemptWithBuffer = async (targetModel: string) => {
+      const initialBuffer: string[] = [];
+      let initialBufferText = '';
+      let isStreamReleased = false;
+      let chunksEmitted = 0;
+
+      const trackedChunk = (chunk: string) => {
+        if (isStreamReleased) {
+          chunksEmitted++;
+          onChunk(chunk);
+          return;
+        }
+
+        initialBuffer.push(chunk);
+        initialBufferText += chunk;
+
+        const lower = initialBufferText.trim().toLowerCase();
+        if (/^user safety/i.test(lower) || /^safe\.?$/i.test(lower) || /^unsafe\.?$/i.test(lower)) {
+          return;
+        }
+
+        if (initialBufferText.length >= 25) {
+          isStreamReleased = true;
+          for (const b of initialBuffer) {
+            chunksEmitted++;
+            onChunk(b);
+          }
+          initialBuffer.length = 0;
+        }
+      };
+
+      const result = await this.attempt(targetModel, universalMsgs, options, trackedChunk);
+
+      if (!result.trim() && chunksEmitted === 0) {
+        getBreaker(this.resolveProvider(targetModel)).recordFailure(new Error('[EMPTY_STREAM] no content'));
+        throw new Error(`[EMPTY_STREAM] ${targetModel} returned no content (reasoning-only response)`);
+      }
+
+      if (!isStreamReleased && !isJunkResponse(result)) {
+        isStreamReleased = true;
+        for (const b of initialBuffer) {
+          chunksEmitted++;
+          onChunk(b);
+        }
+        initialBuffer.length = 0;
+      }
+
+      return { result, chunksEmitted };
     };
 
     try {
-      const result = await this.attempt(model, universalMsgs, options, trackedOnChunk);
-      // Reasoning models (e.g. nemotron-super) sometimes stream NOTHING into
-      // `content` — all output lands in the reasoning field. Treat an empty
-      // stream as failure: rethrow so the ranked fallback chain engages
-      // instead of silently returning ''.
-      if (!result.trim() && chunksEmitted === 0) {
-        getBreaker(this.resolveProvider(model)).recordFailure(new Error('[EMPTY_STREAM] no content'));
-        throw new Error(`[EMPTY_STREAM] ${model} returned no content (reasoning-only response)`);
-      }
+      const { result } = await runAttemptWithBuffer(model);
       return result;
     } catch (err: any) {
-      if (!enableFallback || chunksEmitted > 0) {
+      if (!enableFallback) {
         throw err;
       }
 
@@ -342,7 +409,8 @@ export class UniversalLlmClient {
       for (const fallbackModel of fallbackChain) {
         try {
           logger.info('UniversalLlmClient', `[STREAM FALLBACK] Trying candidate: ${fallbackModel}`);
-          return await this.attempt(fallbackModel, universalMsgs, options, onChunk);
+          const { result } = await runAttemptWithBuffer(fallbackModel);
+          return result;
         } catch (fallbackErr: any) {
           logger.warn('UniversalLlmClient', `[STREAM FALLBACK] Candidate "${fallbackModel}" failed: ${fallbackErr.message}`);
         }
@@ -456,11 +524,16 @@ export class UniversalLlmClient {
     }
 
     const data: any = await response.json();
-    const output = data.choices?.[0]?.message?.content;
-    if (typeof output !== 'string') {
-      return '[No content returned by model]';
+    let output = data.choices?.[0]?.message?.content;
+    if (typeof output !== 'string' || !output.trim()) {
+      const reasoning = data.choices?.[0]?.message?.reasoning;
+      if (typeof reasoning === 'string' && reasoning.trim()) {
+        output = reasoning;
+      } else {
+        return '[No content returned by model]';
+      }
     }
-    return output;
+    return cleanLlmOutput(output);
   }
 
   private async streamOpenAiCompatible(

@@ -732,7 +732,16 @@
       textarea#user-input {
         font-size: 16px !important; /* Eliminates mobile Safari auto-zoom */
         min-height: 40px;
-        padding: 8px 8px;
+        height: 40px;
+        padding: 9px 8px;
+        line-height: 20px;
+        overflow-x: auto;
+      }
+
+      textarea#user-input::placeholder {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
 
       .mic-btn {
