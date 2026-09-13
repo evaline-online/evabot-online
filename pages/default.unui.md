@@ -3,19 +3,25 @@ domain: evabot.online
 badge: NEURAL CORE
 role: AI Вычислительное Ядро, Оркестрация Агентов & Мульти-LLM Консилиум
 infra: evabot-agent-vm · 8 vCPU Intel Xeon Sapphire Rapids · 32 GB RAM · Франкфурт (ФРГ) · IP: 34.159.202.82
-target: Координация агентов, консилиум 78 моделей, векторная память и TUI-сервер.
+target: Координация агентов, консилиум 94 моделей, векторная память и TUI-сервер.
 theme: dark
 ---
 
-● EvaBot v0.0.1  ONLINE │ Ping: 5ms │ Mesh: 134ms │ Live: ~~~
-Model: Gemini 3.8 Flash [FREE] │ Mode: solo │ Pool: 78 models (/models) │ Lang: [EN] UK RU
-Cluster: [evabot.online] │ evaline.network │ evaline.online │ evaline.website │ GitHub: https://github.com/evaline-online
-Commands: /help  /?  /about  /top  /models  /cost  /company  /evaline  /lang  /mode  /consilium  /mcp  /lsp  /clear
+┌── EVABOT TUI // NEURAL CORE ── ● ONLINE ────────────────── [EN] [UK] [RU] ──┐
+│ Model: Gemini 2.5 Flash [FREE] │ Mode: solo │ Pool: 94 models (/models)     │
+│ Cluster: [evabot.online] · evaline.network · evaline.online · GitHub ↗       │
+│ Core: evabot-agent-vm (Frankfurt, EU) │ Mesh: evaline-micro-vm (Iowa, USA)  │
+└─────────────────────────────────────────────────────────────────────────────┘
 
-[19:50:00] system : Connected to neural core evabot.online (Frankfurt, 78 models). Type a message or command (/help).
+[<!-- TIME -->] system : Connected to neural core evabot.online (Frankfurt, 94 models). Type /help or enter message.
 
 > _
 
-Databases: Chroma Vector (1075 embeddings) [OK] · SQLite FTS5 (1482 chunks) [OK] · Memory KB (206 docs) [OK] · MCP [OK]
-Load: Brain(Frankfurt) CPU [■■■░░░░░] 28% RAM [■░░░░░░░] 4.7/31GB (15%) │ Face(Iowa) CPU [░░░░░░] 1% RAM [■■■░░░] 440MB │ ♥ 72bpm
+Commands:
+  [/help] [/models] [/mode] [/top] [/consilium] [/cost] [/company] [/evaline] [/mcp] [/lsp] [/clear]
 
+<!-- SLOT:TELEMETRY -->
+
+<!-- SLOT:LLM_MATRIX -->
+
+<!-- SLOT:SECURITY_SHIELD -->

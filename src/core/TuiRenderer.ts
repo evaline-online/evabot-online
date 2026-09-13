@@ -188,47 +188,24 @@ export class TuiRenderer {
 
     if (body) {
       let hydrated = body;
+      const nowUtcStr = new Date().toISOString().replace('T', ' ').substring(11, 19) + ' UTC';
+      hydrated = hydrated.replace(/<!--\s*TIME\s*-->/g, nowUtcStr).replace(/\{\{TIME\}\}/g, nowUtcStr);
 
-      if (hydrated.includes('<!-- SLOT:LLM_MATRIX -->')) {
-        hydrated = hydrated.replace(
-          /<!-- SLOT:LLM_MATRIX -->[\s\S]*?<!-- \/SLOT:LLM_MATRIX -->/g,
-          `<!-- SLOT:LLM_MATRIX -->\n${llmBlock}\n<!-- /SLOT:LLM_MATRIX -->`
-        );
-      }
+      const replaceSlot = (name: string, content: string) => {
+        const pairedRegex = new RegExp(`<!--\\s*SLOT:${name}\\s*-->[\\s\\S]*?<!--\\s*\\/SLOT:${name}\\s*-->`, 'g');
+        if (pairedRegex.test(hydrated)) {
+          hydrated = hydrated.replace(pairedRegex, `<!-- SLOT:${name} -->\n${content}\n<!-- /SLOT:${name} -->`);
+        } else {
+          hydrated = hydrated.replace(new RegExp(`<!--\\s*SLOT:${name}\\s*-->`, 'g'), content);
+        }
+        hydrated = hydrated.replace(new RegExp(`\\{\\{SLOT_${name}\\}\\}`, 'g'), content);
+      };
 
-      if (hydrated.includes('<!-- SLOT:SECURITY_SHIELD -->')) {
-        hydrated = hydrated.replace(
-          /<!-- SLOT:SECURITY_SHIELD -->[\s\S]*?<!-- \/SLOT:SECURITY_SHIELD -->/g,
-          `<!-- SLOT:SECURITY_SHIELD -->\n${secBlock}\n<!-- /SLOT:SECURITY_SHIELD -->`
-        );
-      }
-
-      if (hydrated.includes('<!-- SLOT:TELEMETRY -->')) {
-        hydrated = hydrated.replace(
-          /<!-- SLOT:TELEMETRY -->[\s\S]*?<!-- \/SLOT:TELEMETRY -->/g,
-          `<!-- SLOT:TELEMETRY -->\n${telemetryBlock}\n<!-- /SLOT:TELEMETRY -->`
-        );
-      } else if (hydrated.includes('{{SLOT_TELEMETRY}}')) {
-        hydrated = hydrated.replace('{{SLOT_TELEMETRY}}', telemetryBlock);
-      }
-
-      if (hydrated.includes('<!-- SLOT:PROCESS_WATCHER -->')) {
-        hydrated = hydrated.replace(
-          /<!-- SLOT:PROCESS_WATCHER -->[\s\S]*?<!-- \/SLOT:PROCESS_WATCHER -->/g,
-          `<!-- SLOT:PROCESS_WATCHER -->\n${procBlock}\n<!-- /SLOT:PROCESS_WATCHER -->`
-        );
-      } else if (hydrated.includes('{{SLOT_PROCESS_WATCHER}}')) {
-        hydrated = hydrated.replace('{{SLOT_PROCESS_WATCHER}}', procBlock);
-      }
-
-      if (hydrated.includes('<!-- SLOT:LOG_STREAM -->')) {
-        hydrated = hydrated.replace(
-          /<!-- SLOT:LOG_STREAM -->[\s\S]*?<!-- \/SLOT:LOG_STREAM -->/g,
-          `<!-- SLOT:LOG_STREAM -->\n${logBlock}\n<!-- /SLOT:LOG_STREAM -->`
-        );
-      } else if (hydrated.includes('{{SLOT_LOG_STREAM}}')) {
-        hydrated = hydrated.replace('{{SLOT_LOG_STREAM}}', logBlock);
-      }
+      replaceSlot('LLM_MATRIX', llmBlock);
+      replaceSlot('SECURITY_SHIELD', secBlock);
+      replaceSlot('TELEMETRY', telemetryBlock);
+      replaceSlot('PROCESS_WATCHER', procBlock);
+      replaceSlot('LOG_STREAM', logBlock);
 
       hydrated = hydrated
         .replace(/<!--\s*SLOT:[A-Z_]+\s*-->\r?\n?/g, '')

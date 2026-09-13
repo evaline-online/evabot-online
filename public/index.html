@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EvaBot v0.0.1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#000000">
+  <title>EvaBot // Cyber-Terminal TUI</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' fill='%2300e676'/%3E%3C/svg%3E">
   <link rel="preload" as="font" type="font/woff2" href="/fonts/Roboto-Variable.woff2" crossorigin>
   <style>
@@ -26,23 +27,47 @@
 
     :root {
       --bg: #000000;
-      --fg: #ffffff;
-      --dim: #777777;
+      --bg-panel: #05080e;
+      --surface: #0a0e17;
+      --surface-card: #0f1522;
+      --surface-hover: #141c2c;
+      --border: #1c2738;
+      --border-subtle: #141d2a;
+      --border-light: #223044;
+      --border-green: rgba(0, 230, 118, 0.4);
+      --fg: #e2e8f0;
+      --fg-bright: #ffffff;
+      --dim: #64748b;
+      --faint: #334155;
       --green: #00e676;
+      --green-dim: rgba(0, 230, 118, 0.12);
       --yellow: #ffd600;
+      --yellow-dim: rgba(255, 214, 0, 0.12);
       --red: #ff1744;
-      --font-sans: 'Roboto', sans-serif;
-      --font-mono: 'Roboto Mono', 'Roboto', monospace;
+      --red-dim: rgba(255, 23, 68, 0.12);
+      --cyan: #00d8ff;
+      --cyan-dim: rgba(0, 216, 255, 0.12);
+      --font-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+      --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
     }
 
     html {
       font-size: 16px;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background: var(--bg);
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     button, input, textarea, select {
@@ -52,36 +77,49 @@
     body {
       background: var(--bg);
       color: var(--fg);
-      min-height: 100vh;
+      height: 100%;
+      height: 100dvh;
+      max-height: 100dvh;
       display: flex;
       flex-direction: column;
-      padding: 14px 20px;
-      overflow-x: hidden;
-      font-family: var(--font-sans);
+      padding: 6px 12px;
+      padding-top: max(6px, var(--safe-top));
+      padding-bottom: max(4px, var(--safe-bottom));
+      padding-left: max(8px, var(--safe-left));
+      padding-right: max(8px, var(--safe-right));
+      overflow: hidden;
+      font-family: var(--font-mono);
       font-size: 0.875rem;
-      line-height: 1.35;
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Roboto Mono strictly for terminal / code surfaces */
+    /* All surfaces strictly share Roboto Mono / monospace */
     .header-block, .chat-container, .input-line, pre, .code-block,
-    code, .ac-box, .toast {
+    code, .ac-box, .toast, .tui-line {
       font-family: var(--font-mono);
     }
 
     .c-ok { color: var(--green); }
     .c-wrn { color: var(--yellow); }
     .c-err { color: var(--red); }
+    .c-cyan { color: var(--cyan); }
     .c-dim { color: var(--dim); }
     .bold { font-weight: 700; }
 
-    /* Header rows */
+    /* Header frame */
     .header-block {
       display: flex;
       flex-direction: column;
-      gap: 2px;
-      margin-bottom: 8px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid #222222;
+      gap: 3px;
+      margin-bottom: 6px;
+      padding: 6px 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-panel);
+      flex-shrink: 0;
+      border-radius: 2px;
     }
 
     .tui-line {
@@ -90,12 +128,62 @@
       line-height: 1.35;
       margin: 0;
       padding: 1px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tui-top-row {
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      gap: 8px;
+    }
+
+    .tui-status-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .tui-actions-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .tui-tab {
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .tui-tab.active {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .tui-meta-row {
+      font-size: 0.8rem;
+      color: var(--dim);
+    }
+
+    .tui-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .status-dot {
       display: inline-block;
       color: var(--green);
       transition: color 0.2s ease;
+      font-size: 0.75rem;
     }
 
     .status-dot.pulse {
@@ -111,6 +199,7 @@
       color: var(--fg);
       text-decoration: underline;
       cursor: pointer;
+      touch-action: manipulation;
     }
 
     .interactive-link:hover {
@@ -121,11 +210,55 @@
       color: var(--fg);
       cursor: pointer;
       text-decoration: underline;
-      margin-right: 8px;
+      touch-action: manipulation;
     }
 
     .cmd-link:hover {
       color: var(--green);
+    }
+
+    /* Swipeable horizontal command ribbon */
+    .tui-cmd-strip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 0;
+      overflow: hidden;
+    }
+
+    .tui-cmd-scroll {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding: 1px 0;
+      flex: 1;
+    }
+
+    .tui-cmd-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tui-cmd-scroll .cmd-link {
+      background: #080d14;
+      border: 1px solid #1c2738;
+      padding: 2px 7px;
+      border-radius: 2px;
+      text-decoration: none;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      touch-action: manipulation;
+      transition: border-color 0.12s, color 0.12s, background 0.12s;
+    }
+
+    .tui-cmd-scroll .cmd-link:hover,
+    .tui-cmd-scroll .cmd-link:active {
+      border-color: var(--green);
+      color: var(--green);
+      background: #0d1a12;
     }
 
     /* Message stream */
@@ -135,28 +268,34 @@
       flex-direction: column;
       gap: 4px;
       overflow-y: auto;
-      padding: 6px 0 16px 0;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px 2px 12px 2px;
+      min-height: 0;
     }
 
     .msg {
       white-space: pre-wrap;
       word-break: break-word;
-      line-height: 1.35;
-      padding: 1px 0;
+      overflow-wrap: anywhere;
+      line-height: 1.4;
+      padding: 2px 0;
       font-size: 0.875rem;
     }
 
     .msg-time {
       color: var(--dim);
-      margin-right: 8px;
+      margin-right: 6px;
+      font-size: 0.75rem;
+      user-select: none;
     }
 
     .msg-sender {
-      font-weight: 500;
+      font-weight: 700;
       margin-right: 8px;
     }
 
-    .msg-sender.user { color: var(--fg); }
+    .msg-sender.user { color: var(--fg-bright); }
     .msg-sender.evabot { color: var(--green); }
     .msg-sender.system { color: var(--yellow); }
     .msg-sender.error { color: var(--red); }
@@ -172,11 +311,20 @@
       background: var(--bg);
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 0;
-      border-top: 1px solid #222222;
+      gap: 6px;
+      padding: 6px 0 max(4px, var(--safe-bottom)) 0;
+      border-top: 1px solid var(--border);
       margin-top: auto;
-      z-index: 10;
+      z-index: 50;
+      flex-shrink: 0;
+    }
+
+    .prompt-prefix {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      user-select: none;
+      flex-shrink: 0;
     }
 
     .prompt-char {
@@ -188,31 +336,48 @@
 
     textarea#user-input {
       flex: 1;
-      background: transparent;
+      background: #070a10;
       color: var(--fg);
-      border: none;
+      border: 1px solid var(--border);
       outline: none;
       resize: none;
-      min-height: 20px;
-      max-height: 200px;
-      padding: 0;
+      min-height: 38px;
+      max-height: 140px;
+      padding: 8px 10px;
       font-size: 0.875rem;
       line-height: 1.35;
+      font-family: var(--font-mono);
+      border-radius: 2px;
+      transition: border-color 0.15s ease;
+    }
+
+    textarea#user-input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 1px rgba(0, 230, 118, 0.2);
     }
 
     textarea#user-input::placeholder {
       color: var(--dim);
     }
 
-    /* Modal - Zero border minimal text overlay */
+    .input-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    /* Modal - Minimal Cyber-TUI Overlay */
     .modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.96);
+      background: rgba(0, 0, 0, 0.94);
       padding: 24px;
       overflow-y: auto;
       z-index: 100;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
     }
 
     .modal-content {
@@ -220,54 +385,77 @@
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
+      background: #05080e;
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 3px;
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
     }
 
     .filter-bar {
       display: flex;
-      gap: 16px;
-      margin: 8px 0;
+      gap: 8px;
+      margin: 4px 0;
     }
 
     .filter-btn {
-      background: transparent;
-      border: none;
+      background: #080d14;
+      border: 1px solid var(--border);
       color: var(--dim);
       cursor: pointer;
-      text-decoration: underline;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 3px 10px;
+      border-radius: 2px;
+      touch-action: manipulation;
+      transition: all 0.12s ease;
     }
 
     .filter-btn.active {
       color: var(--green);
+      border-color: var(--green);
+      background: var(--green-dim);
       font-weight: 700;
     }
 
     .model-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px;
+      max-height: 60vh;
+      overflow-y: auto;
     }
 
     .model-row {
       cursor: pointer;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       gap: 16px;
-      padding: 4px 0;
+      padding: 8px 10px;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      transition: background 0.12s, border-color 0.12s;
     }
 
     .model-row:hover {
-      background: #111111;
+      background: #0c121d;
+      border-color: var(--border-light);
     }
 
     .model-row.active {
       color: var(--green);
+      border-color: var(--border-green);
+      background: var(--green-dim);
       font-weight: 700;
     }
 
@@ -278,23 +466,65 @@
 
     /* Minimalist Markdown Styles */
     .code-block {
-      background: #0d0d0d;
-      border-left: 2px solid var(--green);
-      padding: 10px 14px;
-      margin: 8px 0;
+      background: #06090e;
+      border: 1px solid #1c2738;
+      border-left: 3px solid var(--green);
+      margin: 6px 0;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0b1017;
+      padding: 3px 8px;
+      border-bottom: 1px solid #1c2738;
+      font-size: 0.72rem;
+      color: var(--dim);
+      user-select: none;
+    }
+
+    .code-copy-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 1px 6px;
+      cursor: pointer;
+      border-radius: 2px;
+      touch-action: manipulation;
+      transition: all 0.12s ease;
+    }
+
+    .code-copy-btn:hover, .code-copy-btn:active {
+      color: var(--green);
+      border-color: var(--green);
+    }
+
+    .code-content {
+      padding: 8px 10px;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      line-height: 1.45;
     }
 
     .code-lang {
       color: var(--dim);
-      margin-bottom: 4px;
-      user-select: none;
+      font-size: 0.72rem;
     }
 
     code.inline-code {
-      background: #141414;
-      padding: 2px 6px;
+      background: #0f1522;
+      border: 1px solid #1e293b;
+      padding: 1px 5px;
       color: var(--green);
+      border-radius: 2px;
+      font-size: 0.82rem;
     }
 
     .md-heading {
@@ -318,14 +548,15 @@
       display: none;
       position: absolute;
       bottom: calc(100% + 4px);
-      left: 22px;
+      left: 0;
       right: 0;
       max-height: 220px;
       overflow-y: auto;
-      background: #050505;
+      background: #05080e;
       border: 1px solid var(--green);
-      box-shadow: 0 -4px 18px rgba(0, 230, 118, 0.12);
+      box-shadow: 0 -4px 18px rgba(0, 230, 118, 0.15);
       z-index: 60;
+      border-radius: 2px;
     }
 
     .ac-box.open {
@@ -333,18 +564,19 @@
     }
 
     .ac-item {
-      padding: 3px 10px;
+      padding: 7px 10px;
       cursor: pointer;
       display: flex;
       gap: 8px;
       align-items: baseline;
       white-space: nowrap;
       overflow: hidden;
+      touch-action: manipulation;
     }
 
     .ac-item.active,
     .ac-item:hover {
-      background: #0f2a1a;
+      background: #0d1a12;
     }
 
     .ac-badge {
@@ -382,17 +614,25 @@
       color: var(--fg);
     }
 
-    /* ===== Voice: mic button ===== */
+    /* ===== Voice & Action buttons ===== */
     .mic-btn {
-      background: transparent;
-      border: 1px solid var(--dim);
+      background: #080d14;
+      border: 1px solid var(--border);
       color: var(--fg);
       cursor: pointer;
-      font-size: 0.875rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
       line-height: 1;
-      padding: 3px 7px;
+      padding: 0 8px;
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       user-select: none;
       flex: none;
+      border-radius: 2px;
+      touch-action: manipulation;
+      transition: border-color 0.12s, color 0.12s, background 0.12s;
     }
 
     .mic-btn:hover {
@@ -400,9 +640,21 @@
       color: var(--green);
     }
 
+    .mic-btn:active {
+      background: var(--green);
+      color: #000;
+    }
+
+    .mic-btn.send-btn {
+      color: var(--green);
+      border-color: var(--border-green);
+      font-weight: 700;
+    }
+
     .mic-btn.recording {
       border-color: var(--red);
       color: var(--red);
+      background: var(--red-dim);
       animation: mic-pulse 1s infinite ease-in-out;
     }
 
@@ -414,8 +666,8 @@
     /* ===== Toast notifications ===== */
     .toast-wrap {
       position: fixed;
-      right: 16px;
-      bottom: 64px;
+      right: 14px;
+      bottom: 60px;
       display: flex;
       flex-direction: column;
       align-items: flex-end;
@@ -425,7 +677,7 @@
     }
 
     .toast {
-      background: #0a0a0a;
+      background: #05080e;
       border: 1px solid var(--green);
       color: var(--green);
       padding: 5px 12px;
@@ -443,6 +695,71 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* Responsive media queries for smartphones */
+    @media (max-width: 640px) {
+      body {
+        padding: 4px 6px;
+        padding-top: max(4px, var(--safe-top));
+        padding-bottom: max(4px, var(--safe-bottom));
+        padding-left: max(6px, var(--safe-left));
+        padding-right: max(6px, var(--safe-right));
+      }
+
+      .desk-only {
+        display: none !important;
+      }
+
+      .header-block {
+        padding: 4px 6px;
+        gap: 2px;
+      }
+
+      .tui-top-row {
+        gap: 4px;
+      }
+
+      .tui-meta-row {
+        font-size: 0.74rem;
+        gap: 4px;
+      }
+
+      .tui-cmd-scroll .cmd-link {
+        padding: 3px 8px;
+        font-size: 0.78rem;
+      }
+
+      textarea#user-input {
+        font-size: 16px !important; /* Eliminates mobile Safari auto-zoom */
+        min-height: 40px;
+        padding: 8px 8px;
+      }
+
+      .mic-btn {
+        min-height: 40px;
+        min-width: 42px;
+        padding: 0 6px;
+        font-size: 0.75rem;
+      }
+
+      .modal {
+        padding: 0;
+      }
+
+      .modal-content {
+        min-height: 100dvh;
+        max-height: 100dvh;
+        padding: 12px 10px;
+        border-radius: 0;
+        border: none;
+      }
+
+      .model-row {
+        min-height: 44px;
+        padding: 10px 4px;
+      }
+    }
+
     html:not([data-nocss])[data-locale-pending] body { visibility: hidden; }
   </style>
   <style id="web-layer">
@@ -560,52 +877,124 @@
 </head>
 <body>
 
-  <!-- Tab Navigation -->
-  <div class="header-block" style="border-bottom: 1px solid #222; padding-bottom: 6px; margin-bottom: 6px;">
-    <div class="tui-line" style="display: flex; gap: 8px; align-items: center;">
-      <span class="cmd-link bold c-ok" id="tab-terminal" onclick="switchTab('terminal')" style="font-size: 0.8rem;">[ TERMINAL ]</span>
-      <span class="cmd-link" id="tab-metrics" onclick="switchTab('metrics')" style="font-size: 0.8rem;">[ METRICS ]</span>
-      <span class="c-dim" style="font-size: 0.75rem;">Switch views: chat focus vs system telemetry</span>
+  <!-- TUI Frame Header -->
+  <header class="header-block">
+    <!-- Top Status Row -->
+    <div class="tui-line tui-top-row">
+      <div class="tui-status-group">
+        <span class="status-dot pulse" id="status-light">●</span>
+        <span class="bold c-fg">EvaBot</span> <span class="c-dim" style="font-size: 0.75rem;">v0.1.0</span>
+        <span class="c-ok bold" id="status-text">ONLINE</span>
+        <span class="c-dim">│</span>
+        <span id="lbl-ping" class="c-dim">Ping:</span> <span class="c-ok bold" id="ping-text">...</span>
+        <span class="c-dim desk-only">│</span>
+        <span class="desk-only c-dim">Mesh:</span> <span class="c-ok desk-only" id="mesh-ping">122ms</span>
+        <span class="c-dim desk-only">│</span>
+        <span class="desk-only c-dim">Live:</span> <span class="c-ok desk-only" id="pulse-indicator"></span>
+      </div>
+
+      <div class="tui-actions-group">
+        <span class="cmd-link bold c-ok tui-tab" id="tab-terminal" onclick="switchTab('terminal')" style="font-size: 0.78rem;">[ TERMINAL ]</span>
+        <span class="cmd-link tui-tab" id="tab-metrics" onclick="switchTab('metrics')" style="font-size: 0.78rem;">[ METRICS ]</span>
+        <span class="c-dim">│</span>
+        <span class="cmd-link bold c-ok" id="lang-en" onclick="setLanguage('en')">[EN]</span>
+        <span class="cmd-link" id="lang-uk" onclick="setLanguage('uk')">UK</span>
+        <span class="cmd-link" id="lang-ru" onclick="setLanguage('ru')">RU</span>
+        <span class="cmd-link desk-only" id="css-toggle" onclick="toggleCss()" title="Display mode: off / term / web (click to cycle)">[CSS:TERM]</span>
+      </div>
     </div>
-  </div>
+
+    <!-- Meta Info Row -->
+    <div class="tui-line tui-meta-row">
+      <div class="tui-meta-item">
+        <span class="c-dim" id="lbl-model">Model:</span>
+        <span class="interactive-link bold c-ok" id="model-pill" onclick="openModelModal()">...</span>
+      </div>
+      <span class="c-dim">│</span>
+      <div class="tui-meta-item">
+        <span class="c-dim" id="lbl-mode">Mode:</span>
+        <span class="interactive-link" id="current-mode" onclick="toggleMode()">solo</span>
+      </div>
+      <span class="c-dim desk-only">│</span>
+      <div class="tui-meta-item desk-only">
+        <span class="c-dim" id="lbl-pool">Pool:</span>
+        <span class="interactive-link" id="models-link" onclick="openModelModal()">94 models (/models)</span>
+      </div>
+      <span class="c-dim desk-only">│</span>
+      <div class="tui-meta-item desk-only" id="db-line">
+        <span class="c-dim" id="lbl-databases">Databases:</span>
+        <span class="c-ok" id="db-values">checking ...</span>
+      </div>
+    </div>
+
+    <!-- Horizontal Swipeable Command Strip -->
+    <div class="tui-cmd-strip" id="cmd-strip-line">
+      <span class="c-dim" id="lbl-commands" style="font-size: 0.75rem; flex-shrink: 0; font-weight: 700;">CMD:</span>
+      <div class="tui-cmd-scroll" id="cmd-scroll">
+        <span class="cmd-link" onclick="handleCommand('/help')">/help</span>
+        <span class="cmd-link" onclick="handleCommand('/?')">/?</span>
+        <span class="cmd-link" onclick="openModelModal()">/models</span>
+        <span class="cmd-link" onclick="toggleMode()">/mode</span>
+        <span class="cmd-link" onclick="handleCommand('/consilium')">/consilium</span>
+        <span class="cmd-link" onclick="handleCommand('/top')">/top</span>
+        <span class="cmd-link" onclick="handleCommand('/cost')">/cost</span>
+        <span class="cmd-link" onclick="handleCommand('/company')">/company</span>
+        <span class="cmd-link" onclick="handleCommand('/evaline')">/evaline</span>
+        <span class="cmd-link" onclick="handleCommand('/products')">/products</span>
+        <span class="cmd-link" onclick="handleCommand('/who')">/who</span>
+        <span class="cmd-link" onclick="setLanguage(state.lang)">/lang</span>
+        <span class="cmd-link" onclick="handleCommand('/sephirot')">/sephirot</span>
+        <span class="cmd-link" onclick="handleCommand('/mcp')">/mcp</span>
+        <span class="cmd-link" onclick="handleCommand('/lsp')">/lsp</span>
+        <span class="cmd-link" onclick="handleCommand('/history')">/history</span>
+        <span class="cmd-link" onclick="handleCommand('/memory')">/memory</span>
+        <span class="cmd-link" onclick="handleCommand('/add')">/add</span>
+        <span class="cmd-link" onclick="handleCommand('/file')">/file</span>
+        <span class="cmd-link" onclick="handleCommand('/idea')">/idea</span>
+        <span class="cmd-link" onclick="handleCommand('/error')">/error</span>
+        <span class="cmd-link" onclick="handleCommand('/bug')">/bug</span>
+        <span class="cmd-link" onclick="handleCommand('/errors')">/errors</span>
+        <span class="cmd-link" onclick="handleCommand('/search')">/search</span>
+        <span class="cmd-link" onclick="handleCommand('/services')">/services</span>
+        <span class="cmd-link" onclick="handleCommand('/servers')">/servers</span>
+        <span class="cmd-link" onclick="handleCommand('/clear')">/clear</span>
+      </div>
+    </div>
+  </header>
 
   <!-- Terminal / Chat Panel -->
-  <div id="chat-panel">
-  <div class="header-block">
-    <div class="tui-line"><span class="status-dot pulse" id="status-light">●</span> EvaBot v0.0.1  <span class="c-ok" id="status-text">ONLINE</span>  <span class="c-dim">│</span> <span id="lbl-ping">Ping:</span> <span class="c-ok bold" id="ping-text">...</span>  <span class="c-dim">│</span> Mesh: <span class="c-ok" id="mesh-ping">134ms</span>  <span class="c-dim">│</span> Live: <span class="c-ok" id="pulse-indicator"></span></div>
-    <div class="tui-line"><span class="c-dim" id="lbl-model">Model:</span> <span class="interactive-link" id="model-pill" onclick="openModelModal()">... <span class="c-ok"></span></span>  <span class="c-dim" id="lbl-mode">Mode:</span> <span class="interactive-link" id="current-mode" onclick="toggleMode()">solo</span>  <span class="c-dim" id="lbl-pool">Pool:</span> <span class="interactive-link" id="models-link" onclick="openModelModal()">... (/models)</span>  <span class="c-dim" id="lbl-lang">Lang:</span> <span class="cmd-link bold c-ok" id="lang-en" onclick="setLanguage('en')">[EN]</span><span class="cmd-link" id="lang-uk" onclick="setLanguage('uk')">UK</span><span class="cmd-link" id="lang-ru" onclick="setLanguage('ru')">RU</span><span class="cmd-link" id="css-toggle" onclick="toggleCss()" title="Display mode: off / term / web (click to cycle)">[CSS:TERM]</span></div>
-    <div class="tui-line"><span class="c-dim" id="lbl-commands">Commands:</span> <span class="cmd-link" onclick="handleCommand('/help')">/help</span><span class="cmd-link" onclick="handleCommand('/?')">/?</span><span class="cmd-link" onclick="handleCommand('/about')">/about</span><span class="cmd-link" onclick="handleCommand('/top')">/top</span><span class="cmd-link" onclick="openModelModal()">/models</span><span class="cmd-link" onclick="handleCommand('/cost')">/cost</span><span class="cmd-link" onclick="handleCommand('/company')">/company</span><span class="cmd-link" onclick="handleCommand('/evaline')">/evaline</span><span class="cmd-link" onclick="handleCommand('/products')">/products</span><span class="cmd-link" onclick="handleCommand('/who')">/who</span><span class="cmd-link" onclick="setLanguage(state.lang)">/lang</span><span class="cmd-link" onclick="toggleMode()">/mode</span><span class="cmd-link" onclick="handleCommand('/consilium')">/consilium</span><span class="cmd-link" onclick="handleCommand('/sephirot')">/sephirot</span><span class="cmd-link" onclick="handleCommand('/mcp')">/mcp</span><span class="cmd-link" onclick="handleCommand('/lsp')">/lsp</span><span class="cmd-link" onclick="handleCommand('/history')">/history</span><span class="cmd-link" onclick="handleCommand('/memory')">/memory</span><span class="cmd-link" onclick="handleCommand('/add')">/add</span><span class="cmd-link" onclick="handleCommand('/file')">/file</span><span class="cmd-link" onclick="handleCommand('/idea')">/idea</span><span class="cmd-link" onclick="handleCommand('/error')">/error</span><span class="cmd-link" onclick="handleCommand('/bug')">/bug</span><span class="cmd-link" onclick="handleCommand('/errors')">/errors</span><span class="cmd-link" onclick="handleCommand('/search')">/search</span><span class="cmd-link" onclick="handleCommand('/services')">/services</span><span class="cmd-link" onclick="handleCommand('/servers')">/servers</span><span class="cmd-link" onclick="handleCommand('/clear')">/clear</span></div>
-    <div class="tui-line" id="db-line"><span class="c-dim" id="lbl-databases">Databases:</span> <span class="c-ok" id="db-values">checking ...</span></div>
-  </div>
+  <div id="chat-panel" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0;">
+    <!-- Messages stream -->
+    <div class="chat-container" id="chat-container">
+      <div class="msg">
+        <span class="msg-time" id="boot-time">[19:10:00]</span><span class="msg-sender system">system :</span><span class="msg-body" id="boot-msg">Connecting to evabot.online ...</span>
+      </div>
+    </div>
 
-  <!-- Messages stream -->
-  <div class="chat-container" id="chat-container">
-    <div class="msg">
-      <span class="msg-time" id="boot-time">[19:10:00]</span><span class="msg-sender system">system :</span><span class="msg-body" id="boot-msg">Connecting to evabot.online ...</span>
+    <!-- Input Row -->
+    <div class="input-line">
+      <div class="ac-box" id="ac-box"></div>
+      <div class="prompt-prefix">
+        <span class="c-dim desk-only" style="font-size: 0.8rem; user-select: none;">evabot@core:~$</span>
+        <span class="prompt-char">&gt;</span>
+      </div>
+      <textarea id="user-input" placeholder="Type a message or command (/help)..." autofocus rows="1"></textarea>
+      <div class="input-actions">
+        <button type="button" class="mic-btn send-btn" id="send-btn" title="Send message (Enter)" onclick="sendMessage()">[ ↵ ]</button>
+        <button type="button" class="mic-btn" id="mic-btn" title="Voice input [ MIC ]" onclick="VoiceEngine.toggle()">[ MIC ]</button>
+        <span class="mic-btn" id="tts-toggle" onclick="VoiceEngine.toggleTtsMute()" title="TTS on/off">[ TTS:ON ]</span>
+      </div>
     </div>
   </div>
 
-  <!-- Input Row -->
-  <div class="input-line">
-    <div class="ac-box" id="ac-box"></div>
-    <span class="prompt-char">&gt;</span>
-    <textarea id="user-input" placeholder="Type a message or command (/help)..." autofocus></textarea>
-    <button class="mic-btn" id="mic-btn" title="Voice input [ MIC ]" onclick="VoiceEngine.toggle()">[ MIC ]</button>
-    <span class="mic-btn" id="tts-toggle" onclick="VoiceEngine.toggleTtsMute()" title="TTS on/off">[ TTS:ON ]</span>
-  </div>
-
-  </div>
-
-  <!-- Metrics Panel (second screen) -->
-  <div id="metrics-panel" style="display: none;">
-  <div class="header-block">
-    <div class="tui-line"><span class="status-dot pulse" id="status-light">●</span> EvaBot v0.0.1  <span class="c-ok" id="status-text">ONLINE</span>  <span class="c-dim">│</span> <span id="lbl-ping">Ping:</span> <span class="c-ok bold" id="ping-text">...</span>  <span class="c-dim">│</span> Mesh: <span class="c-ok" id="mesh-ping">134ms</span>  <span class="c-dim">│</span> Live: <span class="c-ok" id="pulse-indicator"></span></div>
-    <div class="tui-line"><span class="c-dim" id="lbl-model">Model:</span> <span class="interactive-link" id="model-pill" onclick="openModelModal()">... <span class="c-ok"></span></span>  <span class="c-dim" id="lbl-mode">Mode:</span> <span class="interactive-link" id="current-mode" onclick="toggleMode()">solo</span>  <span class="c-dim" id="lbl-pool">Pool:</span> <span class="interactive-link" id="models-link" onclick="openModelModal()">... (/models)</span>  <span class="c-dim" id="lbl-lang">Lang:</span> <span class="cmd-link bold c-ok" id="lang-en" onclick="setLanguage('en')">[EN]</span><span class="cmd-link" id="lang-uk" onclick="setLanguage('uk')">UK</span><span class="cmd-link" id="lang-ru" onclick="setLanguage('ru')">RU</span><span class="cmd-link" id="css-toggle" onclick="toggleCss()" title="Display mode: off / term / web (click to cycle)">[CSS:TERM]</span></div>
-    <div class="tui-line"><span class="c-dim" id="lbl-commands">Commands:</span> <span class="cmd-link" onclick="handleCommand('/help')">/help</span><span class="cmd-link" onclick="handleCommand('/?')">/?</span><span class="cmd-link" onclick="handleCommand('/about')">/about</span><span class="cmd-link" onclick="handleCommand('/top')">/top</span><span class="cmd-link" onclick="openModelModal()">/models</span><span class="cmd-link" onclick="handleCommand('/cost')">/cost</span><span class="cmd-link" onclick="handleCommand('/company')">/company</span><span class="cmd-link" onclick="handleCommand('/evaline')">/evaline</span><span class="cmd-link" onclick="handleCommand('/products')">/products</span><span class="cmd-link" onclick="handleCommand('/who')">/who</span><span class="cmd-link" onclick="setLanguage(state.lang)">/lang</span><span class="cmd-link" onclick="toggleMode()">/mode</span><span class="cmd-link" onclick="handleCommand('/consilium')">/consilium</span><span class="cmd-link" onclick="handleCommand('/sephirot')">/sephirot</span><span class="cmd-link" onclick="handleCommand('/mcp')">/mcp</span><span class="cmd-link" onclick="handleCommand('/lsp')">/lsp</span><span class="cmd-link" onclick="handleCommand('/history')">/history</span><span class="cmd-link" onclick="handleCommand('/memory')">/memory</span><span class="cmd-link" onclick="handleCommand('/add')">/add</span><span class="cmd-link" onclick="handleCommand('/file')">/file</span><span class="cmd-link" onclick="handleCommand('/idea')">/idea</span><span class="cmd-link" onclick="handleCommand('/error')">/error</span><span class="cmd-link" onclick="handleCommand('/bug')">/bug</span><span class="cmd-link" onclick="handleCommand('/errors')">/errors</span><span class="cmd-link" onclick="handleCommand('/search')">/search</span><span class="cmd-link" onclick="handleCommand('/services')">/services</span><span class="cmd-link" onclick="handleCommand('/servers')">/servers</span><span class="cmd-link" onclick="handleCommand('/clear')">/clear</span></div>
-    <div class="tui-line" id="db-line"><span class="c-dim" id="lbl-databases">Databases:</span> <span class="c-ok" id="db-values">checking ...</span></div>
-    <div class="tui-line" id="metrics-line"><span class="c-dim" id="lbl-load">Load:</span> <span id="metrics-frankfurt">Brain(Frankfurt) CPU <span class="c-ok">25%</span> · RAM <span class="c-ok">15%</span> 4.7/31GB</span> │ <span id="metrics-iowa">Face(Iowa) CPU <span class="c-ok">2%</span> · RAM <span class="c-ok">46%</span> 440MB</span> │ <span id="heartbeat-indicator" class="c-ok"><span style="color:var(--red)">*</span> 72bpm</span></div>
-    <div class="tui-line" id="network-strip"><span class="c-dim">Cluster:</span> <span class="cmd-link bold c-ok">[evabot.online]</span><a href="https://evaline.network" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.network ↗</a><a href="https://evaline.online" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.online ↗</a><a href="https://evaline.website" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.website ↗</a><span class="c-dim">│</span> <a href="https://github.com/evaline-online" class="cmd-link" target="_blank" style="color:var(--yellow); font-weight:700; text-decoration:underline;">GitHub @evaline-online ↗</a></div>
-  </div>
+  <!-- Metrics Panel -->
+  <div id="metrics-panel" style="display: none; flex: 1; flex-direction: column; overflow: hidden; min-height: 0;">
+    <div class="tui-line" id="metrics-line" style="padding: 4px 0; border-bottom: 1px solid var(--border); font-size: 0.8rem;">
+      <span class="c-dim" id="lbl-load">Load:</span> <span id="metrics-frankfurt">Brain(Frankfurt) CPU <span class="c-ok">25%</span> · RAM <span class="c-ok">15%</span> 4.7/31GB</span> │ <span id="metrics-iowa">Face(Iowa) CPU <span class="c-ok">2%</span> · RAM <span class="c-ok">46%</span> 440MB</span> │ <span id="heartbeat-indicator" class="c-ok"><span style="color:var(--red)">*</span> 72bpm</span>
+    </div>
+    <div class="tui-line desk-only" id="network-strip" style="padding: 4px 0; font-size: 0.78rem;">
+      <span class="c-dim">Cluster:</span> <span class="cmd-link bold c-ok">[evabot.online]</span><a href="https://evaline.network" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.network ↗</a><a href="https://evaline.online" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.online ↗</a><a href="https://evaline.website" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.website ↗</a><span class="c-dim">│</span> <a href="https://github.com/evaline-online" class="cmd-link" target="_blank" style="color:var(--yellow); font-weight:700; text-decoration:underline;">GitHub @evaline-online ↗</a>
+    </div>
     <div class="chat-container" id="metrics-container" style="flex: 1; overflow-y: auto;">
       <div class="msg" style="color: var(--dim);">Loading live metrics...</div>
     </div>
@@ -1604,12 +1993,26 @@ Examples:
       // 4. Restore code blocks safely escaped
       for (let i = 0; i < codeBlocks.length; i++) {
         const { lang, code } = codeBlocks[i];
-        const langTag = lang ? `<div class="code-lang">${escapeHtml(lang.toUpperCase())}</div>` : '';
-        const blockHtml = `<div class="code-block">${langTag}<pre><code>${escapeHtml(code.trim())}</code></pre></div>`;
+        const langStr = lang ? escapeHtml(lang.toUpperCase()) : 'CODE';
+        const blockHtml = `<div class="code-block"><div class="code-header"><span class="code-lang">${langStr}</span><button type="button" class="code-copy-btn" onclick="copyCode(this)" title="Copy code">[COPY]</button></div><pre class="code-content"><code>${escapeHtml(code.trim())}</code></pre></div>`;
         text = text.replace(`__CODE_BLOCK_${i}__`, blockHtml);
       }
 
       return text;
+    }
+
+    function copyCode(btn) {
+      const codeEl = btn.closest('.code-block')?.querySelector('code');
+      if (codeEl) {
+        navigator.clipboard.writeText(codeEl.innerText).then(() => {
+          const old = btn.textContent;
+          btn.textContent = '[COPIED]';
+          btn.style.color = 'var(--green)';
+          setTimeout(() => { btn.textContent = old; btn.style.color = ''; }, 1600);
+        }).catch(() => {
+          btn.textContent = '[OK]';
+        });
+      }
     }
 
     // =====================================================================
@@ -1709,10 +2112,10 @@ Examples:
     let pulseIdx = 0;
     let heartRate = 72;
 
-    // ASCII load bars removed from the web version — plain percentages only.
-    // Kept as a no-op stub for call-site compatibility.
     function makeBar(pct, length = 8) {
-      return '';
+      const safe = Math.max(0, Math.min(100, Math.round(pct || 0)));
+      const filled = Math.round((safe / 100) * length);
+      return '[' + '■'.repeat(filled) + '□'.repeat(length - filled) + ']';
     }
 
     async function checkPing() {
@@ -1778,13 +2181,13 @@ Examples:
               const memUsed = parseFloat(f.memUsedGb) || 4.7;
               const memTotal = parseFloat(f.memTotalGb) || 31;
               const ramPct = Math.round((memUsed / memTotal) * 100);
-              frankfurtEl.innerHTML = `Brain(Frankfurt) CPU <span class="c-ok">${f.cpuPct || 25}%</span> · RAM <span class="c-ok">${ramPct}%</span> ${memUsed}/${memTotal}GB`;
+              frankfurtEl.innerHTML = `Brain(Frankfurt) CPU ${makeBar(f.cpuPct || 25, 6)} <span class="c-ok">${f.cpuPct || 25}%</span> · RAM ${makeBar(ramPct, 6)} <span class="c-ok">${ramPct}%</span> ${memUsed}/${memTotal}GB`;
             }
 
             if (iowaEl && i) {
               const iowaCpu = i.cpuPct || 2;
               const ramPct = Math.round((i.memUsedMb / (i.memTotalMb || 964)) * 100);
-              iowaEl.innerHTML = `Face(Iowa) CPU <span class="c-ok">${iowaCpu}%</span> · RAM <span class="c-ok">${ramPct}%</span> ${i.memUsedMb}MB`;
+              iowaEl.innerHTML = `Face(Iowa) CPU ${makeBar(iowaCpu, 6)} <span class="c-ok">${iowaCpu}%</span> · RAM ${makeBar(ramPct, 6)} <span class="c-ok">${ramPct}%</span> ${i.memUsedMb}MB`;
             }
           }
         }
@@ -2798,17 +3201,17 @@ Examples:
       const tabMetrics = document.getElementById('tab-metrics');
 
       if (tab === 'terminal') {
-        chatPanel.style.display = 'block';
-        metricsPanel.style.display = 'none';
-        tabTerminal.className = 'cmd-link bold c-ok';
-        tabMetrics.className = 'cmd-link';
+        if (chatPanel) chatPanel.style.display = 'flex';
+        if (metricsPanel) metricsPanel.style.display = 'none';
+        if (tabTerminal) tabTerminal.className = 'cmd-link bold c-ok tui-tab active';
+        if (tabMetrics) tabMetrics.className = 'cmd-link tui-tab';
         const input = document.getElementById('user-input');
         if (input) input.focus();
       } else {
-        chatPanel.style.display = 'none';
-        metricsPanel.style.display = 'block';
-        tabTerminal.className = 'cmd-link';
-        tabMetrics.className = 'cmd-link bold c-ok';
+        if (chatPanel) chatPanel.style.display = 'none';
+        if (metricsPanel) metricsPanel.style.display = 'flex';
+        if (tabTerminal) tabTerminal.className = 'cmd-link tui-tab';
+        if (tabMetrics) tabMetrics.className = 'cmd-link bold c-ok tui-tab active';
         refreshMetricsPanel();
       }
     }
@@ -2819,34 +3222,48 @@ Examples:
       fetch('/api/health')
         .then(r => r.json())
         .then(data => {
+          const fCpu = data.telemetry?.frankfurt?.cpuPct || 25;
+          const fMemUsed = parseFloat(data.telemetry?.frankfurt?.memUsedGb) || 4.7;
+          const fMemTot = parseFloat(data.telemetry?.frankfurt?.memTotalGb) || 31;
+          const fRam = Math.round((fMemUsed / fMemTot) * 100);
+
+          const iCpu = data.telemetry?.iowa?.cpuPct || 2;
+          const iMemUsed = data.telemetry?.iowa?.memUsedMb || 440;
+          const iMemTot = data.telemetry?.iowa?.memTotalMb || 964;
+          const iRam = Math.round((iMemUsed / iMemTot) * 100);
+
+          const uptimeHours = Math.floor((data.uptimeSeconds || 0) / 3600);
+          const uptimeMins = Math.floor(((data.uptimeSeconds || 0) % 3600) / 60);
+
           let html = '<div class="msg"><pre>';
-          html += 'Server: ' + (data.server || 'evabot-online-edge') + '\n';
-          html += 'Status: ' + (data.status || 'online') + '\n';
-          html += 'Uptime: ' + Math.floor((data.uptimeSeconds || 0) / 3600) + 'h ' + Math.floor(((data.uptimeSeconds || 0) % 3600) / 60) + 'm\n';
-          html += 'Memory: ' + (data.memoryUsageMb || 0) + ' MB\n';
-          html += 'CPU Cores: ' + (data.cpuCores || 0) + '\n';
-          html += 'Load: ' + (data.systemLoad || '0.00') + '\n\n';
-          if (data.telemetry) {
-            html += '=== Frankfurt (Brain) ===\n';
-            html += 'CPU: ' + (data.telemetry.frankfurt?.cpuPct || 0) + '%\n';
-            html += 'RAM: ' + (data.telemetry.frankfurt?.memUsedGb || 0) + '/' + (data.telemetry.frankfurt?.memTotalGb || 0) + ' GB\n\n';
-            html += '=== Iowa (Face) ===\n';
-            html += 'CPU: ' + (data.telemetry.iowa?.cpuPct || 0) + '%\n';
-            html += 'RAM: ' + (data.telemetry.iowa?.memUsedMb || 0) + '/' + (data.telemetry.iowa?.memTotalMb || 0) + ' MB\n\n';
-            html += 'Mesh Latency: ' + (data.telemetry.meshLatencyMs || 0) + ' ms\n';
-          }
+          html += '┌── EVALINE CLUSTER TELEMETRY // REALTIME DUAL-NODE METRICS ───────────────────┐\n';
+          html += '│ Status: [' + (data.status || 'ONLINE').toUpperCase() + ']  │  Uptime: ' + uptimeHours + 'h ' + uptimeMins + 'm  │  Mesh Latency: ' + (data.telemetry?.meshLatencyMs || 122) + 'ms RTT\n';
+          html += '├───────────────────────────────────────────────────────────────────────────────┤\n';
+          html += '│ NODE 1: EVABRAIN (Compute Core · Франкфурт · 8 vCPU Intel · 32GB RAM)         │\n';
+          html += '│   • CPU : ' + makeBar(fCpu, 10) + ' ' + fCpu + '% (Load: ' + (data.telemetry?.frankfurt?.load || '2.34') + ')\n';
+          html += '│   • RAM : ' + makeBar(fRam, 10) + ' ' + fMemUsed + '/' + fMemTot + ' GB (' + fRam + '%)\n';
+          html += '│   • Role: AI Вычислительное ядро, консилиум 94 моделей, векторная память     │\n';
+          html += '├───────────────────────────────────────────────────────────────────────────────┤\n';
+          html += '│ NODE 2: EVAFACE (Edge Ingress · Айова, США · 2 vCPU e2-micro · 1GB RAM)       │\n';
+          html += '│   • CPU : ' + makeBar(iCpu, 10) + ' ' + iCpu + '% (Load: ' + (data.telemetry?.iowa?.load || '0.15') + ')\n';
+          html += '│   • RAM : ' + makeBar(iRam, 10) + ' ' + iMemUsed + '/' + iMemTot + ' MB (' + iRam + '%)\n';
+          html += '│   • Role: HTTP/3 QUIC шлюз, Caddy Reverse Proxy, WireGuard туннель США<->ФРГ │\n';
+          html += '├───────────────────────────────────────────────────────────────────────────────┤\n';
+          html += '│ DATABASES & STORAGE BACKENDS:                                                 │\n';
           if (data.databases) {
-            html += '\n=== Databases ===\n';
             for (const [key, db] of Object.entries(data.databases)) {
-              html += key.toUpperCase() + ': ' + (db.name || key) + ' (' + (db.count || 0) + ') [' + (db.status || 'OK') + ']\n';
+              const countStr = db.count !== undefined ? ' (' + db.count + ' records)' : '';
+              html += '│   • ' + (db.name || key).padEnd(28) + countStr.padEnd(22) + ' [' + (db.status || 'OK') + ']\n';
             }
           }
-          if (data.plugins) {
-            html += '\n=== Plugins (' + data.plugins.loaded + ' loaded, ' + data.plugins.active + ' active) ===\n';
+          html += '├───────────────────────────────────────────────────────────────────────────────┤\n';
+          html += '│ ACTIVE CONSILIUM ENGINES & PLUGINS:                                           │\n';
+          if (data.plugins?.list) {
             data.plugins.list.forEach(p => {
-              html += '- ' + p.name + ' v' + p.version + ' [' + (p.enabled ? 'ON' : 'OFF') + ']\n';
+              html += '│   • ' + p.name.padEnd(32) + ('v' + p.version).padEnd(10) + ' [' + (p.enabled ? 'ACTIVE' : 'OFF') + ']\n';
             });
           }
+          html += '└───────────────────────────────────────────────────────────────────────────────┘\n';
           html += '</pre></div>';
           container.innerHTML = html;
         })

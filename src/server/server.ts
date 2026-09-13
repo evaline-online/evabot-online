@@ -25,6 +25,7 @@ import { createUploadRouter } from './routes/UploadRouter.js';
 import { Router, createRouteContext } from './routes/Router.js';
 import { ChatRouter } from './routes/ChatRouter.js';
 import { startTelegramBot } from '../telegram/TelegramBot.js';
+import { AccountingEngine, CapitalExpenses } from '../core/AccountingEngine.js';
 
 const MIME_TYPES: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
@@ -149,6 +150,45 @@ export function buildRouter(): Router {
         list: pluginList,
         health: pluginStatuses,
       },
+    });
+  });
+
+  router.get('/api/billing', async (ctx) => {
+    const summary = AccountingEngine.getUsageSummary();
+    const infraInventory = AccountingEngine.getInfraInventory();
+    const totalMonthly = AccountingEngine.getTotalMonthlyInfraCost();
+    const totalHourly = AccountingEngine.getTotalHourlyInfraCost();
+    const capitalExpenses = CapitalExpenses.getCapitalExpenses();
+    const totalCapital = CapitalExpenses.getTotalCapitalUSD();
+
+    ctx.sendJson(200, {
+      status: 'ok',
+      currency: 'USD',
+      rates: {
+        USD: 1.0,
+        EUR: 0.92,
+        UAH: 41.5,
+      },
+      capital: {
+        totalUSD: totalCapital,
+        hardwareCapExUSD: 1000.0,
+        hardwareDevice: 'Google Pixel 10 Pro XL (2FA MFA & Field Terminal)',
+        initialOpExReserveUSD: 500.0,
+        items: capitalExpenses,
+      },
+      infrastructure: {
+        monthlyOpExUSD: totalMonthly,
+        hourlyOpExUSD: totalHourly,
+        dailyOpExUSD: parseFloat((totalMonthly / 30).toFixed(2)),
+        items: infraInventory,
+      },
+      tokenUsage: summary,
+      unitEconomics: [
+        AccountingEngine.calculateAgentUnitCost('CEO & System Architect', 'gemini-3.8-flash'),
+        AccountingEngine.calculateAgentUnitCost('CTO & Principal Engineer', 'gemini-3.1-pro'),
+        AccountingEngine.calculateAgentUnitCost('Lead Backend Developer', 'gemini-3.1-flash'),
+        AccountingEngine.calculateAgentUnitCost('Research & Deep Logic', 'deepseek/deepseek-r1:free'),
+      ],
     });
   });
   
