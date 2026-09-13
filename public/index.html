@@ -635,8 +635,11 @@
   <input type="file" id="file-input" multiple hidden>
 
   <script>
+    const initialLang = localStorage.getItem('evabot_lang') ||
+      (typeof navigator !== 'undefined' && navigator.language && navigator.language.toLowerCase().startsWith('ru') ? 'ru' :
+       typeof navigator !== 'undefined' && navigator.language && (navigator.language.toLowerCase().startsWith('uk') || navigator.language.toLowerCase().startsWith('ua')) ? 'uk' : 'en');
     const state = {
-      lang: localStorage.getItem('evabot_lang') || 'en',
+      lang: initialLang,
       currentModel: 'openrouter/free',
       currentProvider: 'google',
       currentMode: 'solo',
@@ -2467,8 +2470,8 @@ Examples:
       pickVoice(utterLang) {
         if (!window.speechSynthesis) return null;
         const voices = window.speechSynthesis.getVoices() || [];
-        const femaleRe = /female|woman|alice|milena|tatyana|yuri|alena|katya|zira|susan|katia|olesya|svetlana|valentina|natalia/i;
-        const maleRe = /male|man|dmitri|pavel|alex|david|daniel|maxim|oleg|artem/i;
+        const femaleRe = /female|woman|alice|milena|tatyana|yuri|alena|katya|zira|susan|katia|olesya|svetlana|valentina|natalia|zofia|polina/i;
+        const maleRe = /male|man|dmitri|pavel|alex|david|daniel|maxim|oleg|artem|ostap|marek/i;
         const wantFemale = this.persona !== 'adam';
         const primary = voices.filter((v) => v.lang && v.lang.toLowerCase().startsWith(utterLang.slice(0, 2).toLowerCase()));
         const fallback = voices.filter((v) => v.lang && v.lang.toLowerCase().startsWith('en'));
@@ -2478,18 +2481,25 @@ Examples:
       },
 
       // Text-language detection mirroring the server (src/core/LocalePolicy.ts):
-      // Cyrillic with Ukrainian markers → uk-UA, other Cyrillic → ru-RU, else en-US.
       detectLang(text) {
-        if (!text || !/[\u0400-\u04FF]/.test(text)) return 'en-US';
+        if (!text || !text.trim()) return 'en-US';
         const lower = text.toLowerCase();
-        const ukMarks = (lower.match(/[іїєґ]/g) || []).length;
-        const ukWords = ['привіт', 'дякую', 'будь ласка', 'скажи', 'що', 'виготовлення', 'замовлення', 'київ'];
-        const ruWords = ['привет', 'спасибо', 'пожалуйста', 'как', 'что', 'это', 'производство', 'заказ', 'киев'];
-        const ukScore = ukMarks * 2 + ukWords.filter((w) => lower.includes(w)).length;
-        const ruScore = ruWords.filter((w) => lower.includes(w)).length;
-        if (ukScore > ruScore) return 'uk-UA';
-        if (ruScore > ukScore) return 'ru-RU';
-        return 'ru-RU';
+        if (/[\u0400-\u04FF]/.test(text)) {
+          const ukMarks = (lower.match(/[іїєґ]/g) || []).length;
+          const ruMarks = (lower.match(/[ыэъё]/g) || []).length;
+          if (ukMarks > 0 && ruMarks === 0) return 'uk-UA';
+          if (ruMarks > 0 && ukMarks === 0) return 'ru-RU';
+          const ukWords = ['привіт', 'дякую', 'будь ласка', 'скажи', 'що', 'виготовлення', 'замовлення', 'київ', 'україна', 'дуже', 'зараз'];
+          const ruWords = ['привет', 'спасибо', 'пожалуйста', 'как', 'что', 'это', 'производство', 'заказ', 'киев', 'украина', 'очень', 'сейчас'];
+          const ukScore = ukMarks * 3 + ukWords.filter((w) => lower.includes(w)).length;
+          const ruScore = ruMarks * 3 + ruWords.filter((w) => lower.includes(w)).length;
+          if (ukScore > ruScore) return 'uk-UA';
+          return 'ru-RU';
+        }
+        const plMarks = (lower.match(/[ąćęłńóśźż]/g) || []).length;
+        const plWords = ['jest', 'bardzo', 'proszę', 'dziękuję', 'dzień', 'dobry', 'witam'];
+        if (plMarks > 0 || plWords.filter((w) => lower.includes(w)).length >= 2) return 'pl-PL';
+        return 'en-US';
       },
 
       // Splits reply text at sentence boundaries into chunks ≤ 340 chars so

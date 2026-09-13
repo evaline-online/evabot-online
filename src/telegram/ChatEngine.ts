@@ -2,7 +2,7 @@ import { UniversalLlmClient, LlmProvider, UniversalMessage } from '../core/Unive
 import { Config } from '../core/Config.js';
 import { KnowledgeBaseConnector } from '../core/CorporateRoles.js';
 import { rulesEngine } from '../core/RulesEngine.js';
-import { applyLocalePolicy, languageLockInstruction } from '../core/LocalePolicy.js';
+import { applyLocalePolicy, languageLockInstruction, detectMessageLanguage } from '../core/LocalePolicy.js';
 import { ChatHistoryStore } from '../core/ChatHistoryStore.js';
 import { I18nEngine, SupportedLocale } from '../core/I18nEngine.js';
 import { logger } from '../core/Logger.js';
@@ -92,9 +92,10 @@ export class ChatEngine {
 
     let effectiveInstruction = this.resolveSystemInstruction();
 
+    const detectedLang = detectMessageLanguage(message);
     if (useKnowledgeBase) {
       try {
-        const docs = await this.kbConnector.search(message, { limit: 3 });
+        const docs = await this.kbConnector.search(message, { limit: 3, language: detectedLang });
         if (docs.length > 0) {
           effectiveInstruction += `\n${this.kbConnector.formatContextForPrompt(docs)}`;
         }
@@ -105,12 +106,12 @@ export class ChatEngine {
 
     // System-awareness (FEATURE 1) + developer block (FEATURE 2), appended
     // after the existing system prompt building (LocalePolicy/rules/KB).
-    effectiveInstruction += `\n${SystemContext.build()}`;
-    // LANGUAGE LOCK: mirror the user's message language (uk/ru/en) — the bot
+    effectiveInstruction += `\n${SystemContext.build(detectedLang)}`;
+    // LANGUAGE LOCK: mirror the user's message language (uk/ru/en/pl) — the bot
     // must never answer in a different language without an explicit request.
     effectiveInstruction += `\n${languageLockInstruction(message)}`;
     if (DeveloperMode.isUnlocked(sessionId)) {
-      effectiveInstruction += `\n${SystemContext.DEVELOPER_BLOCK}`;
+      effectiveInstruction += `\n${SystemContext.developerBlock(detectedLang)}`;
     }
     if (systemNotes.length > 0) {
       effectiveInstruction += `\n\n[SESSION CONTEXT INJECTED BY USER]\n${systemNotes.join('\n')}`;

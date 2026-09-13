@@ -344,6 +344,7 @@ export interface KnowledgeDocument {
 
 export interface KnowledgeSearchOptions {
   category?: string;
+  language?: string;
   limit?: number;
   minScore?: number;
 }
@@ -462,6 +463,7 @@ export class KnowledgeBaseConnector {
     const kbDocs = kb.search(query, {
       limit,
       category: options.category,
+      language: options.language,
       minScore: options.minScore ?? 0.2,
     });
 
@@ -523,7 +525,15 @@ export class KnowledgeBaseConnector {
     const formatted = docs
       .map((d, i) => `[Document ${i + 1} - ${d.title}] (Relevance: ${(Number(d.relevanceScore || 0.8) * 100).toFixed(0)}%, Source: ${d.source})\n${d.content.substring(0, 2500)}`)
       .join('\n\n');
-    return `\n--- EVALINE HYBRID DATABASE CONTEXT (GROUNDED KB) ---\n${formatted}\n--- END KNOWLEDGE BASE CONTEXT ---\n`;
+    return (
+      `\n--- EVALINE HYBRID DATABASE CONTEXT (GROUNDED KB) ---\n` +
+      `CRITICAL INSTRUCTION FOR REFERENCING CONTEXT:\n` +
+      `The documents below provide factual reference. They may be written in Ukrainian, Polish, English, or Russian.\n` +
+      `You MUST answer exclusively in the user's current message language. NEVER adopt or mirror the language of these reference documents if it differs from the user's language.\n` +
+      `If the user wrote in Russian, formulate your reply 100% in pure Russian without inserting any Ukrainian or Polish vocabulary.\n` +
+      `${formatted}\n` +
+      `--- END KNOWLEDGE BASE CONTEXT ---\n`
+    );
   }
 
   public listAllDocuments(): KnowledgeDocument[] {

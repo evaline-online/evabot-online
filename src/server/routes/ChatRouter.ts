@@ -4,7 +4,7 @@ import { ConsiliumEngine, ConsiliumMode, personaForRoleId } from '../../core/Con
 import { Config } from '../../core/Config.js';
 import { CORPORATE_ROLES, KnowledgeBaseConnector } from '../../core/CorporateRoles.js';
 import { rulesEngine } from '../../core/RulesEngine.js';
-import { applyLocalePolicy, languageLockInstruction } from '../../core/LocalePolicy.js';
+import { applyLocalePolicy, languageLockInstruction, detectMessageLanguage } from '../../core/LocalePolicy.js';
 import { logger } from '../../core/Logger.js';
 import { ChatHistoryStore, CONSILIUM_SESSION_ID } from '../../core/ChatHistoryStore.js';
 import { I18nEngine } from '../../core/I18nEngine.js';
@@ -61,11 +61,12 @@ export class ChatRouter extends Router {
       }
       const usedProvider = client.resolveProvider(targetModel, provider as LlmProvider | undefined);
 
+      const detectedLang = detectMessageLanguage(message);
       let { instruction: effectiveInstruction, persona: resolvedPersona } = this.resolveSystemInstruction(roleId, systemInstruction);
 
       if (useKnowledgeBase) {
         try {
-          const docs = await this.kbConnector.search(message, { limit: 6 });
+          const docs = await this.kbConnector.search(message, { limit: 6, language: detectedLang });
           if (docs.length > 0) {
             effectiveInstruction += `\n${this.kbConnector.formatContextForPrompt(docs)}`;
           }
@@ -74,15 +75,15 @@ export class ChatRouter extends Router {
         }
       }
 
-      // LANGUAGE LOCK (PRIMARY): mirror the user's message language (uk/ru/en) – put first for maximum weight.
-      effectiveInstruction = `${languageLockInstruction(message)}\n`;
+      // LANGUAGE LOCK (PRIMARY): mirror the user's message language (uk/ru/en/pl) – put first for maximum weight.
+      effectiveInstruction = `${languageLockInstruction(message)}\n${effectiveInstruction}`;
       // System-awareness (FEATURE 1) + developer block (FEATURE 2), appended
       // AFTER the existing system prompt building (role/LocalePolicy/rules/KB).
-      effectiveInstruction += `\n${SystemContext.build()}`;
+      effectiveInstruction += `\n${SystemContext.build(detectedLang)}`;
       // Also append lock as a safeguard.
       effectiveInstruction += `\n${languageLockInstruction(message)}`;
       if (DeveloperMode.isUnlocked(chatSessionId)) {
-        effectiveInstruction += `\n${SystemContext.DEVELOPER_BLOCK}`;
+        effectiveInstruction += `\n${SystemContext.developerBlock(detectedLang)}`;
       }
 
       const messages = [...history, { role: 'user', content: message.trim() }];
@@ -126,11 +127,12 @@ export class ChatRouter extends Router {
       }
       const usedProvider = client.resolveProvider(targetModel, provider as LlmProvider | undefined);
 
+      const detectedLang = detectMessageLanguage(message);
       let { instruction: effectiveInstruction, persona: resolvedPersona } = this.resolveSystemInstruction(roleId, systemInstruction);
 
       if (useKnowledgeBase) {
         try {
-          const docs = await this.kbConnector.search(message, { limit: 6 });
+          const docs = await this.kbConnector.search(message, { limit: 6, language: detectedLang });
           if (docs.length > 0) {
             effectiveInstruction += `\n${this.kbConnector.formatContextForPrompt(docs)}`;
           }
@@ -141,11 +143,11 @@ export class ChatRouter extends Router {
 
       // System-awareness (FEATURE 1) + developer block (FEATURE 2).
       effectiveInstruction = `${languageLockInstruction(message)}\n${effectiveInstruction}`;
-      effectiveInstruction += `\n${SystemContext.build()}`;
+      effectiveInstruction += `\n${SystemContext.build(detectedLang)}`;
       // Also append lock as a safeguard.
       effectiveInstruction += `\n${languageLockInstruction(message)}`;
       if (DeveloperMode.isUnlocked(chatSessionId)) {
-        effectiveInstruction += `\n${SystemContext.DEVELOPER_BLOCK}`;
+        effectiveInstruction += `\n${SystemContext.developerBlock(detectedLang)}`;
       }
 
       const messages = [...history, { role: 'user', content: message.trim() }];

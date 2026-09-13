@@ -60,9 +60,9 @@ export function extractMultipartFile(body: Buffer, contentType: string): Buffer 
 }
 
 function normalizeLang(raw: string | null): SttLanguage {
-  if (raw === 'ru-RU' || raw === 'ru') return 'ru-RU';
+  if (raw === 'uk-UA' || raw === 'uk' || raw === 'ua') return 'uk-UA';
   if (raw === 'en-US' || raw === 'en') return 'en-US';
-  return 'uk-UA';
+  return 'ru-RU';
 }
 
 function normalizeEncoding(raw: string | null): SttEncoding | undefined {

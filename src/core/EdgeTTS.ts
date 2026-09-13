@@ -92,6 +92,8 @@ export const EDGE_VOICE_CATALOG: Array<{
   { name: 'ru-RU-SvetlanaNeural', family: 'edge-neural', gender: 'FEMALE', free: true },
   { name: 'en-US-AriaNeural', family: 'edge-neural', gender: 'FEMALE', free: true },
   { name: 'en-US-GuyNeural', family: 'edge-neural', gender: 'MALE', free: true },
+  { name: 'pl-PL-ZofiaNeural', family: 'edge-neural', gender: 'FEMALE', free: true },
+  { name: 'pl-PL-MarekNeural', family: 'edge-neural', gender: 'MALE', free: true },
 ];
 
 const EDGE_VOICE_NAMES: ReadonlySet<string> = new Set(EDGE_VOICE_CATALOG.map((v) => v.name));
@@ -144,12 +146,14 @@ export class EdgeTTS {
     const lang = (opts.lang || '').toLowerCase();
     const isRussian = lang.startsWith('ru');
     const isUkrainian = lang.startsWith('uk') || lang.startsWith('ua');
+    const isPolish = lang.startsWith('pl');
 
     // Persona determines GENDER: eva (default) = female, adam = male
     const isFemale = opts.persona !== 'adam';
 
     if (isRussian) return isFemale ? 'ru-RU-SvetlanaNeural' : 'ru-RU-DmitryNeural';
     if (isUkrainian) return isFemale ? 'uk-UA-PolinaNeural' : 'uk-UA-OstapNeural';
+    if (isPolish) return isFemale ? 'pl-PL-ZofiaNeural' : 'pl-PL-MarekNeural';
     // English (default fallback)
     return isFemale ? 'en-US-AriaNeural' : 'en-US-GuyNeural';
   }
