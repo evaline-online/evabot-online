@@ -2403,6 +2403,21 @@ Examples:
 
     let msgCounter = 0;
 
+    function copyMessageText(msgId) {
+      const bar = document.getElementById(`vbar-${msgId}`);
+      const text = bar ? bar.getAttribute('data-speak-text') : '';
+      if (!text) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('Text copied to clipboard [OK]');
+        }).catch(() => {
+          showToast('Clipboard access denied');
+        });
+      } else {
+        showToast('Clipboard unavailable');
+      }
+    }
+
     function attachVoiceBar(msgDiv, msgId, text) {
       if (!msgDiv || !text || !text.trim() || text === '...') return;
       let bar = msgDiv.querySelector('.msg-voice-bar');
@@ -2417,6 +2432,9 @@ Examples:
         <button type="button" class="voice-btn voice-btn-play" id="btn-play-${msgId}" onclick="VoiceEngine.playMessage('${msgId}')" title="Play speech [▶]">[▶ Speak]</button>
         <button type="button" class="voice-btn voice-btn-pause" id="btn-pause-${msgId}" onclick="VoiceEngine.pauseMessage('${msgId}')" title="Pause speech [⏸]" style="display:none;">[⏸ Pause]</button>
         <button type="button" class="voice-btn voice-btn-stop" id="btn-stop-${msgId}" onclick="VoiceEngine.stopMessage('${msgId}')" title="Stop speech [■]" style="display:none;">[■ Stop]</button>
+        <button type="button" class="voice-btn voice-btn-speed" id="btn-speed-${msgId}" onclick="VoiceEngine.cycleSpeed('${msgId}')" title="Playback Speed">[${VoiceEngine.speed || 1}x]</button>
+        <button type="button" class="voice-btn voice-btn-copy" onclick="copyMessageText('${msgId}')" title="Copy text to clipboard">[📋 Copy]</button>
+        <button type="button" class="voice-btn voice-btn-dl" id="btn-dl-${msgId}" onclick="VoiceEngine.downloadMp3('${msgId}')" title="Download audio [⬇ MP3]" style="display:none;">[⬇ MP3]</button>
         <span class="voice-visualizer" id="viz-${msgId}" style="display:none;">[ ▂▃▅▆▇▆▅▃▂ ]</span>
         <span class="voice-status c-dim" id="vstatus-${msgId}"></span>
       `;
@@ -3277,6 +3295,36 @@ Examples:
       activeMsgId: null,
       paused: false,
       vizInterval: null,
+      speed: 1.0,
+      audioCache: {},
+
+      cycleSpeed(msgId) {
+        if (this.speed === 1.0) this.speed = 1.25;
+        else if (this.speed === 1.25) this.speed = 1.5;
+        else if (this.speed === 1.5) this.speed = 2.0;
+        else this.speed = 1.0;
+
+        const btn = document.getElementById(`btn-speed-${msgId}`);
+        if (btn) btn.textContent = `[${this.speed}x]`;
+        if (this.activeAudio) {
+          this.activeAudio.playbackRate = this.speed;
+        }
+      },
+
+      downloadMp3(msgId) {
+        const b64 = this.audioCache[msgId];
+        if (!b64) {
+          showToast('Audio not cached. Click [▶ Speak] first.');
+          return;
+        }
+        const a = document.createElement('a');
+        a.href = 'data:audio/mp3;base64,' + b64;
+        a.download = `evabot-speech-${msgId}.mp3`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('Downloading MP3 [OK]');
+      },
 
       cleanForSpeech(text) {
         return String(text || '')
@@ -3394,7 +3442,11 @@ Examples:
         .then((data) => {
           if (this.activeMsgId !== msgId) return;
           if (data && data.ok && data.audioBase64) {
+            this.audioCache[msgId] = data.audioBase64;
+            const dlBtn = document.getElementById(`btn-dl-${msgId}`);
+            if (dlBtn) dlBtn.style.display = 'inline-block';
             const audio = new Audio('data:audio/mp3;base64,' + data.audioBase64);
+            audio.playbackRate = this.speed || 1.0;
             this.activeAudio = audio;
             audio.onplay = () => {
               if (this.activeMsgId === msgId) {
