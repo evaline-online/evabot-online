@@ -6,7 +6,7 @@ import { ModelRatings } from '../models/ModelRatings.js';
 import { withTimeout, getBreaker, LLM_CALL_TIMEOUT_MS, ProviderFallbackChain } from './Resilience.js';
 import { OpLog } from './OpLog.js';
 
-export type LlmProvider = 'google' | 'omniroute' | 'openrouter' | 'opencode';
+export type LlmProvider = 'google' | 'omniroute' | 'openrouter' | 'opencode' | 'huggingface';
 
 /**
  * Strips reasoning tags (<think>...</think>, <thought>...</thought>) and internal planning artifacts.
@@ -131,6 +131,13 @@ export class UniversalLlmClient {
       return 'openrouter';
     }
 
+    if (
+      m.startsWith('huggingface/') ||
+      m.startsWith('hf/')
+    ) {
+      return 'huggingface';
+    }
+
     return 'google';
   }
 
@@ -230,6 +237,10 @@ export class UniversalLlmClient {
         systemInstruction,
         signal: options.signal,
       });
+    }
+
+    if (provider === 'huggingface') {
+      return this.generateHuggingFace(model, universalMsgs, options);
     }
 
     return this.generateOpenAiCompatible(provider, model, universalMsgs, options);
@@ -573,8 +584,62 @@ export class UniversalLlmClient {
     return cleanLlmOutput(output);
   }
 
+  private async generateHuggingFace(
+    model: string,
+    messages: UniversalMessage[],
+    options: UniversalGenerationOptions
+  ): Promise<string> {
+    // Hugging Face Inference API
+    const apiKey = options.apiKey ?? Config.hfToken;
+    if (!apiKey) {
+      throw new Error('HuggingFace API token not configured');
+    }
+    const url = `https://api-inference.huggingface.co/models/${model}`;
+    const payload = {
+      inputs: messages.map((m) => m.content).join('\n\n'),
+      parameters: {
+        temperature: options.temperature ?? 0.7,
+        max_new_tokens: options.maxOutputTokens ?? 4096,
+      },
+    };
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+      signal: options.signal,
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      let errorDetail = errText;
+      try {
+        const json = JSON.parse(errText);
+        errorDetail = json.error || json.message || errText;
+      } catch {
+        // use raw
+      }
+      logger.error('UniversalLlmClient', `HuggingFace API Error ${response.status}: ${errorDetail}`);
+      throw new Error(`HuggingFace API Error (${response.status}): ${errorDetail}`);
+    }
+
+    const data: any = await response.json();
+    let output = '';
+    if (Array.isArray(data) && data.length > 0) {
+      output = data[0].generated_text || '';
+    } else if (typeof data === 'object' && data.generated_text) {
+      output = data.generated_text;
+    }
+    if (typeof output !== 'string' || !output.trim()) {
+      return '[No content returned by HuggingFace model]';
+    }
+    return cleanLlmOutput(output);
+  }
+
   private async streamOpenAiCompatible(
-    provider: 'omniroute' | 'openrouter' | 'opencode',
+    provider: 'omniroute' | 'openrouter' | 'opencode' | 'huggingface',
     model: string,
     messages: UniversalMessage[],
     onChunk: (chunk: string) => void,

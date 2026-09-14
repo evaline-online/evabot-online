@@ -60,14 +60,23 @@ export async function runEdgeTtsTests(): Promise<boolean> {
       assert(!!entry && entry.family === 'edge-neural' && entry.free === true, `VOICE_CATALOG contains ${v.name} (edge-neural, FREE)`);
     }
     const genders: Record<string, string> = Object.fromEntries(EDGE_VOICE_CATALOG.map((v) => [v.name, v.gender]));
-    assert(genders['uk-UA-PolinaNeural'] === 'FEMALE', 'uk-UA-PolinaNeural is FEMALE');
-    assert(genders['uk-UA-OstapNeural'] === 'MALE', 'uk-UA-OstapNeural is MALE');
-    assert(genders['ru-RU-DmitryNeural'] === 'MALE', 'ru-RU-DmitryNeural is MALE');
-    assert(genders['ru-RU-SvetlanaNeural'] === 'FEMALE', 'ru-RU-SvetlanaNeural is FEMALE');
-    assert(genders['en-US-AriaNeural'] === 'FEMALE', 'en-US-AriaNeural is FEMALE');
-    assert(genders['pl-PL-ZofiaNeural'] === 'FEMALE', 'pl-PL-ZofiaNeural is FEMALE');
-    assert(genders['pl-PL-MarekNeural'] === 'MALE', 'pl-PL-MarekNeural is MALE');
-    assert(EDGE_VOICE_CATALOG.length === 8, 'exactly 8 edge-neural catalog entries (4 original + 2 EN + 2 PL)');
+assert(genders['uk-UA-PolinaNeural'] === 'FEMALE', 'uk-UA-PolinaNeural is FEMALE');
+assert(genders['uk-UA-OstapNeural'] === 'MALE', 'uk-UA-OstapNeural is MALE');
+assert(genders['ru-RU-DmitryNeural'] === 'MALE', 'ru-RU-DmitryNeural is MALE');
+assert(genders['ru-RU-SvetlanaNeural'] === 'FEMALE', 'ru-RU-SvetlanaNeural is FEMALE');
+assert(genders['en-US-AriaNeural'] === 'FEMALE', 'en-US-AriaNeural is FEMALE');
+assert(genders['en-US-GuyNeural'] === 'MALE', 'en-US-GuyNeural is MALE');
+assert(genders['pl-PL-ZofiaNeural'] === 'FEMALE', 'pl-PL-ZofiaNeural is FEMALE');
+assert(genders['pl-PL-MarekNeural'] === 'MALE', 'pl-PL-MarekNeural is MALE');
+assert(genders['de-DE-KatjaNeural'] === 'FEMALE', 'de-DE-KatjaNeural is FEMALE');
+assert(genders['de-DE-KillianNeural'] === 'MALE', 'de-DE-KillianNeural is MALE');
+assert(genders['es-ES-ElviraNeural'] === 'FEMALE', 'es-ES-ElviraNeural is FEMALE');
+assert(genders['es-ES-AlvaroNeural'] === 'MALE', 'es-ES-AlvaroNeural is MALE');
+assert(genders['fr-FR-DeniseNeural'] === 'FEMALE', 'fr-FR-DeniseNeural is FEMALE');
+assert(genders['fr-FR-HenriNeural'] === 'MALE', 'fr-FR-HenriNeural is MALE');
+assert(genders['it-IT-ElsaNeural'] === 'FEMALE', 'it-IT-ElsaNeural is FEMALE');
+assert(genders['it-IT-DiegoNeural'] === 'MALE', 'it-IT-DiegoNeural is MALE');
+assert(EDGE_VOICE_CATALOG.length === 16, 'exactly 16 edge-neural catalog entries (4 original + 2 EN + 2 PL + 2 DE + 2 ES + 2 FR + 2 IT)');
   }
 
   // 2. Rank order: edge-neural BEFORE chirp3-hd (and the rest)
@@ -90,7 +99,7 @@ export async function runEdgeTtsTests(): Promise<boolean> {
     const k2 = edgeCacheKey('uk-UA-PolinaNeural', 'Привіт');
     const k3 = edgeCacheKey('ru-RU-DmitryNeural', 'Привіт');
     const k4 = edgeCacheKey('uk-UA-PolinaNeural', 'Бувай');
-    assert(k1 === k2 && /^[0-9a-f]{40}$/.test(k1), 'edgeCacheKey deterministic sha1 hex');
+    assert(k1 === k2 && /^[0-9a-f]{64}$/.test(k1), 'edgeCacheKey deterministic sha256 hex');
     assert(k1 !== k3, 'edgeCacheKey differs per voice');
     assert(k1 !== k4, 'edgeCacheKey differs per text');
   }
@@ -107,6 +116,15 @@ export async function runEdgeTtsTests(): Promise<boolean> {
     assert(tts.resolveVoice({ lang: 'en' }) === 'en-US-AriaNeural', 'lang en (default) → eva voice (en-US-AriaNeural, FEMALE)');
     assert(tts.resolveVoice({ lang: 'en', persona: 'adam' }) === 'en-US-GuyNeural', 'lang en + persona adam → en-US-GuyNeural (MALE)');
     assert(tts.resolveVoice({ persona: 'eva', lang: 'ru' }) === 'ru-RU-SvetlanaNeural', 'persona eva + lang ru → ru-RU-SvetlanaNeural (FEMALE)');
+    assert(tts.resolveVoice({ persona: 'eva', lang: 'uk' }) === 'uk-UA-PolinaNeural', 'persona eva + lang uk → uk-UA-PolinaNeural');
+    assert(tts.resolveVoice({ persona: 'eva', lang: 'de' }) === 'de-DE-KatjaNeural', 'persona eva + lang de → de-DE-KatjaNeural (FEMALE)');
+    assert(tts.resolveVoice({ persona: 'adam', lang: 'de' }) === 'de-DE-KillianNeural', 'persona adam + lang de → de-DE-KillianNeural (MALE)');
+    assert(tts.resolveVoice({ persona: 'eva', lang: 'es' }) === 'es-ES-ElviraNeural', 'persona eva + lang es → es-ES-ElviraNeural (FEMALE)');
+    assert(tts.resolveVoice({ persona: 'adam', lang: 'es' }) === 'es-ES-AlvaroNeural', 'persona adam + lang es → es-ES-AlvaroNeural (MALE)');
+    assert(tts.resolveVoice({ persona: 'eva', lang: 'fr' }) === 'fr-FR-DeniseNeural', 'persona eva + lang fr → fr-FR-DeniseNeural (FEMALE)');
+    assert(tts.resolveVoice({ persona: 'adam', lang: 'fr' }) === 'fr-FR-HenriNeural', 'persona adam + lang fr → fr-FR-HenriNeural (MALE)');
+    assert(tts.resolveVoice({ persona: 'eva', lang: 'it' }) === 'it-IT-ElsaNeural', 'persona eva + lang it → it-IT-ElsaNeural (FEMALE)');
+    assert(tts.resolveVoice({ persona: 'adam', lang: 'it' }) === 'it-IT-DiegoNeural', 'persona adam + lang it → it-IT-DiegoNeural (MALE)');
     assert(tts.resolveVoice({ voiceName: 'uk-UA-OstapNeural' }) === 'uk-UA-OstapNeural', 'explicit voiceName wins');
     assert(isEdgeVoice('ru-RU-SvetlanaNeural') && !isEdgeVoice('uk-UA-Chirp3-HD-Aoede'), 'isEdgeVoice distinguishes edge vs google catalog');
   }

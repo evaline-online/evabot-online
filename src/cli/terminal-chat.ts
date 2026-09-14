@@ -554,6 +554,8 @@ async function main(): Promise<void> {
         case '/cost':
         case '/finance':
         case '/budget':
+        case '/quota':
+        case '/usage':
         case '/company':
         case '/team':
         case '/roster':
@@ -573,6 +575,7 @@ async function main(): Promise<void> {
         case '/monitor':
         case '/sys':
         case '/auto':
+        case '/rule':
           console.log(ModelCommand.execute(input));
           break;
 
@@ -762,7 +765,7 @@ ${C.yellow}${C.bold}USER PROFILE${C.reset}`);
           // Multilingual aliases (UK/RU) of server commands → route through the
           // alias-normalizing registry (e.g. /історія → /history, /пошук → /search).
           const canonical = COMMAND_ALIASES[cmd];
-          if (canonical && ['/about', '/history', '/memory', '/search', '/find', '/services', '/servers', '/health', '/news', '/translate', '/products', '/who', '/debug', '/log', '/monitor', '/say', '/listen', '/sys', '/developer', '/voices', '/settings', '/agents', '/models', '/help', '/lang', '/cost', '/sephirot', '/auto', '/subagent', '/room', '/rooms', '/free', '/paid', '/top', '/info', '/mcp', '/lsp', '/company', '/evaline', '/inspect', '/monitor', '/commands'].includes(canonical)) {
+          if (canonical && ['/about', '/history', '/memory', '/search', '/find', '/services', '/servers', '/health', '/news', '/translate', '/products', '/who', '/debug', '/log', '/monitor', '/say', '/listen', '/sys', '/developer', '/voices', '/settings', '/agents', '/models', '/help', '/lang', '/cost', '/sephirot', '/auto', '/subagent', '/room', '/rooms', '/free', '/paid', '/top', '/info', '/mcp', '/lsp', '/company', '/evaline', '/inspect', '/monitor', '/commands', '/rule', '/quota', '/usage'].includes(canonical)) {
             if (canonical === '/say') {
               await handleSay(arg);
             } else if (canonical === '/listen') {

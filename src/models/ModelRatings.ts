@@ -6,6 +6,7 @@ import { AccountingEngine } from '../core/AccountingEngine.js';
 import { AgentBuilder } from '../core/AgentBuilder.js';
 import { I18nEngine } from '../core/I18nEngine.js';
 import { ChatHistoryStore } from '../core/ChatHistoryStore.js';
+import { rulesEngine } from '../core/RulesEngine.js';
 import { RoomManager } from '../core/RoomManager.js';
 import { knowledgeBase } from '../core/KnowledgeBase.js';
 import { ClusterMonitor } from '../core/ClusterMonitor.js';
@@ -82,8 +83,27 @@ export class ModelRatings {
     if (id.includes('gemini-3.8') || name.includes('3.8')) return 100;
     if (id.includes('gemini-3.1') || name.includes('3.1')) return 99;
     if (id.includes('claude-3-7') || id.includes('claude-sonnet-4') || name.includes('claude 3.7')) return 98;
+    if (id.includes('gpt-6-astra') || name.includes('gpt-6 astra')) return 97;
+    if (id.includes('claude-fable-5.1') || id.includes('claude-mythos-5.1') || name.includes('claude fable 5.1') || name.includes('claude mythos 5.1')) return 97;
+    if (id.includes('gemini-3.7') || name.includes('3.7')) return 96;
     if (id.includes('gemini-3.0') || name.includes('3.0')) return 96;
-    if (id.includes('deepseek-r1') || id.includes('deepseek-v3') || id.includes('deepseek-v4') || name.includes('deepseek r1')) return 95;
+    if (id.includes('claude-opus-5') || name.includes('claude opus 5')) return 95;
+    if (id.includes('claude-sonnet-5') || name.includes('claude sonnet 5')) return 95;
+    if (id.includes('claude-fable-5') || name.includes('claude fable 5')) return 95;
+    if (id.includes('deepseek-v4') || name.includes('deepseek v4')) return 95;
+    if (id.includes('deepseek-r1') || id.includes('deepseek-v3') || name.includes('deepseek r1')) return 95;
+    if (id.includes('grok-4') || name.includes('grok 4')) return 94;
+    if (id.includes('gpt-5.6') || name.includes('gpt-5.6')) return 94;
+    if (id.includes('qwen3.8') || name.includes('qwen3.8') || name.includes('qwen 3.8')) return 93;
+    if (id.includes('glm-5.3') || name.includes('glm-5.3') || name.includes('glm 5.3')) return 93;
+    if (id.includes('kimi-k3') || name.includes('kimi k3')) return 92;
+    if (id.includes('muse-spark') || name.includes('muse spark')) return 92;
+    if (id.includes('hy4') || name.includes('hy4')) return 92;
+    if (id.includes('glm-5.2') || name.includes('glm-5.2') || name.includes('glm 5.2')) return 91;
+    if (id.includes('deepseek-v3.2') || name.includes('deepseek v3.2')) return 91;
+    if (id.includes('gpt-oss') || name.includes('gpt-oss')) return 90;
+    if (id.includes('laguna-m-1') || name.includes('laguna m.1')) return 90;
+    if (id.includes('laguna-xs-2') || name.includes('laguna xs.2')) return 90;
     if (id.includes('llama-3.3') || name.includes('llama 3.3')) return 90;
     if (id.includes('qwen-2.5') || id.includes('qwen3') || name.includes('qwen 2.5') || name.includes('qwen3')) return 88;
     if (id.includes('o3-mini') || id.includes('o1') || name.includes('o3-mini') || name.includes('o1')) return 85;
@@ -105,11 +125,31 @@ export class ModelRatings {
     if (id.includes('gemini-3.1-pro') || name.includes('gemini 3.1 pro')) score += 100;
     else if (id.includes('gemini-3.8-flash') || name.includes('gemini 3.8 flash')) score += 99;
     else if (name.includes('claude 3.7') || name.includes('claude sonnet 4')) score += 98;
+    else if (id.includes('gpt-6-astra') || name.includes('gpt-6 astra')) score += 97;
+    else if (id.includes('claude-fable-5.1') || name.includes('claude fable 5.1')) score += 97;
+    else if (id.includes('claude-opus-5') || name.includes('claude opus 5')) score += 96;
+    else if (id.includes('claude-mythos-5.1') || name.includes('claude mythos 5.1')) score += 96;
     else if (id.includes('gemini-3.1-flash') || name.includes('gemini 3.1 flash')) score += 96;
+    else if (id.includes('gemini-3.7') || name.includes('gemini 3.7')) score += 95;
+    else if (id.includes('deepseek-v4-pro') || name.includes('deepseek v4 pro')) score += 95;
     else if (id.includes('deepseek-r1') || name.includes('deepseek r1')) score += 95;
+    else if (id.includes('claude-sonnet-5') || name.includes('claude sonnet 5')) score += 94;
+    else if (id.includes('claude-fable-5') || name.includes('claude fable 5')) score += 94;
     else if (id.includes('codestral') || name.includes('codestral')) score += 94;
+    else if (id.includes('gpt-5.6-sol') || name.includes('gpt-5.6 sol')) score += 93;
+    else if (id.includes('qwen3.8-max') || name.includes('qwen3.8 max')) score += 93;
+    else if (id.includes('glm-5.3') || name.includes('glm 5.3')) score += 93;
     else if (id.includes('qwen-2.5-coder-32b') || name.includes('qwen 2.5 coder 32b') || id.includes('qwen3-coder')) score += 93;
+    else if (id.includes('hy4') || name.includes('hy4')) score += 92;
+    else if (id.includes('grok-4') || name.includes('grok 4')) score += 92;
+    else if (id.includes('deepseek-v4-flash') || name.includes('deepseek v4 flash')) score += 91;
+    else if (id.includes('deepseek-v3.2') || name.includes('deepseek v3.2')) score += 91;
+    else if (id.includes('gpt-5.6-terra') || name.includes('gpt-5.6 terra')) score += 90;
+    else if (id.includes('kimi-k3') || name.includes('kimi k3')) score += 90;
     else if (name.includes('o1') || name.includes('o3-mini')) score += 90;
+    else if (id.includes('gpt-5.6-luna') || name.includes('gpt-5.6 luna')) score += 89;
+    else if (id.includes('gpt-oss-120b') || name.includes('gpt-oss 120b')) score += 89;
+    else if (id.includes('laguna-m-1') || name.includes('laguna m.1')) score += 88;
     else if (name.includes('llama 3.3 70b')) score += 88;
     else if (name.includes('claude 3.5')) score += 86;
     else if (name.includes('gpt-4o')) score += 82;
@@ -304,7 +344,10 @@ export class ModelRatings {
     // (queried OpenRouter /models 2026-09-08; the stale 2025 ":free" ids are
     // paid now). TOP-1 smartest free = NVIDIA Nemotron 3 Ultra 550B (1M ctx).
     const candidateIds = [
+      'qwen/qwen3.8-max:free',
+      'zhipu/glm-5.3:free',
       'nvidia/nemotron-3-super-120b-a12b:free',
+      'tencent/hy4-preview:free',
       'dots-studio/dots-3-note-preview:free',
       'cohere/north-mini-code:free',
       'openrouter/free',
@@ -335,11 +378,16 @@ export class ModelRatings {
     // (stale 2025 ":free" ids are paid now and were removed). Registry-guarded.
     const trustedFleet = [
       'openrouter/free',
+      'qwen/qwen3.8-max:free',
+      'zhipu/glm-5.3:free',
       'nvidia/nemotron-3-super-120b-a12b:free',
+      'tencent/hy4-preview:free',
       'dots-studio/dots-3-note-preview:free',
       'cohere/north-mini-code:free',
       'inclusionai/ling-3.0-flash-sante:free',
       'poolside/laguna-s-2.1:free',
+      'poolside/laguna-m-1:free',
+      'openai/gpt-oss-120b:free',
       'google/gemma-4-31b-it:free',
       'omni/cf-gpt-oss-120b',
       'omni/cf-llama-3.3-70b',
@@ -646,6 +694,10 @@ export class ModelCommand {
         return this.handleTop(parts.slice(1));
       case '/free':
         return this.handleFree();
+      case '/quota':
+        return this.handleQuota(parts.slice(1));
+      case '/usage':
+        return this.handleUsage(parts.slice(1));
       case '/paid':
         return this.handlePaid();
       case '/models':
@@ -718,6 +770,10 @@ export class ModelCommand {
         return this.handleMonitor();
       case '/sys':
         return SystemContext.build();
+      case '/rule':
+        // RAW command keeps custom-rule name/text casing (same as /developer,
+        // /voices above — normalizeCommand lowercases everything).
+        return this.handleRules(command);
       case '/developer':
         // Parsed from the RAW command so the password keeps its original casing.
         return this.handleDeveloper(command);
@@ -761,7 +817,7 @@ export class ModelCommand {
         return '⏳ Reports are registered via the async executor — use web API / Telegram (async mode).';
       default:
         OpLog.getInstance().log('error', 'command', `unknown command: ${action}`);
-        return `[ERROR] Unknown command: ${action}. Use /top, /models, /history, /memory, /search, /find, /services, /servers, /mcp, /lsp, /cost, /company, /evaline, /lang, /info, /news, /translate, /health, /products, /who, /sephirot, /debug, /log, /monitor, /sys, /developer, /voices, /settings, /agents, /room, /rooms, /free, /paid, /auto, /about, /mode, /consilium, /clear, or /help.`;
+        return `[ERROR] Unknown command: ${action}. Use /top, /models, /history, /memory, /search, /find, /services, /servers, /mcp, /lsp, /cost, /company, /evaline, /lang, /info, /news, /translate, /health, /products, /who, /sephirot, /debug, /log, /monitor, /sys, /rule, /quota, /usage, /developer, /voices, /settings, /agents, /room, /rooms, /free, /paid, /auto, /about, /mode, /consilium, /clear, or /help.`;
     }
   }
 
@@ -2547,6 +2603,9 @@ export class ModelCommand {
       { canonical: '/rooms', aliases: aliasMap['/rooms'] || [], description: 'List all active chat rooms', usage: '/rooms', options: [], priority: 2, category: 'System' },
       { canonical: '/free', aliases: aliasMap['/free'] || [], description: 'List all 46 free models with ratings', usage: '/free', options: [], priority: 2, category: 'System' },
       { canonical: '/paid', aliases: aliasMap['/paid'] || [], description: 'List all 32 paid models with ratings', usage: '/paid', options: [], priority: 2, category: 'System' },
+      { canonical: '/rule', aliases: aliasMap['/rule'] || [], description: 'Agent rules & operational mandates (add/reset/list)', usage: '/rule [add <название> | <текст правила> | reset]', options: ['add <название> | <текст правила>', 'reset', 'list'], priority: 2, category: 'System' },
+      { canonical: '/quota', aliases: aliasMap['/quota'] || [], description: 'Free-tier quotas (current provider / all / by model)', usage: '/quota [all|<model_id>]', options: ['all', '<model_id>', 'current'], priority: 2, category: 'System' },
+      { canonical: '/usage', aliases: aliasMap['/usage'] || [], description: 'Token usage & cost statistics (total/day/month)', usage: '/usage [today|month]', options: ['today', 'month'], priority: 2, category: 'System' },
 
       // UTILITY (priority 3)
       { canonical: '/lang', aliases: aliasMap['/lang'] || [], description: 'Set interface language', usage: '/lang <en|uk|ru>', options: ['en', 'uk', 'ru'], priority: 3, category: 'Utility' },
@@ -2610,6 +2669,152 @@ export class ModelCommand {
     lines.push('                /агенти=/agents, /девелопер=/developer, /історія=/history,');
     lines.push('                /пам\'ять=/memory, /пошук=/search, /знайди=/find,');
     lines.push('                /сервіси=/services, /сервери=/servers');
+    lines.push('═'.repeat(78));
+
+    return lines.join('\n');
+  }
+
+  private static handleRules(raw: string): string {
+    const rules = rulesEngine;
+    const rest = raw.includes(' ') ? raw.slice(raw.indexOf(' ') + 1).trim() : '';
+
+    if (!rest || /^(list|ls|show)$/i.test(rest)) {
+      return rules.formatRulesDisplay();
+    }
+
+    if (/^reset/i.test(rest)) {
+      rules.resetToDefaults();
+      return '[OK] Правила сброшены к системным по умолчанию.';
+    }
+
+    // /rule add <название> | <текст правила>  (first '|' splits name/text)
+    const addMatch = rest.match(/^add\s+(.+?)\s*\|\s*([\s\S]+)$/i);
+    if (addMatch) {
+      const name = addMatch[1].trim();
+      const ruleText = addMatch[2].trim();
+      if (!name || !ruleText) {
+        return '[ERROR] Использование: /rule add <название> | <текст правила>';
+      }
+      const rule = rules.addCustomRule(name, ruleText);
+      return `[OK] Добавлено кастомное правило [${rule.id}]: ${rule.name}\n${rule.ruleText}`;
+    }
+
+    return (
+      rules.formatRulesDisplay() +
+      `\n[ERROR] Неизвестная подкоманда "${rest}".\nИспользование: /rule [add <название> | <текст правила> | reset | list]`
+    );
+  }
+
+  private static formatQuotaCard(m: GeminiModelInfo): string {
+    const lines: string[] = [];
+    lines.push('');
+    lines.push('═'.repeat(78));
+    lines.push(`  КВОТА МОДЕЛИ: ${m.id}`);
+    lines.push('═'.repeat(78));
+    lines.push(`  Название : ${m.name}`);
+    lines.push(`  Provider : ${m.provider} | Category: ${m.category}`);
+    lines.push(`  Статус   : ${m.pricing.freeTierStatus}`);
+    lines.push(`  Лимиты   : ${m.pricing.freeTierDetails}`);
+    lines.push(`  Контекст : ${m.contextWindow.toLocaleString()} токенов | Выход: ${m.maxOutputTokens.toLocaleString()} макс.`);
+    const rpm = m.pricing.freeTierDetails.match(/(\d[\d,]*)\s*RPM/i);
+    lines.push(`  Стоимость: In: ${m.pricing.inputPer1MTokensUSD} | Out: ${m.pricing.outputPer1MTokensUSD}`);
+    lines.push('═'.repeat(78));
+    return lines.join('\n');
+  }
+
+private static handleQuota(args: string[]): string {
+    const sub = args[0]?.toLowerCase() || 'current';
+    const free = ModelRegistry.getFreeModels();
+    const lines: string[] = [];
+
+    if (sub !== 'all' && sub !== 'current' && sub !== 'default') {
+      const m = ModelRegistry.getModelById(sub);
+      if (!m) {
+        return `[ERROR] Модель не найдена: ${sub}. Используйте /models, /free или /quota all.`;
+      }
+      return this.formatQuotaCard(m);
+    }
+
+    // Current-provider anchor: last used model (CLI session), fallback default model.
+    const anchor = getLastUsedModel();
+    const anchorModel = (anchor && ModelRegistry.getModelById(anchor.model)) || ModelRegistry.getDefaultModel();
+    const currentProvider = anchorModel.provider;
+
+    const grouped = new Map<string, GeminiModelInfo[]>();
+    for (const m of free) {
+      const list = grouped.get(m.provider) || [];
+      list.push(m);
+      grouped.set(m.provider, list);
+    }
+
+    const providers = Array.from(grouped.keys()).sort((a, b) => a.localeCompare(b));
+
+    lines.push('');
+    lines.push('═'.repeat(78));
+    lines.push(`  БЕСПЛАТНЫЕ КВОТЫ / FREE-TIER QUOTAS (${free.length} моделей)`);
+    lines.push('═'.repeat(78));
+    lines.push('');
+
+    for (const provider of providers) {
+      if (sub === 'current' && provider !== currentProvider) continue;
+      const models = grouped.get(provider) || [];
+      lines.push(`─── ${provider} (${models.length}) ───`);
+      for (const m of models) {
+        const rpm = m.pricing.freeTierDetails.match(/(\d[\d,]*)\s*RPM/i);
+        lines.push(`  ${m.id}`);
+        lines.push(`      Контекст: ${m.contextWindow.toLocaleString()} | ${rpm ? `RPM: ${rpm[1]}` : 'RPM: —'} | ${m.pricing.freeTierStatus.substring(0, 25)}`);
+        lines.push(`      Лимиты: ${m.pricing.freeTierDetails.substring(0, 70)}`);
+      }
+      lines.push('');
+    }
+
+    lines.push('─'.repeat(78));
+    lines.push(`  Текущая модель: ${anchorModel.id} (${anchorModel.provider})`);
+    lines.push('  Команды:');
+    lines.push('    /quota             - Квоты провайдера текущей модели');
+    lines.push('    /quota all         - Квоты всех свободных моделей');
+    lines.push('    /quota <model_id>  - Карточка квоты одной модели');
+    lines.push('═'.repeat(78));
+
+    return lines.join('\n');
+  }
+
+  private static handleUsage(args: string[]): string {
+    const period = args[0]?.toLowerCase() || 'all';
+    const now = new Date();
+    let since: number | undefined;
+    let label = 'ЗА ВСЁ ВРЕМЯ';
+
+    if (period === 'today' || period === 'day') {
+      since = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+      label = 'ЗА СЕГОДНЯ';
+    } else if (period === 'month') {
+      since = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+      label = 'ЗА ЭТОТ МЕСЯЦ';
+    } else if (period !== 'all') {
+      return '[ERROR] Использование: /usage [today|month] — без аргументов = за всё время.';
+    }
+
+    const s = AccountingEngine.getUsageSummary(since);
+    const lines: string[] = [];
+    lines.push('');
+    lines.push('═'.repeat(78));
+    lines.push(`  ИСПОЛЬЗОВАНИЕ ТОКЕНОВ (${label})`);
+    lines.push('═'.repeat(78));
+    lines.push('');
+    lines.push(`  Вызовов      : ${s.totalCalls.toLocaleString()}`);
+    lines.push(`  Токенов вход : ${s.totalInputTokens.toLocaleString()}`);
+    lines.push(`  Токенов выход: ${s.totalOutputTokens.toLocaleString()}`);
+    lines.push(`  Всего токенов: ${s.totalTokens.toLocaleString()}`);
+    lines.push(`  Стоимость    : $${s.totalCostUSD.toFixed(4)}`);
+    lines.push(`  Экономия     : $${s.totalSavedUSD.toFixed(4)} (vs оплата платных аналогов)`);
+    lines.push('');
+    lines.push('─'.repeat(78));
+    lines.push('  Команды:');
+    lines.push('    /usage             - За всё время');
+    lines.push('    /usage today       - За сегодня');
+    lines.push('    /usage month       - За текущий месяц');
+    lines.push('    /quota             - Бесплатные квоты моделей');
     lines.push('═'.repeat(78));
 
     return lines.join('\n');

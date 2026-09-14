@@ -216,7 +216,7 @@ export class AccountingEngine {
     return [...this.INFRA_INVENTORY];
   }
 
-  public static getUsageSummary(): {
+  public static getUsageSummary(since?: number): {
     totalCalls: number;
     totalInputTokens: number;
     totalOutputTokens: number;
@@ -228,8 +228,11 @@ export class AccountingEngine {
     let totalOutputTokens = 0;
     let totalCostUSD = 0;
     let totalSavedUSD = 0;
+    let totalCalls = 0;
 
     for (const r of this.records) {
+      if (since !== undefined && new Date(r.timestamp).getTime() < since) continue;
+      totalCalls += 1;
       totalInputTokens += r.inputTokens;
       totalOutputTokens += r.outputTokens;
       totalCostUSD += r.costUSD;
@@ -237,7 +240,7 @@ export class AccountingEngine {
     }
 
     return {
-      totalCalls: this.records.length,
+      totalCalls,
       totalInputTokens,
       totalOutputTokens,
       totalTokens: totalInputTokens + totalOutputTokens,

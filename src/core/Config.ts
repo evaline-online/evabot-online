@@ -22,6 +22,7 @@ export interface SystemConfig {
   openrouterApiKey: string;
   opencodeBaseUrl: string;
   opencodeApiKey: string;
+  hfToken: string;
   telegramBotToken: string;
   ttsVoiceEva: string;
   ttsVoiceAdam: string;
@@ -89,6 +90,7 @@ defaultSystemInstruction:
   openrouterApiKey: process.env.OPENROUTER_API_KEY || '',
   opencodeBaseUrl: process.env.OPENCODE_BASE_URL || 'http://100.66.98.4:20128/v1',
   opencodeApiKey: process.env.OPENCODE_API_KEY || '',
+  hfToken: process.env.HF_TOKEN || '',
   telegramBotToken: process.env.TELEGRAM_BOT_TOKEN || '',
   // Cloud TTS (ONLY-FREE rule). PRIMARY = Microsoft Edge-TTS (Azure Neural,
   // free/unlimited — src/core/EdgeTTS.ts, voices uk-UA-PolinaNeural (Ева) and

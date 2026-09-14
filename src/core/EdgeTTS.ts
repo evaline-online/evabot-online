@@ -94,6 +94,14 @@ export const EDGE_VOICE_CATALOG: Array<{
   { name: 'en-US-GuyNeural', family: 'edge-neural', gender: 'MALE', free: true },
   { name: 'pl-PL-ZofiaNeural', family: 'edge-neural', gender: 'FEMALE', free: true },
   { name: 'pl-PL-MarekNeural', family: 'edge-neural', gender: 'MALE', free: true },
+  { name: 'de-DE-KatjaNeural', family: 'edge-neural', gender: 'FEMALE', free: true },
+  { name: 'de-DE-KillianNeural', family: 'edge-neural', gender: 'MALE', free: true },
+  { name: 'es-ES-ElviraNeural', family: 'edge-neural', gender: 'FEMALE', free: true },
+  { name: 'es-ES-AlvaroNeural', family: 'edge-neural', gender: 'MALE', free: true },
+  { name: 'fr-FR-DeniseNeural', family: 'edge-neural', gender: 'FEMALE', free: true },
+  { name: 'fr-FR-HenriNeural', family: 'edge-neural', gender: 'MALE', free: true },
+  { name: 'it-IT-ElsaNeural', family: 'edge-neural', gender: 'FEMALE', free: true },
+  { name: 'it-IT-DiegoNeural', family: 'edge-neural', gender: 'MALE', free: true },
 ];
 
 const EDGE_VOICE_NAMES: ReadonlySet<string> = new Set(EDGE_VOICE_CATALOG.map((v) => v.name));
@@ -103,9 +111,9 @@ export function isEdgeVoice(voiceName: string): boolean {
   return EDGE_VOICE_NAMES.has(voiceName) || voiceName.endsWith('Neural');
 }
 
-/** MP3 cache key: sha1 of "<voice>::<text>" (same pattern as CloudTTS). */
+/** MP3 cache key: sha256 of "<voice>::<text>" (same pattern as CloudTTS). */
 export function edgeCacheKey(voice: string, text: string): string {
-  return crypto.createHash('sha1').update(`${voice}::${text}`).digest('hex');
+  return crypto.createHash('sha256').update(`${voice}::${text}`).digest('hex');
 }
 
 /** Minimal MP3 sanity threshold: real speech is always > 1 KB. */

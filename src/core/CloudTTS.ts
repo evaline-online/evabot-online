@@ -210,6 +210,14 @@ const EDGE_NEURAL: Array<[string, CatalogVoiceFamily, 'FEMALE' | 'MALE']> = [
   ['en-US-GuyNeural', 'edge-neural', 'MALE'],
   ['pl-PL-ZofiaNeural', 'edge-neural', 'FEMALE'],
   ['pl-PL-MarekNeural', 'edge-neural', 'MALE'],
+  ['de-DE-KatjaNeural', 'edge-neural', 'FEMALE'],
+  ['de-DE-KillianNeural', 'edge-neural', 'MALE'],
+  ['es-ES-ElviraNeural', 'edge-neural', 'FEMALE'],
+  ['es-ES-AlvaroNeural', 'edge-neural', 'MALE'],
+  ['fr-FR-DeniseNeural', 'edge-neural', 'FEMALE'],
+  ['fr-FR-HenriNeural', 'edge-neural', 'MALE'],
+  ['it-IT-ElsaNeural', 'edge-neural', 'FEMALE'],
+  ['it-IT-DiegoNeural', 'edge-neural', 'MALE'],
 ];
 
 /** Static ONLY-FREE voice catalog per language (Edge-Neural + Chirp3-HD + Wavenet tiers). */
