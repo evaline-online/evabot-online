@@ -175,16 +175,16 @@ export class TuiRenderer {
     }
 
     const llmBlock = `[ МАТРИЦА LLM-ПРОВАЙДЕРОВ И МОДЕЛЕЙ // LLM & MULTI-AGENT STATUS ]:
-  • GOOGLE GEMINI (ADC):   Gemini 2.5 Flash, 3.8 Flash, Pro (1M ctx)     | [ONLINE] 🟢
-  • OMNIROUTE (Port 20128): 94 модели · LPU Groq/Cerebras (800 t/s)      | [ONLINE] 🟢
-  • OPENROUTER HUB:        56 бесплатных кодинг-моделей (DeepSeek, Qwen)  | [ONLINE] 🟢
-  • CONSILIUM AGENTS:      Antigravity agy, OpenCode, Serena, KiloCode   | [ONLINE] 🟢`;
+  • GOOGLE GEMINI (ADC):   Gemini 2.5 Flash, 3.8 Flash, Pro (1M ctx)     | [ONLINE] ●
+  • OMNIROUTE (Port 20128): 94 модели · LPU Groq/Cerebras (800 t/s)      | [ONLINE] ●
+  • OPENROUTER HUB:        56 бесплатных кодинг-моделей (DeepSeek, Qwen)  | [ONLINE] ●
+  • CONSILIUM AGENTS:      Antigravity agy, OpenCode, Serena, KiloCode   | [ONLINE] ●`;
 
     const secBlock = `[ КОНТУР БЕЗОПАСНОСТИ И ЗАЩИТЫ // SECURITY & AUTO-REAP SHIELD ]:
-  • EARLYOOM DAEMON:       Active (Пороги: <10% RAM, >80% Swap)          | [ARMED] 🟢
-  • EVA-WATCHDOG TIMER:    Каждые 3 мин (Сброс Tl-пауз > 20 мин)         | [ACTIVE] 🟢
-  • FAIL2BAN SSH JAIL:     Активен · Мониторинг брутфорса и ботнетов     | [ARMED] 🟢
-  • WIREGUARD ENCRYPTION:  ChaCha20-Poly1305 · Закрытый контур           | [SECURE] 🟢`;
+  • EARLYOOM DAEMON:       Active (Пороги: <10% RAM, >80% Swap)          | [ARMED] ●
+  • EVA-WATCHDOG TIMER:    Каждые 3 мин (Сброс Tl-пауз > 20 мин)         | [ACTIVE] ●
+  • FAIL2BAN SSH JAIL:     Активен · Мониторинг брутфорса и ботнетов     | [ARMED] ●
+  • WIREGUARD ENCRYPTION:  ChaCha20-Poly1305 · Закрытый контур           | [SECURE] ●`;
 
     if (body) {
       let hydrated = body;

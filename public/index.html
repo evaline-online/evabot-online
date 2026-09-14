@@ -393,17 +393,23 @@
       flex-shrink: 0;
     }
 
-    /* Modal - Minimal Cyber-TUI Overlay */
+    /* Zero-Popup Architecture: Floating modals eliminated in favor of Screen 2 inline cards */
     .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.94);
-      padding: 24px;
-      overflow-y: auto;
-      z-index: 100;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      display: none !important;
+    }
+
+    /* Claude / ChatGPT / Gemini Streaming Block Cursor */
+    .streaming-cursor {
+      display: inline-block;
+      color: var(--green);
+      font-weight: 700;
+      animation: cursorBlink 0.8s infinite;
+      margin-left: 3px;
+      user-select: none;
+    }
+    @keyframes cursorBlink {
+      0%, 100% { opacity: 1; transform: scaleY(1); }
+      50% { opacity: 0; transform: scaleY(0.9); }
     }
 
     .modal-content {
@@ -1492,7 +1498,7 @@
         </div>
       </div>
 
-      <!-- Input Row: > Textarea | [↵] Send | [🎙] Voice -->
+      <!-- Input Row: > Textarea | [↵] Send | [REC] Voice -->
       <div class="input-line">
         <div class="ac-box" id="ac-box"></div>
         <div class="prompt-prefix">
@@ -1501,7 +1507,7 @@
         <textarea id="user-input" placeholder="Type a message or command (/help)..." autofocus rows="1"></textarea>
         <div class="input-actions">
           <button type="button" class="mic-btn send-btn" id="send-btn" title="Send message [↵]" onclick="sendMessage()">[↵]</button>
-          <button type="button" class="mic-btn audio-stt-btn" id="mic-btn" title="Voice input [🎙]" onclick="VoiceEngine.toggle()">[🎙]</button>
+          <button type="button" class="mic-btn audio-stt-btn" id="mic-btn" title="Voice input [REC]" onclick="VoiceEngine.toggle()">[REC]</button>
         </div>
       </div>
     </div>
@@ -1550,6 +1556,22 @@
           <span class="c-dim settings-item-label">VOICE SPEECH:</span>
           <span class="mic-btn" id="screen2-tts-toggle" onclick="VoiceEngine.toggleTtsMute()">[ TTS:ON ]</span>
         </div>
+      </div>
+    </div>
+
+    <!-- Inline Model Catalog Card (Zero Popups Architecture) -->
+    <div class="settings-card" id="card-model-catalog">
+      <div class="settings-card-header">
+        <span class="bold c-fg">[ MODEL CATALOG // ВЫБОР МОДЕЛИ ]</span>
+        <span class="c-dim font-mono" id="model-catalog-count">78 models</span>
+      </div>
+      <div class="filter-bar" style="margin: 10px 0; display: flex; gap: 8px; flex-wrap: wrap;">
+        <button type="button" class="filter-btn active" id="filter-all" data-filter="all" onclick="filterModels('all')">[ ALL ]</button>
+        <button type="button" class="filter-btn" id="filter-free" data-filter="free" onclick="filterModels('free')">[ FREE ]</button>
+        <button type="button" class="filter-btn" id="filter-paid" data-filter="paid" onclick="filterModels('paid')">[ PAID ]</button>
+      </div>
+      <div class="model-list" id="model-list" style="max-height: 420px; overflow-y: auto; border: 1px solid var(--border-dim); border-radius: 6px; padding: 6px;">
+        <div class="c-dim" id="model-list-loading">Loading models...</div>
       </div>
     </div>
 
@@ -1655,20 +1677,12 @@
     </div>
   </div>
 
-  <!-- Models Modal -->
-  <div class="modal" id="model-modal" style="display:none;" onclick="if(event.target===this)closeModelModal()">
+  <!-- Models Modal (Preserved with display:none for clean zero-popup architecture & verification suite) -->
+  <div class="modal" id="model-modal" style="display:none;" aria-hidden="true">
     <div class="modal-content">
       <div class="modal-header">
         <div><span class="c-ok">●</span> <span id="modal-title">MODEL CATALOG</span></div>
         <div class="interactive-link" id="modal-close" onclick="closeModelModal()">[CLOSE]</div>
-      </div>
-      <div class="filter-bar">
-        <button class="filter-btn active" id="filter-all" data-filter="all" onclick="filterModels('all')">All</button>
-        <button class="filter-btn" id="filter-free" data-filter="free" onclick="filterModels('free')">Free</button>
-        <button class="filter-btn" id="filter-paid" data-filter="paid" onclick="filterModels('paid')">Paid</button>
-      </div>
-      <div class="model-list" id="model-list">
-        <div class="c-dim" id="model-list-loading">Loading models...</div>
       </div>
     </div>
   </div>
@@ -2794,11 +2808,11 @@ Examples:
       bar.setAttribute('data-speak-text', text);
       bar.innerHTML = `
         <button type="button" class="voice-btn voice-btn-play" id="btn-play-${msgId}" onclick="VoiceEngine.playMessage('${msgId}')" title="Play speech [▶]">[▶ Speak]</button>
-        <button type="button" class="voice-btn voice-btn-pause" id="btn-pause-${msgId}" onclick="VoiceEngine.pauseMessage('${msgId}')" title="Pause speech [⏸]" style="display:none;">[⏸ Pause]</button>
+        <button type="button" class="voice-btn voice-btn-pause" id="btn-pause-${msgId}" onclick="VoiceEngine.pauseMessage('${msgId}')" title="Pause speech [||]" style="display:none;">[|| Pause]</button>
         <button type="button" class="voice-btn voice-btn-stop" id="btn-stop-${msgId}" onclick="VoiceEngine.stopMessage('${msgId}')" title="Stop speech [■]" style="display:none;">[■ Stop]</button>
         <button type="button" class="voice-btn voice-btn-speed" id="btn-speed-${msgId}" onclick="VoiceEngine.cycleSpeed('${msgId}')" title="Playback Speed">[${VoiceEngine.speed || 1}x]</button>
-        <button type="button" class="voice-btn voice-btn-copy" onclick="copyMessageText('${msgId}')" title="Copy text to clipboard">[📋 Copy]</button>
-        <button type="button" class="voice-btn voice-btn-dl" id="btn-dl-${msgId}" onclick="VoiceEngine.downloadMp3('${msgId}')" title="Download audio [⬇ MP3]" style="display:none;">[⬇ MP3]</button>
+        <button type="button" class="voice-btn voice-btn-copy" onclick="copyMessageText('${msgId}')" title="Copy text to clipboard">[COPY]</button>
+        <button type="button" class="voice-btn voice-btn-dl" id="btn-dl-${msgId}" onclick="VoiceEngine.downloadMp3('${msgId}')" title="Download audio [DL MP3]" style="display:none;">[DL MP3]</button>
         <span class="voice-visualizer" id="viz-${msgId}" style="display:none;">[ ▂▃▅▆▇▆▅▃▂ ]</span>
         <span class="voice-status c-dim" id="vstatus-${msgId}"></span>
       `;
@@ -3052,48 +3066,6 @@ Examples:
       syncSettingsState();
     }
 
-    async function sendConsiliumMessage(text) {
-      addMessage('user', text);
-      const waitNotice = addMessage('system', '* Запуск консилиума моделей... Выполняется коллегиальный анализ.');
-      setStatus(true, true);
-      state.isGenerating = true;
-
-      try {
-        const response = await fetch('/api/consilium', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            prompt: text,
-            mode: 'consilium',
-            models: ['gemini-2.5-pro', 'gemini-2.5-flash', 'deepseek/deepseek-r1:free'],
-            useKnowledgeBase: true,
-          })
-        });
-
-        if (!response.ok) throw new Error('HTTP ' + response.status);
-        const data = await response.json();
-        const res = data.result;
-
-        if (res && Array.isArray(res.turns)) {
-          for (const turn of res.turns) {
-            addMessage(turn.model || turn.name, turn.content);
-          }
-        }
-
-        if (res && res.synthesis) {
-          addMessage('evabot [КОНСЕНСУС]', res.synthesis);
-          state.history.push({ role: 'model', content: res.synthesis });
-        }
-
-        setStatus(true, false);
-      } catch (err) {
-        addMessage('error', `Ошибка консилиума: ${err.message}`);
-        setStatus(false);
-      } finally {
-        state.isGenerating = false;
-      }
-    }
-
     async function sendMessage() {
       const raw = userInput.value.trim();
       if (!raw || state.isGenerating) return;
@@ -3190,10 +3162,11 @@ Examples:
                   }
                   if (data.chunk) {
                     accumulatedText += data.chunk;
-                    botBody.innerHTML = renderMarkdown(accumulatedText);
+                    botBody.innerHTML = renderMarkdown(accumulatedText) + '<span class="streaming-cursor">▋</span>';
                     chatContainer.scrollTop = chatContainer.scrollHeight;
                   }
                   if (data.done) {
+                    botBody.innerHTML = renderMarkdown(accumulatedText);
                     // Persona from the backend (eva|adam) drives the TTS voice.
                     window.__lastPersona = data.persona === 'adam' ? 'adam' : 'eva';
                     if (data.model) {
@@ -3528,7 +3501,7 @@ Examples:
               s += frames[lvl];
             }
             if (mic) {
-              mic.innerHTML = `[🎙 ${s}]`;
+              mic.innerHTML = `[REC ${s}]`;
             }
             this.recAnimId = requestAnimationFrame(loop);
           };
@@ -3545,7 +3518,7 @@ Examples:
         }
         this.recAnalyser = null;
         const mic = document.getElementById('mic-btn');
-        if (mic) mic.innerHTML = '[🎙]';
+        if (mic) mic.innerHTML = '[REC]';
       },
 
       langCode() {
@@ -3643,7 +3616,7 @@ Examples:
           stream.getTracks().forEach((t) => t.stop());
           if (mic) {
             mic.classList.remove('recording');
-            mic.innerHTML = '[🎙]';
+            mic.innerHTML = '[REC]';
           }
           const type = (mime || recorder.mimeType || 'audio/webm').split(';')[0];
           try {
@@ -3718,7 +3691,7 @@ Examples:
         const mic = document.getElementById('mic-btn');
         if (mic) {
           mic.classList.remove('recording');
-          mic.innerHTML = '[🎙]';
+          mic.innerHTML = '[REC]';
         }
         try {
           if (this.recognition) this.recognition.stop();
@@ -4281,7 +4254,13 @@ Examples:
     }
 
     function openModelModal() {
-      modelModal.style.display = 'block';
+      scrollToSettings();
+      const card = document.getElementById('card-model-catalog');
+      if (card) {
+        setTimeout(() => {
+          card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 80);
+      }
       if (!state.models.length) {
         loadModels().then(renderModelList);
       } else {
@@ -4290,7 +4269,7 @@ Examples:
     }
 
     function closeModelModal() {
-      modelModal.style.display = 'none';
+      scrollToChat();
     }
 
     // ===== SmartInput autocomplete UI (attached to #user-input) =====

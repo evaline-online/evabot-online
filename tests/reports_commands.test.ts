@@ -70,7 +70,7 @@ export async function runReportsCommandsTests(): Promise<boolean> {
     const listOut = await ReportCommand.execute('/errors');
     assert(typeof listOut === 'string' && listOut.length > 0, '/errors returns text');
     assert(
-      listOut.includes('✅ No system errors') || /\[\d{2}:\d{2}\] \[[A-Z]+\]/.test(listOut),
+      listOut.includes('[OK] No system errors') || listOut.includes('✅ No system errors') || /\[\d{2}:\d{2}\] \[[A-Z]+\]/.test(listOut),
       '/errors formatted as [HH:MM] [SEVERITY] lines (or all-clear)',
     );
     assert(listOut.includes(errStamp) || listOut.includes(bugStamp), '/errors includes the freshly registered reports');
