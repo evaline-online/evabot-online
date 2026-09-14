@@ -531,6 +531,7 @@ export async function runRouterTests(): Promise<boolean> {
     kbProto.search = origKbSearch;
     consiliumProto.run = origConsiliumRun;
     for (const [k, v] of Object.entries(origTtsMethods)) cloudTtsAny[k] = v;
+    for (const [k, v] of Object.entries(origEdgeMethods)) edgeTtsAny[k] = v;
     globalThis.fetch = origGlobalFetch;
     googleAuthAny.getCredentials = origGetCredentials;
     if (sttUsageBackup) { try { fs.writeFileSync(STT_USAGE_PATH, sttUsageBackup); } catch { /* ignore */ } }

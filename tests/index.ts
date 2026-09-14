@@ -33,6 +33,7 @@ import { runCoveragePushTests } from './coverage_push.test.js';
 import { runAddCommandTests } from './add_command.test.js';
 import { runReportsCommandsTests } from './reports_commands.test.js';
 import { runUiStreamVerificationTests } from './ui_stream_verification.test.js';
+import { runVoiceEcosystemDeepTests } from './voice_ecosystem_deep.test.js';
 
 async function runAllTests(): Promise<void> {
   console.log('================================================================');
@@ -76,6 +77,7 @@ async function runAllTests(): Promise<void> {
     await runAddCommandTests(),
     await runReportsCommandsTests(),
     await runUiStreamVerificationTests(),
+    await runVoiceEcosystemDeepTests(),
   ];
 
   const testNames = [
@@ -115,6 +117,7 @@ async function runAllTests(): Promise<void> {
     'AddCommandTests',
     'ReportsCommandsTests',
     'UiStreamVerificationTests',
+    'VoiceEcosystemDeepTests',
   ];
 
   let allPassed = true;
