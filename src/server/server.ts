@@ -436,7 +436,10 @@ export function createServer(): http.Server {
         const contentType = MIME_TYPES[ext] || 'application/octet-stream';
         res.writeHead(200, {
           'Content-Type': contentType,
-          'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0'
+          'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+          'Surrogate-Control': 'no-store'
         });
         fs.createReadStream(filePath).pipe(res);
         return;

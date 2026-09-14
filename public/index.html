@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, proxy-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
   <meta name="theme-color" content="#000000">
   <title>EvaBot // Cyber-Terminal TUI</title>
@@ -643,6 +646,49 @@
     .md-bullet {
       padding-left: 12px;
       margin: 2px 0;
+    }
+
+    /* Markdown Tables (GFM Pipe Tables) */
+    .md-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      margin: 8px 0;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      background: var(--bg-panel);
+      scrollbar-width: thin;
+    }
+    table.md-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      text-align: left;
+      font-family: inherit;
+    }
+    table.md-table th {
+      background: rgba(0, 229, 255, 0.08);
+      color: var(--cyan);
+      font-weight: 700;
+      padding: 6px 10px;
+      border-bottom: 2px solid var(--border);
+      border-right: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    table.md-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      color: var(--fg);
+    }
+    table.md-table th:last-child,
+    table.md-table td:last-child {
+      border-right: none;
+    }
+    table.md-table tr:last-child td {
+      border-bottom: none;
+    }
+    table.md-table tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
     }
 
     /* ===== SmartInput: autocomplete dropdown ===== */
@@ -1415,6 +1461,29 @@
       border-left: 3px solid var(--green);
       margin: 8px 0;
       overflow-x: auto;
+    }
+
+    html[data-mode='web'] .md-table-wrapper {
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+      background: rgba(12, 16, 25, 0.85);
+      margin: 10px 0;
+    }
+
+    html[data-mode='web'] table.md-table th {
+      background: rgba(0, 230, 118, 0.1);
+      color: #38bdf8;
+      font-size: 0.84rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    html[data-mode='web'] table.md-table td {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.85rem;
     }
 
     html[data-mode='web'] .code-header {
@@ -2813,6 +2882,52 @@ Examples:
       text = text.replace(/^(\d+)\.\s+(.+)$/gm, '<div class="md-bullet">$1. $2</div>');
       text = text.replace(/^[-*_]{3,}$/gm, '<hr style="border:0;border-top:1px solid var(--dim);margin:8px 0;">');
       text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" class="interactive-link">$1</a>');
+
+      // 3.5. Markdown Tables (GFM pipe syntax)
+      text = text.replace(/((?:^[ \t]*\|[^\n]+\|[ \t]*(?:\r?\n|$))+)/gm, (tableBlock) => {
+        const rows = tableBlock.trim().split(/\r?\n/).map(r => r.trim()).filter(Boolean);
+        if (rows.length < 2) return tableBlock;
+
+        const parsePipeRow = (row) => {
+          let inner = row.trim();
+          if (inner.startsWith('|')) inner = inner.slice(1);
+          if (inner.endsWith('|')) inner = inner.slice(0, -1);
+          return inner.split('|').map(c => c.trim());
+        };
+
+        const headerCells = parsePipeRow(rows[0]);
+        const delimCells = parsePipeRow(rows[1]);
+
+        const isDelim = delimCells.length > 0 && delimCells.every(c => /^:?-+:?$/.test(c));
+        if (!isDelim) return tableBlock;
+
+        const alignments = delimCells.map(c => {
+          if (c.startsWith(':') && c.endsWith(':')) return 'center';
+          if (c.endsWith(':')) return 'right';
+          return 'left';
+        });
+
+        let out = '<div class="md-table-wrapper"><table class="md-table"><thead><tr>';
+        headerCells.forEach((h, idx) => {
+          const align = alignments[idx] || 'left';
+          out += `<th style="text-align:${align}">${h}</th>`;
+        });
+        out += '</tr></thead><tbody>';
+
+        for (let r = 2; r < rows.length; r++) {
+          const bodyCells = parsePipeRow(rows[r]);
+          out += '<tr>';
+          headerCells.forEach((_, idx) => {
+            const cell = bodyCells[idx] !== undefined ? bodyCells[idx] : '';
+            const align = alignments[idx] || 'left';
+            out += `<td style="text-align:${align}">${cell}</td>`;
+          });
+          out += '</tr>';
+        }
+        out += '</tbody></table></div>';
+        return out;
+      });
+
       text = text.replace(/<\/div>\n/g, '</div>');
       text = text.replace(/\n/g, '<br>');
 
@@ -3962,11 +4077,22 @@ Examples:
 
       cleanForSpeech(text) {
         return String(text || '')
-          .replace(/```[\s\S]*?```/g, ' [Code omitted] ')
+          .replace(/```[\s\S]*?```/g, ' ')
           .replace(/`([^`]+)`/g, '$1')
-          .replace(/[*_#~>|┌┐└┘├┤─│═]+/g, ' ')
+          .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1') // preserve markdown link text
+          .replace(/\|[ \t]*-+[ \t]*\|[ \t*-|]*/g, ' ') // strip table delimiter rows
+          .replace(/\|/g, ', ') // convert table cell pipes into natural commas
+          .replace(/€\s*(\d+(?:[.,]\d+)?)/g, '$1 евро')
+          .replace(/(\d+(?:[.,]\d+)?)\s*€/g, '$1 евро')
+          .replace(/\$\s*(\d+(?:[.,]\d+)?)/g, '$1 долларов')
+          .replace(/(\d+(?:[.,]\d+)?)\s*\$/g, '$1 долларов')
+          .replace(/(\d+)\s*х\s*(\d+)/gi, '$1 на $2')
+          .replace(/(\d+)\s*x\s*(\d+)/gi, '$1 на $2')
+          .replace(/кг\/м[³3]/gi, ' килограмм на кубический метр ')
+          .replace(/м[²2]/gi, ' квадратных метров ')
+          .replace(/[*_#~>┌┐└┘├┤─│═]+/g, ' ')
           .replace(/https?:\/\/\S+/g, ' ')
-          .replace(/\[[^\]]*\]/g, ' ')
+          .replace(/\[[A-Z0-9_:\.\/ -]+\]/g, ' ') // remove bracketed system tags
           .replace(/\s+/g, ' ')
           .trim();
       },
