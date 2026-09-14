@@ -253,8 +253,9 @@ export class UniversalLlmClient {
       ? this.executeStream(model, universalMsgs, onChunk, options)
       : this.executeGenerate(model, universalMsgs, options);
     const t0 = Date.now();
+    const timeoutMs = onChunk ? 90000 : LLM_CALL_TIMEOUT_MS;
     try {
-      const rawResult = await withTimeout(p, LLM_CALL_TIMEOUT_MS, `llm:${provider}:${model}`);
+      const rawResult = await withTimeout(p, timeoutMs, `llm:${provider}:${model}`);
       const result = cleanLlmOutput(rawResult);
       if (isJunkResponse(result)) {
         throw new Error(`[JUNK_RESPONSE] ${model} returned boilerplate instead of content`);
