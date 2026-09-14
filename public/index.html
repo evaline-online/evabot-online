@@ -286,24 +286,33 @@
     }
 
     .msg {
-      white-space: pre-wrap;
+      display: flex;
+      flex-direction: column;
       word-break: break-word;
       overflow-wrap: anywhere;
-      line-height: 1.4;
-      padding: 2px 0;
+      line-height: 1.45;
+      padding: 3px 0;
       font-size: 0.875rem;
+    }
+
+    .msg-meta {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      margin-bottom: 2px;
+      user-select: none;
     }
 
     .msg-time {
       color: var(--dim);
-      margin-right: 6px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       user-select: none;
     }
 
     .msg-sender {
       font-weight: 700;
-      margin-right: 8px;
+      font-size: 0.8rem;
     }
 
     .msg-sender.user { color: var(--fg-bright); }
@@ -313,6 +322,12 @@
 
     .msg-body {
       color: var(--fg);
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      width: 100%;
+      margin: 0;
+      padding: 0;
     }
 
     /* Command prompt input row */
@@ -705,22 +720,21 @@
     .header-minimal {
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 5px 12px;
+      justify-content: space-between;
+      padding: 6px 12px;
       margin-bottom: 6px;
       background: var(--bg-panel);
       border: 1px solid var(--border);
-      border-radius: 2px;
+      border-radius: 4px;
       flex-shrink: 0;
-      text-align: center;
     }
 
     .header-minimal-content {
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 8px;
       font-size: 0.82rem;
+      user-select: none;
     }
 
     .logo-title {
@@ -735,97 +749,84 @@
       font-size: 0.72rem;
     }
 
-    /* Burger Drawer */
-    .burger-drawer-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.65);
-      z-index: 1001;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-    }
-
-    .burger-drawer-backdrop.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .burger-drawer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      width: 290px;
-      max-width: 85vw;
-      background: #06090e;
-      border-right: 1px solid var(--border);
-      z-index: 1002;
-      transform: translateX(-100%);
-      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Screen 2 Settings Cards & UI Mode Selector */
+    .settings-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 12px;
       display: flex;
       flex-direction: column;
-      padding: 16px;
-      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.8);
+      gap: 8px;
+    }
+
+    .settings-card-header {
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+    }
+
+    .ui-mode-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ui-mode-btn {
+      flex: 1;
+      min-width: 90px;
+      padding: 8px 12px;
+      background: #080d14;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      cursor: pointer;
       font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-align: center;
+      border-radius: 3px;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
     }
 
-    .burger-drawer.open {
-      transform: translateX(0);
+    .ui-mode-btn:hover {
+      border-color: var(--green);
+      color: var(--green);
+      background: rgba(0, 230, 118, 0.08);
     }
 
-    .burger-drawer-header {
+    .ui-mode-btn.active {
+      border-color: var(--green);
+      color: var(--green);
+      background: rgba(0, 230, 118, 0.16);
+      box-shadow: 0 0 10px rgba(0, 230, 118, 0.2);
+    }
+
+    .ui-mode-desc {
+      font-size: 0.76rem;
+      line-height: 1.4;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 8px;
+    }
+
+    .settings-item {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 16px;
-    }
-
-    .burger-drawer-content {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      flex: 1;
-      overflow-y: auto;
-    }
-
-    .burger-nav-btn {
-      width: 100%;
-      padding: 10px;
-      background: rgba(0, 255, 65, 0.05);
-      border: 1px solid var(--green);
-      color: var(--green);
-      font-family: var(--font-mono);
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-      border-radius: 2px;
-      transition: all 0.15s ease;
-    }
-
-    .burger-nav-btn:hover {
-      background: rgba(0, 255, 65, 0.15);
-    }
-
-    .burger-section {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .burger-label {
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-    }
-
-    .burger-row {
-      display: flex;
-      gap: 10px;
+      gap: 8px;
+      background: #04070c;
+      padding: 7px 10px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 3px;
       flex-wrap: wrap;
+    }
+
+    .settings-item-label {
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
     }
 
     /* Screen 2: Settings & Telemetry */
@@ -1035,52 +1036,164 @@
   </style>
   <style id="web-layer">
     /* Web-enhancement layer — active only in display mode 'web' (data-mode="web").
-       Terminal styles stay fully on; this adds readability cards & smooth UI. */
+       Modern mobile-first Web interface with sleek bubbles, glassmorphism and optimal touch ergonomics. */
     html[data-mode='web'] body {
+      font-family: var(--font-sans);
       transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    html[data-mode='web'] .header-minimal {
+      border-radius: 12px;
+      background: rgba(10, 15, 24, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+      padding: 8px 14px;
+    }
+
+    html[data-mode='web'] .burger-btn {
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      min-height: 36px;
+      padding: 0 12px;
+      transition: all 0.2s ease;
+    }
+
+    html[data-mode='web'] .burger-btn:hover {
+      background: rgba(0, 230, 118, 0.12);
+      border-color: var(--green);
+      color: var(--green);
     }
 
     html[data-mode='web'] .header-block,
     html[data-mode='web'] .chat-container,
-    html[data-mode='web'] .input-line {
-      max-width: 90ch;
+    html[data-mode='web'] .input-line,
+    html[data-mode='web'] .header-minimal {
+      max-width: 880px;
       width: 100%;
       margin-left: auto;
       margin-right: auto;
     }
 
     html[data-mode='web'] .chat-container {
-      padding: 12px 10px 24px 10px;
+      padding: 8px 4px 18px 4px;
+      gap: 10px;
     }
 
     html[data-mode='web'] .msg {
-      background: #0a0a0a;
-      border: 1px solid #1e1e1e;
-      border-radius: 10px;
+      position: relative;
+      border-radius: 14px;
       padding: 10px 14px;
       margin: 2px 0;
-      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       transition: border-color 0.2s ease, background-color 0.2s ease;
     }
 
-    html[data-mode='web'] .msg:hover {
-      border-color: #2b2b2b;
+    html[data-mode='web'] .msg-evabot {
+      background: rgba(12, 18, 28, 0.88);
+      border: 1px solid rgba(0, 230, 118, 0.2);
+      border-left: 3.5px solid var(--green);
+      border-bottom-left-radius: 4px;
+      max-width: 96%;
+      align-self: flex-start;
+    }
+
+    html[data-mode='web'] .msg-user {
+      background: rgba(0, 230, 118, 0.08);
+      border: 1px solid rgba(0, 230, 118, 0.32);
+      border-bottom-right-radius: 4px;
+      max-width: 88%;
+      align-self: flex-end;
+      margin-left: auto;
+    }
+
+    html[data-mode='web'] .msg-system {
+      background: rgba(255, 214, 0, 0.05);
+      border: 1px dashed rgba(255, 214, 0, 0.28);
+      max-width: 92%;
+      align-self: center;
+      margin: 4px auto;
+      border-radius: 10px;
+    }
+
+    html[data-mode='web'] .msg-error {
+      background: rgba(255, 23, 68, 0.08);
+      border: 1px solid rgba(255, 23, 68, 0.35);
+      border-left: 3.5px solid var(--red);
+      max-width: 96%;
+      align-self: flex-start;
+    }
+
+    html[data-mode='web'] .msg-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    html[data-mode='web'] .msg-sender {
+      font-size: 0.76rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    html[data-mode='web'] .msg-time {
+      font-size: 0.72rem;
+      color: var(--dim);
     }
 
     html[data-mode='web'] .msg-body {
       display: block;
-      max-width: 90ch;
+      width: 100%;
+      font-family: var(--font-sans);
+      font-size: 0.94rem;
+      line-height: 1.55;
+      color: #f1f5f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    html[data-mode='web'] .input-line {
+      border-radius: 16px;
+      background: rgba(10, 15, 24, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      margin-bottom: max(4px, var(--safe-bottom));
+    }
+
+    html[data-mode='web'] #user-input {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+    }
+
+    html[data-mode='web'] .mic-btn {
+      border-radius: 10px;
+      min-width: 38px;
+      min-height: 38px;
     }
 
     html[data-mode='web'] .code-block {
-      background: #101010;
+      background: #0c1017;
       border-radius: 8px;
-      border-left: 2px solid var(--green);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-left: 3px solid var(--green);
+      margin: 8px 0;
       overflow-x: auto;
     }
 
-    html[data-mode='web'] .code-block pre {
-      overflow-x: auto;
+    html[data-mode='web'] .code-header {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 4px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     html[data-mode='web'] .interactive-link {
@@ -1093,7 +1206,7 @@
     }
 
     html[data-mode='web'] .web-fold {
-      max-height: 150px;
+      max-height: 180px;
       overflow: hidden;
       transition: max-height 0.25s ease;
     }
@@ -1108,7 +1221,82 @@
       user-select: none;
       font-size: 0.75rem;
       display: inline-block;
-      margin-top: 4px;
+      margin-top: 6px;
+      font-weight: 700;
+    }
+
+    /* Mobile Landscape & Ultra-compact Heights */
+    @media (orientation: landscape) and (max-height: 540px) {
+      .chat-screen-wrapper {
+        padding: 2px 8px;
+        padding-top: max(2px, var(--safe-top));
+        padding-bottom: max(2px, var(--safe-bottom));
+        padding-left: max(6px, var(--safe-left));
+        padding-right: max(6px, var(--safe-right));
+      }
+
+      .header-minimal {
+        padding: 2px 8px;
+        margin-bottom: 2px;
+        min-height: 26px;
+      }
+
+      .logo-title {
+        font-size: 0.78rem;
+      }
+
+      .logo-subtitle {
+        display: none !important;
+      }
+
+      .burger-btn {
+        min-height: 26px;
+        padding: 0 6px;
+        font-size: 0.85rem;
+      }
+
+      .chat-container {
+        padding: 2px 2px 4px 2px;
+        gap: 4px;
+      }
+
+      .msg {
+        padding: 4px 8px;
+        margin: 1px 0;
+        font-size: 0.82rem;
+      }
+
+      .msg-meta {
+        margin-bottom: 2px;
+        padding-bottom: 2px;
+      }
+
+      .input-line {
+        padding: 2px 6px;
+        gap: 4px;
+      }
+
+      #user-input {
+        min-height: 28px;
+        padding: 3px 6px;
+        font-size: 0.82rem;
+      }
+
+      .mic-btn {
+        min-height: 28px;
+        min-width: 30px;
+        padding: 0 6px;
+        font-size: 0.78rem;
+      }
+
+      .screen-settings-wrapper {
+        padding: 8px 10px 20px 10px;
+        gap: 8px;
+      }
+
+      .settings-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
     }
   </style>
   <script>
@@ -1128,9 +1316,13 @@
         // paint when mode is 'off'. Modes: 'off' | 'term' | 'web'
         // (legacy value 'on' migrates to 'term'; default 'term').
         var cssMode = localStorage.getItem('evabot_css');
-        if (cssMode === 'on') {
+        if (cssMode === 'on' || cssMode === 'tui') {
           cssMode = 'term';
           try { localStorage.setItem('evabot_css', 'term'); } catch (e2) { /* private mode */ }
+        }
+        if (cssMode === 'nocss') {
+          cssMode = 'off';
+          try { localStorage.setItem('evabot_css', 'off'); } catch (e2) { /* private mode */ }
         }
         if (cssMode === 'off') {
           document.documentElement.setAttribute('data-nocss', '1');
@@ -1150,29 +1342,33 @@
 
   <!-- SCREEN 1: Minimalist Chat Interface -->
   <div class="chat-screen-wrapper" id="screen-chat">
-    <!-- Minimal Header: Logo Only -->
+    <!-- Minimal Header: Logo & Burger [≡] -->
     <header class="header-minimal">
-      <div class="header-minimal-content">
+      <div class="header-minimal-content" onclick="scrollToSettings()" style="cursor: pointer;" title="EvaBot // Settings & Telemetry">
         <span class="status-dot pulse" id="status-light">●</span>
         <span class="bold c-fg logo-title">EVABOT.ONLINE</span>
         <span class="c-dim font-mono logo-subtitle">// NEURAL CORE</span>
         <span class="c-ok bold logo-badge" id="status-text">[ONLINE]</span>
       </div>
+      <button type="button" class="burger-btn" id="burger-btn" onclick="scrollToSettings()" title="Menu / Settings [≡]">[≡]</button>
     </header>
 
     <!-- Chat Stream & Input -->
     <div id="chat-panel" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0;">
       <!-- Messages stream -->
       <div class="chat-container" id="chat-container">
-        <div class="msg">
-          <span class="msg-time" id="boot-time">[19:10:00]</span><span class="msg-sender system">system :</span><span class="msg-body" id="boot-msg">Connecting to evabot.online ...</span>
+        <div class="msg msg-system">
+          <div class="msg-meta">
+            <span class="msg-sender system">system :</span>
+            <span class="msg-time" id="boot-time">[19:10:00]</span>
+          </div>
+          <div class="msg-body" id="boot-msg">Connecting to evabot.online ...</div>
         </div>
       </div>
 
-      <!-- Input Row: [≡] Menu | > Textarea | [↵] Send | [🎙] Voice -->
+      <!-- Input Row: > Textarea | [↵] Send | [🎙] Voice -->
       <div class="input-line">
         <div class="ac-box" id="ac-box"></div>
-        <button type="button" class="burger-btn" id="burger-btn" onclick="toggleBurgerMenu()" title="Menu / Settings [≡]">[≡]</button>
         <div class="prompt-prefix">
           <span class="prompt-char">&gt;</span>
         </div>
@@ -1185,55 +1381,50 @@
     </div>
   </div>
 
-  <!-- Burger Menu Drawer -->
-  <div class="burger-drawer-backdrop" id="burger-backdrop" onclick="closeBurgerMenu()"></div>
-  <div class="burger-drawer" id="burger-drawer">
-    <div class="burger-drawer-header">
-      <div class="bold c-fg">[≡] EVABOT CONTROL</div>
-      <div class="interactive-link c-dim" onclick="closeBurgerMenu()">[× CLOSE]</div>
-    </div>
-    <div class="burger-drawer-content">
-      <button type="button" class="burger-nav-btn bold c-ok" onclick="scrollToSettings()">[⚙ SETTINGS & TELEMETRY ⇓]</button>
-      <div class="burger-section">
-        <div class="c-dim burger-label">CORE MODEL:</div>
-        <div class="interactive-link bold c-ok" onclick="closeBurgerMenu(); openModelModal();" id="drawer-model-pill">...</div>
-      </div>
-      <div class="burger-section">
-        <div class="c-dim burger-label">MODE:</div>
-        <div class="interactive-link" onclick="toggleMode(); syncDrawerState();" id="drawer-current-mode">solo</div>
-      </div>
-      <div class="burger-section">
-        <div class="c-dim burger-label">LANGUAGE:</div>
-        <div class="burger-row">
-          <span class="cmd-link" id="drawer-lang-en" onclick="setLanguage('en'); syncDrawerState();">[EN]</span>
-          <span class="cmd-link" id="drawer-lang-uk" onclick="setLanguage('uk'); syncDrawerState();">UK</span>
-          <span class="cmd-link" id="drawer-lang-ru" onclick="setLanguage('ru'); syncDrawerState();">RU</span>
-        </div>
-      </div>
-      <div class="burger-section">
-        <div class="c-dim burger-label">VOICE PERSONA:</div>
-        <div class="burger-row">
-          <span class="cmd-link" id="drawer-persona-eva" onclick="VoiceEngine.setPersona('eva'); syncDrawerState();">[Eva]</span>
-          <span class="cmd-link" id="drawer-persona-adam" onclick="VoiceEngine.setPersona('adam'); syncDrawerState();">[Adam]</span>
-        </div>
-      </div>
-      <div class="burger-section">
-        <div class="c-dim burger-label">QUICK COMMANDS:</div>
-        <div class="burger-row" style="flex-direction: column; gap: 4px;">
-          <span class="cmd-link" onclick="closeBurgerMenu(); handleCommand('/help');">/help - Manual & commands</span>
-          <span class="cmd-link" onclick="closeBurgerMenu(); openModelModal();">/models - Select AI model</span>
-          <span class="cmd-link" onclick="closeBurgerMenu(); handleCommand('/consilium');">/consilium - Multi-agent consensus</span>
-          <span class="cmd-link" onclick="closeBurgerMenu(); handleCommand('/clear');">/clear - Clear chat</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- SCREEN 2: Settings & Telemetry -->
   <div class="screen-settings-wrapper" id="screen-settings">
     <div class="settings-header-nav">
       <button type="button" class="back-btn bold c-ok" onclick="scrollToChat()">[⇑ BACK TO CHAT / НАВЕРХ В ЧАТ]</button>
       <span class="bold c-fg">// EVABOT SYSTEM SETTINGS & TELEMETRY</span>
+    </div>
+
+    <!-- UI Mode Selector (nocss / tui / web) -->
+    <div class="settings-card" id="card-ui-mode">
+      <div class="settings-card-header">
+        <span class="bold c-fg">[ UI DISPLAY MODE / РЕЖИМ ИНТЕРФЕЙСА ]</span>
+      </div>
+      <div class="ui-mode-row">
+        <button type="button" class="ui-mode-btn" id="btn-mode-nocss" onclick="setDisplayMode('nocss')">[ NOCSS ]</button>
+        <button type="button" class="ui-mode-btn" id="btn-mode-tui" onclick="setDisplayMode('tui')">[ TUI / ТЕРМИНАЛ ]</button>
+        <button type="button" class="ui-mode-btn" id="btn-mode-web" onclick="setDisplayMode('web')">[ WEB / СОВРЕМЕННЫЙ ]</button>
+      </div>
+      <div class="ui-mode-desc c-dim" id="ui-mode-desc">Modern responsive web interface with sleek bubbles and optimized mobile ergonomics.</div>
+    </div>
+
+    <!-- Quick Controls Grid -->
+    <div class="settings-card" id="card-quick-config">
+      <div class="settings-card-header">
+        <span class="bold c-fg">[ CONTROLS & NAVIGATION / УПРАВЛЕНИЕ И НАВИГАЦИЯ ]</span>
+      </div>
+      <div class="settings-grid">
+        <div class="settings-item">
+          <span class="c-dim settings-item-label">MODEL:</span>
+          <span class="interactive-link bold c-ok" id="screen2-model-pill" onclick="openModelModal()">...</span>
+        </div>
+        <div class="settings-item">
+          <span class="c-dim settings-item-label">MODE:</span>
+          <span class="interactive-link" id="screen2-current-mode" onclick="toggleMode()">solo</span>
+        </div>
+        <div class="settings-item">
+          <span class="c-dim settings-item-label">VOICE PERSONA:</span>
+          <span class="cmd-link bold c-ok" id="screen2-persona-eva" onclick="VoiceEngine.setPersona('eva'); syncSettingsState();">[Eva]</span>
+          <span class="cmd-link" id="screen2-persona-adam" onclick="VoiceEngine.setPersona('adam'); syncSettingsState();">Adam</span>
+        </div>
+        <div class="settings-item">
+          <span class="c-dim settings-item-label">VOICE SPEECH:</span>
+          <span class="mic-btn" id="screen2-tts-toggle" onclick="VoiceEngine.toggleTtsMute()">[ TTS:ON ]</span>
+        </div>
+      </div>
     </div>
 
     <!-- TUI Frame Header with exact CLI parity labels -->
@@ -2268,6 +2459,52 @@ Examples:
       }
     }
 
+    function syncUiModeButtons() {
+      const mode = getDisplayMode(); // 'off' | 'term' | 'web'
+      const btnNocss = document.getElementById('btn-mode-nocss');
+      const btnTui = document.getElementById('btn-mode-tui');
+      const btnWeb = document.getElementById('btn-mode-web');
+      const descEl = document.getElementById('ui-mode-desc');
+
+      if (btnNocss) btnNocss.classList.toggle('active', mode === 'off');
+      if (btnTui) btnTui.classList.toggle('active', mode === 'term');
+      if (btnWeb) btnWeb.classList.toggle('active', mode === 'web');
+
+      if (descEl) {
+        const lang = state.lang || 'en';
+        const descs = {
+          en: {
+            off: '[NOCSS] Minimalist plain text flow. Zero CSS overhead, maximum speed and accessibility on any terminal or low-bandwidth connection.',
+            term: '[TUI] Cyber-Terminal experience. Monospace font, ASCII frames, green/amber cyber palette and compact telemetry.',
+            web: '[WEB] Modern responsive web interface. Sleek glassmorphism bubbles, fluid typography, ergonomic touch targets, optimized for mobile portrait & landscape.'
+          },
+          uk: {
+            off: "[NOCSS] Мінімалістичний чистий текст без стилів. Нульове навантаження, максимальна швидкість для терміналів і слабкого зв'язку.",
+            term: '[TUI] Кібер-термінал. Моноширинний шрифт, ASCII-рамки, фірмова зелено-бурштинова палітра і компактні статуси.',
+            web: '[WEB] Сучасний мобільний веб-інтерфейс. Стильні скляні картки, плавна типографіка, зручні тач-зони для смартфона в портретному та ландшафтному режимах.'
+          },
+          ru: {
+            off: '[NOCSS] Минималистичный чистый текст без стилей. Нулевая нагрузка, максимальная скорость для терминалов и слабого интернета.',
+            term: '[TUI] Кибер-терминал. Моноширинный шрифт, ASCII-рамки, фирменная зелено-янтарная палитра и компактная телеметрия.',
+            web: '[WEB] Современный мобильный веб-интерфейс. Стильные стеклянные карточки/бабблы, плавная типографика, идеальное отображение на смартфонах в портретном и горизонтальном режимах.'
+          }
+        };
+        const curMap = descs[lang] || descs.en;
+        descEl.textContent = curMap[mode] || curMap.web;
+      }
+    }
+    window.syncUiModeButtons = syncUiModeButtons;
+
+    function setDisplayMode(mode) {
+      let target = mode;
+      if (mode === 'nocss') target = 'off';
+      if (mode === 'tui') target = 'term';
+      if (!CSS_MODES.includes(target)) target = 'term';
+      try { localStorage.setItem('evabot_css', target); } catch (e) { /* private mode */ }
+      applyDisplayMode(target);
+    }
+    window.setDisplayMode = setDisplayMode;
+
     function applyDisplayMode(mode) {
       const on = mode !== 'off';
       setStyleSheetsEnabled(on);
@@ -2282,6 +2519,7 @@ Examples:
         btn.title = 'Display mode: off / term / web (click to cycle)';
       }
       applyWebMode();
+      syncUiModeButtons();
     }
 
     // Cycle: off → term → web → off (HTML onclick stays toggleCss).
@@ -2442,26 +2680,32 @@ Examples:
 
     function addMessage(role, text) {
       const msgDiv = document.createElement('div');
-      msgDiv.className = 'msg';
+      const safeRole = (role || 'system').toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+      msgDiv.className = `msg msg-${safeRole}`;
       const msgId = 'msg-' + (++msgCounter);
       msgDiv.id = msgId;
       msgDiv.setAttribute('data-msg-id', msgId);
+
+      const metaDiv = document.createElement('div');
+      metaDiv.className = 'msg-meta';
+
+      const roleSpan = document.createElement('span');
+      roleSpan.className = `msg-sender ${safeRole}`;
+      roleSpan.textContent = `${role} :`;
 
       const timeSpan = document.createElement('span');
       timeSpan.className = 'msg-time';
       timeSpan.textContent = getTimeStr();
 
-      const roleSpan = document.createElement('span');
-      roleSpan.className = `msg-sender ${role}`;
-      roleSpan.textContent = `${role} :`;
+      metaDiv.appendChild(roleSpan);
+      metaDiv.appendChild(timeSpan);
 
-      const bodySpan = document.createElement('span');
+      const bodySpan = document.createElement('div');
       bodySpan.className = 'msg-body';
       // Defensive renderer: strip emoji from rendered replies (user-typed text stays intact).
       bodySpan.innerHTML = renderMarkdown((emojiOn() || role === 'user') ? text : stripEmoji(text));
 
-      msgDiv.appendChild(timeSpan);
-      msgDiv.appendChild(roleSpan);
+      msgDiv.appendChild(metaDiv);
       msgDiv.appendChild(bodySpan);
 
       if (role !== 'user' && role !== 'system' && text && text !== '...') {
@@ -2599,6 +2843,7 @@ Examples:
       const isFree = model.pricing && model.pricing.freeTierStatus === '100% Free Quota Available';
       const badge = isFree ? '<span class="c-ok">[FREE]</span>' : '<span class="c-wrn">[PAID]</span>';
       modelPill.innerHTML = `${escapeHtml(model.name)} ${badge}`;
+      syncSettingsState();
     }
 
     function toggleMode() {
@@ -2610,6 +2855,7 @@ Examples:
         addMessage('system', 'Режим переключен на SOLO (диалог с активной моделью).');
       }
       currentModeEl.textContent = state.currentMode;
+      syncSettingsState();
     }
 
     async function sendConsiliumMessage(text) {
@@ -3564,35 +3810,24 @@ Examples:
     };
     window.VoiceEngine = VoiceEngine;
 
-    // Drawer and Navigation Handlers
+    // Screen Navigation and Settings Sync
     function toggleBurgerMenu() {
-      const drawer = document.getElementById('burger-drawer');
-      const backdrop = document.getElementById('burger-backdrop');
-      if (!drawer) return;
-      const isOpen = drawer.classList.contains('open');
-      if (isOpen) {
-        closeBurgerMenu();
-      } else {
-        syncDrawerState();
-        drawer.classList.add('open');
-        if (backdrop) backdrop.classList.add('open');
-      }
+      scrollToSettings();
     }
+    window.toggleBurgerMenu = toggleBurgerMenu;
 
     function closeBurgerMenu() {
-      const drawer = document.getElementById('burger-drawer');
-      const backdrop = document.getElementById('burger-backdrop');
-      if (drawer) drawer.classList.remove('open');
-      if (backdrop) backdrop.classList.remove('open');
+      // noop
     }
+    window.closeBurgerMenu = closeBurgerMenu;
 
     function scrollToSettings() {
-      closeBurgerMenu();
       const el = document.getElementById('screen-settings');
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
       }
     }
+    window.scrollToSettings = scrollToSettings;
 
     function scrollToChat() {
       const el = document.getElementById('screen-chat');
@@ -3600,36 +3835,48 @@ Examples:
         el.scrollIntoView({ behavior: 'smooth' });
       }
     }
+    window.scrollToChat = scrollToChat;
 
-    function syncDrawerState() {
-      const dModel = document.getElementById('drawer-model-pill');
-      if (dModel) {
-        const m = state.currentModel || '...';
-        dModel.textContent = m.length > 20 ? m.slice(0, 18) + '...' : m;
+    function syncSettingsState() {
+      const m = state.currentModel || '...';
+      const mText = m.length > 20 ? m.slice(0, 18) + '...' : m;
+      const s2Model = document.getElementById('screen2-model-pill');
+      if (s2Model) s2Model.textContent = mText;
+      const pill = document.getElementById('model-pill');
+      if (pill) pill.textContent = mText;
+
+      const s2Mode = document.getElementById('screen2-current-mode');
+      if (s2Mode) s2Mode.textContent = state.currentMode;
+      const curMode = document.getElementById('current-mode');
+      if (curMode) curMode.textContent = state.currentMode;
+
+      const s2Eva = document.getElementById('screen2-persona-eva');
+      const s2Adam = document.getElementById('screen2-persona-adam');
+      const isAdam = VoiceEngine.persona === 'adam';
+      if (s2Eva && s2Adam) {
+        s2Eva.className = !isAdam ? 'cmd-link bold c-ok' : 'cmd-link';
+        s2Eva.textContent = !isAdam ? '[Eva]' : 'Eva';
+        s2Adam.className = isAdam ? 'cmd-link bold c-ok' : 'cmd-link';
+        s2Adam.textContent = isAdam ? '[Adam]' : 'Adam';
       }
-      const dMode = document.getElementById('drawer-current-mode');
-      if (dMode) dMode.textContent = state.currentMode;
-      const dEva = document.getElementById('drawer-persona-eva');
-      const dAdam = document.getElementById('drawer-persona-adam');
-      if (dEva && dAdam) {
-        const isAdam = VoiceEngine.persona === 'adam';
-        dEva.className = !isAdam ? 'cmd-link bold c-ok' : 'cmd-link';
-        dEva.textContent = !isAdam ? '[Eva]' : 'Eva';
-        dAdam.className = isAdam ? 'cmd-link bold c-ok' : 'cmd-link';
-        dAdam.textContent = isAdam ? '[Adam]' : 'Adam';
+
+      const s2Tts = document.getElementById('screen2-tts-toggle');
+      const ttsToggle = document.getElementById('tts-toggle');
+      const ttsText = VoiceEngine.ttsOn ? '[ TTS:ON ]' : '[ TTS:OFF ]';
+      const ttsCls = VoiceEngine.ttsOn ? 'mic-btn c-ok' : 'mic-btn c-dim';
+      if (s2Tts) {
+        s2Tts.textContent = ttsText;
+        s2Tts.className = ttsCls;
       }
-      const lEn = document.getElementById('drawer-lang-en');
-      const lUk = document.getElementById('drawer-lang-uk');
-      const lRu = document.getElementById('drawer-lang-ru');
-      if (lEn && lUk && lRu) {
-        lEn.className = state.lang === 'en' ? 'cmd-link bold c-ok' : 'cmd-link';
-        lEn.textContent = state.lang === 'en' ? '[EN]' : 'EN';
-        lUk.className = state.lang === 'uk' ? 'cmd-link bold c-ok' : 'cmd-link';
-        lUk.textContent = state.lang === 'uk' ? '[UK]' : 'UK';
-        lRu.className = state.lang === 'ru' ? 'cmd-link bold c-ok' : 'cmd-link';
-        lRu.textContent = state.lang === 'ru' ? '[RU]' : 'RU';
+      if (ttsToggle) {
+        ttsToggle.textContent = ttsText;
+        ttsToggle.className = ttsCls;
       }
+
+      syncUiModeButtons();
     }
+    window.syncSettingsState = syncSettingsState;
+    window.syncDrawerState = syncSettingsState; // Backwards compatibility
 
     async function loadModels() {
       try {
@@ -3833,6 +4080,7 @@ Examples:
     loadModels();
     setStatus(true);
     VoiceEngine.init();
+    syncSettingsState();
 
     function switchTab(tab) {
       const chatPanel = document.getElementById('chat-panel');
