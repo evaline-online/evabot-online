@@ -6,65 +6,65 @@
       <description>Last 10 notes on EvaBot Docs</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
-    <title>quota</title>
-    <link>https://evabot.online/docs/tags/quota</link>
-    <guid>https://evabot.online/docs/tags/quota</guid>
+    <title>agents</title>
+    <link>https://evabot.online/docs/agents/</link>
+    <guid>https://evabot.online/docs/agents/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Mon, 14 Sep 2026 23:26:50 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 23:31:48 GMT</pubDate>
   </item><item>
-    <title>billing</title>
-    <link>https://evabot.online/docs/tags/billing</link>
-    <guid>https://evabot.online/docs/tags/billing</guid>
+    <title>deployment</title>
+    <link>https://evabot.online/docs/deployment/</link>
+    <guid>https://evabot.online/docs/deployment/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Mon, 14 Sep 2026 23:26:50 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 23:31:48 GMT</pubDate>
   </item><item>
-    <title>research</title>
-    <link>https://evabot.online/docs/tags/research</link>
-    <guid>https://evabot.online/docs/tags/research</guid>
+    <title>development</title>
+    <link>https://evabot.online/docs/development/</link>
+    <guid>https://evabot.online/docs/development/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Mon, 14 Sep 2026 23:26:50 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 23:31:48 GMT</pubDate>
   </item><item>
-    <title>ops</title>
-    <link>https://evabot.online/docs/tags/ops</link>
-    <guid>https://evabot.online/docs/tags/ops</guid>
+    <title>domains</title>
+    <link>https://evabot.online/docs/domains/</link>
+    <guid>https://evabot.online/docs/domains/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Mon, 14 Sep 2026 23:26:50 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 23:31:48 GMT</pubDate>
   </item><item>
-    <title>stt</title>
-    <link>https://evabot.online/docs/tags/stt</link>
-    <guid>https://evabot.online/docs/tags/stt</guid>
+    <title>evabot-v0</title>
+    <link>https://evabot.online/docs/history/evabot-v0/</link>
+    <guid>https://evabot.online/docs/history/evabot-v0/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Mon, 14 Sep 2026 23:26:50 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 23:31:48 GMT</pubDate>
   </item><item>
-    <title>google-cloud</title>
-    <link>https://evabot.online/docs/tags/google-cloud</link>
-    <guid>https://evabot.online/docs/tags/google-cloud</guid>
+    <title>history</title>
+    <link>https://evabot.online/docs/history/</link>
+    <guid>https://evabot.online/docs/history/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Mon, 14 Sep 2026 23:26:50 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 23:31:48 GMT</pubDate>
   </item><item>
-    <title>voice</title>
-    <link>https://evabot.online/docs/tags/voice</link>
-    <guid>https://evabot.online/docs/tags/voice</guid>
+    <title>micro-server</title>
+    <link>https://evabot.online/docs/micro-server/</link>
+    <guid>https://evabot.online/docs/micro-server/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Mon, 14 Sep 2026 23:26:50 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 23:31:48 GMT</pubDate>
   </item><item>
-    <title>only-free</title>
-    <link>https://evabot.online/docs/tags/only-free</link>
-    <guid>https://evabot.online/docs/tags/only-free</guid>
+    <title>audit</title>
+    <link>https://evabot.online/docs/micro-server/audit/</link>
+    <guid>https://evabot.online/docs/micro-server/audit/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Mon, 14 Sep 2026 23:26:50 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 23:31:48 GMT</pubDate>
   </item><item>
-    <title>i18n</title>
-    <link>https://evabot.online/docs/tags/i18n</link>
-    <guid>https://evabot.online/docs/tags/i18n</guid>
+    <title>company-dossier</title>
+    <link>https://evabot.online/docs/micro-server/company-dossier/</link>
+    <guid>https://evabot.online/docs/micro-server/company-dossier/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Mon, 14 Sep 2026 23:26:50 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 23:31:48 GMT</pubDate>
   </item><item>
-    <title>translate</title>
-    <link>https://evabot.online/docs/tags/translate</link>
-    <guid>https://evabot.online/docs/tags/translate</guid>
+    <title>frontend</title>
+    <link>https://evabot.online/docs/micro-server/frontend/</link>
+    <guid>https://evabot.online/docs/micro-server/frontend/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Mon, 14 Sep 2026 23:26:50 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 23:31:48 GMT</pubDate>
   </item>
     </channel>
   </rss>
