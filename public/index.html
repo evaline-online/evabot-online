@@ -327,7 +327,49 @@
       overflow-wrap: anywhere;
       width: 100%;
       margin: 0;
-      padding: 0;
+    /* Quick Prompts Suggestions Bar */
+    .quick-prompts-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 4px 0;
+      margin-top: 2px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      flex-shrink: 0;
+    }
+    .quick-prompts-bar::-webkit-scrollbar {
+      display: none;
+    }
+    .quick-prompts-label {
+      font-size: 0.68rem;
+      color: var(--dim);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+    .quick-prompt-btn {
+      background: var(--surface);
+      color: var(--cyan);
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 2px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+      line-height: 1.2;
+    }
+    .quick-prompt-btn:hover {
+      border-color: var(--cyan);
+      background: rgba(0, 229, 255, 0.12);
+      color: #fff;
     }
 
     /* Command prompt input row */
@@ -1229,12 +1271,37 @@
 
     html[data-mode='web'] .header-block,
     html[data-mode='web'] .chat-container,
+    html[data-mode='web'] .quick-prompts-bar,
     html[data-mode='web'] .input-line,
     html[data-mode='web'] .header-minimal {
       max-width: 880px;
       width: 100%;
       margin-left: auto;
       margin-right: auto;
+    }
+
+    html[data-mode='web'] .quick-prompts-bar {
+      padding: 4px 6px;
+      gap: 8px;
+    }
+
+    html[data-mode='web'] .quick-prompt-btn {
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      font-weight: 500;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      padding: 4px 12px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    html[data-mode='web'] .quick-prompt-btn:hover {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: rgba(0, 229, 255, 0.4);
+      color: #38bdf8;
     }
 
     html[data-mode='web'] .chat-container {
@@ -1524,6 +1591,17 @@
           </div>
           <div class="msg-body" id="boot-msg">Connecting to evabot.online ...</div>
         </div>
+      </div>
+
+      <!-- Quick Prompts Bar: Top questions & examples -->
+      <div class="quick-prompts-bar" id="quick-prompts">
+        <span class="quick-prompts-label">[ПРИМЕРЫ]:</span>
+        <button type="button" class="quick-prompt-btn" onclick="sendQuickPrompt('Что ты умеешь?')">Что ты умеешь?</button>
+        <button type="button" class="quick-prompt-btn" onclick="sendQuickPrompt('О компании EvaLine')">О компании EvaLine</button>
+        <button type="button" class="quick-prompt-btn" onclick="sendQuickPrompt('Сколько стоит лист ЭВА?')">Сколько стоит лист?</button>
+        <button type="button" class="quick-prompt-btn" onclick="sendQuickPrompt('Где ваше производство?')">Где производство?</button>
+        <button type="button" class="quick-prompt-btn" onclick="sendQuickPrompt('Сферы применения полимера ЭВА')">Применение ЭВА</button>
+        <button type="button" class="quick-prompt-btn" onclick="sendQuickPrompt('Доставка в ЕС и Украину')">Доставка и экспорт</button>
       </div>
 
       <!-- Input Row: > Textarea | [↵] Send | [REC] Voice -->
@@ -3093,6 +3171,15 @@ Examples:
       currentModeEl.textContent = state.currentMode;
       syncSettingsState();
     }
+
+    window.sendQuickPrompt = function(text) {
+      if (!text || state.isGenerating) return;
+      if (userInput) {
+        userInput.value = text;
+        userInput.dispatchEvent(new Event('input'));
+        sendMessage();
+      }
+    };
 
     async function sendMessage() {
       const raw = userInput.value.trim();
