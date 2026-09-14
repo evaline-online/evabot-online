@@ -1530,7 +1530,7 @@
   </div>
 
   <!-- Models Modal -->
-  <div class="modal" id="model-modal" onclick="if(event.target===this)closeModelModal()">
+  <div class="modal" id="model-modal" style="display:none;" onclick="if(event.target===this)closeModelModal()">
     <div class="modal-content">
       <div class="modal-header">
         <div><span class="c-ok">●</span> <span id="modal-title">MODEL CATALOG</span></div>
@@ -2716,7 +2716,6 @@ Examples:
       // Web display mode: fold long message bodies into a [▼ more] accordion.
       applyWebFolds(msgDiv);
       chatContainer.scrollTop = chatContainer.scrollHeight;
-      window.scrollTo(0, document.body.scrollHeight);
       return bodySpan;
     }
 
@@ -2986,7 +2985,6 @@ Examples:
                     accumulatedText += data.chunk;
                     botBody.innerHTML = renderMarkdown(accumulatedText);
                     chatContainer.scrollTop = chatContainer.scrollHeight;
-                    window.scrollTo(0, document.body.scrollHeight);
                   }
                   if (data.done) {
                     // Persona from the backend (eva|adam) drives the TTS voice.

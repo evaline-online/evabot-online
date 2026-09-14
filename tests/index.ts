@@ -32,10 +32,11 @@ import { runAutoModelRouterTests } from './auto_model_router.test.js';
 import { runCoveragePushTests } from './coverage_push.test.js';
 import { runAddCommandTests } from './add_command.test.js';
 import { runReportsCommandsTests } from './reports_commands.test.js';
+import { runUiStreamVerificationTests } from './ui_stream_verification.test.js';
 
 async function runAllTests(): Promise<void> {
   console.log('================================================================');
-  console.log('⚡ EVABOT v0.1.0 — FULL TEST SUITE (29 test suites)');
+  console.log('⚡ EVABOT v0.1.0 — FULL TEST SUITE (36 test suites)');
   console.log('================================================================\n');
 
   const results = [
@@ -70,10 +71,11 @@ async function runAllTests(): Promise<void> {
     await runSubagentEngineTests(),
     await runLanguagePolicyTests(),
     await runEdgeTtsTests(),
-    runAutoModelRouterTests(),
+    await runAutoModelRouterTests(),
     await runCoveragePushTests(),
     await runAddCommandTests(),
     await runReportsCommandsTests(),
+    await runUiStreamVerificationTests(),
   ];
 
   const testNames = [
@@ -112,6 +114,7 @@ async function runAllTests(): Promise<void> {
     'CoveragePushTests',
     'AddCommandTests',
     'ReportsCommandsTests',
+    'UiStreamVerificationTests',
   ];
 
   let allPassed = true;
@@ -127,7 +130,7 @@ async function runAllTests(): Promise<void> {
 
   console.log('\n================================================================');
   if (allPassed) {
-    console.log('✅ ALL 29 TEST SUITES (100% OF TESTS) PASSED SUCCESSFULLY!');
+    console.log(`✅ ALL ${testNames.length} TEST SUITES (100% OF TESTS) PASSED SUCCESSFULLY!`);
     console.log('================================================================\n');
     process.exit(0);
   } else {
