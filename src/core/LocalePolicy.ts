@@ -72,11 +72,15 @@ export function detectMessageLanguage(text: string): MessageLanguage {
   return 'en';
 }
 
-/** Builds a per-request language-lock instruction line for the system prompt. */
+/** Builds a per-request language-lock instruction line in the user's language. */
 export function languageLockInstruction(userText: string): string {
   const lang = detectMessageLanguage(userText);
-  const name = lang === 'uk' ? 'Ukrainian' : lang === 'ru' ? 'Russian' : 'English';
-  return `LANGUAGE LOCK: The user's current message is in ${name}. Respond ONLY in ${name}. Do not switch languages unless explicitly asked.`;
+  const locks: Record<string, string> = {
+    ru: `LANGUAGE LOCK (ABSOLUTE, NON-NEGOTIABLE): The user wrote in RUSSIAN. You MUST answer entirely in Russian — every single word, sentence, heading, and bullet point. This is a hard requirement, not a suggestion. Even when introducing yourself, describing the company, or listing capabilities, your ENTIRE reply must be in Russian. Do NOT mix languages. Do NOT switch to Ukrainian, English, or any other language. If the user writes in Russian, you answer in Russian. Period. Пример: если пользователь пишет по-русски, вся ответная часть — по-русски, включая представление и перечисление возможностей.`,
+    uk: `LANGUAGE LOCK (ABSOLUTE, NON-NEGOTIABLE): The user wrote in UKRAINIAN. You MUST answer entirely in Ukrainian — every single word, sentence, heading, and bullet point. This is a hard requirement, not a suggestion. Even when introducing yourself, describing the company, or listing capabilities, your ENTIRE reply must be in Ukrainian. Do NOT mix languages. Do NOT switch to Russian, English, or any other language. If the user writes in Ukrainian, you answer in Ukrainian. Period. Приклад: якщо користувач пише українською, вся відповідь — українською, включаючи представлення та перелік можливостей.`,
+    en: `LANGUAGE LOCK (ABSOLUTE, NON-NEGOTIABLE): The user wrote in English. You MUST answer entirely in English — every single word, sentence, heading, and bullet point. This is a hard requirement, not a suggestion. Even when introducing yourself, describing the company, or listing capabilities, your ENTIRE reply must be in English. Do NOT mix languages. Do NOT switch to Ukrainian, Russian, or any other language. If the user writes in English, you answer in English. Period. Example: if the user writes in English, the ENTIRE reply is in English, including self-introduction and capability list.`,
+  };
+  return locks[lang] ?? locks.en;
 }
 
 /**

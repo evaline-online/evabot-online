@@ -73,10 +73,12 @@ export class ChatRouter extends Router {
         }
       }
 
+      // LANGUAGE LOCK (PRIMARY): mirror the user's message language (uk/ru/en) – put first for maximum weight.
+      effectiveInstruction = `${languageLockInstruction(message)}\n`;
       // System-awareness (FEATURE 1) + developer block (FEATURE 2), appended
       // AFTER the existing system prompt building (role/LocalePolicy/rules/KB).
       effectiveInstruction += `\n${SystemContext.build()}`;
-      // LANGUAGE LOCK: mirror the user's message language (uk/ru/en).
+      // Also append lock as a safeguard.
       effectiveInstruction += `\n${languageLockInstruction(message)}`;
       if (DeveloperMode.isUnlocked(chatSessionId)) {
         effectiveInstruction += `\n${SystemContext.DEVELOPER_BLOCK}`;
@@ -136,8 +138,9 @@ export class ChatRouter extends Router {
       }
 
       // System-awareness (FEATURE 1) + developer block (FEATURE 2).
+      effectiveInstruction = `${languageLockInstruction(message)}\n${effectiveInstruction}`;
       effectiveInstruction += `\n${SystemContext.build()}`;
-      // LANGUAGE LOCK: mirror the user's message language (uk/ru/en).
+      // Also append lock as a safeguard.
       effectiveInstruction += `\n${languageLockInstruction(message)}`;
       if (DeveloperMode.isUnlocked(chatSessionId)) {
         effectiveInstruction += `\n${SystemContext.DEVELOPER_BLOCK}`;

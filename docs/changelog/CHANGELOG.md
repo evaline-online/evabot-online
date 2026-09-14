@@ -233,3 +233,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 **Format:** [Keep a Changelog](https://keepachangelog.com/)  
 **Versioning:** [Semantic Versioning](https://semver.org/)  
 **Status:** Active development
+
+## [v0.2.0] - 2026-09-08 — Modular Architecture & Security Hardening
+
+### 🏗️ Added
+- **12 modular repos**: eva-brain, eva-voice, eva-face, eva-db, eva-history, eva-memory, evaline-consilium, evabot-server, eva-server, evaline-server, eva-docs, eva-reports
+- **eva-docs**: unified documentation hub (architecture, ops, agents, domains, models, roadmap, security)
+- **eva-reports**: chronological session reports with indexing
+- **Branch protection** on all active repos' main branches (PR required + 1 approval)
+- **GitHub Actions CI/CD**: automated build → sync-modules → deploy → smoke test
+- **sync-modules.sh**: keeps monorepo and module repos in sync
+- **Watchdog timer**: crash-loop detection with threshold alerting via systemd timer (5min interval)
+- **Uptime monitor**: cron-based health checks logging to /var/log/evabot-uptime.log
+
+### 🔒 Changed / Fixed
+- **GitHub token hygiene**: removed embedded tokens from all git remote URLs (ghp_*); switched to `gh auth` credential helper
+- **GCP key redaction**: removed leaked API key from REPORT.md (GitHub Push Protection)
+- **google-calendar MCP port conflict**: changed PORT 3000 → 3800 in opencode/kilo configs, resolves brain crash-loop
+- **Removed release tarballs** from git history; added backups/ to .gitignore
+- **CompanyKnowledge sources** → `../eva-reports/reports/` (single source of truth)
+- **docs-site/content** → symlink → eva-docs (eliminated content duplication)
+- **MANIFESTO.md** → symlink (deduplicated from public/)
+- **Single-viewport dashboard**: evaline.network zero-scroll layout (mobile-first 320px → desktop)

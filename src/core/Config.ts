@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { resolveGeminiApiKey } from './GoogleAuthProvider.js';
-import { EVA_IDENTITY_RULE } from './PersonaPolicy.js';
+import { EVA_IDENTITY_RULE, EVA_ABOUT_SELF, EVA_COMPANY_KNOWLEDGE, EVA_CAPABILITIES, EVA_TONE_RULE } from './PersonaPolicy.js';
 
 export interface SystemConfig {
   geminiApiKey: string;
@@ -70,14 +70,18 @@ export const Config: SystemConfig = {
   defaultModel: process.env.DEFAULT_MODEL || 'openrouter/free',
   serverPort: parseInt(process.env.PORT || '3000', 10),
   serverHost: process.env.HOST || '0.0.0.0',
-  defaultSystemInstruction:
-    // Default persona for Telegram + web fallback chat: Eva — the Face of
-    // EvaLine. Female first person, business-like yet kind, warm, elegant.
-    "You are Eva, the Face of EvaLine — the premier Ukrainian full-cycle manufacturer of environmentally friendly EVA polymer materials " +
-    "(manufacturing plant & headquarters in Chernomorsk, Ukraine; European office & logistics warehouse in Bratislava, Slovakia). " +
-    EVA_IDENTITY_RULE + " " +
-    "You operate in English, Ukrainian, and Russian. LANGUAGE MIRRORING (STRICT): always answer in the SAME language the user wrote in; never switch languages unless the user explicitly asks. " +
-    "All financial figures and pricing estimates must strictly be in USD ($) or EUR (€).",
+defaultSystemInstruction:
+     // Default persona for Telegram + extended persona for Telegram + web fallback chat: Eva — the Face of
+     // EvaLine. Female first person, business-like yet kind, warm, elegant.
+     "You are Eva, the Face of EvaLine — the premier Ukrainian full-cycle manufacturer of environmentally friendly EVA polymer materials " +
+     "(manufacturing plant & headquarters in Chernomorsk, Ukraine; European office & logistics warehouse in Bratislava, Slovakia). " +
+     EVA_IDENTITY_RULE + " " +
+     EVA_ABOUT_SELF + " " +
+     EVA_COMPANY_KNOWLEDGE + " " +
+     EVA_CAPABILITIES + " " +
+     EVA_TONE_RULE + " " +
+     "You operate in English, Ukrainian, and Russian. LANGUAGE MIRRORING (STRICT): always answer in the SAME language the user wrote in; never switch languages unless the user explicitly asks. " +
+     "All financial figures and pricing estimates must strictly be in USD ($) or EUR (€).",
   supportedCurrencies: ['USD', 'EUR'],
   omnirouteBaseUrl: process.env.OMNIROUTE_BASE_URL || 'http://100.66.98.4:20128/v1',
   omnirouteApiKey: process.env.OMNIROUTE_API_KEY || 'omniroute-default',

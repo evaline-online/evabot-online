@@ -3,7 +3,7 @@ import { ChatHistoryStore } from './ChatHistoryStore.js';
 import { I18nEngine } from './I18nEngine.js';
 import { Config } from './Config.js';
 import { logger } from './Logger.js';
-import { applyPersonaPolicy } from './PersonaPolicy.js';
+import { applyLocalePolicy } from './LocalePolicy.js';
 
 export type VoicePersona = 'eva' | 'adam' | 'neutral';
 
@@ -235,7 +235,7 @@ export class SephirotEngine {
         model: node.model,
         name: node.nameEn,
         title: node.title,
-        systemPrompt: applyPersonaPolicy(
+        systemPrompt: applyLocalePolicy(
           `${node.systemPrompt}${upstream} Topic under deliberation: "${topic}".`,
           persona
         ),
