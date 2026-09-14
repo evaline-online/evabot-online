@@ -100,7 +100,7 @@ const EDGE_VOICE_NAMES: ReadonlySet<string> = new Set(EDGE_VOICE_CATALOG.map((v)
 
 /** True when the voice name belongs to the Edge-Neural catalog. */
 export function isEdgeVoice(voiceName: string): boolean {
-  return EDGE_VOICE_NAMES.has(voiceName);
+  return EDGE_VOICE_NAMES.has(voiceName) || voiceName.endsWith('Neural');
 }
 
 /** MP3 cache key: sha1 of "<voice>::<text>" (same pattern as CloudTTS). */
@@ -147,6 +147,10 @@ export class EdgeTTS {
     const isRussian = lang.startsWith('ru');
     const isUkrainian = lang.startsWith('uk') || lang.startsWith('ua');
     const isPolish = lang.startsWith('pl');
+    const isGerman = lang.startsWith('de');
+    const isSpanish = lang.startsWith('es');
+    const isFrench = lang.startsWith('fr');
+    const isItalian = lang.startsWith('it');
 
     // Persona determines GENDER: eva (default) = female, adam = male
     const isFemale = opts.persona !== 'adam';
@@ -154,6 +158,10 @@ export class EdgeTTS {
     if (isRussian) return isFemale ? 'ru-RU-SvetlanaNeural' : 'ru-RU-DmitryNeural';
     if (isUkrainian) return isFemale ? 'uk-UA-PolinaNeural' : 'uk-UA-OstapNeural';
     if (isPolish) return isFemale ? 'pl-PL-ZofiaNeural' : 'pl-PL-MarekNeural';
+    if (isGerman) return isFemale ? 'de-DE-KatjaNeural' : 'de-DE-KillianNeural';
+    if (isSpanish) return isFemale ? 'es-ES-ElviraNeural' : 'es-ES-AlvaroNeural';
+    if (isFrench) return isFemale ? 'fr-FR-DeniseNeural' : 'fr-FR-HenriNeural';
+    if (isItalian) return isFemale ? 'it-IT-ElsaNeural' : 'it-IT-DiegoNeural';
     // English (default fallback)
     return isFemale ? 'en-US-AriaNeural' : 'en-US-GuyNeural';
   }

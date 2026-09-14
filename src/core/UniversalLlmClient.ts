@@ -340,7 +340,8 @@ export class UniversalLlmClient {
     messages: string | UniversalMessage[] | ChatMessage[],
     onChunk: (chunk: string) => void,
     options: UniversalGenerationOptions = {},
-    enableFallback: boolean = true
+    enableFallback: boolean = true,
+    onFallback?: (fromModel: string, toModel: string) => void
   ): Promise<string> {
     const universalMsgs = this.normalizeToUniversal(messages);
 
@@ -409,6 +410,7 @@ export class UniversalLlmClient {
       for (const fallbackModel of fallbackChain) {
         try {
           logger.info('UniversalLlmClient', `[STREAM FALLBACK] Trying candidate: ${fallbackModel}`);
+          if (onFallback) onFallback(model, fallbackModel);
           const { result } = await runAttemptWithBuffer(fallbackModel);
           return result;
         } catch (fallbackErr: any) {

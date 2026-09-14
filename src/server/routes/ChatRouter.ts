@@ -163,6 +163,7 @@ export class ChatRouter extends Router {
         'Access-Control-Allow-Origin': '*',
       });
 
+      let activeModel = targetModel;
       const fullText = await client.streamContent(
         targetModel,
         messages,
@@ -173,14 +174,19 @@ export class ChatRouter extends Router {
           systemInstruction: effectiveInstruction,
           provider: provider as LlmProvider | undefined,
           apiKey,
+        },
+        true,
+        (fromModel, toModel) => {
+          activeModel = toModel;
+          ctx.res.write(`data: ${JSON.stringify({ fallback: { from: fromModel, to: toModel } })}\n\n`);
         }
       );
       span.end();
       const fullTextOut = isDebugOn() ? `${fullText}\n${renderDebugFooter(span)}` : fullText;
 
-      persistChatMessage(chatSessionId, 'assistant', fullText, targetModel);
+      persistChatMessage(chatSessionId, 'assistant', fullText, activeModel);
 
-      ctx.res.write(`data: ${JSON.stringify({ done: true, fullText: fullTextOut, persona: resolvedPersona || 'eva' })}\n\n`);
+      ctx.res.write(`data: ${JSON.stringify({ done: true, fullText: fullTextOut, model: activeModel, persona: resolvedPersona || 'eva' })}\n\n`);
       ctx.res.end();
     }));
 

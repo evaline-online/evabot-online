@@ -109,6 +109,8 @@ export function createVoiceRouter(): Router {
     const hasUkMarkers = /[іїєґ]/.test(lower);
     const hasRuMarkers = /[ыэъё]/.test(lower);
     const hasPlMarkers = /[ąćęłńóśźż]/.test(lower);
+    const hasDeMarkers = /[äöüß]/.test(lower);
+    const hasEsMarkers = /[áíóúñ¿¡]/.test(lower);
 
     if (hasUkMarkers && !hasRuMarkers) {
       lang = 'uk';
@@ -116,7 +118,11 @@ export function createVoiceRouter(): Router {
       lang = 'ru';
     } else if (hasPlMarkers) {
       lang = 'pl';
-    } else if (explicitLang && (explicitLang === 'uk' || explicitLang === 'ua' || explicitLang === 'ru' || explicitLang === 'en' || explicitLang === 'pl')) {
+    } else if (hasDeMarkers) {
+      lang = 'de';
+    } else if (hasEsMarkers) {
+      lang = 'es';
+    } else if (explicitLang && ['uk', 'ua', 'ru', 'en', 'pl', 'de', 'es', 'fr', 'it'].includes(explicitLang)) {
       lang = explicitLang === 'ua' ? 'uk' : explicitLang;
     } else {
       lang = detectMessageLanguage(text);

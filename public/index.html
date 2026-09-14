@@ -920,11 +920,61 @@
       font-family: var(--font-mono);
       color: var(--green);
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.04em;
       font-size: 0.8rem;
-      animation: pulse-glow 1.2s infinite ease-in-out;
+      user-select: none;
     }
 
+    /* Consilium role badges */
+    .role-badge {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 2px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      user-select: none;
+      vertical-align: middle;
+    }
+    .badge-god { background: rgba(255, 215, 0, 0.16); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.4); }
+    .badge-architect { background: rgba(0, 229, 255, 0.16); color: #00e5ff; border: 1px solid rgba(0, 229, 255, 0.4); }
+    .badge-critic { background: rgba(255, 82, 82, 0.16); color: #ff5252; border: 1px solid rgba(255, 82, 82, 0.4); }
+    .badge-synthesizer { background: rgba(0, 230, 118, 0.16); color: #00e676; border: 1px solid rgba(0, 230, 118, 0.4); }
+    .badge-adam { background: rgba(0, 176, 255, 0.16); color: #00b0ff; border: 1px solid rgba(0, 176, 255, 0.4); }
+    .badge-eva { background: rgba(0, 230, 118, 0.16); color: #00e676; border: 1px solid rgba(0, 230, 118, 0.4); }
+
+    /* Tables */
+    table {
+      max-width: 100%;
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-collapse: collapse;
+      margin: 6px 0;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+
+    th {
+      background: var(--bg-panel);
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    /* Universal responsive overflow guards */
+    .chat-screen-wrapper, .screen-settings-wrapper, #chat-panel, .chat-container,
+    .header-minimal, .header-block, .settings-card, .settings-item, .input-line,
+    .msg, .msg-body {
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
 
     /* ===== Toast notifications ===== */
     .toast-wrap {
@@ -962,11 +1012,19 @@
     /* Responsive media queries for smartphones */
     @media (max-width: 640px) {
       body {
+        padding: 0 !important;
+      }
+
+      .chat-screen-wrapper {
         padding: 4px 6px;
         padding-top: max(4px, var(--safe-top));
         padding-bottom: max(4px, var(--safe-bottom));
         padding-left: max(6px, var(--safe-left));
         padding-right: max(6px, var(--safe-right));
+      }
+
+      .screen-settings-wrapper {
+        padding: 8px 6px 36px 6px;
       }
 
       .desk-only {
@@ -980,16 +1038,63 @@
 
       .tui-top-row {
         gap: 4px;
+        flex-wrap: wrap !important;
+      }
+
+      .tui-actions-group {
+        gap: 4px;
+        flex-wrap: wrap !important;
       }
 
       .tui-meta-row {
         font-size: 0.74rem;
         gap: 4px;
+        flex-wrap: wrap !important;
       }
 
       .tui-cmd-scroll .cmd-link {
         padding: 3px 8px;
         font-size: 0.78rem;
+      }
+
+      .header-minimal-content {
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .logo-subtitle {
+        display: none !important;
+      }
+
+      .settings-header-nav {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+      }
+
+      .settings-header-nav .back-btn {
+        width: 100%;
+        text-align: center;
+        font-size: 0.74rem;
+        padding: 6px 8px;
+      }
+
+      .settings-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ui-mode-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .msg-voice-bar {
+        gap: 4px;
+      }
+
+      .voice-btn {
+        font-size: 0.72rem;
+        padding: 2px 6px;
       }
 
       textarea#user-input {
@@ -999,6 +1104,7 @@
         padding: 9px 8px;
         line-height: 20px;
         overflow-x: auto;
+        min-width: 0;
       }
 
       textarea#user-input::placeholder {
@@ -1009,7 +1115,7 @@
 
       .mic-btn {
         min-height: 40px;
-        min-width: 42px;
+        min-width: 40px;
         padding: 0 6px;
         font-size: 0.75rem;
       }
@@ -1029,6 +1135,26 @@
       .model-row {
         min-height: 44px;
         padding: 10px 4px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .logo-title {
+        font-size: 0.78rem;
+      }
+      .logo-badge {
+        display: none !important;
+      }
+      .burger-btn {
+        padding: 0 8px;
+        font-size: 0.8rem;
+      }
+      .input-actions .mic-btn {
+        min-width: 36px;
+        padding: 0 4px;
+      }
+      .tui-tab {
+        font-size: 0.72rem !important;
       }
     }
 
@@ -2678,7 +2804,7 @@ Examples:
       `;
     }
 
-    function addMessage(role, text) {
+    function addMessage(role, text, roleBadgeClass, roleBadgeText) {
       const msgDiv = document.createElement('div');
       const safeRole = (role || 'system').toLowerCase().replace(/[^a-z0-9_-]/g, '_');
       msgDiv.className = `msg msg-${safeRole}`;
@@ -2688,6 +2814,13 @@ Examples:
 
       const metaDiv = document.createElement('div');
       metaDiv.className = 'msg-meta';
+
+      if (roleBadgeClass && roleBadgeText) {
+        const badge = document.createElement('span');
+        badge.className = `role-badge badge-${roleBadgeClass}`;
+        badge.textContent = roleBadgeText;
+        metaDiv.appendChild(badge);
+      }
 
       const roleSpan = document.createElement('span');
       roleSpan.className = `msg-sender ${safeRole}`;
@@ -2736,6 +2869,68 @@ Examples:
         statusText.textContent = d.statusOnline;
         statusText.className = 'c-ok';
         statusLight.classList.add('pulse');
+      }
+    }
+
+    async function sendConsiliumMessage(text) {
+      addMessage('user', text);
+      const waitNotice = addMessage('system', '* Запуск консилиума моделей... Выполняется коллегиальный анализ.');
+      setStatus(true, true);
+      state.isGenerating = true;
+
+      try {
+        const response = await fetch('/api/consilium', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: text,
+            mode: 'consilium',
+            models: ['gemini-2.5-pro', 'gemini-2.5-flash', 'deepseek/deepseek-r1:free'],
+            useKnowledgeBase: true,
+          })
+        });
+
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const data = await response.json();
+        const res = data.result;
+
+        if (res && Array.isArray(res.turns)) {
+          for (const turn of res.turns) {
+            let badgeClass = 'architect';
+            let badgeTitle = 'ARCHITECT';
+            const nameLower = (turn.name || '').toLowerCase();
+            const roleLower = (turn.role || '').toLowerCase();
+            if (nameLower.includes('god') || roleLower.includes('god') || roleLower.includes('arbiter')) {
+              badgeClass = 'god';
+              badgeTitle = 'GOD';
+            } else if (nameLower.includes('security') || roleLower.includes('security') || nameLower.includes('critic') || roleLower.includes('critic')) {
+              badgeClass = 'critic';
+              badgeTitle = 'CRITIC';
+            } else if (nameLower.includes('synthes') || roleLower.includes('synthes')) {
+              badgeClass = 'synthesizer';
+              badgeTitle = 'SYNTHESIZER';
+            } else if (nameLower.includes('adam') || roleLower.includes('adam')) {
+              badgeClass = 'adam';
+              badgeTitle = 'ADAM';
+            } else if (nameLower.includes('eva') || roleLower.includes('eva')) {
+              badgeClass = 'eva';
+              badgeTitle = 'EVA';
+            }
+            addMessage(turn.name || turn.model, turn.content, badgeClass, badgeTitle);
+          }
+        }
+
+        if (res && res.synthesis) {
+          addMessage('evabot', res.synthesis, 'synthesizer', 'CONSENSUS');
+          state.history.push({ role: 'model', content: res.synthesis });
+        }
+
+        setStatus(true, false);
+      } catch (err) {
+        addMessage('error', `Ошибка консилиума: ${err.message}`);
+        setStatus(false);
+      } finally {
+        state.isGenerating = false;
       }
     }
 
@@ -2981,6 +3176,18 @@ Examples:
               if (trimmed.startsWith('data: ')) {
                 try {
                   const data = JSON.parse(trimmed.slice(6));
+                  if (data.fallback) {
+                    showToast(`[Auto-Fallback: ${data.fallback.from} -> ${data.fallback.to}]`);
+                    const parentMsg = botBody.parentElement;
+                    const meta = parentMsg ? parentMsg.querySelector('.msg-meta') : null;
+                    if (meta && !meta.querySelector('.fallback-badge')) {
+                      const fbNotice = document.createElement('span');
+                      fbNotice.className = 'c-wrn font-mono fallback-badge';
+                      fbNotice.style.fontSize = '0.72rem';
+                      fbNotice.textContent = `[Auto-Fallback: ${data.fallback.from} -> ${data.fallback.to}]`;
+                      meta.appendChild(fbNotice);
+                    }
+                  }
                   if (data.chunk) {
                     accumulatedText += data.chunk;
                     botBody.innerHTML = renderMarkdown(accumulatedText);
@@ -2989,6 +3196,10 @@ Examples:
                   if (data.done) {
                     // Persona from the backend (eva|adam) drives the TTS voice.
                     window.__lastPersona = data.persona === 'adam' ? 'adam' : 'eva';
+                    if (data.model) {
+                      const pill = document.getElementById('model-pill');
+                      if (pill && !state.selectedModel) pill.textContent = data.model;
+                    }
                   }
                 } catch (e) {}
               }
@@ -3272,6 +3483,70 @@ Examples:
       // Queue guard + currently playing audio so mute/new-reply cancel cleanly.
       speakSeq: 0,
       activeAudio: null,
+      audioCtx: null,
+      recAnalyser: null,
+      recStream: null,
+      recAnimId: null,
+      playAnalyser: null,
+      playAnimId: null,
+
+      getAudioContext() {
+        if (!this.audioCtx) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) this.audioCtx = new AC();
+        }
+        if (this.audioCtx && this.audioCtx.state === 'suspended') {
+          this.audioCtx.resume();
+        }
+        return this.audioCtx;
+      },
+
+      startLiveRecordingVisualizer(stream) {
+        this.stopLiveRecordingVisualizer();
+        const ctx = this.getAudioContext();
+        if (!ctx) return;
+        try {
+          this.recStream = stream;
+          const source = ctx.createMediaStreamSource(stream);
+          const analyser = ctx.createAnalyser();
+          analyser.fftSize = 64;
+          analyser.smoothingTimeConstant = 0.5;
+          source.connect(analyser);
+          this.recAnalyser = analyser;
+
+          const mic = document.getElementById('mic-btn');
+          const frames = [' ', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
+          const freqData = new Uint8Array(analyser.frequencyBinCount);
+
+          const loop = () => {
+            if (!this.recAnalyser) return;
+            analyser.getByteFrequencyData(freqData);
+            let s = '';
+            for (let i = 0; i < 5; i++) {
+              const val = freqData[i * 2] || 0;
+              const lvl = Math.min(7, Math.floor((val / 255) * 8));
+              s += frames[lvl];
+            }
+            if (mic) {
+              mic.innerHTML = `[🎙 ${s}]`;
+            }
+            this.recAnimId = requestAnimationFrame(loop);
+          };
+          this.recAnimId = requestAnimationFrame(loop);
+        } catch (e) {
+          console.warn('Live rec visualizer:', e);
+        }
+      },
+
+      stopLiveRecordingVisualizer() {
+        if (this.recAnimId) {
+          cancelAnimationFrame(this.recAnimId);
+          this.recAnimId = null;
+        }
+        this.recAnalyser = null;
+        const mic = document.getElementById('mic-btn');
+        if (mic) mic.innerHTML = '[🎙]';
+      },
 
       langCode() {
         return state.lang === 'uk' ? 'uk-UA' : state.lang === 'ru' ? 'ru-RU' : 'en-US';
@@ -3339,12 +3614,13 @@ Examples:
       async fallbackServerStt() {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') return false;
         const d = I18N[state.lang] || I18N.en;
-        const mime = ['audio/webm;codecs=opus', 'audio/ogg;codecs=opus', 'audio/webm', 'audio/ogg']
+        const mime = ['audio/webm;codecs=opus', 'audio/ogg;codecs=opus', 'audio/mp4', 'audio/webm', 'audio/ogg']
           .find((m) => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)) || '';
         const encoding = mime.indexOf('ogg') !== -1 ? 'OGG_OPUS' : 'WEBM_OPUS';
         let stream;
         try {
           stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          this.startLiveRecordingVisualizer(stream);
         } catch (err) {
           const name = err && err.name ? err.name : '';
           if (name === 'NotAllowedError' || name === 'PermissionDeniedError' || name === 'SecurityError') {
@@ -3363,8 +3639,12 @@ Examples:
         const chunks = [];
         recorder.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
         recorder.onstop = async () => {
+          this.stopLiveRecordingVisualizer();
           stream.getTracks().forEach((t) => t.stop());
-          if (mic) mic.classList.remove('recording');
+          if (mic) {
+            mic.classList.remove('recording');
+            mic.innerHTML = '[🎙]';
+          }
           const type = (mime || recorder.mimeType || 'audio/webm').split(';')[0];
           try {
             const res = await fetch('/api/stt?lang=' + encodeURIComponent(this.langCode()) + '&encoding=' + encoding + '&sampleRate=48000', {
@@ -3434,8 +3714,12 @@ Examples:
 
       stop() {
         this.listening = false;
+        this.stopLiveRecordingVisualizer();
         const mic = document.getElementById('mic-btn');
-        if (mic) mic.classList.remove('recording');
+        if (mic) {
+          mic.classList.remove('recording');
+          mic.innerHTML = '[🎙]';
+        }
         try {
           if (this.recognition) this.recognition.stop();
         } catch (e) { /* ignore */ }
@@ -3504,8 +3788,8 @@ Examples:
       pickVoice(utterLang) {
         if (!window.speechSynthesis) return null;
         const voices = window.speechSynthesis.getVoices() || [];
-        const femaleRe = /female|woman|alice|milena|tatyana|yuri|alena|katya|zira|susan|katia|olesya|svetlana|valentina|natalia|zofia|polina/i;
-        const maleRe = /male|man|dmitri|pavel|alex|david|daniel|maxim|oleg|artem|ostap|marek/i;
+        const femaleRe = /female|woman|alice|milena|tatyana|yuri|alena|katya|zira|susan|katia|olesya|svetlana|valentina|natalia|zofia|polina|elvira/i;
+        const maleRe = /male|man|dmitri|pavel|alex|david|daniel|maxim|oleg|artem|ostap|marek|killian|alvaro/i;
         const wantFemale = this.persona !== 'adam';
         const primary = voices.filter((v) => v.lang && v.lang.toLowerCase().startsWith(utterLang.slice(0, 2).toLowerCase()));
         const fallback = voices.filter((v) => v.lang && v.lang.toLowerCase().startsWith('en'));
@@ -3530,6 +3814,10 @@ Examples:
           if (ukScore > ruScore) return 'uk-UA';
           return 'ru-RU';
         }
+        if (/[äöüß]/.test(lower) || /\b(und|der|die|das|nicht|ist|sie|ich|wir|mit)\b/i.test(lower)) return 'de-DE';
+        if (/[áíóúñ¿¡]/.test(lower) || /\b(que|para|por|como|gracias|buenos|hola)\b/i.test(lower)) return 'es-ES';
+        if (/[éàèùâêîôûç]/.test(lower) || /\b(bonjour|merci|vous|nous|dans|pour)\b/i.test(lower)) return 'fr-FR';
+        if (/\b(ciao|grazie|perche|questo|tutto|sono)\b/i.test(lower)) return 'it-IT';
         const plMarks = (lower.match(/[ąćęłńóśźż]/g) || []).length;
         const plWords = ['jest', 'bardzo', 'proszę', 'dziękuję', 'dzień', 'dobry', 'witam'];
         if (plMarks > 0 || plWords.filter((w) => lower.includes(w)).length >= 2) return 'pl-PL';
@@ -3620,22 +3908,64 @@ Examples:
         }
       },
 
-      startVisualizer(msgId) {
+      startVisualizer(msgId, audioEl) {
         this.stopVisualizer();
         const viz = document.getElementById(`viz-${msgId}`);
         if (!viz) return;
         viz.style.display = 'inline-block';
         const frames = [' ', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
+
+        const ctx = this.getAudioContext();
+        if (ctx && audioEl) {
+          try {
+            if (!audioEl.__sourceNode) {
+              const source = ctx.createMediaElementSource(audioEl);
+              const analyser = ctx.createAnalyser();
+              analyser.fftSize = 64;
+              analyser.smoothingTimeConstant = 0.6;
+              source.connect(analyser);
+              analyser.connect(ctx.destination);
+              audioEl.__sourceNode = source;
+              audioEl.__analyser = analyser;
+            }
+            const analyser = audioEl.__analyser;
+            if (analyser) {
+              const freqData = new Uint8Array(analyser.frequencyBinCount);
+              const loop = () => {
+                if (!this.activeAudio || this.activeAudio.paused || this.activeAudio.ended) {
+                  return;
+                }
+                analyser.getByteFrequencyData(freqData);
+                let s = '';
+                for (let i = 1; i <= 9; i++) {
+                  const val = freqData[i] || 0;
+                  const lvl = Math.min(7, Math.floor((val / 255) * 8));
+                  s += frames[lvl];
+                }
+                viz.textContent = `[ ${s} ]`;
+                this.playAnimId = requestAnimationFrame(loop);
+              };
+              this.playAnimId = requestAnimationFrame(loop);
+              return;
+            }
+          } catch (err) {
+            console.warn('Live playback visualizer fallback:', err);
+          }
+        }
+
+        // Animated fallback
         this.vizInterval = setInterval(() => {
           let s = '';
-          for (let i = 0; i < 9; i++) {
-            s += frames[Math.floor(Math.random() * frames.length)];
-          }
+          for (let i = 0; i < 9; i++) s += frames[Math.floor(Math.random() * frames.length)];
           viz.textContent = `[ ${s} ]`;
         }, 110);
       },
 
       stopVisualizer() {
+        if (this.playAnimId) {
+          cancelAnimationFrame(this.playAnimId);
+          this.playAnimId = null;
+        }
         if (this.vizInterval) {
           clearInterval(this.vizInterval);
           this.vizInterval = null;
@@ -3695,7 +4025,7 @@ Examples:
             audio.onplay = () => {
               if (this.activeMsgId === msgId) {
                 this.setUiState(msgId, 'playing');
-                this.startVisualizer(msgId);
+                this.startVisualizer(msgId, audio);
               }
             };
             audio.onpause = () => {
