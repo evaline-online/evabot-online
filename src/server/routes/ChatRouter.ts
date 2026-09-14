@@ -12,6 +12,7 @@ import { isDebugOn, startSpan, renderDebugFooter } from '../../core/OpLog.js';
 import { SystemContext, recordLastUsedModel } from '../../core/SystemContext.js';
 import { DeveloperMode } from '../../core/DeveloperMode.js';
 import { AutoModelRouter } from '../../core/AutoModelRouter.js';
+import { AccountingEngine } from '../../core/AccountingEngine.js';
 
 /**
  * Fire-and-forget chat persistence: a DB failure must never break the chat flow.
@@ -192,7 +193,21 @@ export class ChatRouter extends Router {
 
       persistChatMessage(chatSessionId, 'assistant', fullText, activeModel);
 
-      ctx.res.write(`data: ${JSON.stringify({ done: true, fullText: fullTextOut, model: activeModel, persona: resolvedPersona || 'eva' })}\n\n`);
+      // Live Token & Cost Accounting
+      const promptTokens = Math.max(1, Math.ceil(message.length / 3.6));
+      const completionTokens = Math.max(1, Math.ceil(fullText.length / 3.6));
+      const usage = AccountingEngine.recordUsage(activeModel, promptTokens, completionTokens);
+      const isFree = usage.costUSD === 0;
+      const stats = {
+        promptTokens,
+        completionTokens,
+        totalTokens: promptTokens + completionTokens,
+        costUSD: isFree ? 0 : parseFloat(usage.costUSD.toFixed(5)),
+        savedUSD: parseFloat(usage.savedUSD.toFixed(4)),
+        isFree,
+      };
+
+      ctx.res.write(`data: ${JSON.stringify({ done: true, fullText: fullTextOut, model: activeModel, persona: resolvedPersona || 'eva', stats })}\n\n`);
       ctx.res.end();
     }));
 

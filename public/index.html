@@ -2863,9 +2863,16 @@ Examples:
 
     function renderMarkdown(md) {
       if (!md) return '';
+      // Sanitize internal reasoning tags and stray Asian CJK characters
+      const sanitized = md
+        .replace(/<think>[\s\S]*?<\/think>/gi, '')
+        .replace(/<think>[\s\S]*$/gi, '')
+        .replace(/<thought>[\s\S]*?<\/thought>/gi, '')
+        .replace(/[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff]/g, '');
+
       // 1. Extract and preserve code blocks
       const codeBlocks = [];
-      let text = md.replace(/```([a-zA-Z0-9_-]*)\n?([\s\S]*?)```/g, (match, lang, code) => {
+      let text = sanitized.replace(/```([a-zA-Z0-9_-]*)\n?([\s\S]*?)```/g, (match, lang, code) => {
         const id = `__CODE_BLOCK_${codeBlocks.length}__`;
         codeBlocks.push({ lang: lang.trim(), code });
         return id;
@@ -3019,7 +3026,7 @@ Examples:
       }
     }
 
-    function attachVoiceBar(msgDiv, msgId, text) {
+    function attachVoiceBar(msgDiv, msgId, text, stats) {
       if (!msgDiv || !text || !text.trim() || text === '...') return;
       let bar = msgDiv.querySelector('.msg-voice-bar');
       if (!bar) {
@@ -3029,6 +3036,12 @@ Examples:
         msgDiv.appendChild(bar);
       }
       bar.setAttribute('data-speak-text', text);
+      let statsHtml = '';
+      if (stats && stats.totalTokens) {
+        const costText = stats.isFree ? '$0.00' : `$${stats.costUSD}`;
+        const savedText = stats.savedUSD > 0 ? ` · Сэкономлено: $${stats.savedUSD}` : '';
+        statsHtml = `<span class="msg-stats font-mono c-dim" style="font-size:0.7rem;margin-left:6px;user-select:none;opacity:0.8;" title="Tokens: prompt=${stats.promptTokens}, completion=${stats.completionTokens}">[ ⚡ ${stats.totalTokens} tok · ${costText}${savedText} ]</span>`;
+      }
       bar.innerHTML = `
         <button type="button" class="voice-btn voice-btn-play" id="btn-play-${msgId}" onclick="VoiceEngine.playMessage('${msgId}')" title="Play speech [▶]">[▶ Speak]</button>
         <button type="button" class="voice-btn voice-btn-pause" id="btn-pause-${msgId}" onclick="VoiceEngine.pauseMessage('${msgId}')" title="Pause speech [||]" style="display:none;">[|| Pause]</button>
@@ -3038,6 +3051,7 @@ Examples:
         <button type="button" class="voice-btn voice-btn-dl" id="btn-dl-${msgId}" onclick="VoiceEngine.downloadMp3('${msgId}')" title="Download audio [DL MP3]" style="display:none;">[DL MP3]</button>
         <span class="voice-visualizer" id="viz-${msgId}" style="display:none;">[ ▂▃▅▆▇▆▅▃▂ ]</span>
         <span class="voice-status c-dim" id="vstatus-${msgId}"></span>
+        ${statsHtml}
       `;
     }
 
@@ -3358,6 +3372,7 @@ Examples:
         const decoder = new TextDecoder('utf-8');
         let buffer = '';
         let accumulatedText = '';
+        let lastStats = null;
 
         // Watchdog: a silent provider stream must never wedge the chat in the
         // '...' state. Abort when no chunk arrives for 60s (or 120s total).
@@ -3415,6 +3430,7 @@ Examples:
                     botBody.innerHTML = renderMarkdown(accumulatedText);
                     // Persona from the backend (eva|adam) drives the TTS voice.
                     window.__lastPersona = data.persona === 'adam' ? 'adam' : 'eva';
+                    if (data.stats) lastStats = data.stats;
                     if (data.model) {
                       const pill = document.getElementById('model-pill');
                       if (pill && !state.selectedModel) pill.textContent = data.model;
@@ -3436,7 +3452,7 @@ Examples:
         state.history.push({ role: 'user', content: text });
         state.history.push({ role: 'model', content: accumulatedText });
         setStatus(true, false);
-        attachVoiceBar(botBody.parentElement, botBody.parentElement.id, accumulatedText);
+        attachVoiceBar(botBody.parentElement, botBody.parentElement.id, accumulatedText, lastStats);
       } catch (error) {
         botBody.innerHTML = `<span class="c-err">[ERROR] ${escapeHtml(error.message)}</span>`;
         setStatus(false);

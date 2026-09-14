@@ -16,6 +16,8 @@ export function cleanLlmOutput(text: string): string {
   let cleaned = text
     .replace(/<think>[\s\S]*?<\/think>/gi, '')
     .replace(/<thought>[\s\S]*?<\/thought>/gi, '')
+    .replace(/<think>[\s\S]*$/gi, '') // strip unclosed trailing think tag
+    .replace(/[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff]/g, '') // remove stray Chinese/Asian ideographs
     .trim();
 
   if (cleaned.startsWith('<think>')) {
