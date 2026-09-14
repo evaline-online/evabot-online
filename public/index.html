@@ -57,9 +57,10 @@
 
     html {
       font-size: 16px;
-      height: 100%;
-      height: 100dvh;
-      overflow: hidden;
+      min-height: 100%;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      overflow-y: auto;
       background: var(--bg);
     }
 
@@ -77,23 +78,33 @@
     body {
       background: var(--bg);
       color: var(--fg);
-      height: 100%;
-      height: 100dvh;
-      max-height: 100dvh;
+      min-height: 100%;
       display: flex;
       flex-direction: column;
-      padding: 6px 12px;
-      padding-top: max(6px, var(--safe-top));
-      padding-bottom: max(4px, var(--safe-bottom));
-      padding-left: max(8px, var(--safe-left));
-      padding-right: max(8px, var(--safe-right));
-      overflow: hidden;
+      padding: 0;
+      overflow-x: hidden;
+      overflow-y: visible;
       font-family: var(--font-mono);
       font-size: 0.875rem;
       line-height: 1.4;
       letter-spacing: -0.01em;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+    }
+
+    .chat-screen-wrapper {
+      height: 100vh;
+      height: 100dvh;
+      max-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 6px 12px;
+      padding-top: max(6px, var(--safe-top));
+      padding-bottom: max(4px, var(--safe-bottom));
+      padding-left: max(8px, var(--safe-left));
+      padding-right: max(8px, var(--safe-right));
+      flex-shrink: 0;
     }
 
     /* All surfaces strictly share Roboto Mono / monospace */
@@ -663,6 +674,257 @@
       50% { box-shadow: 0 0 0 7px rgba(255, 23, 68, 0); }
     }
 
+    /* Burger button & Minimal Header */
+    .burger-btn {
+      background: #080d14;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1;
+      padding: 0 9px;
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      flex: none;
+      border-radius: 2px;
+      touch-action: manipulation;
+      transition: border-color 0.12s, color 0.12s, background 0.12s;
+    }
+
+    .burger-btn:hover {
+      border-color: var(--green);
+      color: var(--green);
+      background: rgba(0, 255, 65, 0.08);
+    }
+
+    .header-minimal {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 12px;
+      margin-bottom: 6px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      flex-shrink: 0;
+      text-align: center;
+    }
+
+    .header-minimal-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.82rem;
+    }
+
+    .logo-title {
+      letter-spacing: 0.05em;
+    }
+
+    .logo-subtitle {
+      font-size: 0.72rem;
+    }
+
+    .logo-badge {
+      font-size: 0.72rem;
+    }
+
+    /* Burger Drawer */
+    .burger-drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 1001;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .burger-drawer-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .burger-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 290px;
+      max-width: 85vw;
+      background: #06090e;
+      border-right: 1px solid var(--border);
+      z-index: 1002;
+      transform: translateX(-100%);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.8);
+      font-family: var(--font-mono);
+    }
+
+    .burger-drawer.open {
+      transform: translateX(0);
+    }
+
+    .burger-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .burger-drawer-content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .burger-nav-btn {
+      width: 100%;
+      padding: 10px;
+      background: rgba(0, 255, 65, 0.05);
+      border: 1px solid var(--green);
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      border-radius: 2px;
+      transition: all 0.15s ease;
+    }
+
+    .burger-nav-btn:hover {
+      background: rgba(0, 255, 65, 0.15);
+    }
+
+    .burger-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .burger-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .burger-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Screen 2: Settings & Telemetry */
+    .screen-settings-wrapper {
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 14px 12px 32px 12px;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-shrink: 0;
+      border-top: 2px solid var(--border);
+    }
+
+    .settings-header-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .back-btn {
+      background: rgba(0, 255, 65, 0.05);
+      border: 1px solid var(--green);
+      color: var(--green);
+      padding: 6px 14px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      border-radius: 2px;
+      transition: all 0.15s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(0, 255, 65, 0.15);
+    }
+
+    /* Message Voice Bar & Visualizer */
+    .msg-voice-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      padding-top: 4px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.08);
+      font-size: 0.78rem;
+      flex-wrap: wrap;
+    }
+
+    .voice-btn {
+      background: #080d14;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 2px 7px;
+      cursor: pointer;
+      border-radius: 2px;
+      line-height: 1.3;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .voice-btn:hover {
+      border-color: var(--green);
+      color: var(--green);
+      background: rgba(0, 255, 65, 0.08);
+    }
+
+    .voice-btn-play {
+      color: var(--green);
+      border-color: rgba(0, 255, 65, 0.4);
+    }
+
+    .voice-btn-pause {
+      color: var(--yellow);
+      border-color: rgba(255, 215, 0, 0.4);
+    }
+
+    .voice-btn-stop {
+      color: var(--red);
+      border-color: rgba(255, 75, 75, 0.4);
+    }
+
+    .voice-visualizer {
+      font-family: var(--font-mono);
+      color: var(--green);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      font-size: 0.8rem;
+      animation: pulse-glow 1.2s infinite ease-in-out;
+    }
+
+
     /* ===== Toast notifications ===== */
     .toast-wrap {
       position: fixed;
@@ -886,126 +1148,193 @@
 </head>
 <body>
 
-  <!-- TUI Frame Header -->
-  <header class="header-block">
-    <!-- Top Status Row -->
-    <div class="tui-line tui-top-row">
-      <div class="tui-status-group">
+  <!-- SCREEN 1: Minimalist Chat Interface -->
+  <div class="chat-screen-wrapper" id="screen-chat">
+    <!-- Minimal Header: Logo Only -->
+    <header class="header-minimal">
+      <div class="header-minimal-content">
         <span class="status-dot pulse" id="status-light">●</span>
-        <span class="bold c-fg">EvaBot</span> <span class="c-dim" style="font-size: 0.75rem;">v0.1.0</span>
-        <span class="c-ok bold" id="status-text">ONLINE</span>
-        <span class="c-dim">│</span>
-        <span id="lbl-ping" class="c-dim">Ping:</span> <span class="c-ok bold" id="ping-text">...</span>
-        <span class="c-dim desk-only">│</span>
-        <span class="desk-only c-dim">Mesh:</span> <span class="c-ok desk-only" id="mesh-ping">122ms</span>
-        <span class="c-dim desk-only">│</span>
-        <span class="desk-only c-dim">Live:</span> <span class="c-ok desk-only" id="pulse-indicator"></span>
+        <span class="bold c-fg logo-title">EVABOT.ONLINE</span>
+        <span class="c-dim font-mono logo-subtitle">// NEURAL CORE</span>
+        <span class="c-ok bold logo-badge" id="status-text">[ONLINE]</span>
+      </div>
+    </header>
+
+    <!-- Chat Stream & Input -->
+    <div id="chat-panel" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0;">
+      <!-- Messages stream -->
+      <div class="chat-container" id="chat-container">
+        <div class="msg">
+          <span class="msg-time" id="boot-time">[19:10:00]</span><span class="msg-sender system">system :</span><span class="msg-body" id="boot-msg">Connecting to evabot.online ...</span>
+        </div>
       </div>
 
-      <div class="tui-actions-group">
-        <span class="cmd-link bold c-ok tui-tab" id="tab-terminal" onclick="switchTab('terminal')" style="font-size: 0.78rem;">[ TERMINAL ]</span>
-        <span class="cmd-link tui-tab" id="tab-metrics" onclick="switchTab('metrics')" style="font-size: 0.78rem;">[ METRICS ]</span>
-        <span class="c-dim">│</span>
-        <span class="cmd-link bold c-ok" id="lang-en" onclick="setLanguage('en')">[EN]</span>
-        <span class="cmd-link" id="lang-uk" onclick="setLanguage('uk')">UK</span>
-        <span class="cmd-link" id="lang-ru" onclick="setLanguage('ru')">RU</span>
-        <span class="cmd-link desk-only" id="css-toggle" onclick="toggleCss()" title="Display mode: off / term / web (click to cycle)">[CSS:TERM]</span>
-      </div>
-    </div>
-
-    <!-- Meta Info Row -->
-    <div class="tui-line tui-meta-row">
-      <div class="tui-meta-item">
-        <span class="c-dim" id="lbl-model">Model:</span>
-        <span class="interactive-link bold c-ok" id="model-pill" onclick="openModelModal()">...</span>
-      </div>
-      <span class="c-dim">│</span>
-      <div class="tui-meta-item">
-        <span class="c-dim" id="lbl-mode">Mode:</span>
-        <span class="interactive-link" id="current-mode" onclick="toggleMode()">solo</span>
-      </div>
-      <span class="c-dim desk-only">│</span>
-      <div class="tui-meta-item desk-only">
-        <span class="c-dim" id="lbl-pool">Pool:</span>
-        <span class="interactive-link" id="models-link" onclick="openModelModal()">94 models (/models)</span>
-      </div>
-      <span class="c-dim desk-only">│</span>
-      <div class="tui-meta-item desk-only" id="db-line">
-        <span class="c-dim" id="lbl-databases">Databases:</span>
-        <span class="c-ok" id="db-values">checking ...</span>
-      </div>
-    </div>
-
-    <!-- Horizontal Swipeable Command Strip -->
-    <div class="tui-cmd-strip" id="cmd-strip-line">
-      <span class="c-dim" id="lbl-commands" style="font-size: 0.75rem; flex-shrink: 0; font-weight: 700;">CMD:</span>
-      <div class="tui-cmd-scroll" id="cmd-scroll">
-        <span class="cmd-link" onclick="handleCommand('/help')">/help</span>
-        <span class="cmd-link" onclick="handleCommand('/?')">/?</span>
-        <span class="cmd-link" onclick="openModelModal()">/models</span>
-        <span class="cmd-link" onclick="toggleMode()">/mode</span>
-        <span class="cmd-link" onclick="handleCommand('/consilium')">/consilium</span>
-        <span class="cmd-link" onclick="handleCommand('/top')">/top</span>
-        <span class="cmd-link" onclick="handleCommand('/cost')">/cost</span>
-        <span class="cmd-link" onclick="handleCommand('/company')">/company</span>
-        <span class="cmd-link" onclick="handleCommand('/evaline')">/evaline</span>
-        <span class="cmd-link" onclick="handleCommand('/products')">/products</span>
-        <span class="cmd-link" onclick="handleCommand('/who')">/who</span>
-        <span class="cmd-link" onclick="setLanguage(state.lang)">/lang</span>
-        <span class="cmd-link" onclick="handleCommand('/sephirot')">/sephirot</span>
-        <span class="cmd-link" onclick="handleCommand('/mcp')">/mcp</span>
-        <span class="cmd-link" onclick="handleCommand('/lsp')">/lsp</span>
-        <span class="cmd-link" onclick="handleCommand('/history')">/history</span>
-        <span class="cmd-link" onclick="handleCommand('/memory')">/memory</span>
-        <span class="cmd-link" onclick="handleCommand('/add')">/add</span>
-        <span class="cmd-link" onclick="handleCommand('/file')">/file</span>
-        <span class="cmd-link" onclick="handleCommand('/idea')">/idea</span>
-        <span class="cmd-link" onclick="handleCommand('/error')">/error</span>
-        <span class="cmd-link" onclick="handleCommand('/bug')">/bug</span>
-        <span class="cmd-link" onclick="handleCommand('/errors')">/errors</span>
-        <span class="cmd-link" onclick="handleCommand('/search')">/search</span>
-        <span class="cmd-link" onclick="handleCommand('/services')">/services</span>
-        <span class="cmd-link" onclick="handleCommand('/servers')">/servers</span>
-        <span class="cmd-link" onclick="handleCommand('/clear')">/clear</span>
-      </div>
-    </div>
-  </header>
-
-  <!-- Terminal / Chat Panel -->
-  <div id="chat-panel" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0;">
-    <!-- Messages stream -->
-    <div class="chat-container" id="chat-container">
-      <div class="msg">
-        <span class="msg-time" id="boot-time">[19:10:00]</span><span class="msg-sender system">system :</span><span class="msg-body" id="boot-msg">Connecting to evabot.online ...</span>
-      </div>
-    </div>
-
-    <!-- Input Row -->
-    <div class="input-line">
-      <div class="ac-box" id="ac-box"></div>
-      <div class="prompt-prefix">
-        <span class="c-dim desk-only" style="font-size: 0.8rem; user-select: none;">evabot@core:~$</span>
-        <span class="prompt-char">&gt;</span>
-      </div>
-      <textarea id="user-input" placeholder="Type a message or command (/help)..." autofocus rows="1"></textarea>
-      <div class="input-actions">
-        <button type="button" class="mic-btn send-btn" id="send-btn" title="Send message (Enter)" onclick="sendMessage()">[ ↵ ]</button>
-        <button type="button" class="mic-btn" id="mic-btn" title="Voice input [ MIC ]" onclick="VoiceEngine.toggle()">[ MIC ]</button>
-        <span class="mic-btn" id="tts-toggle" onclick="VoiceEngine.toggleTtsMute()" title="TTS on/off">[ TTS:ON ]</span>
+      <!-- Input Row: [≡] Menu | > Textarea | [↵] Send | [🎙] Voice -->
+      <div class="input-line">
+        <div class="ac-box" id="ac-box"></div>
+        <button type="button" class="burger-btn" id="burger-btn" onclick="toggleBurgerMenu()" title="Menu / Settings [≡]">[≡]</button>
+        <div class="prompt-prefix">
+          <span class="prompt-char">&gt;</span>
+        </div>
+        <textarea id="user-input" placeholder="Type a message or command (/help)..." autofocus rows="1"></textarea>
+        <div class="input-actions">
+          <button type="button" class="mic-btn send-btn" id="send-btn" title="Send message [↵]" onclick="sendMessage()">[↵]</button>
+          <button type="button" class="mic-btn audio-stt-btn" id="mic-btn" title="Voice input [🎙]" onclick="VoiceEngine.toggle()">[🎙]</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Metrics Panel -->
-  <div id="metrics-panel" style="display: none; flex: 1; flex-direction: column; overflow: hidden; min-height: 0;">
-    <div class="tui-line" id="metrics-line" style="padding: 4px 0; border-bottom: 1px solid var(--border); font-size: 0.8rem;">
-      <span class="c-dim" id="lbl-load">Load:</span> <span id="metrics-frankfurt">Brain(Frankfurt) CPU <span class="c-ok">25%</span> · RAM <span class="c-ok">15%</span> 4.7/31GB</span> │ <span id="metrics-iowa">Face(Iowa) CPU <span class="c-ok">2%</span> · RAM <span class="c-ok">46%</span> 440MB</span> │ <span id="heartbeat-indicator" class="c-ok"><span style="color:var(--red)">*</span> 72bpm</span>
+  <!-- Burger Menu Drawer -->
+  <div class="burger-drawer-backdrop" id="burger-backdrop" onclick="closeBurgerMenu()"></div>
+  <div class="burger-drawer" id="burger-drawer">
+    <div class="burger-drawer-header">
+      <div class="bold c-fg">[≡] EVABOT CONTROL</div>
+      <div class="interactive-link c-dim" onclick="closeBurgerMenu()">[× CLOSE]</div>
     </div>
-    <div class="tui-line desk-only" id="network-strip" style="padding: 4px 0; font-size: 0.78rem;">
-      <span class="c-dim">Cluster:</span> <span class="cmd-link bold c-ok">[evabot.online]</span><a href="https://evaline.network" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.network ↗</a><a href="https://evaline.online" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.online ↗</a><a href="https://evaline.website" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.website ↗</a><span class="c-dim">│</span> <a href="https://github.com/evaline-online" class="cmd-link" target="_blank" style="color:var(--yellow); font-weight:700; text-decoration:underline;">GitHub @evaline-online ↗</a>
+    <div class="burger-drawer-content">
+      <button type="button" class="burger-nav-btn bold c-ok" onclick="scrollToSettings()">[⚙ SETTINGS & TELEMETRY ⇓]</button>
+      <div class="burger-section">
+        <div class="c-dim burger-label">CORE MODEL:</div>
+        <div class="interactive-link bold c-ok" onclick="closeBurgerMenu(); openModelModal();" id="drawer-model-pill">...</div>
+      </div>
+      <div class="burger-section">
+        <div class="c-dim burger-label">MODE:</div>
+        <div class="interactive-link" onclick="toggleMode(); syncDrawerState();" id="drawer-current-mode">solo</div>
+      </div>
+      <div class="burger-section">
+        <div class="c-dim burger-label">LANGUAGE:</div>
+        <div class="burger-row">
+          <span class="cmd-link" id="drawer-lang-en" onclick="setLanguage('en'); syncDrawerState();">[EN]</span>
+          <span class="cmd-link" id="drawer-lang-uk" onclick="setLanguage('uk'); syncDrawerState();">UK</span>
+          <span class="cmd-link" id="drawer-lang-ru" onclick="setLanguage('ru'); syncDrawerState();">RU</span>
+        </div>
+      </div>
+      <div class="burger-section">
+        <div class="c-dim burger-label">VOICE PERSONA:</div>
+        <div class="burger-row">
+          <span class="cmd-link" id="drawer-persona-eva" onclick="VoiceEngine.setPersona('eva'); syncDrawerState();">[Eva]</span>
+          <span class="cmd-link" id="drawer-persona-adam" onclick="VoiceEngine.setPersona('adam'); syncDrawerState();">[Adam]</span>
+        </div>
+      </div>
+      <div class="burger-section">
+        <div class="c-dim burger-label">QUICK COMMANDS:</div>
+        <div class="burger-row" style="flex-direction: column; gap: 4px;">
+          <span class="cmd-link" onclick="closeBurgerMenu(); handleCommand('/help');">/help - Manual & commands</span>
+          <span class="cmd-link" onclick="closeBurgerMenu(); openModelModal();">/models - Select AI model</span>
+          <span class="cmd-link" onclick="closeBurgerMenu(); handleCommand('/consilium');">/consilium - Multi-agent consensus</span>
+          <span class="cmd-link" onclick="closeBurgerMenu(); handleCommand('/clear');">/clear - Clear chat</span>
+        </div>
+      </div>
     </div>
-    <div class="chat-container" id="metrics-container" style="flex: 1; overflow-y: auto;">
-      <div class="msg" style="color: var(--dim);">Loading live metrics...</div>
+  </div>
+
+  <!-- SCREEN 2: Settings & Telemetry -->
+  <div class="screen-settings-wrapper" id="screen-settings">
+    <div class="settings-header-nav">
+      <button type="button" class="back-btn bold c-ok" onclick="scrollToChat()">[⇑ BACK TO CHAT / НАВЕРХ В ЧАТ]</button>
+      <span class="bold c-fg">// EVABOT SYSTEM SETTINGS & TELEMETRY</span>
+    </div>
+
+    <!-- TUI Frame Header with exact CLI parity labels -->
+    <header class="header-block">
+      <!-- Top Status Row -->
+      <div class="tui-line tui-top-row">
+        <div class="tui-status-group">
+          <span class="c-dim"><span id="lbl-ping">Ping:</span></span> <span class="c-ok bold" id="ping-text">...</span>
+          <span class="c-dim desk-only">│</span>
+          <span class="desk-only c-dim">Mesh:</span> <span class="c-ok desk-only" id="mesh-ping">122ms</span>
+          <span class="c-dim desk-only">│</span>
+          <span class="desk-only c-dim">Live:</span> <span class="c-ok desk-only" id="pulse-indicator"></span>
+        </div>
+
+        <div class="tui-actions-group">
+          <span class="cmd-link bold c-ok tui-tab" id="tab-terminal" onclick="switchTab('terminal')" style="font-size: 0.78rem;">[ TERMINAL ]</span>
+          <span class="cmd-link tui-tab" id="tab-metrics" onclick="switchTab('metrics')" style="font-size: 0.78rem;">[ METRICS ]</span>
+          <span class="c-dim">│</span>
+          <span class="c-dim"><span id="lbl-lang">Lang:</span></span>
+          <span class="cmd-link bold c-ok" id="lang-en" onclick="setLanguage('en')">[EN]</span>
+          <span class="cmd-link" id="lang-uk" onclick="setLanguage('uk')">UK</span>
+          <span class="cmd-link" id="lang-ru" onclick="setLanguage('ru')">RU</span>
+          <span class="cmd-link desk-only" id="css-toggle" onclick="toggleCss()" title="Display mode: off / term / web (click to cycle)">[CSS:TERM]</span>
+          <span class="c-dim">│</span>
+          <span class="mic-btn" id="tts-toggle" onclick="VoiceEngine.toggleTtsMute()" title="TTS on/off">[ TTS:ON ]</span>
+        </div>
+      </div>
+
+      <!-- Meta Info Row -->
+      <div class="tui-line tui-meta-row">
+        <div class="tui-meta-item">
+          <span class="c-dim"><span id="lbl-model">Model:</span></span>
+          <span class="interactive-link bold c-ok" id="model-pill" onclick="openModelModal()">...</span>
+        </div>
+        <span class="c-dim">│</span>
+        <div class="tui-meta-item">
+          <span class="c-dim"><span id="lbl-mode">Mode:</span></span>
+          <span class="interactive-link" id="current-mode" onclick="toggleMode()">solo</span>
+        </div>
+        <span class="c-dim desk-only">│</span>
+        <div class="tui-meta-item desk-only">
+          <span class="c-dim"><span id="lbl-pool">Pool:</span></span>
+          <span class="interactive-link" id="models-link" onclick="openModelModal()">94 models (/models)</span>
+        </div>
+        <span class="c-dim desk-only">│</span>
+        <div class="tui-meta-item desk-only" id="db-line">
+          <span class="c-dim"><span id="lbl-databases">Databases:</span></span>
+          <span class="c-ok" id="db-values">checking ...</span>
+        </div>
+      </div>
+
+      <!-- Horizontal Swipeable Command Strip -->
+      <div class="tui-cmd-strip" id="cmd-strip-line">
+        <span class="c-dim" style="font-size: 0.75rem; flex-shrink: 0; font-weight: 700;"><span id="lbl-commands">Commands:</span></span>
+        <div class="tui-cmd-scroll" id="cmd-scroll">
+          <span class="cmd-link" onclick="handleCommand('/help'); scrollToChat();">/help</span>
+          <span class="cmd-link" onclick="handleCommand('/?'); scrollToChat();">/?</span>
+          <span class="cmd-link" onclick="openModelModal()">/models</span>
+          <span class="cmd-link" onclick="toggleMode()">/mode</span>
+          <span class="cmd-link" onclick="handleCommand('/consilium'); scrollToChat();">/consilium</span>
+          <span class="cmd-link" onclick="handleCommand('/top'); scrollToChat();">/top</span>
+          <span class="cmd-link" onclick="handleCommand('/cost'); scrollToChat();">/cost</span>
+          <span class="cmd-link" onclick="handleCommand('/company'); scrollToChat();">/company</span>
+          <span class="cmd-link" onclick="handleCommand('/evaline'); scrollToChat();">/evaline</span>
+          <span class="cmd-link" onclick="handleCommand('/products'); scrollToChat();">/products</span>
+          <span class="cmd-link" onclick="handleCommand('/who'); scrollToChat();">/who</span>
+          <span class="cmd-link" onclick="setLanguage(state.lang)">/lang</span>
+          <span class="cmd-link" onclick="handleCommand('/sephirot'); scrollToChat();">/sephirot</span>
+          <span class="cmd-link" onclick="handleCommand('/mcp'); scrollToChat();">/mcp</span>
+          <span class="cmd-link" onclick="handleCommand('/lsp'); scrollToChat();">/lsp</span>
+          <span class="cmd-link" onclick="handleCommand('/history'); scrollToChat();">/history</span>
+          <span class="cmd-link" onclick="handleCommand('/memory'); scrollToChat();">/memory</span>
+          <span class="cmd-link" onclick="handleCommand('/add'); scrollToChat();">/add</span>
+          <span class="cmd-link" onclick="handleCommand('/file'); scrollToChat();">/file</span>
+          <span class="cmd-link" onclick="handleCommand('/idea'); scrollToChat();">/idea</span>
+          <span class="cmd-link" onclick="handleCommand('/error'); scrollToChat();">/error</span>
+          <span class="cmd-link" onclick="handleCommand('/bug'); scrollToChat();">/bug</span>
+          <span class="cmd-link" onclick="handleCommand('/errors'); scrollToChat();">/errors</span>
+          <span class="cmd-link" onclick="handleCommand('/search'); scrollToChat();">/search</span>
+          <span class="cmd-link" onclick="handleCommand('/services'); scrollToChat();">/services</span>
+          <span class="cmd-link" onclick="handleCommand('/servers'); scrollToChat();">/servers</span>
+          <span class="cmd-link" onclick="handleCommand('/clear'); scrollToChat();">/clear</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Metrics Panel -->
+    <div id="metrics-panel" style="display: flex; flex-direction: column; overflow: hidden; min-height: 280px;">
+      <div class="tui-line" id="metrics-line" style="padding: 4px 0; border-bottom: 1px solid var(--border); font-size: 0.8rem;">
+        <span class="c-dim"><span id="lbl-load">Load:</span></span> <span id="metrics-frankfurt">Brain(Frankfurt) CPU <span class="c-ok">25%</span> · RAM <span class="c-ok">15%</span> 4.7/31GB</span> │ <span id="metrics-iowa">Face(Iowa) CPU <span class="c-ok">2%</span> · RAM <span class="c-ok">46%</span> 440MB</span> │ <span id="heartbeat-indicator" class="c-ok"><span style="color:var(--red)">*</span> 72bpm</span>
+      </div>
+      <div class="tui-line desk-only" id="network-strip" style="padding: 4px 0; font-size: 0.78rem;">
+        <span class="c-dim">Cluster:</span> <span class="cmd-link bold c-ok">[evabot.online]</span><a href="https://evaline.network" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.network ↗</a><a href="https://evaline.online" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.online ↗</a><a href="https://evaline.website" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.website ↗</a><span class="c-dim">│</span> <a href="https://github.com/evaline-online" class="cmd-link" target="_blank" style="color:var(--yellow); font-weight:700; text-decoration:underline;">GitHub @evaline-online ↗</a>
+      </div>
+      <div class="chat-container" id="metrics-container" style="flex: 1; overflow-y: auto; max-height: 480px;">
+        <div class="msg" style="color: var(--dim);">Loading live metrics...</div>
+      </div>
+    </div>
+
+    <div style="padding: 12px 0; text-align: center;">
+      <button type="button" class="back-btn bold c-ok" onclick="scrollToChat()">[⇑ BACK TO CHAT / НАВЕРХ В ЧАТ]</button>
     </div>
   </div>
 
@@ -1829,6 +2158,10 @@ Examples:
           : `${state.models.length} моделей (/models)`;
       }
 
+      if (typeof syncDrawerState === 'function') {
+        syncDrawerState();
+      }
+
       const bootMsg = document.getElementById('boot-msg');
       if (bootMsg && chatContainer && chatContainer.children.length === 1) {
         const alreadyConnected = bootMsg.textContent && !bootMsg.textContent.includes('Connecting');
@@ -2068,9 +2401,33 @@ Examples:
       return localStorage.getItem('evabot_emoji') === 'on';
     }
 
+    let msgCounter = 0;
+
+    function attachVoiceBar(msgDiv, msgId, text) {
+      if (!msgDiv || !text || !text.trim() || text === '...') return;
+      let bar = msgDiv.querySelector('.msg-voice-bar');
+      if (!bar) {
+        bar = document.createElement('div');
+        bar.className = 'msg-voice-bar';
+        bar.id = `vbar-${msgId}`;
+        msgDiv.appendChild(bar);
+      }
+      bar.setAttribute('data-speak-text', text);
+      bar.innerHTML = `
+        <button type="button" class="voice-btn voice-btn-play" id="btn-play-${msgId}" onclick="VoiceEngine.playMessage('${msgId}')" title="Play speech [▶]">[▶ Speak]</button>
+        <button type="button" class="voice-btn voice-btn-pause" id="btn-pause-${msgId}" onclick="VoiceEngine.pauseMessage('${msgId}')" title="Pause speech [⏸]" style="display:none;">[⏸ Pause]</button>
+        <button type="button" class="voice-btn voice-btn-stop" id="btn-stop-${msgId}" onclick="VoiceEngine.stopMessage('${msgId}')" title="Stop speech [■]" style="display:none;">[■ Stop]</button>
+        <span class="voice-visualizer" id="viz-${msgId}" style="display:none;">[ ▂▃▅▆▇▆▅▃▂ ]</span>
+        <span class="voice-status c-dim" id="vstatus-${msgId}"></span>
+      `;
+    }
+
     function addMessage(role, text) {
       const msgDiv = document.createElement('div');
       msgDiv.className = 'msg';
+      const msgId = 'msg-' + (++msgCounter);
+      msgDiv.id = msgId;
+      msgDiv.setAttribute('data-msg-id', msgId);
 
       const timeSpan = document.createElement('span');
       timeSpan.className = 'msg-time';
@@ -2088,6 +2445,10 @@ Examples:
       msgDiv.appendChild(timeSpan);
       msgDiv.appendChild(roleSpan);
       msgDiv.appendChild(bodySpan);
+
+      if (role !== 'user' && role !== 'system' && text && text !== '...') {
+        attachVoiceBar(msgDiv, msgId, text);
+      }
 
       chatContainer.appendChild(msgDiv);
       // Web display mode: fold long message bodies into a [▼ more] accordion.
@@ -2264,7 +2625,6 @@ Examples:
         if (res && res.synthesis) {
           addMessage('evabot [КОНСЕНСУС]', res.synthesis);
           state.history.push({ role: 'model', content: res.synthesis });
-          VoiceEngine.speak(res.synthesis);
         }
 
         setStatus(true, false);
@@ -2384,7 +2744,7 @@ Examples:
         state.history.push({ role: 'user', content: text });
         state.history.push({ role: 'model', content: accumulatedText });
         setStatus(true, false);
-        VoiceEngine.speak(accumulatedText);
+        attachVoiceBar(botBody.parentElement, botBody.parentElement.id, accumulatedText);
       } catch (error) {
         botBody.innerHTML = `<span class="c-err">[ERROR] ${escapeHtml(error.message)}</span>`;
         setStatus(false);
@@ -2914,51 +3274,12 @@ Examples:
         return 'en-US';
       },
 
-      // Splits reply text at sentence boundaries into chunks ≤ 340 chars so
-      // the FULL reply is voiced (the old code spoke only the first 350 chars).
-      splitSpeech(cleanText, max = 340) {
-        const chunks = [];
-        let start = 0;
-        while (start < cleanText.length) {
-          let end = Math.min(start + max, cleanText.length);
-          if (end < cleanText.length) {
-            const slice = cleanText.slice(start, end);
-            const cuts = ['. ', '! ', '? ', '… ', '... ', '; ', ', ']
-              .map((sep) => slice.lastIndexOf(sep))
-              .filter((idx) => idx >= Math.floor(max / 2));
-            if (cuts.length) end = start + Math.max(...cuts) + 1;
-          }
-          chunks.push(cleanText.slice(start, end).trim());
-          start = end;
-        }
-        return chunks.filter(Boolean);
-      },
+      activeMsgId: null,
+      paused: false,
+      vizInterval: null,
 
-      // Cloud TTS for one chunk. Resolves true on played audio, false on any
-      // failure so the caller drops into the browser speechSynthesis fallback.
-      cloudSpeak(chunk, persona, lang) {
-        return fetch('/api/tts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: chunk, persona, lang }),
-        }).then((r) => r.json()).then((data) => {
-          if (!(data && data.ok && data.audioBase64)) return false;
-          const audio = new Audio('data:audio/mp3;base64,' + data.audioBase64);
-          this.activeAudio = audio;
-          return new Promise((resolve) => {
-            audio.onended = () => { if (this.activeAudio === audio) this.activeAudio = null; resolve(true); };
-            audio.onerror = () => { if (this.activeAudio === audio) this.activeAudio = null; resolve(false); };
-            audio.play().catch(() => { if (this.activeAudio === audio) this.activeAudio = null; resolve(false); });
-          });
-        }).catch(() => false);
-      },
-
-      // Voices the WHOLE reply: language detected from the spoken text (so a
-      // Russian/Ukrainian reply is never voiced with an English voice), split
-      // into sentence-aligned chunks and queued one after another.
-      speak(text) {
-        if (!this.ttsOn) return;
-        const cleanText = String(text || '')
+      cleanForSpeech(text) {
+        return String(text || '')
           .replace(/```[\s\S]*?```/g, ' [Code omitted] ')
           .replace(/`([^`]+)`/g, '$1')
           .replace(/[*_#~>|┌┐└┘├┤─│═]+/g, ' ')
@@ -2966,39 +3287,297 @@ Examples:
           .replace(/\[[^\]]*\]/g, ' ')
           .replace(/\s+/g, ' ')
           .trim();
-        if (!cleanText) return;
-        const seq = ++this.speakSeq;
-        const persona = window.__lastPersona || this.persona;
-        const lang = this.detectLang(cleanText);
-        const chunks = this.splitSpeech(cleanText);
-        const self = this;
-        (async function speakQueue(i) {
-          if (self.speakSeq !== seq || !self.ttsOn) return;
-          if (i >= chunks.length) return;
-          const okay = await self.cloudSpeak(chunks[i], persona, lang);
-          if (self.speakSeq !== seq || !self.ttsOn) return;
-          if (!okay) self.speakBrowser(chunks[i], lang);
-          if (self.speakSeq === seq && self.ttsOn) setTimeout(() => speakQueue(i + 1), 140);
-        })(0);
       },
 
-      // Legacy browser speechSynthesis fallback (persona pitch/rate apply here;
-      // language comes from the spoken text, not the UI locale).
-      speakBrowser(cleanText, lang) {
-        if (!this.ttsOn || !window.speechSynthesis) return;
+      setUiState(msgId, state) {
+        const btnPlay = document.getElementById(`btn-play-${msgId}`);
+        const btnPause = document.getElementById(`btn-pause-${msgId}`);
+        const btnStop = document.getElementById(`btn-stop-${msgId}`);
+        const viz = document.getElementById(`viz-${msgId}`);
+        if (!btnPlay) return;
+
+        if (state === 'idle') {
+          btnPlay.style.display = 'inline-block';
+          btnPlay.textContent = '[▶ Speak]';
+          btnPlay.className = 'voice-btn voice-btn-play';
+          if (btnPause) btnPause.style.display = 'none';
+          if (btnStop) btnStop.style.display = 'none';
+          if (viz) viz.style.display = 'none';
+        } else if (state === 'loading') {
+          btnPlay.style.display = 'inline-block';
+          btnPlay.textContent = '[▶ Loading...]';
+          btnPlay.className = 'voice-btn voice-btn-play c-yellow';
+          if (btnPause) btnPause.style.display = 'none';
+          if (btnStop) btnStop.style.display = 'inline-block';
+          if (viz) viz.style.display = 'none';
+        } else if (state === 'playing') {
+          btnPlay.style.display = 'none';
+          if (btnPause) {
+            btnPause.style.display = 'inline-block';
+            btnPause.textContent = '[⏸ Pause]';
+          }
+          if (btnStop) btnStop.style.display = 'inline-block';
+          if (viz) viz.style.display = 'inline-block';
+        } else if (state === 'paused') {
+          btnPlay.style.display = 'inline-block';
+          btnPlay.textContent = '[▶ Resume]';
+          btnPlay.className = 'voice-btn voice-btn-play';
+          if (btnPause) btnPause.style.display = 'none';
+          if (btnStop) btnStop.style.display = 'inline-block';
+          if (viz) viz.style.display = 'none';
+        }
+      },
+
+      startVisualizer(msgId) {
+        this.stopVisualizer();
+        const viz = document.getElementById(`viz-${msgId}`);
+        if (!viz) return;
+        viz.style.display = 'inline-block';
+        const frames = [' ', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
+        this.vizInterval = setInterval(() => {
+          let s = '';
+          for (let i = 0; i < 9; i++) {
+            s += frames[Math.floor(Math.random() * frames.length)];
+          }
+          viz.textContent = `[ ${s} ]`;
+        }, 110);
+      },
+
+      stopVisualizer() {
+        if (this.vizInterval) {
+          clearInterval(this.vizInterval);
+          this.vizInterval = null;
+        }
+        if (this.activeMsgId) {
+          const viz = document.getElementById(`viz-${this.activeMsgId}`);
+          if (viz) viz.style.display = 'none';
+        }
+      },
+
+      playMessage(msgId, customText) {
+        if (!this.ttsOn) {
+          const d = I18N[state.lang] || I18N.en;
+          showToast(d.ttsOff);
+          return;
+        }
+
+        if (this.activeMsgId === msgId && this.paused) {
+          this.resumeMessage(msgId);
+          return;
+        }
+
+        if (this.activeMsgId) {
+          this.stopMessage(this.activeMsgId);
+        }
+
+        const bar = document.getElementById(`vbar-${msgId}`);
+        const text = customText || (bar ? bar.getAttribute('data-speak-text') : '') || '';
+        const cleanText = this.cleanForSpeech(text);
+        if (!cleanText) {
+          showToast('No text available for speech');
+          return;
+        }
+
+        this.activeMsgId = msgId;
+        this.paused = false;
+        this.setUiState(msgId, 'loading');
+
+        const persona = window.__lastPersona || this.persona;
+        const lang = this.detectLang(cleanText);
+
+        fetch('/api/tts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: cleanText, persona, lang }),
+        })
+        .then((r) => r.json())
+        .then((data) => {
+          if (this.activeMsgId !== msgId) return;
+          if (data && data.ok && data.audioBase64) {
+            const audio = new Audio('data:audio/mp3;base64,' + data.audioBase64);
+            this.activeAudio = audio;
+            audio.onplay = () => {
+              if (this.activeMsgId === msgId) {
+                this.setUiState(msgId, 'playing');
+                this.startVisualizer(msgId);
+              }
+            };
+            audio.onpause = () => {
+              if (this.activeMsgId === msgId && this.paused) {
+                this.setUiState(msgId, 'paused');
+                this.stopVisualizer();
+              }
+            };
+            audio.onended = () => {
+              if (this.activeMsgId === msgId) {
+                this.stopMessage(msgId);
+              }
+            };
+            audio.onerror = () => {
+              if (this.activeMsgId === msgId) {
+                this.speakBrowser(cleanText, lang, msgId);
+              }
+            };
+            audio.play().catch(() => {
+              this.speakBrowser(cleanText, lang, msgId);
+            });
+          } else {
+            this.speakBrowser(cleanText, lang, msgId);
+          }
+        })
+        .catch(() => {
+          if (this.activeMsgId === msgId) {
+            this.speakBrowser(cleanText, lang, msgId);
+          }
+        });
+      },
+
+      pauseMessage(msgId) {
+        if (this.activeMsgId !== msgId) return;
+        this.paused = true;
+        if (this.activeAudio) {
+          try { this.activeAudio.pause(); } catch (e) {}
+        } else if (window.speechSynthesis) {
+          try { window.speechSynthesis.pause(); } catch (e) {}
+        }
+        this.setUiState(msgId, 'paused');
+        this.stopVisualizer();
+      },
+
+      resumeMessage(msgId) {
+        if (this.activeMsgId !== msgId) return;
+        this.paused = false;
+        if (this.activeAudio) {
+          try { this.activeAudio.play(); } catch (e) {}
+        } else if (window.speechSynthesis) {
+          try { window.speechSynthesis.resume(); } catch (e) {}
+        }
+        this.setUiState(msgId, 'playing');
+        this.startVisualizer(msgId);
+      },
+
+      stopMessage(msgId) {
+        const id = msgId || this.activeMsgId;
+        if (this.activeAudio) {
+          try {
+            this.activeAudio.pause();
+            this.activeAudio.currentTime = 0;
+          } catch (e) {}
+          this.activeAudio = null;
+        }
+        if (window.speechSynthesis) {
+          try { window.speechSynthesis.cancel(); } catch (e) {}
+        }
+        this.stopVisualizer();
+        this.paused = false;
+        if (id) {
+          this.setUiState(id, 'idle');
+        }
+        this.activeMsgId = null;
+      },
+
+      speakBrowser(cleanText, lang, msgId) {
+        if (!this.ttsOn || !window.speechSynthesis) {
+          if (msgId) this.stopMessage(msgId);
+          return;
+        }
         window.speechSynthesis.cancel();
-        const spokenSlice = cleanText.length > 350 ? `${cleanText.slice(0, 350)}...` : cleanText;
+        const spokenSlice = cleanText.length > 500 ? `${cleanText.slice(0, 500)}...` : cleanText;
         const utterance = new SpeechSynthesisUtterance(spokenSlice);
         utterance.lang = lang || this.langCode();
-        // persona tuning (see frontend/src/app.ts:760-769 conventions)
         utterance.rate = 1.05;
         utterance.pitch = this.persona === 'adam' ? 0.85 : 1.12;
         const voice = this.pickVoice(utterance.lang);
         if (voice) utterance.voice = voice;
+        utterance.onstart = () => {
+          if (msgId && this.activeMsgId === msgId) {
+            this.setUiState(msgId, 'playing');
+            this.startVisualizer(msgId);
+          }
+        };
+        utterance.onend = () => {
+          if (msgId && this.activeMsgId === msgId) this.stopMessage(msgId);
+        };
+        utterance.onerror = () => {
+          if (msgId && this.activeMsgId === msgId) this.stopMessage(msgId);
+        };
         window.speechSynthesis.speak(utterance);
+      },
+
+      speak(text) {
+        // Provided for compatibility; on-demand playback via playMessage() is preferred
+        const clean = this.cleanForSpeech(text);
+        if (clean) this.playMessage('legacy-speak', clean);
       },
     };
     window.VoiceEngine = VoiceEngine;
+
+    // Drawer and Navigation Handlers
+    function toggleBurgerMenu() {
+      const drawer = document.getElementById('burger-drawer');
+      const backdrop = document.getElementById('burger-backdrop');
+      if (!drawer) return;
+      const isOpen = drawer.classList.contains('open');
+      if (isOpen) {
+        closeBurgerMenu();
+      } else {
+        syncDrawerState();
+        drawer.classList.add('open');
+        if (backdrop) backdrop.classList.add('open');
+      }
+    }
+
+    function closeBurgerMenu() {
+      const drawer = document.getElementById('burger-drawer');
+      const backdrop = document.getElementById('burger-backdrop');
+      if (drawer) drawer.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('open');
+    }
+
+    function scrollToSettings() {
+      closeBurgerMenu();
+      const el = document.getElementById('screen-settings');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function scrollToChat() {
+      const el = document.getElementById('screen-chat');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function syncDrawerState() {
+      const dModel = document.getElementById('drawer-model-pill');
+      if (dModel) {
+        const m = state.currentModel || '...';
+        dModel.textContent = m.length > 20 ? m.slice(0, 18) + '...' : m;
+      }
+      const dMode = document.getElementById('drawer-current-mode');
+      if (dMode) dMode.textContent = state.currentMode;
+      const dEva = document.getElementById('drawer-persona-eva');
+      const dAdam = document.getElementById('drawer-persona-adam');
+      if (dEva && dAdam) {
+        const isAdam = VoiceEngine.persona === 'adam';
+        dEva.className = !isAdam ? 'cmd-link bold c-ok' : 'cmd-link';
+        dEva.textContent = !isAdam ? '[Eva]' : 'Eva';
+        dAdam.className = isAdam ? 'cmd-link bold c-ok' : 'cmd-link';
+        dAdam.textContent = isAdam ? '[Adam]' : 'Adam';
+      }
+      const lEn = document.getElementById('drawer-lang-en');
+      const lUk = document.getElementById('drawer-lang-uk');
+      const lRu = document.getElementById('drawer-lang-ru');
+      if (lEn && lUk && lRu) {
+        lEn.className = state.lang === 'en' ? 'cmd-link bold c-ok' : 'cmd-link';
+        lEn.textContent = state.lang === 'en' ? '[EN]' : 'EN';
+        lUk.className = state.lang === 'uk' ? 'cmd-link bold c-ok' : 'cmd-link';
+        lUk.textContent = state.lang === 'uk' ? '[UK]' : 'UK';
+        lRu.className = state.lang === 'ru' ? 'cmd-link bold c-ok' : 'cmd-link';
+        lRu.textContent = state.lang === 'ru' ? '[RU]' : 'RU';
+      }
+    }
 
     async function loadModels() {
       try {

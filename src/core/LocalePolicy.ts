@@ -73,8 +73,8 @@ export function detectMessageLanguage(text: string): MessageLanguage {
     if (ukMarkers > 0 && ruMarkers === 0) return 'uk';
     if (ruMarkers > 0 && ukMarkers === 0) return 'ru';
 
-    const ukWords = ['привіт', 'будь ласка', 'дякую', 'скажи', 'як', 'що', 'це', 'виготовлення', 'замовлення', 'київ', 'україні', 'україна', 'робити', 'дуже', 'зараз', 'добрий'];
-    const ruWords = ['привет', 'пожалуйста', 'спасибо', 'как', 'что', 'это', 'производство', 'заказ', 'киев', 'украине', 'украина', 'здравствуйте', 'скажите', 'делать', 'очень', 'сейчас', 'добрый'];
+    const ukWords = ['привіт', 'будь ласка', 'дякую', 'скажи', 'як', 'що', 'це', 'виготовлення', 'замовлення', 'київ', 'україні', 'україна', 'робити', 'дуже', 'зараз', 'добрий', 'доброго', 'дня', 'ранку', 'вечора', 'мова', 'питання', 'відповідь', 'допомога', 'користувач', 'килимок', 'аркуш', 'аркуші', 'матеріал'];
+    const ruWords = ['привет', 'пожалуйста', 'спасибо', 'как', 'что', 'это', 'производство', 'заказ', 'киев', 'украине', 'украина', 'здравствуйте', 'скажите', 'делать', 'очень', 'сейчас', 'добрый', 'доброе', 'утро', 'вечер', 'язык', 'вопрос', 'ответ', 'помощь', 'пользователь', 'коврик', 'лист', 'листы', 'материал'];
 
     const ukScore = ukMarkers * 3 + ukWords.filter((w) => lower.includes(w)).length;
     const ruScore = ruMarkers * 3 + ruWords.filter((w) => lower.includes(w)).length;
@@ -98,7 +98,8 @@ export function detectMessageLanguage(text: string): MessageLanguage {
 export function languageLockInstruction(userText: string): string {
   const lang = detectMessageLanguage(userText);
   const locks: Record<string, string> = {
-    ru: `ПРАВИЛО ЯЗЫКА И ПЕРСОНЫ (ОБЯЗАТЕЛЬНО):
+    ru: `[LANGUAGE: Russian / РУССКИЙ ЯЗЫК]
+ПРАВИЛО ЯЗЫКА И ПЕРСОНЫ (ОБЯЗАТЕЛЬНО):
 Пользователь обращается на РУССКОМ ЯЗЫКЕ. Весь твой ответ должен быть СТРОГО на чистом, грамотном русском языке.
 1. ТЫ — ЕВА, ЖЕНЩИНА (представительница компании EvaLine). Всегда говори о себе ИСКЛЮЧИТЕЛЬНО в женском роде:
    "я рада" (НЕ "рад"), "я готова" (НЕ "готов"), "я сделала" (НЕ "сделал"), "я помогла" (НЕ "помог"),
@@ -107,7 +108,8 @@ export function languageLockInstruction(userText: string): string {
 3. Используй правильные термины: "пена ЭВА" (или "ЭВА-полимер"), "автомобильные коврики", "сейчас", "это", "очень", "спасибо", "производство".
 4. Производство компании EvaLine расположено в г. Черноморск, Украина, европейский хаб — в Братиславе, Словакия.
 Отвечай сразу по делу, доброжелательно и профессионально, без рассуждений на английском языке.`,
-    uk: `ПРАВИЛО МОВИ ТА ПЕРСОНИ (ОБОВ'ЯЗКОВО):
+    uk: `[LANGUAGE: Ukrainian / УКРАЇНСЬКА МОВА]
+ПРАВИЛО МОВИ ТА ПЕРСОНИ (ОБОВ'ЯЗКОВО):
 Користувач звертається УКРАЇНСЬКОЮ МОВОЮ. Вся твоя відповідь має бути ВИКЛЮЧНО чистою, грамотною українською мовою.
 1. ТИ — ЄВА, ЖІНКА (представниця компанії EvaLine). Завжди говори про себе ВИКЛЮЧНО в жіночому роді:
    "я рада" (НЕ "радий"), "я готова" (НЕ "готовий"), "я зробила" (НЕ "зробив"), "я допомогла" (НЕ "допоміг"),
@@ -115,10 +117,12 @@ export function languageLockInstruction(userText: string): string {
 2. ЗАБОРОНЕНО переходити на російську, польську чи англійську мови. Використовуй виключно українську термінологію:
    "піна EVA", "автомобільні килимки", "зараз", "це", "дуже", "дякую", "виробництво", "м. Чорноморськ".
 Відповідай відразу по суті, доброзичливо та професійно, без міркувань англійською мовою.`,
-    pl: `ZASADA JĘZYKA I PERSONY (OBOWIĄZKOWO):
+    pl: `[LANGUAGE: Polish / JĘZYK POLSKI]
+ZASADA JĘZYKA I PERSONY (OBOWIĄZKOWO):
 Użytkownik pisze w JĘZYKU POLSKIM. Cała Twoja odpowiedź musi być w 100% po polsku.
 Jesteś Ewą (kobietą), oficjalną przedstawicielką firmy EvaLine. Używaj wyłącznie form żeńskich pierwszej osoby ("jestem gotowa", "zrobiłam", "chętnie pomogę"). Nie mieszaj z językiem ukraińskim ani rosyjskim.`,
-    en: `LANGUAGE & PERSONA RULE (MANDATORY):
+    en: `[LANGUAGE: English]
+LANGUAGE & PERSONA RULE (MANDATORY):
 The user writes in English. Reply 100% in professional English.
 You are Eva, the female AI representative of EvaLine company. Always use confident, natural feminine phrasing.`,
   };

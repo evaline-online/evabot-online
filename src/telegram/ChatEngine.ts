@@ -106,12 +106,15 @@ export class ChatEngine {
 
     // System-awareness (FEATURE 1) + developer block (FEATURE 2), appended
     // after the existing system prompt building (LocalePolicy/rules/KB).
-    effectiveInstruction += `\n${SystemContext.build(detectedLang)}`;
+    const sysCtx = SystemContext.build();
+    const locSysCtx = SystemContext.build(detectedLang);
+    effectiveInstruction += `\n${sysCtx}`;
+    if (locSysCtx !== sysCtx) effectiveInstruction += `\n${locSysCtx}`;
     // LANGUAGE LOCK: mirror the user's message language (uk/ru/en/pl) — the bot
     // must never answer in a different language without an explicit request.
     effectiveInstruction += `\n${languageLockInstruction(message)}`;
     if (DeveloperMode.isUnlocked(sessionId)) {
-      effectiveInstruction += `\n${SystemContext.developerBlock(detectedLang)}`;
+      effectiveInstruction += `\n${SystemContext.DEVELOPER_BLOCK}\n${SystemContext.developerBlock(detectedLang)}`;
     }
     if (systemNotes.length > 0) {
       effectiveInstruction += `\n\n[SESSION CONTEXT INJECTED BY USER]\n${systemNotes.join('\n')}`;

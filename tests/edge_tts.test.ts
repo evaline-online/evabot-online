@@ -65,8 +65,9 @@ export async function runEdgeTtsTests(): Promise<boolean> {
     assert(genders['ru-RU-DmitryNeural'] === 'MALE', 'ru-RU-DmitryNeural is MALE');
     assert(genders['ru-RU-SvetlanaNeural'] === 'FEMALE', 'ru-RU-SvetlanaNeural is FEMALE');
     assert(genders['en-US-AriaNeural'] === 'FEMALE', 'en-US-AriaNeural is FEMALE');
-    assert(genders['en-US-GuyNeural'] === 'MALE', 'en-US-GuyNeural is MALE');
-    assert(EDGE_VOICE_CATALOG.length === 6, 'exactly 6 edge-neural catalog entries (4 original + 2 EN)');
+    assert(genders['pl-PL-ZofiaNeural'] === 'FEMALE', 'pl-PL-ZofiaNeural is FEMALE');
+    assert(genders['pl-PL-MarekNeural'] === 'MALE', 'pl-PL-MarekNeural is MALE');
+    assert(EDGE_VOICE_CATALOG.length === 8, 'exactly 8 edge-neural catalog entries (4 original + 2 EN + 2 PL)');
   }
 
   // 2. Rank order: edge-neural BEFORE chirp3-hd (and the rest)

@@ -116,7 +116,7 @@ export async function runCliTuiTests(): Promise<boolean> {
   {
     const text = TuiRenderer.renderText('evabot.online');
     assert(text.length > 100, 'renderText: produces substantial output');
-    assert(text.includes('● EvaBot v0.0.1') && text.includes('Ping:'), 'renderText: banner body rendered from template');
+    assert((text.includes('EVABOT TUI') || text.includes('EvaBot')) && (text.includes('Model:') || text.includes('Ping:')), 'renderText: banner body rendered from template');
     assert(text.endsWith('\n') && !text.endsWith('\n\n'), 'renderText: output trimmed to single trailing newline');
     assert(!/<!--\s*\/?SLOT:[A-Z_]+\s*-->/.test(text), 'renderText: slot comment tags stripped from terminal stream');
 

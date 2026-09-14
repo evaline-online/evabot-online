@@ -98,11 +98,29 @@ export function createVoiceRouter(): Router {
       return;
     }
     const persona = body?.persona === 'adam' ? 'adam' : body?.persona === 'eva' ? 'eva' : undefined;
-    // Language from the TEXT wins (LANGUAGE-FIRST): Russian text must be voiced
-    // with a Russian voice even when the UI language param says otherwise.
-    // body.lang is only a fallback when text detection yields nothing.
-    const detectedLang = detectMessageLanguage(text);
-    const lang = detectedLang || (typeof body?.lang === 'string' ? body.lang : undefined);
+    // Robust language determination:
+    // 1. Unambiguous alphabet markers take absolute priority.
+    // 2. If Cyrillic is ambiguous, explicit caller body.lang is respected.
+    // 3. Otherwise detectMessageLanguage is used.
+    const explicitLang = typeof body?.lang === 'string' ? body.lang.toLowerCase().slice(0, 2) : undefined;
+    const lower = text.toLowerCase();
+    let lang: string;
+
+    const hasUkMarkers = /[іїєґ]/.test(lower);
+    const hasRuMarkers = /[ыэъё]/.test(lower);
+    const hasPlMarkers = /[ąćęłńóśźż]/.test(lower);
+
+    if (hasUkMarkers && !hasRuMarkers) {
+      lang = 'uk';
+    } else if (hasRuMarkers && !hasUkMarkers) {
+      lang = 'ru';
+    } else if (hasPlMarkers) {
+      lang = 'pl';
+    } else if (explicitLang && (explicitLang === 'uk' || explicitLang === 'ua' || explicitLang === 'ru' || explicitLang === 'en' || explicitLang === 'pl')) {
+      lang = explicitLang === 'ua' ? 'uk' : explicitLang;
+    } else {
+      lang = detectMessageLanguage(text);
+    }
 
     let audioBase64: string | null = null;
     let voice = '';

@@ -83,7 +83,7 @@ export class ChatRouter extends Router {
       // Also append lock as a safeguard.
       effectiveInstruction += `\n${languageLockInstruction(message)}`;
       if (DeveloperMode.isUnlocked(chatSessionId)) {
-        effectiveInstruction += `\n${SystemContext.developerBlock(detectedLang)}`;
+        effectiveInstruction += `\n${SystemContext.DEVELOPER_BLOCK}\n${SystemContext.developerBlock(detectedLang)}`;
       }
 
       const messages = [...history, { role: 'user', content: message.trim() }];
@@ -147,7 +147,7 @@ export class ChatRouter extends Router {
       // Also append lock as a safeguard.
       effectiveInstruction += `\n${languageLockInstruction(message)}`;
       if (DeveloperMode.isUnlocked(chatSessionId)) {
-        effectiveInstruction += `\n${SystemContext.developerBlock(detectedLang)}`;
+        effectiveInstruction += `\n${SystemContext.DEVELOPER_BLOCK}\n${SystemContext.developerBlock(detectedLang)}`;
       }
 
       const messages = [...history, { role: 'user', content: message.trim() }];
