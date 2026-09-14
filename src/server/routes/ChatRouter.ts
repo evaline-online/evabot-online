@@ -163,6 +163,9 @@ export class ChatRouter extends Router {
         'Access-Control-Allow-Origin': '*',
       });
 
+      // Emit initial routing step immediately so client sees instant activity
+      ctx.res.write(`data: ${JSON.stringify({ process: { step: 'routing', detail: `Маршрутизация запроса в модель ${targetModel}...`, model: targetModel } })}\n\n`);
+
       let activeModel = targetModel;
       const fullText = await client.streamContent(
         targetModel,
@@ -178,7 +181,10 @@ export class ChatRouter extends Router {
         true,
         (fromModel, toModel) => {
           activeModel = toModel;
-          ctx.res.write(`data: ${JSON.stringify({ fallback: { from: fromModel, to: toModel } })}\n\n`);
+          ctx.res.write(`data: ${JSON.stringify({ fallback: { from: fromModel, to: toModel }, process: { step: 'fallback', detail: `Автопереключение: ${fromModel} → ${toModel}`, model: toModel } })}\n\n`);
+        },
+        (proc) => {
+          ctx.res.write(`data: ${JSON.stringify({ process: proc })}\n\n`);
         }
       );
       span.end();

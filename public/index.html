@@ -412,6 +412,34 @@
       50% { opacity: 0; transform: scaleY(0.9); }
     }
 
+    /* Live System Process & Thought Indicator */
+    .msg-process {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--cyan);
+      background: rgba(0, 216, 255, 0.07);
+      border: 1px solid rgba(0, 216, 255, 0.2);
+      border-radius: 4px;
+      padding: 3px 8px;
+      margin-bottom: 6px;
+      user-select: none;
+      animation: fadeIn 0.15s ease;
+    }
+    .process-pulse {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      animation: liveGlow 1.2s infinite ease-in-out;
+    }
+    .process-text {
+      color: var(--fg);
+    }
+
     .modal-content {
       max-width: 900px;
       margin: 0 auto;
@@ -3101,7 +3129,9 @@ Examples:
       }
 
       addMessage('user', text);
-      const botBody = addMessage('evabot', '...');
+      const botBody = addMessage('evabot', '');
+      const initProcText = state.lang === 'uk' ? 'Маршрутизація запиту...' : state.lang === 'ru' ? 'Маршрутизация запроса...' : 'Routing request...';
+      botBody.innerHTML = `<div class="msg-process"><span class="process-pulse">●</span> <span class="process-text">${initProcText}</span></div><span class="msg-content"></span>`;
       setStatus(true, true);
       state.isGenerating = true;
 
@@ -3148,6 +3178,13 @@ Examples:
               if (trimmed.startsWith('data: ')) {
                 try {
                   const data = JSON.parse(trimmed.slice(6));
+                  if (data.process) {
+                    const procEl = botBody.querySelector('.msg-process');
+                    if (procEl) {
+                      procEl.innerHTML = `<span class="process-pulse">●</span> <span class="process-text">${escapeHtml(data.process.detail || '')}</span>`;
+                      chatContainer.scrollTop = chatContainer.scrollHeight;
+                    }
+                  }
                   if (data.fallback) {
                     showToast(`[Auto-Fallback: ${data.fallback.from} -> ${data.fallback.to}]`);
                     const parentMsg = botBody.parentElement;
@@ -3162,7 +3199,12 @@ Examples:
                   }
                   if (data.chunk) {
                     accumulatedText += data.chunk;
-                    botBody.innerHTML = renderMarkdown(accumulatedText) + '<span class="streaming-cursor">▋</span>';
+                    const procEl = botBody.querySelector('.msg-process');
+                    if (procEl && procEl.style.display !== 'none') {
+                      procEl.style.display = 'none';
+                    }
+                    const contentSpan = botBody.querySelector('.msg-content') || botBody;
+                    contentSpan.innerHTML = renderMarkdown(accumulatedText) + '<span class="streaming-cursor">▋</span>';
                     chatContainer.scrollTop = chatContainer.scrollHeight;
                   }
                   if (data.done) {

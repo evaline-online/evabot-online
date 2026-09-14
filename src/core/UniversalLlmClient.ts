@@ -341,7 +341,8 @@ export class UniversalLlmClient {
     onChunk: (chunk: string) => void,
     options: UniversalGenerationOptions = {},
     enableFallback: boolean = true,
-    onFallback?: (fromModel: string, toModel: string) => void
+    onFallback?: (fromModel: string, toModel: string) => void,
+    onProgress?: (event: { step: string; detail: string; model?: string }) => void
   ): Promise<string> {
     const universalMsgs = this.normalizeToUniversal(messages);
 
@@ -350,8 +351,19 @@ export class UniversalLlmClient {
       let initialBufferText = '';
       let isStreamReleased = false;
       let chunksEmitted = 0;
+      let firstChunkReceived = false;
+      let ttftTimer: NodeJS.Timeout | null = null;
 
       const trackedChunk = (chunk: string) => {
+        if (!firstChunkReceived) {
+          firstChunkReceived = true;
+          if (ttftTimer) {
+            clearTimeout(ttftTimer);
+            ttftTimer = null;
+          }
+          onProgress?.({ step: 'generating', detail: `Генерация ответа [${targetModel}]...`, model: targetModel });
+        }
+
         if (isStreamReleased) {
           chunksEmitted++;
           onChunk(chunk);
@@ -362,11 +374,42 @@ export class UniversalLlmClient {
         initialBufferText += chunk;
 
         const lower = initialBufferText.trim().toLowerCase();
-        if (/^user safety/i.test(lower) || /^safe\.?$/i.test(lower) || /^unsafe\.?$/i.test(lower)) {
-          return;
+        if (lower.startsWith('user safety') || lower.startsWith('safe') || lower.startsWith('unsafe')) {
+          if (initialBufferText.length < 25) {
+            return;
+          }
         }
 
-        if (initialBufferText.length >= 25) {
+        isStreamReleased = true;
+        for (const b of initialBuffer) {
+          chunksEmitted++;
+          onChunk(b);
+        }
+        initialBuffer.length = 0;
+      };
+
+      onProgress?.({ step: 'connecting', detail: `Подключение к модели ${targetModel}...`, model: targetModel });
+
+      const streamPromise = this.attempt(targetModel, universalMsgs, options, trackedChunk);
+      const ttftPromise = new Promise<never>((_, reject) => {
+        ttftTimer = setTimeout(() => {
+          if (!firstChunkReceived) {
+            reject(new Error(`[TTFT_TIMEOUT] Model ${targetModel} stalled (no tokens within 6s)`));
+          }
+        }, 6000);
+      });
+
+      let attemptResult: { result: string; chunksEmitted: number };
+      try {
+        const rawResult = await Promise.race([streamPromise, ttftPromise]);
+        const result = typeof rawResult === 'string' ? rawResult : '';
+
+        if (!result.trim() && chunksEmitted === 0) {
+          getBreaker(this.resolveProvider(targetModel)).recordFailure(new Error('[EMPTY_STREAM] no content'));
+          throw new Error(`[EMPTY_STREAM] ${targetModel} returned no content (reasoning-only response)`);
+        }
+
+        if (!isStreamReleased && !isJunkResponse(result)) {
           isStreamReleased = true;
           for (const b of initialBuffer) {
             chunksEmitted++;
@@ -374,25 +417,13 @@ export class UniversalLlmClient {
           }
           initialBuffer.length = 0;
         }
-      };
 
-      const result = await this.attempt(targetModel, universalMsgs, options, trackedChunk);
-
-      if (!result.trim() && chunksEmitted === 0) {
-        getBreaker(this.resolveProvider(targetModel)).recordFailure(new Error('[EMPTY_STREAM] no content'));
-        throw new Error(`[EMPTY_STREAM] ${targetModel} returned no content (reasoning-only response)`);
+        attemptResult = { result, chunksEmitted };
+      } finally {
+        if (ttftTimer) clearTimeout(ttftTimer);
       }
 
-      if (!isStreamReleased && !isJunkResponse(result)) {
-        isStreamReleased = true;
-        for (const b of initialBuffer) {
-          chunksEmitted++;
-          onChunk(b);
-        }
-        initialBuffer.length = 0;
-      }
-
-      return { result, chunksEmitted };
+      return attemptResult;
     };
 
     try {
@@ -411,6 +442,7 @@ export class UniversalLlmClient {
         try {
           logger.info('UniversalLlmClient', `[STREAM FALLBACK] Trying candidate: ${fallbackModel}`);
           if (onFallback) onFallback(model, fallbackModel);
+          onProgress?.({ step: 'fallback', detail: `Автопереключение: ${model} недоступна ➔ ${fallbackModel}...`, model: fallbackModel });
           const { result } = await runAttemptWithBuffer(fallbackModel);
           return result;
         } catch (fallbackErr: any) {
