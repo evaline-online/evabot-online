@@ -3,6 +3,7 @@ import path from 'node:path';
 import { knowledgeBase, type KnowledgeDocument } from './KnowledgeBase.js';
 import { ChatHistoryStore } from './ChatHistoryStore.js';
 import { logger, LogCategory } from './Logger.js';
+import { McpLspSelectionStore } from '../models/ModelRatings.js';
 
 export interface AddFilePayload {
   name: string;
@@ -116,6 +117,10 @@ export class AddCommand {
         return this.handleFile(opts?.file, 'file');
       case 'media':
         return this.handleFile(opts?.file, 'media');
+      case 'mcp':
+        return this.handleMcp(parts.slice(2).join(' ').trim());
+      case 'lsp':
+        return this.handleLsp(parts.slice(2).join(' ').trim());
       case 'help':
       case undefined:
         return this.helpText();
@@ -128,7 +133,7 @@ export class AddCommand {
     return [
       '',
       '═'.repeat(78),
-      '  [ADD] UNIVERSAL ADD COMMAND — add content, links, files, participants',
+      '  [ADD] UNIVERSAL ADD COMMAND — add content, links, files, participants, MCP/LSP',
       '═'.repeat(78),
       '  /add db <title> | <content>   - Add document to Knowledge Base (FTS5 index)',
       '  /add kb <title> | <content>   - Alias for /add db',
@@ -139,12 +144,16 @@ export class AddCommand {
       '  /add agent <name> [prompt]    - Register agent with optional system prompt',
       '  /add file / /add media        - POST /api/upload (multipart) — text → KB,',
       '                                  binary → media metadata roster entry',
+      '  /add mcp <name|номер>         - Добавить MCP сервер в выбор (alias: /mcp select)',
+      '  /add lsp <name|номер>         - Добавить LSP сервер в выбор (alias: /lsp select)',
       '  /add help                     - This help',
       '',
-      '  RU: /add добаляє документи (db/kb), лінки, файли та учасників сесії.',
+      '  RU: /add добаляє документи (db/kb), лінки, файли, учасників та MCP/LSP сервери.',
       '  Примеры: /add db Цена | Плитка EVA — от $25/м²',
       '           /add link https://evacom.ua/en/about',
       '           /add agent Analyst Focus on market data.',
+      '           /add mcp notebooklm',
+      '           /add lsp typescript',
       '═'.repeat(78),
     ].join('\n');
   }
@@ -318,5 +327,27 @@ export class AddCommand {
     });
     writeRoster(roster);
     return `[ADD] Binary ${kind} "${file.name}" (${file.mime}, ${file.data.length} bytes) stored as media metadata in session roster (${roster.media.length} media entries). Multimodal parts not yet wired.`;
+  }
+
+  private static handleMcp(args: string): string {
+    if (!args) return '[ERROR] Usage: /add mcp <имя_сервера|номер>';
+    const store = McpLspSelectionStore.getInstance();
+    const allServers = ['notebooklm', 'chrome-devtools', 'fetch', 'context7', 'filesystem', 'sqlite', 'memory', 'git', 'github', 'docker', 'google-cloud', 'sequential-thinking', 'markdownlint', 'firebase'];
+    const idx = parseInt(args, 10);
+    const name = (idx >= 1 && idx <= allServers.length) ? allServers[idx - 1] : args;
+    if (!allServers.includes(name)) return `[ERROR] Неизвестный MCP сервер: ${name}. Доступные: ${allServers.join(', ')}`;
+    if (store.select('mcp', name)) return `[ADD] MCP "${name}" добавлен в выбор.`;
+    return `[ERROR] Не удалось добавить "${name}".`;
+  }
+
+  private static handleLsp(args: string): string {
+    if (!args) return '[ERROR] Usage: /add lsp <имя_языка|номер>';
+    const store = McpLspSelectionStore.getInstance();
+    const allServers = ['TypeScript / JS', 'Python 3.11', 'HTML / CSS / JSON', 'Markdown / Docs'];
+    const idx = parseInt(args, 10);
+    const name = (idx >= 1 && idx <= allServers.length) ? allServers[idx - 1] : allServers.find(s => s.toLowerCase().includes(args.toLowerCase()));
+    if (!name) return `[ERROR] Неизвестный LSP сервер: ${args}. Доступные: ${allServers.map((s, i) => `${i+1}. ${s}`).join(', ')}`;
+    if (store.select('lsp', name)) return `[ADD] LSP "${name}" добавлен в выбор.`;
+    return `[ERROR] Не удалось добавить "${name}".`;
   }
 }

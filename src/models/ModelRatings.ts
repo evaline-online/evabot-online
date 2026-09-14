@@ -27,7 +27,11 @@ import { SubagentEngine } from '../core/SubagentEngine.js';
 import { AddCommand } from '../core/AddCommand.js';
 import { IdeaCommand } from '../core/IdeaCommand.js';
 import { ReportCommand } from '../core/ReportCommand.js';
-import { logger } from '../core/Logger.js';
+import { ConsiliumEngine } from '../core/ConsiliumEngine.js';
+import { logger, LogCategory } from '../core/Logger.js';
+import { UserMemory } from '../core/UserMemory.js';
+import { DatabaseSync } from 'node:sqlite';
+import path from 'node:path';
 
 export type ModelRatingDimension = 'quality' | 'speed' | 'context' | 'cost';
 
@@ -80,16 +84,16 @@ export class ModelRatings {
     if (id.includes('claude-3-7') || id.includes('claude-sonnet-4') || name.includes('claude 3.7')) return 98;
     if (id.includes('gemini-3.0') || name.includes('3.0')) return 96;
     if (id.includes('deepseek-r1') || id.includes('deepseek-v3') || id.includes('deepseek-v4') || name.includes('deepseek r1')) return 95;
-    if (id.includes('gemini-2.5') || name.includes('2.5')) return 88;
-    if (id.includes('llama-3.3') || name.includes('llama 3.3')) return 86;
-    if (id.includes('qwen-2.5') || id.includes('qwen3') || name.includes('qwen 2.5') || name.includes('qwen3')) return 85;
-    if (id.includes('gemini-2.0') || name.includes('gemini 2.0')) return 80;
-    if (id.includes('o3-mini') || id.includes('o1') || name.includes('o3-mini') || name.includes('o1')) return 80;
+    if (id.includes('llama-3.3') || name.includes('llama 3.3')) return 90;
+    if (id.includes('qwen-2.5') || id.includes('qwen3') || name.includes('qwen 2.5') || name.includes('qwen3')) return 88;
+    if (id.includes('o3-mini') || id.includes('o1') || name.includes('o3-mini') || name.includes('o1')) return 85;
+    if (id.includes('claude-3-5') || name.includes('claude 3.5')) return 78;
     if (id.includes('gpt-4o') || name.includes('gpt-4o')) return 75;
-    if (id.includes('claude-3-5') || name.includes('claude 3.5')) return 70;
-    if (id.includes('gemini-1.5') || name.includes('gemini 1.5')) return 60;
-    if (id.includes('llama-3.1') || name.includes('llama 3.1') || id.includes('gemma-2')) return 55;
-    return 50;
+    if (id.includes('gemini-2.5') || name.includes('2.5')) return 60;
+    if (id.includes('gemini-2.0') || name.includes('gemini 2.0')) return 50;
+    if (id.includes('gemini-1.5') || name.includes('gemini 1.5')) return 40;
+    if (id.includes('llama-3.1') || name.includes('llama 3.1') || id.includes('gemma-2')) return 35;
+    return 30;
   }
 
   private static computeQualityScore(model: GeminiModelInfo): number {
@@ -105,14 +109,14 @@ export class ModelRatings {
     else if (id.includes('deepseek-r1') || name.includes('deepseek r1')) score += 95;
     else if (id.includes('codestral') || name.includes('codestral')) score += 94;
     else if (id.includes('qwen-2.5-coder-32b') || name.includes('qwen 2.5 coder 32b') || id.includes('qwen3-coder')) score += 93;
-    else if (id.includes('gemini-2.5-pro') || name.includes('gemini 2.5 pro')) score += 90;
-    else if (id.includes('gemini-2.5-flash') || name.includes('gemini 2.5 flash')) score += 88;
-    else if (name.includes('o1') || name.includes('o3-mini')) score += 88;
+    else if (name.includes('o1') || name.includes('o3-mini')) score += 90;
+    else if (name.includes('llama 3.3 70b')) score += 88;
     else if (name.includes('claude 3.5')) score += 86;
-    else if (name.includes('llama 3.3 70b')) score += 85;
-    else if (name.includes('gemini-2.0') || name.includes('gemini 2.0')) score += 83;
     else if (name.includes('gpt-4o')) score += 82;
-    else if (name.includes('llama 3.1 405b')) score += 82;
+    else if (name.includes('llama 3.1 405b')) score += 80;
+    else if (id.includes('gemini-2.5-pro') || name.includes('gemini 2.5 pro')) score += 65;
+    else if (id.includes('gemini-2.5-flash') || name.includes('gemini 2.5 flash')) score += 60;
+    else if (name.includes('gemini-2.0') || name.includes('gemini 2.0')) score += 55;
     else if (name.includes('mistral large')) score += 75;
     else if (name.includes('gemini 1.5 pro')) score += 70;
     else if (name.includes('gemini 1.5 flash')) score += 65;
@@ -212,9 +216,18 @@ export class ModelRatings {
   }
 
   public static getTopPaid(limit: number = 10): TopModelEntry[] {
-    return this.rankByDimension('quality', limit, false).filter(e =>
-      e.model.pricing.freeTierStatus === 'Paid / Pay-As-You-Go Only'
-    ).slice(0, limit);
+    const paidModels = ModelRegistry.getPaidOnlyModels();
+    const ratings = paidModels.map((m) => ({
+      model: m,
+      rating: this.computeRating(m),
+    }));
+    ratings.sort((a, b) => b.rating.quality - a.rating.quality);
+    return ratings.slice(0, limit).map((entry, idx) => ({
+      rank: idx + 1,
+      model: entry.model,
+      rating: entry.rating,
+      reason: this.getRankReason(entry.model, 'quality'),
+    }));
   }
 
   public static getTopBySpeed(freeOnly: boolean = true, limit: number = 10): TopModelEntry[] {
@@ -388,9 +401,18 @@ export const COMMAND_ALIASES: Record<string, string> = {
   // /help
   '/допомога': '/help',
   '/помощь': '/help',
+  // /commands
+  '/команды': '/commands',
+  '/команди': '/commands',
+  '/cmds': '/commands',
+  '/список-команд': '/commands',
   // /lang
   '/мова': '/lang',
   '/язык': '/lang',
+  // /user
+  '/пользователь': '/user',
+  '/профиль': '/user',
+  '/юзер': '/user',
   // /cost
   '/вартість': '/cost',
   '/стоимость': '/cost',
@@ -403,6 +425,20 @@ export const COMMAND_ALIASES: Record<string, string> = {
   '/очистити': '/clear',
   '/очистить': '/clear',
   '/очистка': '/clear',
+  '/cls': '/clear',
+  // /about
+  '/про': '/about',
+  '/про-бота': '/about',
+  '/про-нас': '/about',
+  '/о-нас': '/about',
+  '/про_бота': '/about',
+  '/про_нас': '/about',
+  // /mode
+  '/режим': '/mode',
+  // /consilium
+  '/консилиум': '/consilium',
+  '/консиліум': '/consilium',
+  '/рада': '/consilium',
   // /news
   '/новини': '/news',
   '/новости': '/news',
@@ -457,6 +493,13 @@ export const COMMAND_ALIASES: Record<string, string> = {
   '/система': '/sys',
   '/системa': '/sys',
   '/whereami': '/sys',
+  // /mcp (MCP server management)
+  '/мкп': '/mcp',
+  '/мцп': '/mcp',
+  // /lsp (LSP server management)
+  '/лсп': '/lsp',
+  '/язык-сервер': '/lsp',
+  '/языковые-серверы': '/lsp',
   // /developer (password-protected developer mode)
   '/девелопер': '/developer',
   '/розробник': '/developer',
@@ -495,6 +538,100 @@ export function normalizeCommand(input: string): string {
   return rest ? `${canonical} ${rest}` : canonical;
 }
 
+const MCP_LSP_DB_PATH = path.join(process.env.HOME || '/home/evabot', '.mcp', 'sqlite.db');
+
+interface SelectionRecord {
+  id: number;
+  type: 'mcp' | 'lsp';
+  name: string;
+  enabled: boolean;
+  position: number;
+  created_at: number;
+}
+
+export class McpLspSelectionStore {
+  private static instance: McpLspSelectionStore | null = null;
+  private db: DatabaseSync | null = null;
+  private ready = false;
+
+  private constructor() {
+    try {
+      fs.mkdirSync(path.dirname(MCP_LSP_DB_PATH), { recursive: true });
+      this.db = new DatabaseSync(MCP_LSP_DB_PATH);
+      this.migrate();
+      this.ready = true;
+    } catch (err) {
+      logger.warn(LogCategory.STORAGE, 'MCP_LSP_SELECTION', `Store unavailable: ${String(err)}`);
+    }
+  }
+
+  public static getInstance(): McpLspSelectionStore {
+    if (!McpLspSelectionStore.instance) {
+      McpLspSelectionStore.instance = new McpLspSelectionStore();
+    }
+    return McpLspSelectionStore.instance;
+  }
+
+  private migrate(): void {
+    this.db!.exec(`
+      CREATE TABLE IF NOT EXISTS mcp_lsp_selection (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        type TEXT NOT NULL,
+        name TEXT NOT NULL,
+        enabled INTEGER NOT NULL DEFAULT 1,
+        position INTEGER NOT NULL DEFAULT 0,
+        created_at INTEGER NOT NULL,
+        UNIQUE(type, name)
+      );
+      CREATE INDEX IF NOT EXISTS idx_mcp_lsp_type_enabled ON mcp_lsp_selection(type, enabled);
+    `);
+  }
+
+  public isReady(): boolean {
+    return this.ready;
+  }
+
+  public select(type: 'mcp' | 'lsp', name: string): boolean {
+    if (!this.ready) return false;
+    try {
+      const maxPos = this.db!.prepare('SELECT COALESCE(MAX(position), 0) + 1 AS pos FROM mcp_lsp_selection WHERE type = ? AND enabled = 1').get(type) as { pos: number };
+      this.db!.prepare('INSERT OR REPLACE INTO mcp_lsp_selection (type, name, enabled, position, created_at) VALUES (?, ?, 1, ?, ?)').run(type, name, maxPos.pos, Date.now());
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  public deselect(type: 'mcp' | 'lsp', name: string): boolean {
+    if (!this.ready) return false;
+    try {
+      this.db!.prepare('DELETE FROM mcp_lsp_selection WHERE type = ? AND name = ?').run(type, name);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  public getSelected(type: 'mcp' | 'lsp'): string[] {
+    if (!this.ready) return [];
+    try {
+      const rows = this.db!.prepare('SELECT name FROM mcp_lsp_selection WHERE type = ? AND enabled = 1 ORDER BY position').all(type) as { name: string }[];
+      return rows.map(r => r.name);
+    } catch {
+      return [];
+    }
+  }
+
+  public getAll(type: 'mcp' | 'lsp'): SelectionRecord[] {
+    if (!this.ready) return [];
+    try {
+      return this.db!.prepare('SELECT * FROM mcp_lsp_selection WHERE type = ? ORDER BY position').all(type) as unknown as SelectionRecord[];
+    } catch {
+      return [];
+    }
+  }
+}
+
 export class ModelCommand {
   public static execute(command: string): string {
     const cmd = normalizeCommand(command);
@@ -503,6 +640,8 @@ export class ModelCommand {
     const action = parts[0];
 
     switch (action) {
+      case '/commands':
+        return this.handleCommands();
       case '/top':
         return this.handleTop(parts.slice(1));
       case '/free':
@@ -512,9 +651,9 @@ export class ModelCommand {
       case '/models':
         return this.handleModels(parts.slice(1));
       case '/mcp':
-        return this.handleMcp();
+        return this.handleMcp(parts.slice(1));
       case '/lsp':
-        return this.handleLsp();
+        return this.handleLsp(parts.slice(1));
       case '/history':
         return this.handleHistory(parts.slice(1));
       case '/memory':
@@ -544,6 +683,18 @@ export class ModelCommand {
       case '/help':
       case '/?':
         return I18nEngine.formatHelp();
+      case '/about':
+        return this.handleAbout();
+      case '/user':
+      case '/profile':
+        return this.handleUser(parts.slice(1));
+      case '/mode':
+        return this.handleMode(parts.slice(1));
+      case '/consilium':
+        return this.handleConsilium(parts.slice(1));
+      case '/clear':
+      case '/cls':
+        return this.handleClear();
       case '/info':
       case '/inspect':
         return this.handleInfo(parts.slice(1));
@@ -610,7 +761,7 @@ export class ModelCommand {
         return '⏳ Reports are registered via the async executor — use web API / Telegram (async mode).';
       default:
         OpLog.getInstance().log('error', 'command', `unknown command: ${action}`);
-        return `[ERROR] Unknown command: ${action}. Use /top, /models, /history, /memory, /search, /find, /services, /servers, /mcp, /lsp, /cost, /company, /evaline, /lang, /info, /news, /translate, /health, /products, /who, /sephirot, /debug, /log, /monitor, /sys, /developer, /voices, /settings, /agents, /room, /rooms, /free, /paid, /auto, or /help.`;
+        return `[ERROR] Unknown command: ${action}. Use /top, /models, /history, /memory, /search, /find, /services, /servers, /mcp, /lsp, /cost, /company, /evaline, /lang, /info, /news, /translate, /health, /products, /who, /sephirot, /debug, /log, /monitor, /sys, /developer, /voices, /settings, /agents, /room, /rooms, /free, /paid, /auto, /about, /mode, /consilium, /clear, or /help.`;
     }
   }
 
@@ -636,6 +787,112 @@ export class ModelCommand {
       out += '  - ' + r.id + ' - ' + r.members + ' учасник(ів)\n';
     }
     return out;
+  }
+
+  private static handleUser(args: string[]): string {
+    const sessionId = 'cli';
+    const sub = (args[0] || '').toLowerCase();
+
+    // Use synchronous database access
+    const { DatabaseSync } = require('node:sqlite');
+    const path = require('path');
+    const os = require('os');
+    const dbPath = path.join(os.homedir(), '.mcp', 'user-memory.db');
+    let db;
+    try {
+      db = new DatabaseSync(dbPath);
+    } catch (e) {
+      return '[X] База данных пользователей недоступна';
+    }
+
+    // Subcommands that modify data
+    if (sub === 'name' && args[1]) {
+      const newName = args.slice(1).join(' ');
+      db.prepare('UPDATE users SET name = ?, updated_at = ? WHERE session_id = ?').run(newName, new Date().toISOString(), sessionId);
+      db.close();
+      return `[OK] Имя изменено на: ${newName}`;
+    }
+    if (sub === 'status' && args[1]) {
+      const newStatus = args.slice(1).join(' ');
+      db.prepare('UPDATE users SET status = ?, updated_at = ? WHERE session_id = ?').run(newStatus, new Date().toISOString(), sessionId);
+      db.close();
+      return `[OK] Статус изменён на: ${newStatus}`;
+    }
+    if (sub === 'pref' && args[1] && args[2]) {
+      const key = args[1];
+      const value = args.slice(2).join(' ');
+      // Get current preferences
+      const row = db.prepare('SELECT preferences FROM users WHERE session_id = ?').get(sessionId) as { preferences: string } | undefined;
+      let prefs: Record<string, unknown> = {};
+      if (row) {
+        try { prefs = JSON.parse(row.preferences); } catch { prefs = {}; }
+      }
+      prefs[key] = value;
+      db.prepare('UPDATE users SET preferences = ?, updated_at = ? WHERE session_id = ?').run(JSON.stringify(prefs), new Date().toISOString(), sessionId);
+      db.close();
+      return `[OK] Предпочтение установлено: ${key} = ${value}`;
+    }
+    if (sub === 'reset') {
+      db.prepare('UPDATE users SET name = NULL, status = NULL, preferences = ?, updated_at = ? WHERE session_id = ?').run('{}', new Date().toISOString(), sessionId);
+      db.close();
+      return '[OK] Профиль сброшен к значениям по умолчанию';
+    }
+
+    // Default: show user info
+    const user = db.prepare('SELECT * FROM users WHERE session_id = ?').get(sessionId) as {
+      name?: string;
+      status?: string;
+      preferences: string;
+      created_at: string;
+      message_count: number;
+      last_query?: string;
+      last_topic?: string;
+      lang_pref?: string;
+      model_pref?: string;
+    } | undefined;
+    db.close();
+
+    const lines: string[] = [];
+    lines.push('');
+    lines.push('═'.repeat(78));
+    lines.push('  ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ (/user)');
+    lines.push('═'.repeat(78));
+    lines.push('');
+
+    if (!user) {
+      lines.push('  Профиль не найден. Он будет создан автоматически при следующем сообщении.');
+    } else {
+      let prefs: Record<string, unknown> = {};
+      try { prefs = JSON.parse(user.preferences); } catch { prefs = {}; }
+      
+      lines.push(`  Имя            : ${user.name || '(не задано)'}`);
+      lines.push(`  Статус         : ${user.status || '(не задан)'}`);
+      lines.push(`  Сообщений      : ${user.message_count}`);
+      lines.push(`  Последний запрос: ${user.last_query || '(нет)'}`);
+      lines.push(`  Последняя тема : ${user.last_topic || '(нет)'}`);
+      lines.push(`  Язык (pref)    : ${user.lang_pref || 'en'}`);
+      lines.push(`  Модель (pref)  : ${user.model_pref || '(не задано)'}`);
+      lines.push(`  Создан         : ${user.created_at}`);
+      lines.push('');
+      lines.push('  Предпочтения:');
+      if (Object.keys(prefs).length === 0) {
+        lines.push('    (пусто)');
+      } else {
+        for (const [k, v] of Object.entries(prefs)) {
+          lines.push(`    ${k}: ${String(v)}`);
+        }
+      }
+    }
+
+    lines.push('');
+    lines.push('  Подкоманды:');
+    lines.push('    /user name <имя>         — изменить имя');
+    lines.push('    /user status <текст>     — установить статус');
+    lines.push('    /user pref <ключ> <знач> — установить предпочтение (напр. lang uk)');
+    lines.push('    /user reset              — сбросить профиль');
+    lines.push('    /profile                 — синоним /user');
+    lines.push('═'.repeat(78));
+    return lines.join('\n');
   }
 
   /**
@@ -717,6 +974,10 @@ export class ModelCommand {
     }
     if (cmd.startsWith('/error') || cmd.startsWith('/bug')) {
       return ReportCommand.execute(command);
+    }
+    if (cmd.startsWith('/consilium')) {
+      const raw = command.replace(/^\s*\/[^\s]+\s*/i, '').trim();
+      return this.handleConsiliumAsync(raw);
     }
     return this.execute(command);
   }
@@ -1209,17 +1470,12 @@ export class ModelCommand {
     return lines.join('\n');
   }
 
-  private static handleMcp(): string {
-    const lines: string[] = [];
-    lines.push('');
-    lines.push('═'.repeat(78));
-    lines.push('  MCP СЕРВЕРЫ (Model Context Protocol Suite // 21 активный сервер)');
-    lines.push('═'.repeat(78));
-    lines.push('');
-    lines.push('  Единый пул инструментов и интеграций, доступный всем агентам кластера:');
-    lines.push('');
+  private static handleMcp(args: string[]): string {
+    const sub = args[0]?.toLowerCase() || 'list';
+    const store = McpLspSelectionStore.getInstance();
+    const lang = I18nEngine.getLocale();
 
-    const servers = [
+    const allServers = [
       { name: 'notebooklm', desc: 'Gemini 2.5 Grounded RAG (Google Auth / Antigravity Notebook)', status: 'ACTIVE' },
       { name: 'chrome-devtools', desc: 'Автоматизация браузера, DOM, скриншоты, TigerVNC :0', status: 'ACTIVE' },
       { name: 'fetch', desc: 'HTTP/HTTPS парсинг, Puppeteer, веб-сокеты и GraphQL', status: 'ACTIVE' },
@@ -1236,44 +1492,193 @@ export class ModelCommand {
       { name: 'firebase', desc: 'Облачная база Firestore и чтение Auth профилей', status: 'ACTIVE' },
     ];
 
-    servers.forEach((s, idx) => {
-      lines.push(`  [${(idx + 1).toString().padStart(2)}] ${s.name.padEnd(20)} [${s.status}]`);
-      lines.push(`       ${s.desc}`);
-    });
+    const selected = store.getSelected('mcp');
 
-    lines.push('');
-    lines.push('  Синхронизация конфигурации: утилита sync-mcp автоматически');
-    lines.push('  распространяет настройки серверов на все 5 агентных сред.');
-    lines.push('──────────────────────────────────────────────────────────────────────────────');
-    return lines.join('\n');
+    switch (sub) {
+      case 'select':
+      case 'add': {
+        const name = args[1];
+        if (!name) {
+          return lang === 'ru' ? '[ERROR] Использование: /mcp select <имя_сервера>' : '[ERROR] Usage: /mcp select <server_name>';
+        }
+        const srv = allServers.find(s => s.name === name);
+        if (!srv) {
+          return `[ERROR] Неизвестный MCP сервер: ${name}. Доступные: ${allServers.map(s => s.name).join(', ')}`;
+        }
+        if (store.select('mcp', name)) {
+          return `[OK] MCP сервер "${name}" добавлен в выбор (позиция ${store.getSelected('mcp').length}).`;
+        }
+        return `[ERROR] Не удалось добавить "${name}".`;
+      }
+      case 'deselect':
+      case 'remove': {
+        const name = args[1];
+        if (!name) {
+          return lang === 'ru' ? '[ERROR] Использование: /mcp deselect <имя_сервера>' : '[ERROR] Usage: /mcp deselect <server_name>';
+        }
+        if (store.deselect('mcp', name)) {
+          return `[OK] MCP сервер "${name}" удалён из выбора.`;
+        }
+        return `[ERROR] Сервер "${name}" не был в выборе или ошибка удаления.`;
+      }
+      case 'selected': {
+        if (selected.length === 0) {
+          return lang === 'ru' ? '[INFO] Выбранных MCP серверов нет. Используйте /mcp select <имя>.' : '[INFO] No MCP servers selected. Use /mcp select <name>.';
+        }
+        const lines: string[] = ['', '═'.repeat(78), '  ВЫБРАННЫЕ MCP СЕРВЕРЫ', '═'.repeat(78), ''];
+        selected.forEach((name, idx) => {
+          const srv = allServers.find(s => s.name === name);
+          lines.push(`  [${(idx + 1).toString().padStart(2)}] ${name.padEnd(20)} [SELECTED]`);
+          if (srv) lines.push(`       ${srv.desc}`);
+        });
+        lines.push('');
+        lines.push('──────────────────────────────────────────────────────────────────────────────');
+        return lines.join('\n');
+      }
+      case 'top': {
+        const limit = parseInt(args[1] || '5', 10);
+        const top5 = allServers.slice(0, limit);
+        const lines: string[] = ['', '═'.repeat(78), `  ТОП-${limit} MCP СЕРВЕРОВ (по приоритету sync-mcp)`, '═'.repeat(78), ''];
+        top5.forEach((s, idx) => {
+          lines.push(`  [${(idx + 1).toString().padStart(2)}] ${s.name.padEnd(20)} [${s.status}]`);
+          lines.push(`       ${s.desc}`);
+        });
+        lines.push('');
+        lines.push('──────────────────────────────────────────────────────────────────────────────');
+        return lines.join('\n');
+      }
+      case 'info': {
+        const name = args[1];
+        if (!name) {
+          return lang === 'ru' ? '[ERROR] Использование: /mcp info <имя_сервера>' : '[ERROR] Usage: /mcp info <server_name>';
+        }
+        const srv = allServers.find(s => s.name === name);
+        if (!srv) return `[ERROR] Неизвестный сервер: ${name}`;
+        const isSel = selected.includes(name);
+        const lines = ['', '═'.repeat(78), `  MCP INFO: ${srv.name.toUpperCase()}`, '═'.repeat(78), `  Статус: ${srv.status}`, `  Описание: ${srv.desc}`, `  В выборе: ${isSel ? 'ДА' : 'НЕТ'}`, '──────────────────────────────────────────────────────────────────────────────'];
+        return lines.join('\n');
+      }
+      case 'help': {
+        const lines = ['', '═'.repeat(78), '  /mcp — Управление MCP серверами', '═'.repeat(78), '  /mcp list        — Список всех 14 активных серверов', '  /mcp top [N]     — Топ-N серверов (по умолчанию 5)', '  /mcp select <name> — Добавить сервер в выбор', '  /mcp deselect <name> — Убрать сервер из выбора', '  /mcp selected    — Показать выбранные серверы', '  /mcp info <name> — Детали сервера', '  /mcp help        — Эта справка', '──────────────────────────────────────────────────────────────────────────────'];
+        return lines.join('\n');
+      }
+      case 'list':
+      default: {
+        const lines: string[] = ['', '═'.repeat(78), '  MCP СЕРВЕРЫ (Model Context Protocol Suite // 14 активных серверов)', '═'.repeat(78), '', '  Единый пул инструментов и интеграций, доступный всем агентам кластера:', ''];
+        allServers.forEach((s, idx) => {
+          const isSel = selected.includes(s.name) ? ' [SELECTED]' : '';
+          lines.push(`  [${(idx + 1).toString().padStart(2)}] ${s.name.padEnd(20)} [${s.status}]${isSel}`);
+          lines.push(`       ${s.desc}`);
+        });
+        lines.push('');
+        lines.push('  Синхронизация: sync-mcp распространяет конфиг на 5 сред (agy, antigravity2, antigravity_ide, opencode, kilocode).');
+        lines.push('  Подкоманды: /mcp select|deselect|selected|top|info|help');
+        lines.push('──────────────────────────────────────────────────────────────────────────────');
+        return lines.join('\n');
+      }
+    }
   }
 
-  private static handleLsp(): string {
-    const lines: string[] = [];
-    lines.push('');
-    lines.push('═'.repeat(78));
-    lines.push('  LSP СЕРВЕРЫ (Language Server Protocol // Глобальные языковые демоны)');
-    lines.push('═'.repeat(78));
-    lines.push('');
-    lines.push('  Все LSP-серверы установлены в PATH, 100% бесплатные, локальное исполнение:');
-    lines.push('');
+  private static handleLsp(args: string[]): string {
+    const sub = args[0]?.toLowerCase() || 'list';
+    const store = McpLspSelectionStore.getInstance();
+    const lang = I18nEngine.getLocale();
 
-    const servers = [
+    const allServers = [
       { lang: 'TypeScript / JS', cmd: 'typescript-language-server --stdio', caps: 'AST парсинг, типизация, автодополнение, Go to definition' },
       { lang: 'Python 3.11', cmd: 'pyright-langserver --stdio', caps: 'Строгий статический анализ типов, Pyright engine' },
       { lang: 'HTML / CSS / JSON', cmd: 'vscode-{html,css,json}-language-server', caps: 'Синтаксис, CSS форматирование, JSON-схемы' },
       { lang: 'Markdown / Docs', cmd: 'marksman', caps: 'Иерархия заголовков, cross-doc ссылки, валидация' },
     ];
 
-    servers.forEach((l, idx) => {
-      lines.push(`  [${(idx + 1).toString().padStart(2)}] ${l.lang.padEnd(20)} Команда: ${l.cmd}`);
-      lines.push(`       Возможности: ${l.caps}`);
-      lines.push('');
-    });
+    const selected = store.getSelected('lsp');
 
-    lines.push('  Статус: Все демоны активны в окружении и доступны для рефакторинга кода.');
-    lines.push('──────────────────────────────────────────────────────────────────────────────');
-    return lines.join('\n');
+    switch (sub) {
+      case 'select':
+      case 'add': {
+        const name = args[1];
+        if (!name) {
+          return lang === 'ru' ? '[ERROR] Использование: /lsp select <имя_языка>' : '[ERROR] Usage: /lsp select <lang_name>';
+        }
+        const idx = parseInt(name, 10);
+        const srv = (idx >= 1 && idx <= allServers.length) ? allServers[idx - 1] : allServers.find(s => s.lang.toLowerCase().includes(name.toLowerCase()));
+        if (!srv) {
+          return `[ERROR] Неизвестный LSP сервер: ${name}. Доступные: ${allServers.map((s, i) => `${i+1}. ${s.lang}`).join(', ')}`;
+        }
+        if (store.select('lsp', srv.lang)) {
+          return `[OK] LSP "${srv.lang}" добавлен в выбор.`;
+        }
+        return `[ERROR] Не удалось добавить "${srv.lang}".`;
+      }
+      case 'deselect':
+      case 'remove': {
+        const name = args[1];
+        if (!name) {
+          return lang === 'ru' ? '[ERROR] Использование: /lsp deselect <имя_языка>' : '[ERROR] Usage: /lsp deselect <lang_name>';
+        }
+        const idx = parseInt(name, 10);
+        const srv = (idx >= 1 && idx <= allServers.length) ? allServers[idx - 1] : allServers.find(s => s.lang.toLowerCase().includes(name.toLowerCase()));
+        if (srv && store.deselect('lsp', srv.lang)) {
+          return `[OK] LSP "${srv.lang}" удалён из выбора.`;
+        }
+        return `[ERROR] Сервер не был в выборе или ошибка удаления.`;
+      }
+      case 'selected': {
+        if (selected.length === 0) {
+          return lang === 'ru' ? '[INFO] Выбранных LSP серверов нет. Используйте /lsp select <имя>.' : '[INFO] No LSP servers selected. Use /lsp select <name>.';
+        }
+        const lines: string[] = ['', '═'.repeat(78), '  ВЫБРАННЫЕ LSP СЕРВЕРЫ', '═'.repeat(78), ''];
+        selected.forEach((name, idx) => {
+          const srv = allServers.find(s => s.lang === name);
+          lines.push(`  [${(idx + 1).toString().padStart(2)}] ${name.padEnd(20)} [SELECTED]`);
+          if (srv) lines.push(`       Команда: ${srv.cmd} | ${srv.caps}`);
+        });
+        lines.push('');
+        lines.push('──────────────────────────────────────────────────────────────────────────────');
+        return lines.join('\n');
+      }
+      case 'top': {
+        const limit = parseInt(args[1] || '5', 10);
+        const topN = allServers.slice(0, Math.min(limit, allServers.length));
+        const lines: string[] = ['', '═'.repeat(78), `  ТОП-${Math.min(limit, allServers.length)} LSP СЕРВЕРОВ`, '═'.repeat(78), ''];
+        topN.forEach((s, idx) => {
+          lines.push(`  [${(idx + 1).toString().padStart(2)}] ${s.lang.padEnd(20)} Команда: ${s.cmd}`);
+          lines.push(`       ${s.caps}`);
+        });
+        lines.push('');
+        lines.push('──────────────────────────────────────────────────────────────────────────────');
+        return lines.join('\n');
+      }
+      case 'info': {
+        const name = args[1];
+        if (!name) {
+          return lang === 'ru' ? '[ERROR] Использование: /lsp info <имя_языка>' : '[ERROR] Usage: /lsp info <lang_name>';
+        }
+        const idx = parseInt(name, 10);
+        const srv = (idx >= 1 && idx <= allServers.length) ? allServers[idx - 1] : allServers.find(s => s.lang.toLowerCase().includes(name.toLowerCase()));
+        if (!srv) return `[ERROR] Неизвестный сервер: ${name}`;
+        const isSel = selected.includes(srv.lang);
+        const lines = ['', '═'.repeat(78), `  LSP INFO: ${srv.lang.toUpperCase()}`, '═'.repeat(78), `  Команда: ${srv.cmd}`, `  Возможности: ${srv.caps}`, `  В выборе: ${isSel ? 'ДА' : 'НЕТ'}`, '──────────────────────────────────────────────────────────────────────────────'];
+        return lines.join('\n');
+      }
+      case 'help': {
+        const lines = ['', '═'.repeat(78), '  /lsp — Управление LSP серверами', '═'.repeat(78), '  /lsp list        — Список всех 6 языковых серверов', '  /lsp top [N]     — Топ-N серверов (по умолчанию 5)', '  /lsp select <name|номер> — Добавить сервер в выбор', '  /lsp deselect <name|номер> — Убрать сервер из выбора', '  /lsp selected    — Показать выбранные серверы', '  /lsp info <name|номер> — Детали сервера', '  /lsp help        — Эта справка', '──────────────────────────────────────────────────────────────────────────────'];
+        return lines.join('\n');
+      }
+      case 'list':
+      default: {
+        const lines: string[] = ['', '═'.repeat(78), '  LSP СЕРВЕРЫ (Language Server Protocol // 6 глобальных языковых демонов)', '═'.repeat(78), '', '  Все LSP-серверы установлены в PATH, 100% бесплатные, локальное исполнение:', ''];
+        allServers.forEach((s, idx) => {
+          const isSel = selected.includes(s.lang) ? ' [SELECTED]' : '';
+          lines.push(`  [${(idx + 1).toString().padStart(2)}] ${s.lang.padEnd(20)} Команда: ${s.cmd}${isSel}`);
+          lines.push(`       Возможности: ${s.caps}`);
+          lines.push('');
+        });
+        lines.push('  Подкоманды: /lsp select|deselect|selected|top|info|help');
+        lines.push('──────────────────────────────────────────────────────────────────────────────');
+        return lines.join('\n');
+      }
+    }
   }
 
   private static handleCompany(args: string[]): string {
@@ -1860,6 +2265,353 @@ export class ModelCommand {
     lines.push(`  ОПИСАНИЕ:`);
     lines.push(`    ${model.description}`);
     lines.push('═'.repeat(78));
+    return lines.join('\n');
+  }
+
+  /**
+   * /about (aliases: /про, /про-бота, /про-нас, /о-нас) — System passport
+   * of EvaBot Online, EvaLine company, Chernomorsk manufacturing plant,
+   * Bratislava EU hub, and dual-cluster architecture on GCP.
+   */
+  private static handleAbout(): string {
+    const lang = I18nEngine.getLocale();
+    if (lang === 'uk') {
+      return [
+        '',
+        '═'.repeat(78),
+        '  [★] ПРО ПРОЕКТ EVABOT ONLINE // СИСТЕМНИЙ ПАСПОРТ',
+        '═'.repeat(78),
+        '  Назва        : EvaBot Online (v0.0.1 Cyber-Terminal & Multi-Agent Core)',
+        '  Публічний URL: https://evabot.online',
+        '  Компанія     : EvaLine Group (ТОВ "Євалайн")',
+        '  Виробництво  : вул. Промислова 1, Чорноморськ, Одеська обл., Україна (UA)',
+        '  Єврохаб      : Obchodná 37, 811 06 Bratislava, Slovakia (EU Hub & SCM)',
+        '  Продукція    : Виробництво ЕВА полімерів (автоковрики, татамі, мати "Бурьонка", взуття)',
+        '  GCP Проект   : evabot-agent-server (ID: evabot-agent-server, #873069440066)',
+        '  Кластер      : 1) Brain: evabot-agent-vm (c3-standard-8, Франкфурт, 34.159.202.82)',
+        '                 2) Edge:  evaline-micro-vm (e2-micro, Айова, 136.114.26.252, Caddy/QUIC)',
+        '  Персони      : Єва (Eva: Frontend, UX, Sales) та Адам (Adam: Cloud, Backend, Security)',
+        '  Можливості   : Мульти-LLM консиліум (/consilium), рада Сфірот (/sephirot), 21 MCP сервер,',
+        '                 4 LSP сервери, Cloud STT/TTS, розумний автовибір безкоштовних моделей (/auto).',
+        '  Команди      : /help, /about, /mode, /consilium, /clear, /models, /top, /cost, /who',
+        '═'.repeat(78),
+      ].join('\n');
+    }
+    if (lang === 'ru') {
+      return [
+        '',
+        '═'.repeat(78),
+        '  [★] О ПРОЕКТЕ EVABOT ONLINE // СИСТЕМНЫЙ ПАСПОРТ',
+        '═'.repeat(78),
+        '  Название     : EvaBot Online (v0.0.1 Cyber-Terminal & Multi-Agent Core)',
+        '  Публичный URL: https://evabot.online',
+        '  Компания     : EvaLine Group (ООО "Евалайн")',
+        '  Производство : ул. Промышленная 1, Черноморск, Одесская обл., Украина (UA)',
+        '  Еврохаб      : Obchodná 37, 811 06 Bratislava, Slovakia (EU Hub & SCM)',
+        '  Продукция    : Производство ЭВА полимеров (автоковрики, татами, маты "Буренка", обувь)',
+        '  GCP Проект   : evabot-agent-server (ID: evabot-agent-server, #873069440066)',
+        '  Кластер      : 1) Brain: evabot-agent-vm (c3-standard-8, Франкфурт, 34.159.202.82)',
+        '                 2) Edge:  evaline-micro-vm (e2-micro, Айова, 136.114.26.252, Caddy/QUIC)',
+        '  Персоны      : Ева (Eva: Frontend, UX, Sales) и Адам (Adam: Cloud, Backend, Security)',
+        '  Возможности  : Мульти-LLM консилиум (/consilium), совет Сфирот (/sephirot), 21 MCP сервер,',
+        '                 4 LSP сервера, Cloud STT/TTS, умный автовыбор бесплатных моделей (/auto).',
+        '  Команды      : /help, /about, /mode, /consilium, /clear, /models, /top, /cost, /who',
+        '═'.repeat(78),
+      ].join('\n');
+    }
+    return [
+      '',
+      '═'.repeat(78),
+      '  [*] ABOUT EVABOT ONLINE // SYSTEM PASSPORT',
+      '═'.repeat(78),
+      '  Product      : EvaBot Online (v0.0.1 Cyber-Terminal & Multi-Agent Core)',
+      '  Public URL   : https://evabot.online',
+      '  Company      : EvaLine Group',
+      '  Manufacturing: Promyslova st. 1, Chernomorsk, Odesa reg., Ukraine (UA)',
+      '  EU Hub       : Obchodna 37, 811 06 Bratislava, Slovakia (EU Hub & SCM)',
+      '  Products     : Premier EVA polymer manufacturing (car mats, tatami, livestock mats, footwear)',
+      '  GCP Project  : evabot-agent-server (ID: evabot-agent-server, #873069440066)',
+      '  Cluster      : 1) Brain: evabot-agent-vm (c3-standard-8, Frankfurt, 34.159.202.82)',
+      '                 2) Edge:  evaline-micro-vm (e2-micro, Iowa, 136.114.26.252, Caddy/QUIC)',
+      '  Personas     : Eva (Frontend, UX, Sales) & Adam (Cloud, Backend, Security)',
+      '  Capabilities : Multi-LLM Consilium (/consilium), Sephirot council (/sephirot), 21 MCP servers,',
+      '                 4 LSP servers, Cloud STT/TTS, Smart auto free-model routing (/auto).',
+      '  Commands     : /help, /about, /mode, /consilium, /clear, /models, /top, /cost, /who',
+      '═'.repeat(78),
+    ].join('\n');
+  }
+
+  /**
+   * /mode (alias: /режим) — Switch or inspect operational mode:
+   * solo, dialogue, consilium, interview.
+   */
+  private static handleMode(args: string[]): string {
+    const lang = I18nEngine.getLocale();
+    const sub = (args[0] || '').toLowerCase();
+    const modes = [
+      { id: 'solo / chat', desc: lang === 'uk' ? 'Прямий діалог з активною моделлю або персоною' : lang === 'ru' ? 'Прямой диалог с активной моделью или персоной' : 'Direct conversation with the active model/persona' },
+      { id: 'dialogue', desc: lang === 'uk' ? 'Дебати та діалог між двома моделями на задану тему' : lang === 'ru' ? 'Дебаты и диалог между двумя моделями на заданную тему' : '2-model debate and deliberation on the topic' },
+      { id: 'consilium', desc: lang === 'uk' ? 'Колегіальний консиліум 3-10 експертних моделей з консенсус-синтезом' : lang === 'ru' ? 'Коллегиальный консилиум 3-10 экспертных моделей с консенсус-синтезом' : '3-10 model deliberation with consensus synthesis' },
+      { id: 'interview', desc: lang === 'uk' ? 'Глибоке структуроване інтерв\'ю та аналіз вимог' : lang === 'ru' ? 'Глубокое структурированное интервью и анализ требований' : 'In-depth structured interview and requirements analysis' },
+    ];
+
+    if (sub && ['chat', 'solo', 'dialog', 'dialogue', 'consilium', 'interview'].includes(sub)) {
+      const normalized = sub === 'chat' ? 'solo' : sub === 'dialog' ? 'dialogue' : sub;
+      return lang === 'uk'
+        ? `[OK] Режим переключено на: ${normalized.toUpperCase()}. Використовуйте термінал або вебінтерфейс для взаємодії.`
+        : lang === 'ru'
+        ? `[OK] Режим переключен на: ${normalized.toUpperCase()}. Используйте терминал или вебинтерфейс для взаимодействия.`
+        : `[OK] Operational mode set to: ${normalized.toUpperCase()}. Use terminal or web interface to interact.`;
+    }
+
+    const title = lang === 'uk' ? 'ОПЕРАЦІЙНІ РЕЖИМИ СИСТЕМИ (/mode)' : lang === 'ru' ? 'ОПЕРАЦИОННЫЕ РЕЖИМЫ СИСТЕМЫ (/mode)' : 'OPERATIONAL SYSTEM MODES (/mode)';
+    const usage = lang === 'uk' ? 'Використання: /mode <solo|dialogue|consilium|interview>' : lang === 'ru' ? 'Использование: /mode <solo|dialogue|consilium|interview>' : 'Usage: /mode <solo|dialogue|consilium|interview>';
+    const lines = ['', '═'.repeat(78), `  [*] ${title}`, '═'.repeat(78)];
+    for (const m of modes) {
+      lines.push(`  ${m.id.padEnd(20)} - ${m.desc}`);
+    }
+    lines.push('─'.repeat(78));
+    lines.push(`  ${usage}`);
+    lines.push('═'.repeat(78));
+    return lines.join('\n');
+  }
+
+  /**
+   * /consilium (aliases: /консилиум, /консиліум, /рада) — sync status and
+   * usage guidance for multi-agent consilium deliberation.
+   */
+  private static handleConsilium(args: string[]): string {
+    const topic = args.join(' ').trim();
+    const lang = I18nEngine.getLocale();
+    if (!topic) {
+      return lang === 'uk'
+        ? [
+            '',
+            '═'.repeat(78),
+            '  [★] МУЛЬТИ-АГЕНТНИЙ КОНСИЛІУМ (/consilium)',
+            '═'.repeat(78),
+            '  Опис         : Колегіальний аналіз запиту пулом експертних моделей з консенсус-синтезом.',
+            '  Учасники     : Gemini 2.5 Pro, Gemini 2.5 Flash, DeepSeek R1 (:free)',
+            '  Використання : /consilium <тема або запитання>',
+            '  Приклад      : /consilium Вибір архітектури бази даних для високих навантажень',
+            '  Примітка     : Для виконання в реальному часі використовуйте CLI (npm run cli) або веб-чат.',
+            '═'.repeat(78),
+          ].join('\n')
+        : lang === 'ru'
+        ? [
+            '',
+            '═'.repeat(78),
+            '  [★] МУЛЬТИ-АГЕНТНЫЙ КОНСИЛИУМ (/consilium)',
+            '═'.repeat(78),
+            '  Описание     : Коллегиальный анализ запроса пулом экспертных моделей с консенсус-синтезом.',
+            '  Участники    : Gemini 2.5 Pro, Gemini 2.5 Flash, DeepSeek R1 (:free)',
+            '  Использование: /consilium <тема или вопрос>',
+            '  Пример       : /consilium Выбор архитектуры базы данных для высоких нагрузок',
+            '  Примечание   : Для выполнения в реальном времени используйте CLI (npm run cli) или веб-чат.',
+            '═'.repeat(78),
+          ].join('\n')
+        : [
+            '',
+            '═'.repeat(78),
+            '  [*] MULTI-AGENT CONSILIUM (/consilium)',
+            '═'.repeat(78),
+            '  Description  : Deliberation by an expert model pool with consensus synthesis.',
+            '  Participants : Gemini 2.5 Pro, Gemini 2.5 Flash, DeepSeek R1 (:free)',
+            '  Usage        : /consilium <topic or question>',
+            '  Example      : /consilium Database architecture selection for high load',
+            '  Note         : For live streaming execution, use CLI (npm run cli) or web chat.',
+            '═'.repeat(78),
+          ].join('\n');
+    }
+    return lang === 'uk'
+      ? `⏳ Запуск консиліуму на тему "${topic}"... У синхронному режимі використовуйте CLI або Web API (/api/consilium або executeAsync).`
+      : lang === 'ru'
+      ? `⏳ Запуск консилиума на тему "${topic}"... В синхронном режиме используйте CLI или Web API (/api/consilium или executeAsync).`
+      : `⏳ Launching consilium on "${topic}"... In synchronous mode use CLI or Web API (/api/consilium or executeAsync).`;
+  }
+
+  /**
+   * Fully async /consilium execution: runs multi-agent deliberation and consensus.
+   */
+  private static async handleConsiliumAsync(topic: string): Promise<string> {
+    if (!topic) {
+      return this.handleConsilium([]);
+    }
+    try {
+      const engine = new ConsiliumEngine();
+      const result = await engine.run({
+        mode: 'consilium',
+        prompt: topic,
+        models: ['gemini-3.1-pro', 'gemini-3.8-flash', 'deepseek/deepseek-r1:free'],
+        rounds: 1,
+        synthesizerModel: 'gemini-3.1-pro',
+        useKnowledgeBase: true,
+      });
+
+      const lines: string[] = [];
+      lines.push('');
+      lines.push('═'.repeat(78));
+      lines.push(`  [*] CONSILIUM REPORT // ТЕМА: ${topic}`);
+      lines.push('═'.repeat(78));
+      lines.push(`  Тривалість: ${result.durationMs}ms | Раундів: ${result.totalRounds} | Учасників: ${result.participants.length}`);
+      lines.push('');
+      for (const turn of result.turns) {
+        lines.push(`┌─ [${turn.name.toUpperCase()}] (${turn.model}) ──────────────────`);
+        lines.push(turn.content);
+        lines.push(`└─${'─'.repeat(50)}`);
+        lines.push('');
+      }
+      if (result.synthesis) {
+        lines.push('╔══════════════════════════════════════════════════════════════════════════════╗');
+        lines.push('║                     [★] ПІДСУМКОВИЙ КОНСЕНСУС-СИНТЕЗ                         ║');
+        lines.push('╚══════════════════════════════════════════════════════════════════════════════╝');
+        lines.push(result.synthesis);
+        lines.push('');
+      }
+      return lines.join('\n');
+    } catch (err: any) {
+      return `[ERROR] Помилка консиліуму: ${err?.message || String(err)}`;
+    }
+  }
+
+  /**
+   * /clear (aliases: /cls, /очистити, /очистить, /очистка) — screen purge confirmation.
+   */
+  private static handleClear(): string {
+    const lang = I18nEngine.getLocale();
+    if (lang === 'uk') {
+      return '[OK] Екран терміналу та історію сесії очищено.';
+    }
+    if (lang === 'ru') {
+      return '[OK] Экран терминала и история сессии очищены.';
+    }
+    return '[OK] Terminal screen and session history cleared.';
+  }
+
+  /**
+   * /commands — show all available commands with descriptions, aliases, usage, and options.
+   * Sorted by priority (core → system → utility) then alphabetically.
+   * Includes EN/UK/RU aliases from COMMAND_ALIASES.
+   */
+  private static handleCommands(): string {
+    const lang = I18nEngine.getLocale();
+
+    // Build reverse alias map: canonical -> [aliases]
+    const aliasMap: Record<string, string[]> = {};
+    for (const [alias, canonical] of Object.entries(COMMAND_ALIASES)) {
+      if (!aliasMap[canonical]) aliasMap[canonical] = [];
+      aliasMap[canonical].push(alias);
+    }
+
+    // Command definitions with all metadata
+    interface CommandDef {
+      canonical: string;
+      aliases: string[];
+      description: string;
+      usage: string;
+      options: string[];
+      priority: 1 | 2 | 3;
+      category: string;
+    }
+
+    const commands: CommandDef[] = [
+      // CORE (priority 1)
+      { canonical: '/help', aliases: aliasMap['/help'] || [], description: 'Show this help / command reference', usage: '/help', options: ['/help', '/?'], priority: 1, category: 'Core' },
+      { canonical: '/about', aliases: aliasMap['/about'] || [], description: 'System passport: EvaBot Online, EvaLine, GCP cluster', usage: '/about', options: ['/about', '/про', '/про-бота', '/про-нас', '/о-нас'], priority: 1, category: 'Core' },
+      { canonical: '/top', aliases: aliasMap['/top'] || [], description: 'Top models by quality/speed/context/cost', usage: '/top [free|paid|speed|context] [N]', options: ['free', 'paid', 'speed', 'context', 'all'], priority: 1, category: 'Core' },
+      { canonical: '/models', aliases: aliasMap['/models'] || [], description: 'Model catalog summary & filter commands', usage: '/models [summary]', options: ['summary'], priority: 1, category: 'Core' },
+      { canonical: '/info', aliases: aliasMap['/info'] || [], description: 'Technical spec & rating for a model', usage: '/info <model_id>', options: ['model ID or name'], priority: 1, category: 'Core' },
+      { canonical: '/mcp', aliases: aliasMap['/mcp'] || [], description: 'Manage 21 MCP servers (select/deselect/list)', usage: '/mcp [list|top|select|deselect|selected|info|help]', options: ['list', 'top [N]', 'select <name>', 'deselect <name>', 'selected', 'info <name>', 'help'], priority: 1, category: 'Core' },
+      { canonical: '/lsp', aliases: aliasMap['/lsp'] || [], description: 'Manage 6 LSP servers (TypeScript, Python, HTML, MD)', usage: '/lsp [list|top|select|deselect|selected|info|help]', options: ['list', 'top [N]', 'select <name|num>', 'deselect <name|num>', 'selected', 'info <name|num>', 'help'], priority: 1, category: 'Core' },
+      { canonical: '/add', aliases: aliasMap['/add'] || [], description: 'Add files/URLs to Knowledge Base (async)', usage: '/add <file|url> [tags]', options: ['<file path>', '<http(s) URL>', 'tags...'], priority: 1, category: 'Core' },
+      { canonical: '/model', aliases: aliasMap['/model'] || [], description: 'Alias for /info — model technical passport', usage: '/model <model_id>', options: ['model ID or name'], priority: 1, category: 'Core' },
+      { canonical: '/mode', aliases: aliasMap['/mode'] || [], description: 'Switch operational mode', usage: '/mode [solo|dialogue|consilium|interview]', options: ['solo', 'dialogue', 'consilium', 'interview'], priority: 1, category: 'Core' },
+      { canonical: '/consilium', aliases: aliasMap['/consilium'] || [], description: 'Multi-agent expert deliberation with consensus', usage: '/consilium <topic> | status', options: ['<topic>', 'status'], priority: 1, category: 'Core' },
+      { canonical: '/sephirot', aliases: aliasMap['/sephirot'] || [], description: '10-node Tree-of-Life agent council (Tetraxis)', usage: '/sephirot <topic> | status | tree', options: ['<topic>', 'status', 'tree|map'], priority: 1, category: 'Core' },
+      { canonical: '/clear', aliases: aliasMap['/clear'] || [], description: 'Clear terminal screen & session history', usage: '/clear', options: ['/clear', '/cls', '/очистити', '/очистить', '/очистка'], priority: 1, category: 'Core' },
+      { canonical: '/exit', aliases: aliasMap['/exit'] || [], description: 'Exit CLI session (web: no-op)', usage: '/exit', options: [], priority: 1, category: 'Core' },
+
+      // SYSTEM (priority 2)
+      { canonical: '/cost', aliases: aliasMap['/cost'] || [], description: 'Token cost report & budget summary', usage: '/cost', options: ['/cost', '/finance', '/budget', '/вартість', '/стоимость', '/фінанси', '/финансы', '/бюджет', '/бухгалтерія', '/бухгалтерия'], priority: 2, category: 'System' },
+      { canonical: '/company', aliases: aliasMap['/company'] || [], description: 'Corporate agent roster (free/paid/evaline tiers)', usage: '/company [free|paid|evaline]', options: ['free', 'paid', 'evaline'], priority: 2, category: 'System' },
+      { canonical: '/products', aliases: aliasMap['/products'] || [], description: 'EvaLine product catalog (EVA polymers)', usage: '/products [query]', options: ['<search query>'], priority: 2, category: 'System' },
+      { canonical: '/who', aliases: aliasMap['/who'] || [], description: 'Corporate knowledge matrix — role lookup', usage: '/who [role_name]', options: ['<role id or name>'], priority: 2, category: 'System' },
+      { canonical: '/health', aliases: aliasMap['/health'] || [], description: 'Provider fallback chain & breaker status', usage: '/health', options: [], priority: 2, category: 'System' },
+      { canonical: '/debug', aliases: aliasMap['/debug'] || [], description: 'Debug mode toggle & full diagnostics', usage: '/debug [on|off|status|full]', options: ['on', 'off', 'status', 'full'], priority: 2, category: 'System' },
+      { canonical: '/log', aliases: aliasMap['/log'] || [], description: 'Operation log tail with filters', usage: '/log [N] [level|kind|text]', options: ['N (1-200)', 'info|warn|error|debug', 'command|llm|breaker|system|chat', 'substring'], priority: 2, category: 'System' },
+      { canonical: '/monitor', aliases: aliasMap['/monitor'] || [], description: 'Auto-generated model monitor TOP-10 report', usage: '/monitor', options: [], priority: 2, category: 'System' },
+      { canonical: '/sys', aliases: aliasMap['/sys'] || [], description: 'System self-awareness block (env, cluster, DB)', usage: '/sys', options: [], priority: 2, category: 'System' },
+      { canonical: '/auto', aliases: aliasMap['/auto'] || [], description: 'Smart auto free-model routing per session', usage: '/auto [on|off|test <text>|fleet|status]', options: ['on', 'off', 'test <text>', 'fleet', 'status'], priority: 2, category: 'System' },
+      { canonical: '/subagent', aliases: aliasMap['/subagent'] || [], description: 'Parallel free-model agent batch (1-4 agents)', usage: '/subagent [1-4] <task>', options: ['1-4 agents', '<task description>'], priority: 2, category: 'System' },
+      { canonical: '/room', aliases: aliasMap['/room'] || [], description: 'Create/join/leave chat room', usage: '/room <name> | leave', options: ['<room name>', 'leave'], priority: 2, category: 'System' },
+      { canonical: '/rooms', aliases: aliasMap['/rooms'] || [], description: 'List all active chat rooms', usage: '/rooms', options: [], priority: 2, category: 'System' },
+      { canonical: '/free', aliases: aliasMap['/free'] || [], description: 'List all 46 free models with ratings', usage: '/free', options: [], priority: 2, category: 'System' },
+      { canonical: '/paid', aliases: aliasMap['/paid'] || [], description: 'List all 32 paid models with ratings', usage: '/paid', options: [], priority: 2, category: 'System' },
+
+      // UTILITY (priority 3)
+      { canonical: '/lang', aliases: aliasMap['/lang'] || [], description: 'Set interface language', usage: '/lang <en|uk|ru>', options: ['en', 'uk', 'ru'], priority: 3, category: 'Utility' },
+      { canonical: '/news', aliases: aliasMap['/news'] || [], description: 'Tech/news digest (Google News RSS, cached 15m)', usage: '/news [tag...]', options: ['ai', 'ml', 'devops', 'security', 'cloud', 'frontend', 'backend', 'database', 'mobile', 'crypto', 'space', 'biotech', 'energy', 'robotics', 'quantum', 'opensource', 'startup', 'bigtech'], priority: 3, category: 'Utility' },
+      { canonical: '/translate', aliases: aliasMap['/translate'] || [], description: 'Google Cloud Translation v3 (100+ languages)', usage: '/translate <target_lang> <text>', options: ['<lang code: uk, en, ru, de, pl, es...>', '<text to translate>'], priority: 3, category: 'Utility' },
+      { canonical: '/listen', aliases: aliasMap['/listen'] || [], description: 'Cloud STT: transcribe local audio file', usage: '/listen <file_path>', options: ['<path to .wav/.mp3/.flac/.ogg>'], priority: 3, category: 'Utility' },
+      { canonical: '/say', aliases: aliasMap['/say'] || [], description: 'Cloud TTS: speak text with Eva/Adam voices', usage: '/say <text>', options: ['<text to speak>'], priority: 3, category: 'Utility' },
+      { canonical: '/voices', aliases: aliasMap['/voices'] || [], description: 'TTS voice catalog (free families only)', usage: '/voices [uk|ru|en] | set eva|adam <voice>', options: ['uk', 'ru', 'en', 'set eva <voice>', 'set adam <voice>'], priority: 3, category: 'Utility' },
+      { canonical: '/settings', aliases: aliasMap['/settings'] || [], description: 'Current system settings table', usage: '/settings', options: [], priority: 3, category: 'Utility' },
+      { canonical: '/agents', aliases: aliasMap['/agents'] || [], description: 'Agent roster: 18 corporate + 10 Sephirot', usage: '/agents', options: [], priority: 3, category: 'Utility' },
+      { canonical: '/developer', aliases: aliasMap['/developer'] || [], description: 'Password-protected developer mode (2h TTL)', usage: '/developer unlock <pwd> | status | lock', options: ['unlock <password>', 'status', 'lock'], priority: 3, category: 'Utility' },
+      { canonical: '/emoji', aliases: aliasMap['/emoji'] || [], description: 'Toggle emoji rendering in chat (client)', usage: '/emoji [on|off]', options: ['on', 'off'], priority: 3, category: 'Utility' },
+      { canonical: '/boot', aliases: aliasMap['/boot'] || [], description: 'System boot sequence / init status', usage: '/boot', options: [], priority: 3, category: 'Utility' },
+      { canonical: '/history', aliases: aliasMap['/history'] || [], description: 'Chat history (all sessions, FTS5 searchable)', usage: '/history [N]', options: ['N messages (default 20, max 200)'], priority: 3, category: 'Utility' },
+      { canonical: '/memory', aliases: aliasMap['/memory'] || [], description: 'System memory stats (KB, chat DB, vector store)', usage: '/memory', options: [], priority: 3, category: 'Utility' },
+      { canonical: '/search', aliases: aliasMap['/search'] || [], description: 'Full-text search chats + Knowledge Base', usage: '/search <query>', options: ['<search terms>'], priority: 3, category: 'Utility' },
+      { canonical: '/find', aliases: aliasMap['/find'] || [], description: 'Alias for /search', usage: '/find <query>', options: ['<search terms>'], priority: 3, category: 'Utility' },
+      { canonical: '/services', aliases: aliasMap['/services'] || [], description: 'Systemd/Docker service status table', usage: '/services', options: [], priority: 3, category: 'Utility' },
+      { canonical: '/servers', aliases: aliasMap['/servers'] || [], description: 'Cluster telemetry: brain + face VMs', usage: '/servers', options: [], priority: 3, category: 'Utility' },
+    ];
+
+    // Sort: priority asc, then canonical alpha
+    commands.sort((a, b) => {
+      if (a.priority !== b.priority) return a.priority - b.priority;
+      return a.canonical.localeCompare(b.canonical);
+    });
+
+    const lines: string[] = [];
+    lines.push('');
+    lines.push('═'.repeat(78));
+    lines.push('  ВСЕ ДОСТУПНЫЕ КОМАНДЫ / ALL AVAILABLE COMMANDS');
+    lines.push('═'.repeat(78));
+
+    let currentPriority = 0;
+    const priorityLabels: Record<number, string> = { 1: 'CORE', 2: 'SYSTEM', 3: 'UTILITY' };
+
+    for (const cmd of commands) {
+      if (cmd.priority !== currentPriority) {
+        currentPriority = cmd.priority;
+        lines.push('');
+        lines.push(`  ─── ${priorityLabels[currentPriority]} COMMANDS ───`);
+      }
+
+      const aliasStr = cmd.aliases.length > 0 ? `  (aliases: ${cmd.aliases.join(', ')})` : '';
+      lines.push(`  ${cmd.canonical.padEnd(18)} ${cmd.description}${aliasStr}`);
+      lines.push(`      Usage: ${cmd.usage}`);
+      if (cmd.options.length > 0) {
+        lines.push(`      Options: ${cmd.options.join(' | ')}`);
+      }
+      lines.push('');
+    }
+
+    lines.push('─'.repeat(78));
+    lines.push(`  Всего команд: ${commands.length} (Core: ${commands.filter(c => c.priority === 1).length}, System: ${commands.filter(c => c.priority === 2).length}, Utility: ${commands.filter(c => c.priority === 3).length})`);
+    lines.push('  Алиасы RU/UK: /допомога=/help, /про=/about, /моделі=/models, /режим=/mode,');
+    lines.push('                /консилиум=/consilium, /сфирот=/sephirot, /очистити=/clear,');
+    lines.push('                /вартість=/cost, /продукти=/products, /хто=/who, /здоров\'я=/health,');
+    lines.push('                /дебаг=/debug, /лог=/log, /монитор=/monitor, /система=/sys,');
+    lines.push('                /авто=/auto, /мова=/lang, /новини=/news, /переклад=/translate,');
+    lines.push('                /розпізнай=/listen, /скажи=/say, /голоси=/voices, /налаштування=/settings,');
+    lines.push('                /агенти=/agents, /девелопер=/developer, /історія=/history,');
+    lines.push('                /пам\'ять=/memory, /пошук=/search, /знайди=/find,');
+    lines.push('                /сервіси=/services, /сервери=/servers');
+    lines.push('═'.repeat(78));
+
     return lines.join('\n');
   }
 }

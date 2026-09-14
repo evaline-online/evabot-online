@@ -544,8 +544,28 @@ export function renderCompareTable(models: CompareModelSpan[]): string {
   );
 }
 
+export function renderAbout(): string {
+  const lines: string[] = [
+    `\n${ANSI.bold}${ANSI.brightCyan}EVA-BOT ONLINE // SYSTEM & CLUSTER PASSPORT${ANSI.reset}`,
+    divider('─', 80, ANSI.gray),
+    `  ${ANSI.bold}${ANSI.white}Product:${ANSI.reset}       EvaBot Online (v0.0.1 Cyber-Terminal & Multi-Agent Swarm)`,
+    `  ${ANSI.bold}${ANSI.white}Gateway:${ANSI.reset}       ${ANSI.cyan}https://evabot.online${ANSI.reset}`,
+    `  ${ANSI.bold}${ANSI.white}Company:${ANSI.reset}       EvaLine Group (Chernomorsk, Ukraine & Bratislava, Slovakia)`,
+    `  ${ANSI.bold}${ANSI.white}Production:${ANSI.reset}    Premier EVA polymer solutions (car mats, tatami, livestock mats)`,
+    `  ${ANSI.bold}${ANSI.white}GCP Project:${ANSI.reset}   ${ANSI.green}evabot-agent-server${ANSI.reset} (#873069440066)`,
+    `  ${ANSI.bold}${ANSI.white}Dual Cluster:${ANSI.reset}  Brain: ${ANSI.brightWhite}evabot-agent-vm${ANSI.reset} (Frankfurt, c3-standard-8, 34.159.202.82)`,
+    `                 Edge:  ${ANSI.brightWhite}evaline-micro-vm${ANSI.reset} (Iowa, e2-micro, 136.114.26.252, HTTP/3 QUIC)`,
+    `  ${ANSI.bold}${ANSI.white}Personas:${ANSI.reset}      Eva (Frontend/UX/Diplomacy) & Adam (Cloud/Backend/Security)`,
+    `  ${ANSI.bold}${ANSI.white}Engine Core:${ANSI.reset}   Multi-Agent Consilium, Sephirot Council, 21 MCPs, 4 LSPs, STT/TTS`,
+    `  ${ANSI.bold}${ANSI.white}Commands:${ANSI.reset}      /about, /mode, /consilium, /clear, /models, /compare, /boot, /help`,
+    divider('─', 80, ANSI.gray),
+  ];
+  return lines.join('\n');
+}
+
 export function renderHelp(): string {
   const commands = [
+    { cmd: '/about', desc: 'About EvaBot Online, EvaLine company & cloud architecture' },
     { cmd: '/models [filter]', desc: 'Model catalog with free/paid status & USD/EUR pricing' },
     { cmd: '/compare', desc: 'Top-10 coding models side-by-side with SWE-bench & Terminal-Bench' },
     { cmd: '/model <id>', desc: 'Switch active model' },

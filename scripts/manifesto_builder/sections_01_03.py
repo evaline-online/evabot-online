@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from helpers import t, accordion_section, sub_accordion
+import infographics_builder
 
 def get_section_01():
     sub1 = sub_accordion(
@@ -47,7 +48,10 @@ def get_section_01():
         "The vast majority of corporate AI implementations fail because they reduce intelligence to an isolated web chatbox. In real-world enterprise environments, businesses face systemic bottlenecks from standalone language models:"
     )
 
-    content = f'''      <p class="lead-text">{lead}</p>
+    info_panel = infographics_builder.get_infographic_01()
+
+    content = f'''      {info_panel}
+      <p class="lead-text">{lead}</p>
       {sub1}
       {sub2}
       {sub3}'''
@@ -69,9 +73,9 @@ def get_section_02():
         "Question 2.1: What is an agent factory and how are digital employee personas structured?",
         "6 ключевых ролей", "6 ключових ролей", "6 Core Personas",
         f'''<p>{t(
-            "Каждый агент EvaLine наделен строгим функционалом и персональной зоной ответственности: Главный системный архитектор (<strong>Architect</strong>), Ведущий инженер бэкенда и шеф производства (<strong>Adam</strong>), Фронтенд-директор и голос заботы о клиентах (<strong>Eva</strong>), Офицер кибербезопасности (<strong>CISO</strong>), Аналитик баз данных (<strong>Data Engineer</strong>) и Стратегический директор (<strong>CEO</strong>).",
-            "Кожен агент EvaLine наділений чітким функціоналом та зоною відповідальності: Головний системний архітектор (<strong>Architect</strong>), Провідний інженер бекенду та шеф виробництва (<strong>Adam</strong>), Фронтенд-директор та амбасадор турботи про клієнта (<strong>Eva</strong>), Офіцер кібербезпеки (<strong>CISO</strong>), Аналітик баз даних (<strong>Data Engineer</strong>) та Стратегічний директор (<strong>CEO</strong>).",
-            "Every EvaLine agent is endowed with explicit authority boundaries and rigorous domain prompts: Chief Systems Architect (<strong>Architect</strong>), Lead Backend Engineer & Manufacturing Master (<strong>Adam</strong>), Customer Experience & Omnichannel Director (<strong>Eva</strong>), Chief Information Security Officer (<strong>CISO</strong>), Telemetry & Data Engineer (<strong>Data Engineer</strong>), and Strategic Coordinator (<strong>CEO</strong>)."
+            "Каждый агент EvaLine наделен строгим функционалом и персональной зоной ответственности: Главный системный архитектор (<strong>Architect</strong>), Ведущий инженер бэкенда и разработки, шеф производства, безопасности и бизнес-процессов (<strong>Adam</strong>), Фронтенд-директор, лицо компании и голос заботы о клиентах (<strong>Eva</strong>), Офицер кибербезопасности (<strong>CISO</strong>), Аналитик баз данных (<strong>Data Engineer</strong>) и Стратегический директор (<strong>CEO</strong>).",
+            "Кожен агент EvaLine наділений чітким функціоналом та зоною відповідальності: Головний системний архітектор (<strong>Architect</strong>), Провідний інженер бекенду та розробки, шеф виробництва, безпеки та бізнес-процесів (<strong>Adam</strong>), Фронтенд-директор, обличчя компанії та голос турботи про клієнта (<strong>Eva</strong>), Офіцер кібербезпеки (<strong>CISO</strong>), Аналітик баз даних (<strong>Data Engineer</strong>) та Стратегічний директор (<strong>CEO</strong>).",
+            "Every EvaLine agent is endowed with explicit authority boundaries and rigorous domain prompts: Chief Systems Architect (<strong>Architect</strong>), Lead Backend & Development Engineer, Chief of Manufacturing, Security & Business Processes (<strong>Adam</strong>), Frontend Director, Company Face & Client-Care Voice (<strong>Eva</strong>), Chief Information Security Officer (<strong>CISO</strong>), Telemetry & Data Engineer (<strong>Data Engineer</strong>), and Strategic Coordinator (<strong>CEO</strong>)."
         )}</p>'''
     )
 
@@ -120,7 +124,10 @@ def get_section_02():
         "<strong>EvaLine</strong> builds not disposable novelty bots, but an <strong>autonomous factory of specialized digital employees</strong> bound by industrial context protocols and unified deterministic oversight:"
     )
 
-    content = f'''      <p class="lead-text">{lead}</p>
+    info_panel = infographics_builder.get_infographic_02()
+
+    content = f'''      {info_panel}
+      <p class="lead-text">{lead}</p>
       {sub1}
       {sub2}
       {sub3}
@@ -132,7 +139,7 @@ def get_section_02():
         "EvaNetwork: Фабрика агентів та автономне ШІ-агентство",
         "EvaNetwork: Sovereign Agent Factory & Autonomous AI Agency",
         "Инженерная платформа", "Інженерна платформа", "Core Platform",
-        content, open=True
+        content, open=False
     )
 
 def get_section_03():
@@ -213,14 +220,14 @@ def get_section_03():
 
     sub4 = sub_accordion(
         "sub-3-4", "☯️",
-        "Вопрос 3.4: В чем суть диалектического баланса Адама (CISO) и Евы (CXO)?",
-        "Питання 3.4: У чому суть діалектичного балансу Адама (CISO) та Єви (CXO)?",
-        "Question 3.4: What is the core of the dialectical executive balance: Adam vs. Eva?",
+        "Вопрос 3.4: В чем суть диалектического баланса Адама (Бэкенд и Безопасность) и Евы (Фронтенд и Лицо компании)?",
+        "Питання 3.4: У чому суть діалектичного балансу Адама (Бекенд та Безпека) та Єви (Фронтенд та Обличчя компанії)?",
+        "Question 3.4: What is the core of the dialectical executive balance: Adam (Backend & Security) vs. Eva (Frontend & Face)?",
         "Двойной контроль", "Подвійний контроль", "Dual Governance",
         f'''<p>{t(
-            "Управление платформой разделено между двумя противоположными архетипами: <strong>Адам</strong> олицетворяет сурового инженера, проверяющего безопасность, сметные лимиты, отсутствие уязвимостей и соблюдение жестких технических стандартов. <strong>Ева</strong> отвечает за человекоцентричность, эмпатию, безупречный стиль диалога и мгновенное удовлетворение потребностей клиентов. Их непрерывный диалог рождает идеальный продукт.",
-            "Управління платформою розділене між двома протилежними архетипами: <strong>Адам</strong> уособлює суворого інженера, який перевіряє безпеку, ліміти кошторису, відсутність вразливостей і дотримання технічних стандартів. <strong>Єва</strong> відповідає за людиноцентричність, емпатію, бездоганний стиль діалогу та задоволення потреб клієнтів. Їхній діалог народжує ідеальний баланс.",
-            "Platform governance is anchored in an executive dichotomy: <strong>Adam</strong> embodies the unyielding CISO and production chief, enforcing zero-trust boundaries, budget caps, and strict standard compliance. <strong>Eva</strong> embodies the Chief Experience Officer, driving empathy, multilingual prose, brand warmth, and client success. Their dialectical tension creates products that are both technically bulletproof and delightful to use."
+            "Управление платформой разделено между двумя противоположными архетипами: <strong>Адам</strong> олицетворяет сурового инженера бэкенда и разработки: безопасность, бизнес-процессы, сметные лимиты, производство и отсутствие уязвимостей. <strong>Ева</strong> — фронтенд и лицо компании: человекоцентричность, эмпатия, безупречный стиль диалога и мгновенное удовлетворение потребностей клиентов. Их непрерывный диалог рождает идеальный продукт.",
+            "Управління платформою розділене між двома протилежними архетипами: <strong>Адам</strong> уособлює суворого інженера бекенду та розробки: безпека, бізнес-процеси, ліміти кошторису, виробництво й відсутність вразливостей. <strong>Єва</strong> — фронтенд і обличчя компанії: людиноцентричність, емпатія, бездоганний стиль діалогу та задоволення потреб клієнтів. Їхній діалог народжує ідеальний баланс.",
+            "Platform governance is anchored in an executive dichotomy: <strong>Adam</strong> embodies the unyielding backend and development engineer: zero-trust security, business-process rigor, budget caps, manufacturing discipline, and strict standard compliance. <strong>Eva</strong> is the frontend and the face of the company: empathy, multilingual prose, brand warmth, and instant client success. Their dialectical tension creates products that are both technically bulletproof and delightful to use."
         )}</p>'''
     )
 
@@ -230,7 +237,10 @@ def get_section_03():
         "The core technological engine of our platform is the <strong>Consilium Engine</strong>: an algorithmic multi-agent framework facilitating adversarial debates, cross-model peer review, and formal consensus arbitration across heterogeneous neural architectures:"
     )
 
-    content = f'''      <p class="lead-text">{lead}</p>
+    info_panel = infographics_builder.get_infographic_03()
+
+    content = f'''      {info_panel}
+      <p class="lead-text">{lead}</p>
       {sub1}
       {sub2}
       {sub3}
@@ -242,5 +252,5 @@ def get_section_03():
         "Система «Євалайн Консиліум»: Як працює колегіальний розум",
         "The EvaLine Consilium System: Collective Intelligence Engine",
         "Коллегиальный ИИ", "Колегіальний ШІ", "Consensus Engine",
-        content, open=True
+        content, open=False
     )

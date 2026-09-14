@@ -201,9 +201,9 @@ export class GeminiClient {
           if (i < locations.length - 1) {
             continue;
           }
-          if (cleanModel !== 'gemini-2.5-flash') {
-            logger.warn('GeminiClient', `Model "${cleanModel}" not found on Vertex AI across locations. Falling back to gemini-2.5-flash`);
-            return this.generateContent('gemini-2.5-flash', contents, options);
+          if (cleanModel !== 'gemini-3.8-flash') {
+            logger.warn('GeminiClient', `Model "${cleanModel}" not found on Vertex AI across locations. Falling back to gemini-3.8-flash`);
+            return this.generateContent('gemini-3.8-flash', contents, options);
           }
         }
 
@@ -330,9 +330,9 @@ export class GeminiClient {
           if (i < locations.length - 1) {
             continue;
           }
-          if (cleanModel !== 'gemini-2.5-flash') {
-            logger.warn('GeminiClient', `Model "${cleanModel}" not found on Vertex AI across locations. Falling back to gemini-2.5-flash`);
-            return this.streamContent('gemini-2.5-flash', contents, onChunk, options);
+          if (cleanModel !== 'gemini-3.8-flash') {
+            logger.warn('GeminiClient', `Model "${cleanModel}" not found on Vertex AI across locations. Falling back to gemini-3.8-flash`);
+            return this.streamContent('gemini-3.8-flash', contents, onChunk, options);
           }
         }
 

@@ -149,6 +149,14 @@ def get_prerendered_models():
 
         role_label = t("Роль в Консилиуме:", "Роль у Консиліумі:", "Role in Consilium:")
         role_text = t(m['roleHints']['ru'], m['roleHints']['uk'], m['roleHints']['en'])
+        rel_date = m.get('releaseDate', '')
+        upd_date = m.get('lastUpdate', '')
+        dates_html = ''
+        if rel_date or upd_date:
+            dates_html = f'''<div class="model-dates">
+              <span>🗓 {t("Релиз:", "Реліз:", "Released:")} <strong>{rel_date}</strong></span>
+              <span>🔄 {t("Обновление:", "Оновлення:", "Updated:")} <strong>{upd_date}</strong></span>
+            </div>'''
 
         c = f'''        <div class="model-card">
           <div class="model-card-header">
@@ -162,6 +170,7 @@ def get_prerendered_models():
             {ctx_badge}
           </div>
           <p class="model-desc">{m.get('desc', '')}</p>
+          {dates_html}
           <div class="model-role">
             <strong>{role_label}</strong> {role_text}
           </div>
@@ -169,3 +178,35 @@ def get_prerendered_models():
         </div>'''
         cards.append(c)
     return "\n".join(cards)
+
+
+def _model_line(m, idx, with_dates=False):
+    """One model + description = exactly one line (raw/terminal readable)."""
+    dates = ''
+    if with_dates:
+        rel = m.get('releaseDate', '')
+        upd = m.get('lastUpdate', '')
+        if rel or upd:
+            dates = f' <span class="ml-dates">🗓 {rel} → {upd}</span>'
+    return (f'<div class="model-line">'
+            f'<span class="ml-idx">{idx:02d}</span>'
+            f'<span class="ml-name">{m.get("name", "")}</span>'
+            f'<span class="ml-prov">{m.get("provider", "")}</span>'
+            f'<span class="ml-iq">IQ {m.get("quality", 0)}</span>'
+            f'<span class="ml-desc">{m.get("desc", "")}</span>'
+            f'{dates}</div>')
+
+
+def get_models_line_list(limit=None, with_dates=False):
+    """Compact one-line-per-model list of ALL models, sorted by quality desc."""
+    ordered = sorted(raw_models, key=lambda m: (m.get('quality', 0), m.get('recency', 0)), reverse=True)
+    if limit and limit > 0:
+        ordered = ordered[:limit]
+    return "\n".join(_model_line(m, i + 1, with_dates) for i, m in enumerate(ordered))
+
+
+def get_models_top_list(label_ru, label_uk, label_en, n=20, with_dates=False):
+    """Top-N models as one-line entries with header."""
+    ordered = sorted(raw_models, key=lambda m: (m.get('quality', 0), m.get('recency', 0)), reverse=True)[:n]
+    header = f'<div class="model-list-header">{t(label_ru, label_uk, label_en)}</div>'
+    return header + "\n" + "\n".join(_model_line(m, i + 1, with_dates) for i, m in enumerate(ordered))

@@ -61,7 +61,7 @@ export const COMPLETE_GOOGLE_MODEL_CATALOG: GeminiModelInfo[] = [
     description: 'Frontier ultra-fast autonomous agentic model with native real-time tool orchestration and multi-modal streaming.',
     contextWindow: 1048576,
     maxOutputTokens: 8192,
-    recommended: false,
+    recommended: true,
     tier: 'Free Quota + Paid',
     protocol: 'google-genai',
     pricing: {
@@ -81,7 +81,7 @@ export const COMPLETE_GOOGLE_MODEL_CATALOG: GeminiModelInfo[] = [
     description: 'Premier enterprise reasoning frontier model with 2M token context, deep logic, and architectural planning capability.',
     contextWindow: 2097152,
     maxOutputTokens: 8192,
-    recommended: false,
+    recommended: true,
     tier: 'Free Quota + Paid',
     protocol: 'google-genai',
     pricing: {
@@ -101,7 +101,7 @@ export const COMPLETE_GOOGLE_MODEL_CATALOG: GeminiModelInfo[] = [
     description: 'Lightweight high-efficiency frontier flash model with ultra-low latency inference.',
     contextWindow: 1048576,
     maxOutputTokens: 8192,
-    recommended: false,
+    recommended: true,
     tier: 'Free Quota + Paid',
     protocol: 'google-genai',
     pricing: {
@@ -118,10 +118,10 @@ export const COMPLETE_GOOGLE_MODEL_CATALOG: GeminiModelInfo[] = [
     name: 'Gemini 2.5 Flash',
     provider: 'Google DeepMind',
     category: 'Google Gemini (Next-Gen)',
-    description: 'Google’s fastest flagship model with native multimodal reasoning and real-time responsiveness.',
+    description: 'Google’s legacy multimodal model.',
     contextWindow: 1048576,
     maxOutputTokens: 8192,
-    recommended: true,
+    recommended: false,
     tier: 'Free Quota + Paid',
     protocol: 'google-genai',
     pricing: {
@@ -138,10 +138,10 @@ export const COMPLETE_GOOGLE_MODEL_CATALOG: GeminiModelInfo[] = [
     name: 'Gemini 2.5 Pro',
     provider: 'Google DeepMind',
     category: 'Google Gemini (Next-Gen)',
-    description: 'Premier reasoning and code generation engine for complex analytical challenges.',
+    description: 'Legacy analytical reasoning engine.',
     contextWindow: 2097152,
     maxOutputTokens: 8192,
-    recommended: true,
+    recommended: false,
     tier: 'Free Quota + Paid',
     protocol: 'google-genai',
     pricing: {

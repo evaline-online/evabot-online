@@ -25,16 +25,19 @@ import { createUploadRouter } from './routes/UploadRouter.js';
 import { Router, createRouteContext } from './routes/Router.js';
 import { ChatRouter } from './routes/ChatRouter.js';
 import { startTelegramBot } from '../telegram/TelegramBot.js';
+import { AccountingEngine, CapitalExpenses } from '../core/AccountingEngine.js';
 
 const MIME_TYPES: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'application/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.webmanifest': 'application/manifest+json; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.ico': 'image/x-icon',
   '.woff2': 'font/woff2',
+  '.md': 'text/markdown; charset=utf-8',
 };
 
 function sendJson(res: http.ServerResponse, statusCode: number, data: unknown, origin: string = '*'): void {
@@ -147,6 +150,45 @@ export function buildRouter(): Router {
         list: pluginList,
         health: pluginStatuses,
       },
+    });
+  });
+
+  router.get('/api/billing', async (ctx) => {
+    const summary = AccountingEngine.getUsageSummary();
+    const infraInventory = AccountingEngine.getInfraInventory();
+    const totalMonthly = AccountingEngine.getTotalMonthlyInfraCost();
+    const totalHourly = AccountingEngine.getTotalHourlyInfraCost();
+    const capitalExpenses = CapitalExpenses.getCapitalExpenses();
+    const totalCapital = CapitalExpenses.getTotalCapitalUSD();
+
+    ctx.sendJson(200, {
+      status: 'ok',
+      currency: 'USD',
+      rates: {
+        USD: 1.0,
+        EUR: 0.92,
+        UAH: 41.5,
+      },
+      capital: {
+        totalUSD: totalCapital,
+        hardwareCapExUSD: 1000.0,
+        hardwareDevice: 'Google Pixel 10 Pro XL (2FA MFA & Field Terminal)',
+        initialOpExReserveUSD: 500.0,
+        items: capitalExpenses,
+      },
+      infrastructure: {
+        monthlyOpExUSD: totalMonthly,
+        hourlyOpExUSD: totalHourly,
+        dailyOpExUSD: parseFloat((totalMonthly / 30).toFixed(2)),
+        items: infraInventory,
+      },
+      tokenUsage: summary,
+      unitEconomics: [
+        AccountingEngine.calculateAgentUnitCost('CEO & System Architect', 'gemini-3.8-flash'),
+        AccountingEngine.calculateAgentUnitCost('CTO & Principal Engineer', 'gemini-3.1-pro'),
+        AccountingEngine.calculateAgentUnitCost('Lead Backend Developer', 'gemini-3.1-flash'),
+        AccountingEngine.calculateAgentUnitCost('Research & Deep Logic', 'deepseek/deepseek-r1:free'),
+      ],
     });
   });
   
@@ -274,20 +316,34 @@ export function createServer(): http.Server {
       '/manifesto-uk', '/manifesto-uk.html',
       '/manifesto-en', '/manifesto-en.html',
       '/manifesto.txt',
+      '/MANIFESTO.md',
       '/hub', '/hub.html',
       '/network', '/network.html',
       '/visualize', '/visualize.html',
       '/terminal', '/terminal.txt', '/plain',
+      '/sw.js', '/service-worker.js',
+      '/manifest.webmanifest', '/manifest.json',
+      '/offline.html',
     ];
 
-    if (pathname.startsWith('/dist/') || pathname.startsWith('/fonts/') || staticRoutes.includes(pathname)) {
+    if (pathname.startsWith('/dist/') || pathname.startsWith('/fonts/') || pathname.startsWith('/assets/') || staticRoutes.includes(pathname)) {
       let filePath = '';
       const host = (req.headers.host || 'localhost').toLowerCase().replace(/^www\./, '');
 
-      if (pathname.startsWith('/fonts/')) {
+      if (pathname.startsWith('/assets/')) {
+        // Self-hosted static assets (public/assets) — path-sanitized, no traversal
+        const rel = pathname.slice('/assets/'.length).replace(/\\/g, '/').replace(/\.\./g, '');
+        filePath = path.resolve(process.cwd(), 'public', 'assets', rel);
+      } else if (pathname.startsWith('/fonts/')) {
         // Self-hosted static fonts (public/fonts) — path-sanitized, no traversal
         const rel = pathname.slice('/fonts/'.length).replace(/\\/g, '/').replace(/\.\./g, '');
         filePath = path.resolve(process.cwd(), 'public', 'fonts', rel);
+      } else if (pathname === '/sw.js' || pathname === '/service-worker.js') {
+        filePath = path.resolve(process.cwd(), 'public', 'sw.js');
+      } else if (pathname === '/manifest.webmanifest' || pathname === '/manifest.json') {
+        filePath = path.resolve(process.cwd(), 'public', 'manifest.webmanifest');
+      } else if (pathname === '/offline.html') {
+        filePath = path.resolve(process.cwd(), 'public', 'offline.html');
       } else if (pathname.startsWith('/dist/')) {
         filePath = path.resolve(process.cwd(), pathname.slice(1));
       } else if (pathname === '/manifesto.txt') {
@@ -320,6 +376,8 @@ export function createServer(): http.Server {
         } else {
           filePath = path.resolve(process.cwd(), 'public', 'manifesto.html');
         }
+      } else if (pathname === '/MANIFESTO.md') {
+        filePath = path.resolve(process.cwd(), 'public', 'MANIFESTO.md');
       } else if (pathname === '/hub' || pathname === '/hub.html') {
         filePath = path.resolve(process.cwd(), 'public', 'hub.html');
       } else if (pathname === '/network' || pathname === '/network.html' || pathname === '/visualize' || pathname === '/visualize.html') {
@@ -376,7 +434,13 @@ export function createServer(): http.Server {
       if (filePath && fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
         const ext = path.extname(filePath).toLowerCase();
         const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-        res.writeHead(200, { 'Content-Type': contentType });
+        res.writeHead(200, {
+          'Content-Type': contentType,
+          'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+          'Surrogate-Control': 'no-store'
+        });
         fs.createReadStream(filePath).pipe(res);
         return;
       }

@@ -148,7 +148,7 @@ export async function runDeveloperModeTests(): Promise<boolean> {
       const block = SystemContext.build();
       assert(block.includes(Config.defaultModel), `block includes configured default model (${Config.defaultModel})`);
       assert(block.includes('evabot-agent-vm'), 'block includes evabot-agent-vm');
-      assert(block.includes('evabot-micro'), 'block includes evabot-micro');
+      assert(block.includes('evaline-micro-vm'), 'block includes evaline-micro-vm');
       assert(block.includes('ЕВА-ЛАЙН'), 'block includes company name');
       assert(block.includes('40484497'), 'block includes ЄДРПОУ');
       assert(/\d+/.test(block), 'block includes numeric stats');

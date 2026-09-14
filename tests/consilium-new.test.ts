@@ -73,6 +73,7 @@ export async function runPluginConsiliumTests(): Promise<boolean> {
   await test('Run solo mode with real API (mock fallback)', async () => {
     const p = new ConsiliumPlugin('test-key');
     await p.initialize({} as any);
+    (p as any).client = { generateContent: async () => 'Mocked solo response' };
     try {
       const result = await p.run({
         mode: 'solo',
@@ -90,6 +91,7 @@ export async function runPluginConsiliumTests(): Promise<boolean> {
   await test('Run broadcast mode (mocked)', async () => {
     const p = new ConsiliumPlugin('test-key');
     await p.initialize({} as any);
+    (p as any).client = { generateContent: async () => 'Mocked broadcast response' };
     try {
       const result = await p.run({
         mode: 'broadcast',
@@ -105,6 +107,7 @@ export async function runPluginConsiliumTests(): Promise<boolean> {
   await test('Run dialogue mode (mocked)', async () => {
     const p = new ConsiliumPlugin('test-key');
     await p.initialize({} as any);
+    (p as any).client = { generateContent: async () => 'Mocked dialogue response' };
     try {
       const result = await p.run({
         mode: 'dialogue',
@@ -121,6 +124,7 @@ export async function runPluginConsiliumTests(): Promise<boolean> {
   await test('Run consilium mode (mocked)', async () => {
     const p = new ConsiliumPlugin('test-key');
     await p.initialize({} as any);
+    (p as any).client = { generateContent: async () => 'Mocked consilium response' };
     try {
       const result = await p.run({
         mode: 'consilium',

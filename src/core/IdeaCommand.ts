@@ -17,7 +17,7 @@ export function buildIdeaParticipants(): ConsiliumParticipant[] {
   return [
     {
       id: 'idea-1-creative-director',
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.8-flash',
       name: 'Creative Director',
       title: 'Creative Director',
       temperature: 0.9,
@@ -25,7 +25,7 @@ export function buildIdeaParticipants(): ConsiliumParticipant[] {
     },
     {
       id: 'idea-2-brand-designer',
-      model: 'gemini-2.0-flash',
+      model: 'omniroute/gemini-3.8-flash',
       name: 'Brand Designer',
       title: 'Brand Designer',
       temperature: 0.8,
@@ -33,7 +33,7 @@ export function buildIdeaParticipants(): ConsiliumParticipant[] {
     },
     {
       id: 'idea-3-ux-designer',
-      model: 'gemini-2.0-flash-lite',
+      model: 'qwen/qwen-2.5-coder-32b-instruct:free',
       name: 'UX/Product Designer',
       title: 'UX & Product Designer',
       temperature: 0.7,
@@ -41,7 +41,7 @@ export function buildIdeaParticipants(): ConsiliumParticipant[] {
     },
     {
       id: 'idea-4-market-analyst',
-      model: 'gemini-1.5-pro',
+      model: 'gemini-3.1-pro',
       name: 'Market Analyst',
       title: 'Market Analyst',
       temperature: 0.5,
@@ -49,7 +49,7 @@ export function buildIdeaParticipants(): ConsiliumParticipant[] {
     },
     {
       id: 'idea-5-product-manager',
-      model: 'gemini-1.5-flash',
+      model: 'deepseek/deepseek-r1:free',
       name: 'Product Manager',
       title: 'Product Manager',
       temperature: 0.6,
@@ -57,7 +57,7 @@ export function buildIdeaParticipants(): ConsiliumParticipant[] {
     },
     {
       id: 'idea-6-marketing-strategist',
-      model: 'gemini-1.5-flash-8b',
+      model: 'meta-llama/llama-3.3-70b:free',
       name: 'Marketing Strategist',
       title: 'Marketing Strategist',
       temperature: 0.7,

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 from helpers import t, accordion_section, sub_accordion
+import infographics_builder
 
 # Import the 20 glossary items from build_full_trilingual_manifesto.py
 import sys
@@ -94,7 +95,10 @@ def get_section_09():
         "We engineer frontier autonomous technologies and high-precision polymer materials, communicating with our partners in clear, accessible language free of opaque jargon:"
     )
 
-    content = f'''      <p class="lead-text">{lead}</p>
+    info_panel = infographics_builder.get_infographic_09()
+
+    content = f'''      {info_panel}
+      <p class="lead-text">{lead}</p>
       {controls}
       {sub1}
       {sub2}
@@ -106,5 +110,5 @@ def get_section_09():
         "Глосарій термінів: Простими словами про високі технології EvaLine",
         "Plain-Language Glossary: High Technologies in Accessible Terms",
         "20 терминов", "20 термінів", "20 Clear Terms",
-        content, open=True
+        content, open=False
     )

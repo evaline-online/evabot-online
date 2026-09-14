@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Офлайн — EvaLine Network</title>
+  <meta name="description" content="EvaLine Network недоступна без подключения к сети">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #07090e;
+      color: #e8e8e8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 480px;
+      text-align: center;
+    }
+    .logo { font-size: 4rem; margin-bottom: 1rem; }
+    h1 { font-size: 1.75rem; margin-bottom: 1rem; color: #00e676; }
+    p { color: #a0a0a0; margin-bottom: 1.5rem; }
+    .status { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 0.5rem; 
+      padding: 0.75rem 1.5rem; 
+      background: rgba(255, 214, 0, 0.1); 
+      border: 1px solid rgba(255, 214, 0, 0.3);
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      color: #ffd600;
+      margin-bottom: 1.5rem;
+    }
+    .status::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: #ffd600;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .retry-btn {
+      display: inline-block;
+      padding: 0.875rem 2rem;
+      background: linear-gradient(135deg, #00e676, #00c853);
+      color: #07090e;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .retry-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 230, 118, 0.4); }
+    .retry-btn:active { transform: translateY(0); }
+    .info { margin-top: 2rem; font-size: 0.75rem; color: #555; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo" aria-hidden="true">◆</div>
+    <h1>EvaLine Network</h1>
+    <p>Вы находитесь в автономном режиме. Манифест и инструменты недоступны без сети.</p>
+    <div class="status">Ожидание подключения…</div>
+    <a href="/" class="retry-btn" onclick="window.location.reload()">Повторить попытку</a>
+    <div class="info">
+      Кэшированные страницы загружаются автоматически при следующем визите.<br>
+      Service Worker: evabot-static-v1
+    </div>
+  </div>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window.location.reload();
+      });
+      navigator.serviceWorker.ready.then(reg => {
+        reg.addEventListener('updatefound', () => {
+          document.querySelector('.status').textContent = 'Доступно обновление…';
+          document.querySelector('.status').style.background = 'rgba(0, 230, 118, 0.1)';
+          document.querySelector('.status').style.borderColor = 'rgba(0, 230, 118, 0.3)';
+          document.querySelector('.status').style.color = '#00e676';
+        });
+      });
+    }
+    window.addEventListener('online', () => {
+      document.querySelector('.status').textContent = 'Соединение восстановлено';
+      document.querySelector('.status').style.background = 'rgba(0, 230, 118, 0.1)';
+      document.querySelector('.status').style.borderColor = 'rgba(0, 230, 118, 0.3)';
+      document.querySelector('.status').style.color = '#00e676';
+      setTimeout(() => window.location.reload(), 1500);
+    });
+  </script>
+</body>
+</html>

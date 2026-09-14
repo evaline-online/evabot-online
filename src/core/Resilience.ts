@@ -19,8 +19,8 @@
 import { logger } from './Logger.js';
 import { OpLog } from './OpLog.js';
 
-/** Default hard deadline for a single LLM provider call (45 s). */
-export const LLM_CALL_TIMEOUT_MS = 45_000;
+/** Default hard deadline for a single LLM provider call (15 s, eliminates hanging). */
+export const LLM_CALL_TIMEOUT_MS = 15_000;
 
 /**
  * Rejects if the wrapped promise does not settle within `ms` milliseconds.

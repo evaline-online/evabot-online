@@ -10,7 +10,7 @@
 <header class="top-nav" role="banner">
   <div class="brand-row">
     <a href="https://evaline.online" class="brand-title">
-      <span class="logo-gem">◆</span> EVALINE // EVANETWORK
+      <span class="logo-gem">◆</span> EVALINE NETWORK (EVANET)
     </a>
     <div class="cluster-status-pill" id="cluster-status-indicator">
       <span class="pulse-dot"></span>
@@ -19,6 +19,8 @@
   </div>
 
   <!-- Master Controls Toolbar: Language, Themes, Accordions, Diagrams, Export -->
+  <details class="toolbar-accordion" id="header-accordion">
+    <summary class="toolbar-summary">⚙ <span>Control Panel (Language / Style / Sections / Diagrams / Export)</span></summary>
   <div class="toolbar-container" role="toolbar" aria-label="Manifesto Controls">
     <div class="toolbar-group">
       <span class="toolbar-label"><span>Lang:</span></span>
@@ -32,14 +34,17 @@
     <div class="toolbar-group">
       <span class="toolbar-label"><span>Style:</span></span>
       <div class="btn-group theme-switcher" role="group" aria-label="Theme Selector">
-        <button type="button" class="theme-btn active" data-theme="web" onclick="setTheme('web')" title="Полноценный веб поверх терминального стиля">
-          🖥️ <span>Web</span>
-        </button>
-        <button type="button" class="theme-btn" data-theme="terminal" onclick="setTheme('terminal')" title="Зеленый моноширинный терминал">
-          📟 <span>Terminal</span>
+        <button type="button" class="theme-btn active" data-theme="cyber" onclick="setTheme('cyber')" title="Киберпанк (Неон / Dark)">
+          🎨 <span>Cyber UI</span>
         </button>
         <button type="button" class="theme-btn" data-theme="raw" onclick="setTheme('raw')" title="Чистый HTML без стилей оформления">
           📄 <span>Raw HTML</span>
+        </button>
+        <button type="button" class="theme-btn" data-theme="paper" onclick="setTheme('paper')" title="Бумажный светлый минимализм">
+          ☀️ <span>Paper Light</span>
+        </button>
+        <button type="button" class="theme-btn" data-theme="terminal" onclick="setTheme('terminal')" title="Зеленый моноширинный терминал">
+          📟 <span>Terminal</span>
         </button>
       </div>
     </div>
@@ -83,19 +88,13 @@
       </div>
     </div>
   </div>
+  </details>
 </header>
 
 <div class="container">
 
   <!-- HERO SECTION -->
   <section class="hero">
-    <pre class="hero-ascii" aria-label="EVALINE ASCII logo">
-   _______    _____    __    _____   ________
-  / ____/ |  / /   |  / /   /  _/ | / / ____/
- / __/  | | / / /| | / /    / //  |/ / __/
-/ /___  | |/ / ___ |/ /____/ // /|  / /___
-/_____/  |___/_/  |_/_____/___/_/ |_/_____/
-</pre>
     <div class="hero-eyebrow">
       <span>SOVEREIGN AGENT FACTORY & PHYSICAL POLYMER MANUFACTURING</span>
     </div>
@@ -108,6 +107,9 @@
 
     <!-- Quick Jump Links -->
     <div class="hero-links" style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px;">
+      <a href="#monetization-top" class="btn-ctrl" style="text-decoration: none; padding: 8px 16px; border-color: rgba(255,214,0,0.6);">
+        🪙 <span class="t-ru">Топ-20 автономного заработка</span><span class="t-uk" hidden>Топ-20 автономного заробітку</span><span class="t-en" hidden>Top-20 Autonomous Earning</span>
+      </a>
       <a href="#models-matrix" class="btn-ctrl" style="text-decoration: none; padding: 8px 16px;">
         📊 <span>94-Model LLM Matrix</span>
       </a>
@@ -123,6 +125,43 @@
     </div>
   </section>
   <hr class="section-divider">
+
+  <!-- FORMULA: ONE HUB -> A TRILLION -->
+  <section class="section" id="formula-trillion">
+    <div class="section-header">
+      <div class="section-num">00</div>
+      <h2 class="section-title"><span>Formula: From One Hub to a Trillion</span></h2>
+    </div>
+
+    <div class="infographic-panel">
+      <p class="formula-line"><span>1 central hub → 10 plants → 100 agencies → 1,000 clients → 10,000 agents → 100,000 deals → 1,000,000 transactions → 10,000,000 traffic clicks → 100,000,000 margin operations → $1,000,000,000,000 cumulative turnover</span></p>
+      <p><span>Each level compounds the network across three monetisation lines, so a single hub naturally scales to a trillion-dollar footprint.</span></p>
+    </div>
+
+    <h3 class="section-title" style="font-size:1.1rem;margin:18px 0 10px;"><span>Three Monetisation Lines</span></h3>
+    <p><strong><span>1) EVA / CONSILIUM token sales.</span></strong> <span>Issue and sell network tokens to members, clients and investors; a portion of revenue flows back into polymer production and fleet growth.</span></p>
+    <p><strong><span>2) Traffic resale.</span></strong> <span>Buy traffic wholesale at low cost and resell it to agents, agencies and ad campaigns — profiting from the spread on every 1,000 clicks.</span></p>
+    <p><strong><span>3) Consilium token arbitrage.</span></strong> <span>Buy tokens cheaper across venues and periods and sell higher — price, liquidity and spot/futures spreads create arbitrage margin.</span></p>
+
+    <table class="kpi-table" border="1" cellpadding="8" cellspacing="0" width="100%" style="margin-top:16px;">
+      <thead>
+        <tr>
+          <th><span>Step</span></th>
+          <th><span>Network</span></th>
+          <th><span>Cumulative turnover</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td><span>1 hub</span></td><td>$1</td></tr>
+        <tr><td>2</td><td><span>10 plants</span></td><td>$1 000</td></tr>
+        <tr><td>3</td><td><span>100 agencies</span></td><td>$100 000</td></tr>
+        <tr><td>4</td><td><span>1,000 clients</span></td><td>$10 000 000</td></tr>
+        <tr><td>5</td><td><span>10,000 agents</span></td><td>$1 000 000 000</td></tr>
+        <tr><td>6</td><td><span>100,000 deals</span></td><td>$100 000 000 000</td></tr>
+        <tr><td>7</td><td><span>1,000,000 transactions</span></td><td>$1 000 000 000 000</td></tr>
+      </tbody>
+    </table>
+  </section>
   <!-- =========================================================================
        SECTION 01: PROBLEM-STATEMENT
        ========================================================================= -->

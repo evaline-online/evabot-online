@@ -250,7 +250,7 @@ class ConsiliumEngine:
         interviewer = participants[0] if participants else None
 
         if persona == "eva":
-            base_model = interviewer.get("model") if interviewer else "gemini-2.5-flash"
+            base_model = interviewer.get("model") if interviewer else "gemini-3.8-flash"
             interviewer = {
                 "id": "eva-interviewer",
                 "model": base_model,
@@ -267,7 +267,7 @@ class ConsiliumEngine:
                 "temperature": 0.4,
             }
         elif persona == "adam":
-            base_model = interviewer.get("model") if interviewer else "gemini-2.5-pro"
+            base_model = interviewer.get("model") if interviewer else "gemini-3.1-pro"
             interviewer = {
                 "id": "adam-interviewer",
                 "model": base_model,
@@ -284,7 +284,7 @@ class ConsiliumEngine:
                 "temperature": 0.3,
             }
         else:  # dual
-            base_model = interviewer.get("model") if interviewer else "gemini-2.5-pro"
+            base_model = interviewer.get("model") if interviewer else "gemini-3.1-pro"
             interviewer = {
                 "id": "dual-interviewers",
                 "model": base_model,

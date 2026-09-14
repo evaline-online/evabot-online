@@ -61,6 +61,13 @@ export function runCommandsAndHistoryTests(): boolean {
     ['/очистити', '/clear', 'UK /очистити → /clear'],
     ['/очистить', '/clear', 'RU /очистить → /clear'],
     ['/очистка', '/clear', '/очистка → /clear'],
+    ['/cls', '/clear', '/cls → /clear'],
+    ['/про', '/about', 'UK/RU /про → /about'],
+    ['/про-бота', '/about', '/про-бота → /about'],
+    ['/режим', '/mode', 'UK/RU /режим → /mode'],
+    ['/консилиум', '/consilium', 'RU /консилиум → /consilium'],
+    ['/консиліум', '/consilium', 'UK /консиліум → /consilium'],
+    ['/рада', '/consilium', 'UK /рада → /consilium'],
   ];
 
   for (const [input, expected, label] of aliasCases) {
@@ -82,6 +89,19 @@ export function runCommandsAndHistoryTests(): boolean {
   assert(ruHelp.includes('СИСТЕМНЫЕ КОМАНДЫ'), 'RU help lists the command set');
   assert(ruHelp.includes('/history'), 'Help lists the new /history command');
   assert(ruHelp.includes('/servers'), 'Help lists the new /servers command');
+  assert(ruHelp.includes('/about'), 'Help lists the new /about command');
+
+  const aboutCmd = ModelCommand.execute('/about');
+  assert(aboutCmd.includes('EVABOT ONLINE') && aboutCmd.includes('evabot-agent-server'), '/about renders project passport');
+
+  const modeCmd = ModelCommand.execute('/mode');
+  assert(modeCmd.includes('OPERATIONAL') || modeCmd.includes('ОПЕРАЦІЙНІ') || modeCmd.includes('ОПЕРАЦИОННЫЕ'), '/mode lists operational modes');
+
+  const consiliumCmd = ModelCommand.execute('/consilium');
+  assert(consiliumCmd.includes('CONSILIUM') || consiliumCmd.includes('КОНСИЛІУМ') || consiliumCmd.includes('КОНСИЛИУМ'), '/consilium renders consilium usage');
+
+  const clearCmd = ModelCommand.execute('/clear');
+  assert(clearCmd.includes('[OK]'), '/clear executes clear command');
 
   // 2. ChatHistoryStore (temp DB path)
   const tmpDb = path.join(os.tmpdir(), `evabot-chat-test-${Date.now()}-${Math.floor(Math.random() * 100000)}.db`);

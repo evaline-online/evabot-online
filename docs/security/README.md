@@ -14,6 +14,9 @@
 - Рекомендации по защите
 - Fail2ban конфигурация
 
+### [`AUDIT-2026-09-09.md`](./AUDIT-2026-09-09.md)
+SSH Hardening — remediation of open firewall (0.0.0.0/0 → IAP-only), OS Login enablement, IAM access control, legacy SSH key rotation.
+
 ---
 
 ## 🔍 Как добавить новый аудит
@@ -24,6 +27,6 @@
 
 ---
 
-**Last Audit:** 2026-09-07 (v0.0.2)  
+**Last Audit:** 2026-09-09 (SSH Hardening — v0.0.3)  
 **Threats Detected:** 432 WP exploit attempts blocked  
 **Status:** ✅ All threats mitigated

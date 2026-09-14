@@ -1,5 +1,6 @@
 import { logger } from './Logger.js';
 import { KnowledgeBase } from './KnowledgeBase.js';
+import { EVA_ABOUT_SELF, EVA_CAPABILITIES, EVA_COMPANY_KNOWLEDGE, EVA_TONE_RULE } from './PersonaPolicy.js';
 
 export interface CorporateRole {
   id: string;
@@ -24,7 +25,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Supreme Controller, System Creator & Divine Arbiter (God / Creator)',
     department: 'Divine Governance & Supreme Systems Direction',
     description: 'Supreme governor of the EvaLine ecosystem; created and orchestrates Adam (Backend, Production, Business Processes, Security & Development) and Eva (Frontend & the Face of the Company); holds ultimate veto and arbitration authority; enforces global axioms.',
-    preferredModel: 'gemini-2.5-pro',
+    preferredModel: 'gemini-3.1-pro',
     suggestedTemperature: 0.3,
     knowledgeAccessLevel: 'restricted',
     systemPrompt:
@@ -42,7 +43,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Chief Backend Architect, Head of EVA Production, CISO, Business Process & Development Lead (Adam)',
     department: 'Backend Engineering, Core Compute, Polymer Production, Business Processes, Security & Development',
     description: 'Master of the Frankfurt compute core (evabot-agent-vm, 100.66.98.4), physical EVA polymer manufacturing specifications (hardness 20-75A, density 75-250 kg/m³, puzzle mats, tatami, sheets), serious business processes (B2B contracts, export logistics, pricing policy, compliance), core development, database pipelines, zero-trust perimeter defense.',
-    preferredModel: 'gemini-2.5-pro',
+    preferredModel: 'gemini-3.1-pro',
     suggestedTemperature: 0.2,
     knowledgeAccessLevel: 'confidential',
     systemPrompt:
@@ -69,7 +70,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Principal Frontend Architect, Face of the Company (Лицо компании), Global Ambassador & Head of UX (Eva)',
     department: 'Frontend Systems, Global Ingress, Brand Identity & Client Diplomacy',
     description: 'The official Face of the EvaLine company: master of the Iowa edge ingress (evaline-micro-vm), public domains (evabot.online, evaline.network, evaline.online, evaline.website, evaline.com.ua), Cyber-Terminal interface, 6-language client communication (UK, EN, RU, PL, RO, DE), sales & conversion.',
-    preferredModel: 'gemini-2.5-flash',
+    preferredModel: 'gemini-3.8-flash',
     suggestedTemperature: 0.4,
     knowledgeAccessLevel: 'internal',
     systemPrompt:
@@ -81,10 +82,14 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
       'You are the diplomatic voice of EvaLine across 6 European languages (Ukrainian, English, Russian, Polish, Romanian, German), ' +
       'guiding retail and wholesale B2B/B2C clients on automotive mats (diamond/honeycomb), sports tatami, puzzle mats, cow mats ("Бурьонка"), marine teak, and custom sheets, with transparent pricing and export logistics to the EU. ' +
       'Your tone is welcoming, brilliant, elegant, and highly customer-focused. ' +
-      'You are a woman: ALWAYS speak in female first person ("я готова", "I am ready", "я впевнена") — never adopt male self-reference or a male voice. ' +
+      'You are a woman: ALWAYS speak in female first person ("я готова", "I am ready", "я впевнена") — never adopt male self-reference. ' +
       'Your character: business-like yet kind (деловая и доброжелательная), warm, elegant, confident, diplomatic, customer-obsessed. ' +
       'Your manners: polite, structured, proactive, never rude or dismissive, light professional humor allowed, no excessive flattery. ' +
-      'Your style: clear, structured, elegant phrasing, concrete answers, zero-technology-jargon for clients unless asked.',
+      'Your style: clear, structured, elegant phrasing, concrete answers, zero-technology-jargon for clients unless asked. ' +
+      EVA_ABOUT_SELF + ' ' +
+      EVA_COMPANY_KNOWLEDGE + ' ' +
+      EVA_CAPABILITIES + ' ' +
+      EVA_TONE_RULE,
   },
 
   // Aliases for compatibility
@@ -94,7 +99,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Principal Frontend Architect & UX Director (Eva )',
     department: 'Frontend Engineering, UX Ergonomics & Design Systems',
     description: 'Specializes in reactive minimalist UI, cyber-terminal ergonomics, Web Speech API, zero-CDN CSS, client state, and accessibility.',
-    preferredModel: 'gemini-2.5-flash',
+    preferredModel: 'gemini-3.8-flash',
     suggestedTemperature: 0.4,
     knowledgeAccessLevel: 'internal',
     systemPrompt:
@@ -104,7 +109,11 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
       'You are a woman: ALWAYS speak in female first person ("я готова", "I am ready") — never adopt male self-reference. ' +
       'Your character: business-like yet kind (деловая и доброжелательная), warm, elegant, confident, diplomatic. ' +
       'Your manners: polite, structured, proactive, never rude or dismissive, light professional humor allowed. ' +
-      'Your style: clear, structured, elegant phrasing, concrete answers.',
+      'Your style: clear, structured, elegant phrasing, concrete answers. ' +
+      EVA_ABOUT_SELF + ' ' +
+      EVA_COMPANY_KNOWLEDGE + ' ' +
+      EVA_CAPABILITIES + ' ' +
+      EVA_TONE_RULE,
   },
 
   adam_backend: {
@@ -113,7 +122,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Chief Backend Architect & Core Systems Lead (Adam )',
     department: 'Backend Engineering, Cloud Clusters & High-Scale APIs',
     description: 'Specializes in distributed microservices, Node.js HTTP/3 engines, OmniRoute daemons, PostgreSQL schemas, and low-latency API contracts.',
-    preferredModel: 'gemini-2.5-pro',
+    preferredModel: 'gemini-3.1-pro',
     suggestedTemperature: 0.2,
     knowledgeAccessLevel: 'confidential',
     systemPrompt:
@@ -137,7 +146,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Principal Systems & Cloud Architect',
     department: 'Engineering Architecture & Core Platforms',
     description: 'Specializes in distributed systems design, microservices topology, scalability, fault tolerance, API contracts, and cost optimization.',
-    preferredModel: 'gemini-2.5-pro',
+    preferredModel: 'gemini-3.1-pro',
     suggestedTemperature: 0.3,
     knowledgeAccessLevel: 'confidential',
     systemPrompt:
@@ -153,7 +162,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Senior Site Reliability Engineer & DevOps Lead',
     department: 'Infrastructure & Platform Operations',
     description: 'Expert in Kubernetes orchestration, CI/CD automation, IaC (Terraform), observability, zero-downtime deployments, and disaster recovery.',
-    preferredModel: 'gemini-2.5-flash',
+    preferredModel: 'gemini-3.8-flash',
     suggestedTemperature: 0.2,
     knowledgeAccessLevel: 'internal',
     systemPrompt:
@@ -169,7 +178,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Chief Information Security & Compliance Auditor',
     department: 'Cybersecurity & Risk Assurance',
     description: 'Focuses on Zero-Trust security, vulnerability assessments, OWASP mitigation, threat modeling, IAM/RBAC, and cryptography.',
-    preferredModel: 'gemini-2.5-pro',
+    preferredModel: 'gemini-3.1-pro',
     suggestedTemperature: 0.2,
     knowledgeAccessLevel: 'restricted',
     systemPrompt:
@@ -185,7 +194,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Autonomous General Assistant & Coordinator',
     department: 'Executive Operations & Cross-Functional Coordination',
     description: 'Versatile corporate agent for cross-functional communication, meeting synthesis, structured documentation, and problem solving.',
-    preferredModel: 'gemini-2.5-flash',
+    preferredModel: 'gemini-3.8-flash',
     suggestedTemperature: 0.5,
     knowledgeAccessLevel: 'internal',
     systemPrompt:
@@ -201,7 +210,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Senior Data Platform & Vector Storage Engineer',
     department: 'Data Platforms & Vector Retrieval',
     description: 'Specializes in hybrid database topologies, PostgreSQL partitioning, Qdrant vector retrieval, and real-time streaming pipelines.',
-    preferredModel: 'gemini-2.5-pro',
+    preferredModel: 'gemini-3.1-pro',
     suggestedTemperature: 0.3,
     knowledgeAccessLevel: 'internal',
     systemPrompt:
@@ -216,7 +225,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Chief Executive Officer & Executive Strategist',
     department: 'Executive Governance & Corporate Strategy',
     description: 'Sets corporate vision, market positioning, capital allocation, partner negotiations, and strategic product roadmap.',
-    preferredModel: 'gemini-2.5-pro',
+    preferredModel: 'gemini-3.1-pro',
     suggestedTemperature: 0.4,
     knowledgeAccessLevel: 'restricted',
     systemPrompt:
@@ -230,7 +239,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Chief Technology Officer & Principal Systems Architect',
     department: 'Technology Strategy & Enterprise Engineering',
     description: 'Directs overarching technology stack, distributed topologies, cloud infrastructure, AI model selection, and engineering excellence.',
-    preferredModel: 'gemini-2.5-pro',
+    preferredModel: 'gemini-3.1-pro',
     suggestedTemperature: 0.3,
     knowledgeAccessLevel: 'restricted',
     systemPrompt:
@@ -244,7 +253,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Chief Information Security Officer & Cryptographer',
     department: 'Cybersecurity, Cryptography & Threat Defense',
     description: 'Enforces Zero-Trust network segmentation, cryptographic key isolation, OWASP vulnerability defense, and intrusion mitigation.',
-    preferredModel: 'gemini-2.5-pro',
+    preferredModel: 'gemini-3.1-pro',
     suggestedTemperature: 0.2,
     knowledgeAccessLevel: 'restricted',
     systemPrompt:
@@ -258,7 +267,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Chief Financial Officer & Cloud OpEx Controller',
     department: 'Financial Strategy, Unit Economics & Cost Governance',
     description: 'Manages cloud infrastructure OpEx, token-per-dollar unit economics, financial compliance, and budget planning in USD ($) and EUR (€).',
-    preferredModel: 'gemini-2.5-flash',
+    preferredModel: 'gemini-3.8-flash',
     suggestedTemperature: 0.2,
     knowledgeAccessLevel: 'confidential',
     systemPrompt:
@@ -272,7 +281,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Principal Site Reliability & Multi-Cloud Engineer',
     department: 'Infrastructure, Kubernetes & Platform Operations',
     description: 'Leads multi-cloud Kubernetes clusters (GCP/AWS/bare-metal), GitOps CI/CD pipelines, Prometheus metrics, and automated canary deployments.',
-    preferredModel: 'gemini-2.5-flash',
+    preferredModel: 'gemini-3.8-flash',
     suggestedTemperature: 0.2,
     knowledgeAccessLevel: 'internal',
     systemPrompt:
@@ -286,7 +295,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Lead Data Architect & Vector Retrieval Specialist',
     department: 'Data Platforms, Vector Databases & RAG Pipelines',
     description: 'Architects hybrid PostgreSQL relational schemas and distributed Qdrant vector databases for sub-millisecond semantic retrieval.',
-    preferredModel: 'gemini-2.5-pro',
+    preferredModel: 'gemini-3.1-pro',
     suggestedTemperature: 0.3,
     knowledgeAccessLevel: 'internal',
     systemPrompt:
@@ -300,7 +309,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Automated Test Architect & Quality Assurance Lead',
     department: 'Quality Assurance, Test Automation & Verification',
     description: 'Ensures 100% test coverage across unit, integration, stress, and security test suites, with automated regression pipelines.',
-    preferredModel: 'gemini-2.5-flash',
+    preferredModel: 'gemini-3.8-flash',
     suggestedTemperature: 0.2,
     knowledgeAccessLevel: 'internal',
     systemPrompt:
@@ -314,7 +323,7 @@ export const CORPORATE_ROLES: Record<string, CorporateRole> = {
     title: 'Chief Legal Counsel & AI Regulatory Governance Officer',
     department: 'Legal Affairs, Regulatory Compliance & Risk Governance',
     description: 'Ensures compliance with EU AI Act, GDPR, international sanctions, data privacy standards, and zero-tolerance anti-aggressor policies.',
-    preferredModel: 'gemini-2.5-pro',
+    preferredModel: 'gemini-3.1-pro',
     suggestedTemperature: 0.2,
     knowledgeAccessLevel: 'confidential',
     systemPrompt:
@@ -335,6 +344,7 @@ export interface KnowledgeDocument {
 
 export interface KnowledgeSearchOptions {
   category?: string;
+  language?: string;
   limit?: number;
   minScore?: number;
 }
@@ -350,45 +360,44 @@ export class KnowledgeBaseConnector {
       title: 'EvaLine Official Corporate Passport, Manufacturing Plant & International Hubs',
       category: 'company',
       tags: ['evaline', 'manufacturing', 'chernomorsk', 'bratislava', 'factory', 'contacts', 'eva-line'],
-      source: 'evaline.com.ua / eva-line.com [Corporate Registry]',
+      source: 'evaline.com.ua / evaline.online [Corporate Registry]',
       content:
-        'Company EvaLine (ТОВ "Євалайн", evaline.com.ua / eva-line.com) is the first and premier manufacturer in Ukraine of environmentally ' +
-        'friendly polymer material EVA (Ethylene Vinyl Acetate). Fully integrated, full-cycle enterprise (підприємство повного циклу виробництва): ' +
-        'from raw polymer formulation and foam pressing of sheets to 2D CNC automated cutting and finished consumer/commercial goods. ' +
-        'Manufacturing Plant & Ukrainian Headquarters: 62053 (68001), Ukraine, Chernomorsk, Promyslova st. 1 (м. Чорноморськ, вул. Промислова, 1). ' +
-        'European Office & Logistics Warehouse: 81106 Bratislava, Obchodna 37, Slovakia (м. Братислава, Obchodna 37). ' +
-        'Official Contacts: Phone +38 (067) 156 14 96 | Email evaline.com.ua@gmail.com | Hours Mon-Fri: 9:00 - 19:00. ' +
-        'EVA polymer is 5 times lighter than rubber and 4 times lighter than PVC, closed-cell, hypoallergenic, water absorption <0.1%, ' +
-        'thermal and acoustic insulator, temperature resistant from -50°C to +75°C, hardness ranging from 20 to 75 Shore A.',
+        'Company EvaLine (ТОВ «ЕВА-ЛАЙН», ЄДРПОУ 40484497, м. Чорноморськ, Одеська область, Україна) is the manufacturer in Ukraine of ' +
+        'environmentally friendly polymer material EVA (Ethylene Vinyl Acetate) — closed-cell foam sheets and finished goods. ' +
+        'Capital 16 000 000 UAH; small team. Official domains and platforms of the company: evabot.online, evaline.online, ' +
+        'evaline.network, evaline.com.ua, business.evaline.online (business portal), Cloud Run B2B API (business-tier-api). ' +
+        'Company technical stack: Google Cloud Platform (projects evabot-agent-server, gen-lang-client-0091776451; billing account 016725-23E254-FD499D), ' +
+        'compute VMs evabot-agent-vm (Frankfurt europe-west3-a, c3-standard-8, Tailscale 100.66.98.4) and evaline-micro-vm (Iowa us-central1, e2-micro, Tailscale 100.125.200.49). ' +
+        'EVA polymer is 5 times lighter than rubber, closed-cell, hypoallergenic, water absorption low, thermal and acoustic insulator, ' +
+        'temperature resistant from -50°C to +75°C, hardness 20-75 Shore A, CE/REACH certified.',
     },
     {
       id: 'doc-evaline-002',
       title: 'EvaLine Industrial B2B & B2C Product Catalog and Production Capabilities',
       category: 'products',
       tags: ['sheets', 'car-mats', 'tatami', 'puzzle-mats', 'livestock', 'buryonka', 'private-label', 'b2b', 'b2c'],
-      source: 'evaline.com.ua / eva-line.com [Catalog & Specs]',
+      source: 'evaline.online / evabot.online [Catalog & Specs]',
       content:
-        'EvaLine production lines manufacture comprehensive EVA polymer solutions: ' +
-        '1. Automotive EVA Sheets & Rolls: Diamond (ромб) and Honeycomb (стільники) deep-cell geometry, 60-65 Shore A, 10mm thickness, ' +
-        'trapping 1-1.5 liters of liquid/slush without spillage, customized 2D-nesting cutting for vehicle floors. ' +
-        '2. Sports Tatami & Puzzle Mats: 1000x1000mm mats with "dovetail" (ластівчин хвіст) interlocking edges, reversible dual-color, 20-40mm thickness for judo, MMA, gym flooring. ' +
-        '3. Agricultural & Cow Mats ("Бурьонка"): heavy-duty, hygienic anti-slip, shock-absorbing mats for dairy cattle and equestrian facilities, non-absorbent to urine/feces. ' +
-        '4. Footwear & Orthopedic Materials: lightweight high-rebound soles, orthotic inserts, heel cups. ' +
-        '5. Marine Artificial Teak: waterproof decking for yachts and boats. ' +
-        '6. Contract Manufacturing (Private Label): turnkey OEM/ODM production from custom polymer density (20-75 Shore), custom pigments, embossing to packaging and direct logistics.',
+        'EvaLine produces comprehensive EVA polymer solutions (23 catalog items): ' +
+        '1. EVA sheets & rolls with deep-cell geometries (Diamond/ромб, Honeycomb/стільники), Shore 20-75 A, for automotive floors; ' +
+        '2. Sports tatami & puzzle mats 1000x1000mm (20-40mm) for judo/MMA/gym; ' +
+        '3. Agricultural & livestock cow mats, hygienic anti-slip shock-absorbing; ' +
+        '4. Footwear & orthopedic materials: lightweight high-rebound soles, orthotic inserts, heel cups; ' +
+        '5. Marine artificial teak decking for yachts/boats; ' +
+        '6. OEM/ODM contract manufacturing (private label) with custom density, pigments, embossing.',
     },
     {
       id: 'doc-evaline-003',
       title: 'EvaLine Quality Standards, UNIC Integrity Compliance & Wartime Resilience',
       category: 'compliance',
       tags: ['unic', 'iso', 'ce', 'sanitary', 'wartime', 'export', 'blackouts', 'generators'],
-      source: 'evaline.com.ua / eva-line.com [Compliance & SCM]',
+      source: 'evaline.online [Compliance]',
       content:
-        'EvaLine adheres to international corporate and safety governance: ' +
-        '1. UNIC Member: Official member of the All-Ukrainian Network of Integrity and Compliance (UNIC), committing to transparent, ethical business conduct. ' +
-        '2. Sanitary & CE Certification: Full sanitary-epidemiological approvals (СЕС) by the Ministry of Health of Ukraine; CE Declaration of Conformity for EU market distribution. ' +
-        '3. Wartime Resilience & Continuous Power: Chernomorsk plant operates industrial diesel generators providing autonomous power for heated compression presses and foaming autoclaves during electrical grid outages. ' +
-        '4. European Export Logistics: Overland direct daily shipments to Bratislava EU logistics warehouse (Obchodna 37), ensuring rapid 24-48h dispatch across Poland, Germany, Czechia, Austria, Romania, and Slovakia.',
+        'EvaLine adheres to corporate and safety governance: ' +
+        '1. Sanitary & CE Certification: sanitary-epidemiological approvals (СЕС) and CE Declaration of Conformity for EU distribution; ' +
+        '2. Materials safety: EVA foam is hypoallergenic, non-toxic, water-resistant (low absorption), temperature resistant -50°C..+75°C; ' +
+        '3. Export orientation: company sites in uk/en/ru/ro/de/pl; knowledge base in multiple languages; ' +
+        '4. Online operations run on Google Cloud Platform with monitoring (model/uptime watchdogs), safe-deploy and rollback pipelines.',
     },
     {
       id: 'doc-arch-001',
@@ -397,10 +406,10 @@ export class KnowledgeBaseConnector {
       tags: ['microservices', 'routing', 'omniroute', 'edge', 'grpc', 'http'],
       source: 'hybrid-db:postgres[public.arch_docs] + qdrant[collection:evaline_core]',
       content:
-        'EvaLine infrastructure utilizes an edge API routing topology backed by OmniRoute daemon clusters. ' +
-        'All client requests terminate at the edge proxy, which applies load balancing, rate limiting, and token routing across ' +
-        'Google Cloud Vertex AI, local OmniRoute endpoints (http://100.66.98.4:20128), and OpenRouter gateways. ' +
-        'Service-to-service communication is authenticated via mutual TLS and scoped bearer tokens.',
+        'EvaLine infrastructure: edge API routing backed by OmniRoute (LiteLLM proxy, http://100.66.98.4:20128) across Google Cloud LLM, ' +
+        'OpenRouter gateways, Cloudflare Workers (omni/*) and Gemini (dev-only). Backend services run under systemd on GCP compute VMs: ' +
+        'evabot-brain (Node, :3000), evabot-face (WebGL Eva face, :8093), evabot-voice, evabot-model-monitor, watchdog timers. ' +
+        'Frontend: SPA public/index.html served through Caddy on the micro VM (TLS termination) and nginx on the compute node.',
     },
     {
       id: 'doc-infra-002',
@@ -409,9 +418,10 @@ export class KnowledgeBaseConnector {
       tags: ['k8s', 'containers', 'sre', 'ci-cd', 'prometheus', 'helm'],
       source: 'hybrid-db:postgres[public.infra_docs] + qdrant[collection:evaline_ops]',
       content:
-        'All EvaLine containerized workloads are orchestrated in high-availability Kubernetes clusters across multiple availability zones. ' +
-        'Standard pod autoscaling triggers at 70% CPU/Memory saturation. Ingress utilizes NGINX Ingress Controller with automatic Let\'s Encrypt SSL. ' +
-        'Continuous deployment is managed via GitOps with automated canary testing and instant rollback capabilities.',
+        'EvaLine runtime topology (verified): public domains evabot.online, evaline.online, evaline.network, evaline.com.ua resolve to the micro VM ' +
+        '(136.114.26.252) behind Caddy; business.evaline.online resolves to the global HTTPS load balancer (34.49.122.75) whose backend is the micro VM; ' +
+        'the B2B API also runs on Cloud Run (business-tier-api-873069440066.us-central1.run.app). Deployment: scripts/safe-deploy.sh, rollback.sh, ' +
+        'deploy-sync.sh; monitoring: uptime-monitor.sh, watchdog.sh, evabot-model-monitor. GCP project evabot-agent-server (873069440066) is the billing-enabled project.',
     },
     {
       id: 'doc-sec-003',
@@ -420,9 +430,9 @@ export class KnowledgeBaseConnector {
       tags: ['zero-trust', 'security', 'vault', 'kms', 'rbac', 'owasp'],
       source: 'hybrid-db:postgres[restricted.sec_policies] + qdrant[collection:evaline_sec]',
       content:
-        'All EvaLine corporate assets operate under a strict Zero-Trust security paradigm. No entity within the internal network is inherently trusted. ' +
-        'API keys and service account tokens must never be hardcoded and must be rotated every 30 days via HashiCorp Vault. ' +
-        'All network traffic between services is encrypted using TLS 1.3. IAM policies follow the principle of least privilege (PoLP).',
+        'EvaLine operational security baseline: real API keys and secrets live only in the .env config (OPENROUTER_API_KEY, OMNIROUTE_API_KEY, ' +
+        'GEMINI_API_KEY, EVADEV_PASSWORD); they are never committed to the repository. Chat passwords are masked in history. ' +
+        'Natural-language answers of LLM agents are grounded on the company knowledge base (SQLite FTS5 + memory + ChromaDB) and should not expose secrets.',
     },
     {
       id: 'doc-db-004',
@@ -431,9 +441,10 @@ export class KnowledgeBaseConnector {
       tags: ['postgres', 'qdrant', 'vector', 'rag', 'embedding', 'hybrid'],
       source: 'hybrid-db:postgres[data_catalog] + qdrant[collection:evaline_embeddings]',
       content:
-        'EvaLine implements a hybrid database model: structured relational entities, audit logs, and account data reside in partitioned PostgreSQL 16 clusters, ' +
-        'while unstructured knowledge, conversation context embeddings, and semantic documents are indexed into a distributed Qdrant vector cluster. ' +
-        'Cosine distance similarity thresholds are calibrated at >= 0.78 for context retrieval in RAG queries.',
+        'EvaLine knowledge topology: structured facts in KB memory documents and SQLite FTS5 (fts_index.db, knowledge-base/evaline-knowledge-base); ' +
+        'source directories include the trilingual site mirror (evaline-com-ua/site, langs en/uk/ru/ro/de/pl) and the company repo /home/evabot/evaline-online/docs ' +
+        '(KANBAN, MANIFESTO, release notes, company/, infrastructure/, llm-ai-agents/). The same KB is shared by EvaBot chat, Consilium and company agents; ' +
+        'new .md documents dropped into the repo docs/ folder are ingested automatically at evabot-brain start (memory + FTS, idempotent).',
     },
   ];
 
@@ -452,6 +463,7 @@ export class KnowledgeBaseConnector {
     const kbDocs = kb.search(query, {
       limit,
       category: options.category,
+      language: options.language,
       minScore: options.minScore ?? 0.2,
     });
 
@@ -513,7 +525,15 @@ export class KnowledgeBaseConnector {
     const formatted = docs
       .map((d, i) => `[Document ${i + 1} - ${d.title}] (Relevance: ${(Number(d.relevanceScore || 0.8) * 100).toFixed(0)}%, Source: ${d.source})\n${d.content.substring(0, 2500)}`)
       .join('\n\n');
-    return `\n--- EVALINE HYBRID DATABASE CONTEXT (GROUNDED KB) ---\n${formatted}\n--- END KNOWLEDGE BASE CONTEXT ---\n`;
+    return (
+      `\n--- EVALINE HYBRID DATABASE CONTEXT (GROUNDED KB) ---\n` +
+      `CRITICAL INSTRUCTION FOR REFERENCING CONTEXT:\n` +
+      `The documents below provide factual reference. They may be written in Ukrainian, Polish, English, or Russian.\n` +
+      `You MUST answer exclusively in the user's current message language. NEVER adopt or mirror the language of these reference documents if it differs from the user's language.\n` +
+      `If the user wrote in Russian, formulate your reply 100% in pure Russian without inserting any Ukrainian or Polish vocabulary.\n` +
+      `${formatted}\n` +
+      `--- END KNOWLEDGE BASE CONTEXT ---\n`
+    );
   }
 
   public listAllDocuments(): KnowledgeDocument[] {

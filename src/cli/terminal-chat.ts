@@ -16,6 +16,7 @@ import os from 'node:os';
 import fs from 'node:fs';
 import path from 'node:path';
 import { ChatSession } from '../core/ChatSession.js';
+import { UserMemory } from '../core/UserMemory.js';
 import { ModelRegistry } from '../models/ModelRegistry.js';
 import { ModelRatings, ModelCommand, COMMAND_ALIASES } from '../models/ModelRatings.js';
 import { transcribeVoiceWithFallback, type SttLanguage } from '../core/CloudSTT.js';
@@ -55,7 +56,7 @@ interface AccordionState {
   roles: boolean;
 }
 
-const accordions: AccordionState = {
+const _accordions: AccordionState = {
   bootLog: true,
   servers: false,
   models: false,
@@ -64,7 +65,7 @@ const accordions: AccordionState = {
 };
 
 let lastDiagnosticReport: BootDiagnosticReport | null = null;
-let currentRole = 'general_assistant';
+let _currentRole = 'general_assistant';
 let currentMode: ConsiliumMode = 'solo';
 // Emoji mode (task 1: evabot_emoji=off by default → strip emoji from output).
 let emojiStripOn = true;
@@ -230,6 +231,9 @@ function getTimeStr(): string {
  * Extracted from main() for testability (behavior-preserving).
  */
 export function installEmojiStripFilter(
+  // process.stdout.write exposes overloads; a loose functional type is required
+  // for seamless assignment, so the explicit-any rule is waived here.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   stream: { write: (...args: any[]) => any } = process.stdout,
   shouldStrip: () => boolean = () => emojiStripOn
 ): void {
@@ -277,7 +281,7 @@ export function renderDashboard(session: ChatSession): void {
   // Line 2: Active model, tier, mode, model pool count, lang
   console.log(`${C.gray}${s.model}${C.reset} ${C.bold}${C.white}${session.getModel()}${C.reset} ${tierBadge}  ${C.gray}${s.mode}${C.reset} ${currentMode}  ${C.gray}${s.pool ? 'Pool:' : 'Pool:'}${C.reset} ${totalModels} models (/models)  ${C.gray}${s.lang}${C.reset} ${enBadge} ${ukBadge} ${ruBadge}`);
   // Line 3: System command list
-  console.log(`${C.gray}${s.commandsLabel}${C.reset} /help  /?  /top  /models  /cost  /company  /evaline  /products  /who  /lang  /mode  /consilium  /sephirot  /mcp  /lsp  /history  /memory  /search  /services  /servers  /clear`);
+  console.log(`${C.gray}${s.commandsLabel}${C.reset} /help  /?  /about  /top  /models  /cost  /company  /evaline  /products  /who  /lang  /mode  /consilium  /sephirot  /mcp  /lsp  /add mcp  /add lsp  /history  /memory  /search  /services  /servers  /commands  /clear`);
   // Line 4: Connected databases
   console.log(`${C.gray}${s.databasesLabel}${C.reset} ${C.green}${s.databasesValue}${C.reset}`);
   // Line 5: Live server cluster load telemetry with ASCII bars
@@ -290,6 +294,7 @@ export function printHelp(): void {
   console.log(`
 ${C.yellow}${C.bold}EVA-BOT CYBER-TERMINAL COMMAND GUIDE:${C.reset}
   ${C.cyan}/help, /?${C.reset}              Показать это руководство
+  ${C.cyan}/about${C.reset}                 О проекте EvaBot Online, компании EvaLine и кластере
   ${C.cyan}/top [free|paid|speed]${C.reset} Топ моделей по качеству и композитному рейтингу
   ${C.cyan}/models${C.reset}                Сводка и каталог всех моделей пула
   ${C.cyan}/info <id>${C.reset}            Паспорт модели, квоты, бенчмарки и цены
@@ -298,8 +303,10 @@ ${C.yellow}${C.bold}EVA-BOT CYBER-TERMINAL COMMAND GUIDE:${C.reset}
   ${C.cyan}/who [роль]${C.reset}           Матриця знань компанії: хто що знає, обмін інформацією
   ${C.cyan}/cost${C.reset}                  Бухгалтерия, расходы на токены и себестоимость агентов
   ${C.cyan}/free, /paid${C.reset}           Фильтры бесплатных и платных моделей
-  ${C.cyan}/mcp${C.reset}                   Статус 21 сервера Model Context Protocol
-  ${C.cyan}/lsp${C.reset}                   Статус Language Server Protocol языковых демонов
+  ${C.cyan}/mcp [list|top|select|deselect|selected|info|help]${C.reset}  MCP серверы: список, выбор, топ-5
+  ${C.cyan}/lsp [list|top|select|deselect|selected|info|help]${C.reset}  LSP серверы: список, выбор, топ-5
+  ${C.cyan}/add mcp <name|номер>${C.reset}   Добавить MCP сервер в выбор
+  ${C.cyan}/add lsp <name|номер>${C.reset}   Добавить LSP сервер в выбор
   ${C.cyan}/model <id>${C.reset}            Переключить модель (напр. gemini-3.8-flash)
   ${C.cyan}/mode <mode>${C.reset}            Режим: solo | dialogue | consilium
   ${C.cyan}/consilium <тема>${C.reset}     Запустить многоагентный консилиум экспертов
@@ -319,6 +326,10 @@ ${C.yellow}${C.bold}EVA-BOT CYBER-TERMINAL COMMAND GUIDE:${C.reset}
   ${C.cyan}/voices [uk|ru|en]${C.reset}     Каталог голосів TTS: Chirp3-HD + Wavenet (free), стать, поточні Єва/Адам
   ${C.cyan}/voices set eva|adam <голос>${C.reset} Змінити голос персони (free-родини), дані: data/voice-prefs.json
   ${C.cyan}/settings${C.reset}              Таблиця налаштувань: мова, модель, debug, TTS/STT/переклад ліміти (/налаштування)
+  ${C.cyan}/user, /profile${C.reset}        Профіль пам'яті користувача: ім'я, уподобання, історія
+  ${C.cyan}/user name <Ім>${C.reset}      Зберегти ім'я користувача в пам'ять
+  ${C.cyan}/user set <ключ> <значення>${C.reset} Зберегти уподобання/нотатку (напр. /user set lang ru)
+  ${C.cyan}/user unset <ключ>${C.reset}   Видалити уподобання/нотатку
   ${C.cyan}/agents${C.reset}                Ростер агентів: 18 корпоративних ролей + 10 вузлів Сефірот (/агенти, /рота)
   ${C.cyan}/emoji [on|off]${C.reset}        Емодзі у виводі (off = вирізати, за замовчуванням)
   ${C.cyan}/developer [unlock|status|lock]${C.reset} Режим розробника за паролем (EVADEV_PASSWORD, TTL 2 год)
@@ -348,8 +359,8 @@ async function handleConsiliumRun(mode: ConsiliumMode, prompt: string): Promise<
 
   try {
     const participants = mode === 'consilium'
-      ? ['gemini-2.5-pro', 'gemini-2.5-flash', 'deepseek/deepseek-r1:free']
-      : ['gemini-2.5-pro', 'gemini-2.5-flash'];
+      ? ['gemini-3.1-pro', 'gemini-3.8-flash', 'deepseek/deepseek-r1:free']
+      : ['gemini-3.1-pro', 'gemini-3.8-flash'];
 
     const engine = new ConsiliumEngine();
     const result = await engine.run({
@@ -357,7 +368,7 @@ async function handleConsiliumRun(mode: ConsiliumMode, prompt: string): Promise<
       prompt,
       models: participants,
       rounds: mode === 'dialogue' ? 2 : 1,
-      synthesizerModel: 'gemini-2.5-pro',
+      synthesizerModel: 'gemini-3.1-pro',
       useKnowledgeBase: true,
       onProgress: (evt: ConsiliumProgressEvent) => {
         console.log(`  ${C.cyan} [${evt.type.toUpperCase()}]${C.reset} ${evt.message || ''}`);
@@ -376,10 +387,10 @@ async function handleConsiliumRun(mode: ConsiliumMode, prompt: string): Promise<
       console.log(`${C.bold}${C.green}║                   [] ИТОГОВЫЙ КОНСЕНСУС-ОТЧЕТ ЭКСПЕРТОВ                     ║${C.reset}`);
       console.log(`${C.bold}${C.green}╚══════════════════════════════════════════════════════════════════════════════╝${C.reset}`);
       console.log(renderTerminalMarkdown(result.synthesis));
-      console.log(`\n${C.gray}Синтезировано консилиум-арбитром на базе gemini-2.5-pro${C.reset}\n`);
+      console.log(`\n${C.gray}Синтезировано консилиум-арбитром на базе gemini-3.1-pro${C.reset}\n`);
     }
-  } catch (err: any) {
-    console.log(`${C.red}[X] Ошибка консилиума: ${err.message}${C.reset}`);
+  } catch (err: unknown) {
+    console.log(`${C.red}[X] Ошибка консилиума: ${err instanceof Error ? err.message : String(err)}${C.reset}`);
   }
 }
 
@@ -400,8 +411,8 @@ async function handleSay(arg: string): Promise<void> {
       const sizeKb = (fs.statSync('/tmp/evabot-say.mp3').size / 1024).toFixed(1);
       console.log(`${C.green}[OK] Аудио сохранено: /tmp/evabot-say.mp3 (${sizeKb} KB)${C.reset}`);
       console.log(`  ${C.gray}Голос: ${result.voice} | символов: ${result.charCount}${result.cached ? ' [кэш]' : ''} | осталось символов в этом месяце: ${result.charsLeftThisMonth}${C.reset}`);
-    } catch (err: any) {
-      console.log(`${C.red}[X] Не удалось сохранить файл: ${err.message}${C.reset}`);
+    } catch (err: unknown) {
+      console.log(`${C.red}[X] Не удалось сохранить файл: ${err instanceof Error ? err.message : String(err)}${C.reset}`);
     }
   } else if (result.overCap) {
     console.log(`${C.yellow}[WRN] ${result.error}${C.reset}`);
@@ -459,8 +470,12 @@ async function main(): Promise<void> {
 
   // Smartest model auto-selection at entry with ranked fallback
   const smartest = ModelRatings.getSmartestFreeModel();
-  const initialModel = smartest ? smartest.id : 'gemini-2.5-pro';
+  const initialModel = smartest ? smartest.id : 'gemini-3.8-flash';
   const session = new ChatSession({ model: initialModel });
+
+  // Initialize UserMemory for CLI session
+  const userMemory = UserMemory.getInstance();
+  userMemory.createUser('cli');
 
   // 1. Run live boot diagnostics
   await runAndPrintBootSequence(session.getModel());
@@ -484,6 +499,12 @@ async function main(): Promise<void> {
       return;
     }
 
+    // Track user memory before command handling
+    await userMemory.incrementMessageCount('cli');
+    const extractedName = userMemory.extractNameFromMessage(input);
+    if (extractedName) await userMemory.updateUser('cli', { name: extractedName });
+    await userMemory.addQuery('cli', input);
+
     // Command handling
     if (input.startsWith('/')) {
       const parts = input.split(' ');
@@ -506,6 +527,10 @@ async function main(): Promise<void> {
           console.log(I18nEngine.formatHelp());
           break;
 
+        case '/about':
+          console.log(ModelCommand.execute(input));
+          break;
+
         case '/lang':
         case '/language':
         case '/locale': {
@@ -523,6 +548,7 @@ async function main(): Promise<void> {
         case '/top':
         case '/free':
         case '/paid':
+        case '/commands':
         case '/mcp':
         case '/lsp':
         case '/cost':
@@ -576,6 +602,76 @@ async function main(): Promise<void> {
           break;
         }
 
+        case '/user':
+        case '/profile': {
+          const segs = arg.split(' ').filter(Boolean);
+          const sub = segs[0] ? segs[0].toLowerCase() : 'show';
+
+          // Edit: /user name <Имя>  |  /user set <key> <value>  |  /user unset <key>
+          if (sub === 'name') {
+            const name = segs.slice(1).join(' ').trim();
+            if (!name) {
+              console.log(`${C.yellow}Использование: /user name <Имя>${C.reset}`);
+              break;
+            }
+            const ok = userMemory.updateUser('cli', { name });
+            console.log(ok ? `${C.green}[OK] Имя сохранено: ${C.bold}${name}${C.reset}` : `${C.red}[X] Не удалось сохранить имя.${C.reset}`);
+            break;
+          }
+          if (sub === 'set') {
+            if (segs.length < 3) {
+              console.log(`${C.yellow}Использование: /user set <ключ> <значение>${C.reset}`);
+              break;
+            }
+            const key = segs[1];
+            const value = segs.slice(2).join(' ');
+            const ok = userMemory.setPreference('cli', key, value);
+            console.log(ok ? `${C.green}[OK] Предпочтение сохранено: ${C.bold}${key}${C.reset} = ${value}` : `${C.red}[X] Не удалось сохранить предпочтение.${C.reset}`);
+            break;
+          }
+          if (sub === 'unset') {
+            if (segs.length < 2) {
+              console.log(`${C.yellow}Использование: /user unset <ключ>${C.reset}`);
+              break;
+            }
+            const key = segs[1];
+            const prefs = { ...userMemory.getPreferences('cli') };
+            delete prefs[key];
+            const ok = userMemory.updateUser('cli', { preferences: prefs });
+            console.log(ok ? `${C.green}[OK] Предпочтение удалено: ${C.bold}${key}${C.reset}` : `${C.red}[X] Не удалось удалить предпочтение.${C.reset}`);
+            break;
+          }
+
+          // Show (default)
+          const user = await userMemory.getUser('cli');
+          if (!user) {
+            console.log(`${C.yellow}No user profile found for CLI session.${C.reset}`);
+          } else {
+            const prefs = userMemory.getPreferences('cli');
+            console.log(`
+${C.yellow}${C.bold}USER PROFILE${C.reset}`);
+            console.log(`${C.gray}────────────────────────────────────${C.reset}`);
+            console.log(`  ${C.bold}Session ID:${C.reset} ${user.session_id}`);
+            console.log(`  ${C.bold}Name:${C.reset} ${user.name || '(not set)'}`);
+            console.log(`  ${C.bold}Status:${C.reset} ${user.status || 'active'}`);
+            console.log(`  ${C.bold}Message Count:${C.reset} ${user.message_count}`);
+            console.log(`  ${C.bold}Last Query:${C.reset} ${user.last_query || '(none)'}`);
+            console.log(`  ${C.bold}Last Topic:${C.reset} ${user.last_topic || '(none)'}`);
+            console.log(`  ${C.bold}Created:${C.reset} ${user.created_at}`);
+            console.log(`  ${C.bold}Updated:${C.reset} ${user.updated_at}`);
+            if (prefs && Object.keys(prefs).length > 0) {
+              console.log(`  ${C.bold}Preferences:${C.reset}`);
+              for (const [key, value] of Object.entries(prefs)) {
+                console.log(`    ${key}: ${value}`);
+              }
+            }
+            console.log(`${C.gray}────────────────────────────────────${C.reset}`);
+            console.log(`${C.dim}Правка: /user name <Имя> | /user set <ключ> <значение> | /user unset <ключ>${C.reset}
+`);
+          }
+          break;
+        }
+
         case '/news':
         case '/translate':
         case '/subagent':
@@ -592,7 +688,7 @@ async function main(): Promise<void> {
 
         case '/model':
           if (!arg) {
-            console.log(`${C.yellow}Использование: /model <id> (напр. /model gemini-2.5-flash)${C.reset}`);
+            console.log(`${C.yellow}Использование: /model <id> (напр. /model gemini-3.8-flash)${C.reset}`);
           } else if (ModelRegistry.isValidModel(arg)) {
             session.setModel(arg);
             console.log(`${C.green}[OK] Активная модель переключена на: ${C.bold}${arg}${C.reset}`);
@@ -615,7 +711,7 @@ async function main(): Promise<void> {
 
         case '/role':
           if (CORPORATE_ROLES[arg]) {
-            currentRole = arg;
+            _currentRole = arg;
             console.log(`${C.green}[OK] Роль установлена: ${C.bold}${arg}${C.reset}`);
           } else {
             console.log(`${C.yellow}Доступные роли: ${Object.keys(CORPORATE_ROLES).join(', ')}${C.reset}`);
@@ -666,7 +762,7 @@ async function main(): Promise<void> {
           // Multilingual aliases (UK/RU) of server commands → route through the
           // alias-normalizing registry (e.g. /історія → /history, /пошук → /search).
           const canonical = COMMAND_ALIASES[cmd];
-          if (canonical && ['/history', '/memory', '/search', '/find', '/services', '/servers', '/health', '/news', '/translate', '/products', '/who', '/debug', '/log', '/monitor', '/say', '/listen', '/sys', '/developer', '/voices', '/settings', '/agents', '/models', '/help', '/lang', '/cost', '/sephirot', '/auto', '/subagent', '/room', '/rooms', '/free', '/paid', '/top', '/info', '/mcp', '/lsp', '/company', '/evaline', '/inspect', '/monitor'].includes(canonical)) {
+          if (canonical && ['/about', '/history', '/memory', '/search', '/find', '/services', '/servers', '/health', '/news', '/translate', '/products', '/who', '/debug', '/log', '/monitor', '/say', '/listen', '/sys', '/developer', '/voices', '/settings', '/agents', '/models', '/help', '/lang', '/cost', '/sephirot', '/auto', '/subagent', '/room', '/rooms', '/free', '/paid', '/top', '/info', '/mcp', '/lsp', '/company', '/evaline', '/inspect', '/monitor', '/commands'].includes(canonical)) {
             if (canonical === '/say') {
               await handleSay(arg);
             } else if (canonical === '/listen') {
@@ -702,12 +798,35 @@ async function main(): Promise<void> {
     const time = getTimeStr();
     process.stdout.write(`\n${C.gray}${time}${C.reset} ${C.green}evabot :${C.reset} `);
     try {
+      // Get user profile for personalization
+      const user = await userMemory.getUser('cli');
+      const prefs = user ? await userMemory.getPreferences('cli') : {};
+      let systemPrompt = '';
+      if (user) {
+        const parts = [];
+        if (user.name) parts.push(`User's name: ${user.name}`);
+        parts.push(`Message count: ${user.message_count}`);
+        if (user.last_topic) parts.push(`Last topic: ${user.last_topic}`);
+        if (prefs.language) parts.push(`Preferred language: ${prefs.language}`);
+        if (prefs.model) parts.push(`Preferred model: ${prefs.model}`);
+        if (prefs.communicationStyle) parts.push(`Communication style: ${prefs.communicationStyle}`);
+        if (parts.length > 0) {
+          systemPrompt = `User context: ${parts.join('; ')}. Personalize your response accordingly.`;
+        }
+      }
+
       const client = new UniversalLlmClient();
       const streamer = new TerminalMarkdownStreamer((text) => process.stdout.write(text));
       const span = startSpan(session.getModel(), client.resolveProvider(session.getModel()));
+      
+      // Build messages array with system prompt if available
+      const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = systemPrompt
+        ? [{ role: 'system', content: systemPrompt }, { role: 'user', content: input }]
+        : [{ role: 'user', content: input }];
+      
       await client.streamContent(
         session.getModel(),
-        [{ role: 'user', content: input }],
+        messages,
         (chunk: string) => {
           streamer.push(chunk);
         }
@@ -717,8 +836,8 @@ async function main(): Promise<void> {
       if (isDebugOn()) {
         process.stdout.write(`${C.gray}${renderDebugFooter(span)}${C.reset}\n`);
       }
-    } catch (err: any) {
-      process.stdout.write(`\n${C.red}[ERROR] Ошибка генерации: ${err.message}${C.reset}\n`);
+    } catch (err: unknown) {
+      process.stdout.write(`\n${C.red}[ERROR] Ошибка генерации: ${err instanceof Error ? err.message : String(err)}${C.reset}\n`);
     }
 
     rl.prompt();

@@ -1,0 +1,36 @@
+EvaBot Engine UI Layout
+
+Screen 1: Main Chat
+--------------------------------------
+| ☰ EvaBot                     1200 🪙 |
+|------------------------------------|
+|                                    |
+| Eva: Hello! How can I help today?  |
+|                                    |
+|                                    |
+|                                    |
+|                                    |
+|                                    |
+|                                    |
+|------------------------------------|
+| ( Type your message...         [↑] )|
+--------------------------------------
+
+Screen 2: Settings
+--------------------------------------
+| <- Back                   Settings |
+|------------------------------------|
+| Model Selection                    |
+| (*) GPT-4o        $0.01 / 1K tok   |
+| ( ) Claude 3      €0.015 / 1K tok  |
+|                                    |
+| Current Usage                      |
+| - Session Cost: $0.05              |
+| - Available Tokens: 12,500         |
+|                                    |
+| Voice Options                      |
+| [ ] Enable Voice Output            |
+|                                    |
+| Appearance                         |
+| [x] Dark Mode                      |
+--------------------------------------

@@ -521,28 +521,31 @@
       
       if (lowerCmd === '/help' || lowerCmd === '/?') {
         addSystemMessage(`ДОСТУПНЫЕ КОМАНДЫ:
-/top [filter] [N]  - Топ-N моделей (filter: free|paid|speed|context)
-/free             - Все 46 бесплатных моделей
-/paid             - Все 32 платные модели
+/about            - О проекте EvaBot, EvaLine и архитектуре кластера
+/mode             - Переключение режима solo / consilium
+/consilium [тема] - Мульти-агентный консилиум
+/top [filter] [N] - Топ-N моделей (filter: free|paid|speed|context)
+/free             - Все бесплатные модели
+/paid             - Все платные модели
 /models           - Сводка по моделям
-/clear            - Очистить экран
-/help             - Эта справка
+/clear, /cls      - Очистить экран
+/help, /?         - Эта справка
 
 Примеры:
-  /top             - Топ-5 free + топ-5 paid
+  /about           - Паспорт системы и кластера
+  /mode consilium  - Переключить режим на консилиум
+  /consilium тест  - Запуск обсуждения темы моделями
   /top free 10     - Топ-10 бесплатных
-  /top speed 5     - 5 самых быстрых
-  /top context 5   - 5 с самым большим контекстом
-  /free            - Список всех бесплатных`);
+  /clear           - Очистить консоль`);
         return;
       }
       
-      if (lowerCmd.startsWith('/top') || lowerCmd.startsWith('/free') || lowerCmd.startsWith('/paid') || lowerCmd.startsWith('/models')) {
+      if (lowerCmd.startsWith('/')) {
         try {
           const response = await fetch('/api/models/command', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ command: cmd })
+            body: JSON.stringify({ command: cmd, lang: 'ru' })
           });
           const data = await response.json();
           addSystemMessage(data.result);
@@ -551,8 +554,6 @@
         }
         return;
       }
-      
-      addSystemMessage(`[ERROR] Неизвестная команда: ${cmd}\nИспользуйте /help для справки`);
     }
 
     async function loadModels() {

@@ -4,7 +4,7 @@ import { ConsiliumEngine, ConsiliumMode, personaForRoleId } from '../../core/Con
 import { Config } from '../../core/Config.js';
 import { CORPORATE_ROLES, KnowledgeBaseConnector } from '../../core/CorporateRoles.js';
 import { rulesEngine } from '../../core/RulesEngine.js';
-import { applyLocalePolicy, languageLockInstruction } from '../../core/LocalePolicy.js';
+import { applyLocalePolicy, languageLockInstruction, detectMessageLanguage } from '../../core/LocalePolicy.js';
 import { logger } from '../../core/Logger.js';
 import { ChatHistoryStore, CONSILIUM_SESSION_ID } from '../../core/ChatHistoryStore.js';
 import { I18nEngine } from '../../core/I18nEngine.js';
@@ -12,6 +12,7 @@ import { isDebugOn, startSpan, renderDebugFooter } from '../../core/OpLog.js';
 import { SystemContext, recordLastUsedModel } from '../../core/SystemContext.js';
 import { DeveloperMode } from '../../core/DeveloperMode.js';
 import { AutoModelRouter } from '../../core/AutoModelRouter.js';
+import { AccountingEngine } from '../../core/AccountingEngine.js';
 
 /**
  * Fire-and-forget chat persistence: a DB failure must never break the chat flow.
@@ -54,17 +55,19 @@ export class ChatRouter extends Router {
       const chatSessionId = typeof body.sessionId === 'string' && body.sessionId ? body.sessionId : 'web-default';
       const client = new UniversalLlmClient(apiKey || (Config.vertexEnabled ? undefined : Config.geminiApiKey) || undefined);
       // TASK-320: /auto mode — dynamic FREE model per message when opted in.
-      let targetModel = model || Config.defaultModel;
-      if (!model && AutoModelRouter.isActive(chatSessionId)) {
+      const requestedModel = model && model !== 'auto' && model !== 'default' ? model : undefined;
+      let targetModel = requestedModel || Config.defaultModel;
+      if (!requestedModel && AutoModelRouter.isActive(chatSessionId)) {
         targetModel = AutoModelRouter.pick({ message, history }, chatSessionId).modelId;
       }
       const usedProvider = client.resolveProvider(targetModel, provider as LlmProvider | undefined);
 
+      const detectedLang = detectMessageLanguage(message);
       let { instruction: effectiveInstruction, persona: resolvedPersona } = this.resolveSystemInstruction(roleId, systemInstruction);
 
       if (useKnowledgeBase) {
         try {
-          const docs = await this.kbConnector.search(message, { limit: 3 });
+          const docs = await this.kbConnector.search(message, { limit: 6, language: detectedLang });
           if (docs.length > 0) {
             effectiveInstruction += `\n${this.kbConnector.formatContextForPrompt(docs)}`;
           }
@@ -73,13 +76,15 @@ export class ChatRouter extends Router {
         }
       }
 
+      // LANGUAGE LOCK (PRIMARY): mirror the user's message language (uk/ru/en/pl) – put first for maximum weight.
+      effectiveInstruction = `${languageLockInstruction(message)}\n${effectiveInstruction}`;
       // System-awareness (FEATURE 1) + developer block (FEATURE 2), appended
       // AFTER the existing system prompt building (role/LocalePolicy/rules/KB).
-      effectiveInstruction += `\n${SystemContext.build()}`;
-      // LANGUAGE LOCK: mirror the user's message language (uk/ru/en).
+      effectiveInstruction += `\n${SystemContext.build(detectedLang)}`;
+      // Also append lock as a safeguard.
       effectiveInstruction += `\n${languageLockInstruction(message)}`;
       if (DeveloperMode.isUnlocked(chatSessionId)) {
-        effectiveInstruction += `\n${SystemContext.DEVELOPER_BLOCK}`;
+        effectiveInstruction += `\n${SystemContext.DEVELOPER_BLOCK}\n${SystemContext.developerBlock(detectedLang)}`;
       }
 
       const messages = [...history, { role: 'user', content: message.trim() }];
@@ -116,17 +121,19 @@ export class ChatRouter extends Router {
       const chatSessionId = typeof body.sessionId === 'string' && body.sessionId ? body.sessionId : 'web-default';
       const client = new UniversalLlmClient(apiKey || (Config.vertexEnabled ? undefined : Config.geminiApiKey) || undefined);
       // TASK-320: /auto mode — dynamic FREE model per message when opted in.
-      let targetModel = model || Config.defaultModel;
-      if (!model && AutoModelRouter.isActive(chatSessionId)) {
+      const requestedModel = model && model !== 'auto' && model !== 'default' ? model : undefined;
+      let targetModel = requestedModel || Config.defaultModel;
+      if (!requestedModel && AutoModelRouter.isActive(chatSessionId)) {
         targetModel = AutoModelRouter.pick({ message, history }, chatSessionId).modelId;
       }
       const usedProvider = client.resolveProvider(targetModel, provider as LlmProvider | undefined);
 
+      const detectedLang = detectMessageLanguage(message);
       let { instruction: effectiveInstruction, persona: resolvedPersona } = this.resolveSystemInstruction(roleId, systemInstruction);
 
       if (useKnowledgeBase) {
         try {
-          const docs = await this.kbConnector.search(message, { limit: 3 });
+          const docs = await this.kbConnector.search(message, { limit: 6, language: detectedLang });
           if (docs.length > 0) {
             effectiveInstruction += `\n${this.kbConnector.formatContextForPrompt(docs)}`;
           }
@@ -136,11 +143,12 @@ export class ChatRouter extends Router {
       }
 
       // System-awareness (FEATURE 1) + developer block (FEATURE 2).
-      effectiveInstruction += `\n${SystemContext.build()}`;
-      // LANGUAGE LOCK: mirror the user's message language (uk/ru/en).
+      effectiveInstruction = `${languageLockInstruction(message)}\n${effectiveInstruction}`;
+      effectiveInstruction += `\n${SystemContext.build(detectedLang)}`;
+      // Also append lock as a safeguard.
       effectiveInstruction += `\n${languageLockInstruction(message)}`;
       if (DeveloperMode.isUnlocked(chatSessionId)) {
-        effectiveInstruction += `\n${SystemContext.DEVELOPER_BLOCK}`;
+        effectiveInstruction += `\n${SystemContext.DEVELOPER_BLOCK}\n${SystemContext.developerBlock(detectedLang)}`;
       }
 
       const messages = [...history, { role: 'user', content: message.trim() }];
@@ -156,6 +164,10 @@ export class ChatRouter extends Router {
         'Access-Control-Allow-Origin': '*',
       });
 
+      // Emit initial routing step immediately so client sees instant activity
+      ctx.res.write(`data: ${JSON.stringify({ process: { step: 'routing', detail: `Маршрутизация запроса в модель ${targetModel}...`, model: targetModel } })}\n\n`);
+
+      let activeModel = targetModel;
       const fullText = await client.streamContent(
         targetModel,
         messages,
@@ -166,14 +178,36 @@ export class ChatRouter extends Router {
           systemInstruction: effectiveInstruction,
           provider: provider as LlmProvider | undefined,
           apiKey,
+        },
+        true,
+        (fromModel, toModel) => {
+          activeModel = toModel;
+          ctx.res.write(`data: ${JSON.stringify({ fallback: { from: fromModel, to: toModel }, process: { step: 'fallback', detail: `Автопереключение: ${fromModel} → ${toModel}`, model: toModel } })}\n\n`);
+        },
+        (proc) => {
+          ctx.res.write(`data: ${JSON.stringify({ process: proc })}\n\n`);
         }
       );
       span.end();
       const fullTextOut = isDebugOn() ? `${fullText}\n${renderDebugFooter(span)}` : fullText;
 
-      persistChatMessage(chatSessionId, 'assistant', fullText, targetModel);
+      persistChatMessage(chatSessionId, 'assistant', fullText, activeModel);
 
-      ctx.res.write(`data: ${JSON.stringify({ done: true, fullText: fullTextOut, persona: resolvedPersona || 'eva' })}\n\n`);
+      // Live Token & Cost Accounting
+      const promptTokens = Math.max(1, Math.ceil(message.length / 3.6));
+      const completionTokens = Math.max(1, Math.ceil(fullText.length / 3.6));
+      const usage = AccountingEngine.recordUsage(activeModel, promptTokens, completionTokens);
+      const isFree = usage.costUSD === 0;
+      const stats = {
+        promptTokens,
+        completionTokens,
+        totalTokens: promptTokens + completionTokens,
+        costUSD: isFree ? 0 : parseFloat(usage.costUSD.toFixed(5)),
+        savedUSD: parseFloat(usage.savedUSD.toFixed(4)),
+        isFree,
+      };
+
+      ctx.res.write(`data: ${JSON.stringify({ done: true, fullText: fullTextOut, model: activeModel, persona: resolvedPersona || 'eva', stats })}\n\n`);
       ctx.res.end();
     }));
 

@@ -1,6 +1,7 @@
 import { Router, withErrorHandling } from './Router.js';
 import { ModelRegistry } from '../../models/ModelRegistry.js';
 import { ModelRatings, ModelCommand } from '../../models/ModelRatings.js';
+import { I18nEngine } from '../../core/I18nEngine.js';
 import { Config } from '../../core/Config.js';
 import { logger, LogCategory } from '../../core/Logger.js';
 import { DeveloperMode } from '../../core/DeveloperMode.js';
@@ -67,6 +68,9 @@ export function createModelsRouter(): Router {
   router.post('/api/models/command', withErrorHandling(async (ctx) => {
     const body = await ctx.parseJsonBody();
     const command = body.command || '';
+    if (body.lang && typeof body.lang === 'string') {
+      I18nEngine.setLocale(body.lang);
+    }
     // Bind /developer unlock to the chat session that sent the command
     // (ChatRouter uses the same sessionId for the developer prompt block).
     DeveloperMode.setActiveSession(typeof body.sessionId === 'string' ? body.sessionId : undefined);

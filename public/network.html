@@ -7,6 +7,14 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>EVALINE.NETWORK // LIVE ARCHITECTURE, 94 LLMs CATALOG, ACCOUNTING & AGENT CONSILIUM</title>
+  <meta name="description" content="EVALINE.NETWORK — Live dual-node cluster telemetry, 94 LLMs catalog, WireGuard mesh, infrastructure accounting and multi-agent AI consilium.">
+  <meta name="theme-color" content="#050608">
+  <meta name="color-scheme" content="dark light">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="EVALINE.NETWORK // LIVE ARCHITECTURE, 94 LLMs CATALOG & CONSILIUM">
+  <meta property="og:description" content="Live dual-node cluster telemetry, 94 LLMs catalog, WireGuard backbone mesh visualizer, infrastructure financial accounting & AI Agent Consilium.">
+  <meta property="og:url" content="https://evaline.network">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%230e1118' stroke='%2300e5ff' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%2300e676'/%3E%3C/svg%3E">
   
   <!-- COMPLETE ROBOTO SUPERFAMILY: Roboto, Roboto Mono, Roboto Condensed, Roboto Slab, Roboto Serif, Roboto Flex -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +22,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto+Flex:wght@100..1000&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&family=Roboto+Slab:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 
   <style>
+    @font-face {
+      font-family: 'Roboto';
+      src: url('/fonts/Roboto-Variable.woff2') format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Roboto';
+      src: url('/fonts/Roboto-Italic-Variable.woff2') format('woff2');
+      font-weight: 100 900;
+      font-style: italic;
+      font-display: swap;
+    }
+
     :root {
       /* FONT FAMILY VARIABLES - ALL ROBOTO STYLES */
       --font-roboto: 'Roboto', sans-serif;
@@ -76,6 +99,95 @@
       padding-bottom: 60px;
     }
 
+    /* CUSTOM CYBER SCROLLBAR */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--surface-hover);
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-cyan);
+    }
+
+    /* ACCESSIBILITY & INTERACTION */
+    :focus-visible {
+      outline: 2px solid var(--accent-cyan);
+      outline-offset: 2px;
+    }
+    .copyable {
+      cursor: pointer;
+      position: relative;
+      transition: color 0.15s ease, text-shadow 0.15s ease;
+    }
+    .copyable:hover {
+      color: var(--accent-cyan) !important;
+      text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+    }
+    .copy-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--surface);
+      color: var(--accent-cyan);
+      border: 1px solid var(--border-cyan);
+      box-shadow: 0 4px 20px rgba(0, 229, 255, 0.25);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .copy-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* BACK TO TOP FLOATING BUTTON */
+    .btn-back-to-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border-cyan);
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 99;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.85);
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      font-size: 14px;
+    }
+    .btn-back-to-top.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+    .btn-back-to-top:hover {
+      background: var(--accent-cyan);
+      color: #000;
+      box-shadow: 0 0 16px rgba(0, 229, 255, 0.5);
+    }
+
     /* TRILINGUAL INSTANT SWITCHING RULES */
     html[data-lang="en"] .t-en { display: inline !important; }
     html[data-lang="en"] .t-uk, html[data-lang="en"] .t-ru { display: none !important; }
@@ -107,15 +219,19 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 64px;
-      gap: 16px;
+      min-height: 64px;
+      height: auto;
+      gap: 12px;
+      padding: 8px 0;
+      flex-wrap: wrap;
     }
     .brand-group {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       text-decoration: none;
       color: inherit;
+      flex-wrap: wrap;
     }
     .brand-logo {
       font-family: var(--font-mono);
@@ -152,7 +268,8 @@
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     /* LANGUAGE BUTTONS */
@@ -163,18 +280,22 @@
       border-radius: 6px;
       padding: 2px;
       gap: 2px;
+      flex: 1 1 auto;
     }
     .lang-btn {
       background: transparent;
       border: none;
       color: var(--fg-dim);
-      padding: 4px 10px;
+      padding: 4px 8px;
       font-family: var(--font-mono);
       font-size: 11px;
       font-weight: 600;
       border-radius: 4px;
       cursor: pointer;
       transition: all 0.15s ease;
+      flex: 1 1 auto;
+      min-width: 0;
+      text-align: center;
     }
     .lang-btn:hover {
       color: var(--fg);
@@ -191,16 +312,20 @@
       background: var(--surface-2);
       border: 1px solid var(--border);
       color: var(--fg);
-      padding: 6px 12px;
+      padding: 6px 10px;
       font-family: var(--font-mono);
-      font-size: 12px;
+      font-size: 11px;
       border-radius: 6px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      gap: 5px;
       text-decoration: none;
       transition: all 0.2s;
+      flex: 1 1 auto;
+      min-width: 0;
+      white-space: nowrap;
     }
     .btn-ctrl:hover {
       background: var(--surface-hover);
@@ -237,7 +362,7 @@
     .domain-links {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 8px 14px;
       flex-wrap: wrap;
     }
     .domain-links a {
@@ -247,6 +372,8 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      white-space: normal;
+      word-break: break-word;
     }
     .domain-links a:hover { color: var(--accent-cyan); }
     .domain-links a.active {
@@ -258,12 +385,59 @@
       align-items: center;
       gap: 6px;
       font-size: 11px;
-      padding: 2px 8px;
+      padding: 3px 8px;
       border-radius: 12px;
       background: rgba(0, 230, 118, 0.12);
       color: var(--accent-green);
       border: 1px solid var(--border-green);
       font-family: var(--font-mono);
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.3;
+      max-width: 100%;
+    }
+
+    /* SINGLE-VIEWPORT TABS */
+    .vp-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin: 16px 0 24px 0;
+      padding: 6px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .vp-tab {
+      flex: 1 1 auto;
+      min-width: 70px;
+      max-width: 120px;
+      text-align: center;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--fg-dim);
+      padding: 6px 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .vp-tab:hover {
+      color: var(--fg);
+      background: var(--surface-hover);
+      border-color: var(--border-bright);
+    }
+    .vp-tab.active {
+      background: var(--accent-cyan);
+      color: #050608;
+      border-color: var(--accent-cyan);
+      font-weight: 700;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.35);
     }
 
     /* SECTIONS */
@@ -300,8 +474,8 @@
     /* KPI GRID */
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+      gap: 14px;
     }
     .kpi-card {
       background: var(--surface);
@@ -310,6 +484,7 @@
       padding: 16px;
       position: relative;
       overflow: hidden;
+      min-width: 0;
       transition: transform 0.2s, border-color 0.2s;
     }
     .kpi-card:hover {
@@ -337,6 +512,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
     }
     .kpi-value {
       font-family: var(--font-mono);
@@ -344,6 +521,9 @@
       font-weight: 700;
       color: var(--fg);
       margin-bottom: 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .kpi-sub {
       font-size: 11px;
@@ -352,6 +532,9 @@
       align-items: center;
       gap: 4px;
       font-family: var(--font-mono);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .progress-bar-wrap {
       width: 100%;
@@ -378,6 +561,7 @@
       border-radius: 8px;
       padding: 24px;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
     .arch-grid {
       display: grid;
@@ -392,6 +576,7 @@
       border-radius: 8px;
       padding: 20px;
       position: relative;
+      min-width: 0;
       transition: all 0.2s ease;
     }
     .node-box:hover {
@@ -476,6 +661,7 @@
     }
     .pipe-line {
       width: 100%;
+      max-width: 100%;
       height: 3px;
       background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
       position: relative;
@@ -531,7 +717,18 @@
     }
     @media (max-width: 1024px) {
       .workflow-steps-grid { grid-template-columns: 1fr; }
-      .arch-grid { grid-template-columns: 1fr; }
+      .arch-grid {
+        grid-template-columns: 1fr;
+        min-width: 0;
+        width: 100%;
+      }
+      .backbone-pipe {
+        order: 2;
+        margin: 16px 0;
+        width: 100%;
+      }
+      .node-box.edge { order: 1; }
+      .node-box.compute { order: 3; }
     }
     .workflow-step-card {
       background: var(--surface-2);
@@ -597,7 +794,7 @@
     /* CONSILIUM AGENTS */
     .agents-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
       gap: 16px;
     }
     .agent-card {
@@ -605,6 +802,7 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 18px;
+      min-width: 0;
       transition: all 0.2s;
     }
     .agent-card:hover {
@@ -616,6 +814,8 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
     .agent-name-title {
       font-family: var(--font-mono);
@@ -652,12 +852,14 @@
       padding-top: 8px;
       display: flex;
       justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
     }
 
     /* 94 MODELS SECTION & SPOTLIGHT CARDS */
     .models-spotlight-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
       gap: 16px;
       margin-bottom: 20px;
     }
@@ -667,6 +869,7 @@
       border-radius: 8px;
       padding: 18px;
       position: relative;
+      min-width: 0;
     }
     .spotlight-card.paid { border-top: 3px solid var(--accent-amber); }
     .spotlight-card.free { border-top: 3px solid var(--accent-green); }
@@ -678,6 +881,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
     }
     .spotlight-list {
       display: flex;
@@ -693,10 +898,18 @@
       border-radius: 4px;
       font-family: var(--font-mono);
       font-size: 11px;
+      gap: 8px;
     }
-    .spotlight-name { font-weight: 600; color: var(--fg); }
-    .spotlight-price { color: var(--accent-amber); font-weight: 600; }
-    .spotlight-free { color: var(--accent-green); font-weight: 600; }
+    .spotlight-name {
+      font-weight: 600;
+      color: var(--fg);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+    .spotlight-price { color: var(--accent-amber); font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+    .spotlight-free { color: var(--accent-green); font-weight: 600; white-space: nowrap; flex-shrink: 0; }
 
     /* MODELS TABLE CONTROLS */
     .models-controls {
@@ -742,6 +955,7 @@
       padding: 4px 12px;
       gap: 8px;
       width: 300px;
+      max-width: 100%;
     }
     .model-search input {
       background: transparent;
@@ -756,7 +970,7 @@
     /* ACCOUNTING & FINANCIAL TELEMETRY */
     .accounting-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
       gap: 20px;
     }
     .account-card {
@@ -765,6 +979,8 @@
       border-radius: 8px;
       padding: 20px;
       position: relative;
+      min-width: 0;
+      overflow-x: auto;
     }
     .account-card.capex { border-top: 3px solid var(--accent-purple); }
     .account-card.opex { border-top: 3px solid var(--accent-cyan); }
@@ -776,6 +992,8 @@
       margin-bottom: 14px;
       padding-bottom: 8px;
       border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 8px;
     }
     .account-title {
       font-family: var(--font-mono);
@@ -800,20 +1018,26 @@
     }
     .cost-table td {
       padding: 6px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid var(--border);
       color: var(--fg-dim);
+    }
+    .cost-table td:first-child {
+      word-break: break-word;
+      padding-right: 8px;
     }
     .cost-table td:last-child {
       text-align: right;
       font-weight: 600;
       color: var(--fg);
       white-space: nowrap;
+      vertical-align: top;
     }
     .cost-note {
       font-size: 10px;
       color: var(--fg-faint);
       display: block;
       margin-top: 2px;
+      word-break: break-word;
     }
 
     /* PROCESS INSPECTOR */
@@ -852,6 +1076,27 @@
       color: #000;
     }
 
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 12px;
+      gap: 8px;
+      width: 300px;
+      max-width: 100%;
+    }
+    .search-box input {
+      background: transparent;
+      border: none;
+      color: var(--fg);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      width: 100%;
+      outline: none;
+    }
+
     .table-wrap {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -859,8 +1104,10 @@
       overflow-x: auto;
       max-height: 520px;
       position: relative;
+      -webkit-overflow-scrolling: touch;
     }
-    table {
+    .table-wrap table, table {
+      min-width: max-content;
       width: 100%;
       border-collapse: collapse;
       font-family: var(--font-mono);
@@ -900,7 +1147,7 @@
     .badge-web { background: rgba(0, 229, 255, 0.15); color: var(--accent-cyan); border: 1px solid var(--border-cyan); }
     .badge-mcp { background: rgba(0, 230, 118, 0.15); color: var(--accent-green); border: 1px solid var(--border-green); }
     .badge-lsp { background: rgba(255, 214, 0, 0.15); color: var(--accent-amber); border: 1px solid var(--border-amber); }
-    .badge-system { background: rgba(255, 255, 255, 0.08); color: var(--fg-dim); border: 1px solid var(--border); }
+    .badge-system { background: var(--surface-2); color: var(--fg-dim); border: 1px solid var(--border); }
 
     /* LOG STREAM FEED */
     .feed-wrap {
@@ -923,7 +1170,7 @@
       padding: 4px 8px;
       border-radius: 4px;
       background: var(--surface-2);
-      border: 1px solid rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
     }
     .log-time { color: var(--fg-faint); }
     .log-host { color: var(--accent-cyan); font-weight: 600; }
@@ -948,6 +1195,112 @@
     }
     footer a { color: var(--accent-cyan); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
+
+    /* RESPONSIVE BREAKPOINTS (mobile-first 320px -> 768px -> 1024px) */
+    @media (max-width: 768px) {
+      .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .brand-group {
+        justify-content: center;
+        flex-wrap: wrap;
+        text-align: center;
+      }
+      .header-actions {
+        justify-content: center;
+        width: 100%;
+      }
+      .models-controls, .process-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .model-search, .search-box {
+        width: 100%;
+      }
+      .model-tabs, .category-tabs {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 12px;
+      }
+      .brand-logo {
+        font-size: 14px;
+      }
+      .brand-badge {
+        font-size: 10px;
+        padding: 2px 6px;
+      }
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      .section-title {
+        font-size: 13px;
+        flex-wrap: wrap;
+      }
+      .section-subtitle {
+        font-size: 11px;
+      }
+      .node-box {
+        padding: 14px;
+      }
+      .arch-diagram-wrap {
+        padding: 12px;
+      }
+      footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+        justify-content: center;
+      }
+      footer div {
+        justify-content: center;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .container {
+        padding: 0 8px;
+      }
+      .kpi-value {
+        font-size: 18px;
+      }
+      .kpi-card {
+        padding: 12px;
+      }
+      .node-metrics-mini {
+        grid-template-columns: 1fr;
+      }
+      .vp-tab {
+        min-width: 60px;
+        font-size: 10px;
+        padding: 5px 6px;
+      }
+      .btn-ctrl {
+        font-size: 10px;
+        padding: 5px 8px;
+      }
+      .lang-btn {
+        font-size: 10px;
+        padding: 3px 6px;
+      }
+      .spotlight-card {
+        padding: 12px;
+      }
+      .account-card {
+        padding: 12px;
+      }
+      .account-total {
+        font-size: 17px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1210,11 +1563,11 @@
             <div class="node-metrics-mini">
               <div class="mini-metric">
                 <div class="mini-metric-label">Public IP</div>
-                <div class="mini-metric-val">136.114.26.252</div>
+                <div class="mini-metric-val copyable" onclick="copyText('136.114.26.252')" title="Click to copy">136.114.26.252 ⎘</div>
               </div>
               <div class="mini-metric">
                 <div class="mini-metric-label">Mesh IP</div>
-                <div class="mini-metric-val">100.125.200.49</div>
+                <div class="mini-metric-val copyable" onclick="copyText('100.125.200.49')" title="Click to copy">100.125.200.49 ⎘</div>
               </div>
               <div class="mini-metric">
                 <div class="mini-metric-label">RAM / Swap</div>
@@ -1241,7 +1594,7 @@
 
           <!-- CONNECTOR / WIRE GUARD PIPE -->
           <div class="backbone-pipe">
-            <div class="backbone-pill">
+            <div class="backbone-pill copyable" onclick="copyText('100.125.200.49 <-> 100.66.98.4 (UDP 51820)')" title="Click to copy tunnel info">
               <span class="t-en">WIREGUARD MESH</span>
               <span class="t-uk">WIREGUARD СІТКА</span>
               <span class="t-ru">WIREGUARD СЕТЬ</span>
@@ -1269,11 +1622,11 @@
             <div class="node-metrics-mini">
               <div class="mini-metric">
                 <div class="mini-metric-label">Public IP</div>
-                <div class="mini-metric-val">34.159.202.82</div>
+                <div class="mini-metric-val copyable" onclick="copyText('34.159.202.82')" title="Click to copy">34.159.202.82 ⎘</div>
               </div>
               <div class="mini-metric">
                 <div class="mini-metric-label">Mesh IP</div>
-                <div class="mini-metric-val">100.66.98.4</div>
+                <div class="mini-metric-val copyable" onclick="copyText('100.66.98.4')" title="Click to copy">100.66.98.4 ⎘</div>
               </div>
               <div class="mini-metric">
                 <div class="mini-metric-label">Hardware</div>
@@ -1675,6 +2028,7 @@
         <div class="model-search">
           <span style="color: var(--fg-dim);">&gt;</span>
           <input type="text" id="model-search-input" placeholder="Search model, provider, context..." oninput="searchModels(this.value)">
+          <span id="models-count-badge" style="font-size: 11px; color: var(--fg-dim); white-space: nowrap; margin-left: 6px; font-family: var(--font-mono);">94 models</span>
         </div>
       </div>
 
@@ -2059,6 +2413,9 @@
 
   </main>
 
+  <div id="copy-toast" class="copy-toast"></div>
+  <button id="btn-back-to-top" class="btn-back-to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="Back to top" aria-label="Back to top">↑</button>
+
   <script>
     // RAW MODELS CATALOG DATA (94 MODELS)
     const rawCatalog = [{"id":"gemini-3.8-flash","name":"Gemini 3.8 Flash","provider":"Google DeepMind","category":"Google Gemini (Next-Gen)","desc":"Frontier ultra-fast autonomous agentic model with native real-time tool orchestration and multi-modal streaming.","context":1048576,"maxOutput":8192,"isFree":true,"freeDetails":"Google AI Pro / AI Studio: 15 RPM, 1M TPM, 1,500 RPD ($0.00)","priceIn":"$0.00 (Free) / $0.075 (Paid)","priceOut":"$0.00 (Free) / $0.300 (Paid)","quality":99,"recency":100,"speed":85,"composite":97,"recommended":false,"releaseDate":"2026-05-14","lastUpdate":"2026-09-01"},{"id":"gemini-3.1-pro","name":"Gemini 3.1 Pro","provider":"Google DeepMind","category":"Google Gemini (Next-Gen)","desc":"Premier enterprise reasoning frontier model with 2M token context, deep logic, and architectural planning capability.","context":2097152,"maxOutput":8192,"isFree":true,"freeDetails":"Google AI Pro / AI Studio: 2 RPM, 32k TPM, 50 RPD ($0.00)","priceIn":"$0.00 (Free) / $1.25 (Paid)","priceOut":"$0.00 (Free) / $5.00 (Paid)","quality":100,"recency":99,"speed":45,"composite":94,"recommended":false,"releaseDate":"2025-12-09","lastUpdate":"2026-09-01"},{"id":"gemini-3.1-flash","name":"Gemini 3.1 Flash","provider":"Google DeepMind","category":"Google Gemini (Next-Gen)","desc":"Lightweight high-efficiency frontier flash model with ultra-low latency inference.","context":1048576,"maxOutput":8192,"isFree":true,"freeDetails":"Google AI Studio: 15 RPM, 1M TPM ($0.00)","priceIn":"$0.00 (Free) / $0.050 (Paid)","priceOut":"$0.00 (Free) / $0.200 (Paid)","quality":96,"recency":99,"speed":85,"composite":95,"recommended":false,"releaseDate":"2025-12-04","lastUpdate":"2026-09-01"},{"id":"gemini-2.5-flash","name":"Gemini 2.5 Flash","provider":"Google DeepMind","category":"Google Gemini (Next-Gen)","desc":"Google’s fastest flagship model with native multimodal reasoning and real-time responsiveness.","context":1048576,"maxOutput":8192,"isFree":true,"freeDetails":"Google AI Studio: 15 RPM, 1M TPM, 1,500 RPD ($0.00)","priceIn":"$0.00 (Free) / $0.075 (Paid)","priceOut":"$0.00 (Free) / $0.30 (Paid)","quality":93,"recency":88,"speed":85,"composite":90,"recommended":true,"releaseDate":"2025-06-17","lastUpdate":"2026-02-15"},{"id":"gemini-2.5-pro","name":"Gemini 2.5 Pro","provider":"Google DeepMind","category":"Google Gemini (Next-Gen)","desc":"Premier reasoning and code generation engine for complex analytical challenges.","context":2097152,"maxOutput":8192,"isFree":true,"freeDetails":"Google AI Studio: 2 RPM, 32k TPM, 50 RPD ($0.00)","priceIn":"$0.00 (Free) / $1.25 (Paid)","priceOut":"$0.00 (Free) / $5.00 (Paid)","quality":95,"recency":88,"speed":45,"composite":89,"recommended":true,"releaseDate":"2025-03-25","lastUpdate":"2026-02-15"},{"id":"gemini-2.0-flash","name":"Gemini 2.0 Flash","provider":"Google DeepMind","category":"Google Gemini (Next-Gen)","desc":"Next-gen streaming architecture for high-frequency interactive dialogues and agent loops.","context":1048576,"maxOutput":8192,"isFree":true,"freeDetails":"Google AI Studio: 15 RPM, 1M TPM, 1,500 RPD ($0.00)","priceIn":"$0.00 (Free) / $0.10 (Paid)","priceOut":"$0.00 (Free) / $0.40 (Paid)","quality":83,"recency":80,"speed":85,"composite":84,"recommended":false,"releaseDate":"2024-12-11","lastUpdate":"2025-11-15"},{"id":"gemini-2.0-flash-lite","name":"Gemini 2.0 Flash Lite","provider":"Google DeepMind","category":"Google Gemini (Next-Gen)","desc":"Ultra cost-efficient model designed for extreme throughput and low latency agent tasks.","context":1048576,"maxOutput":8192,"isFree":true,"freeDetails":"Google AI Studio: 30 RPM, 1,500 RPD ($0.00)","priceIn":"$0.00 (Free) / $0.075 (Paid)","priceOut":"$0.00 (Free) / $0.30 (Paid)","quality":83,"recency":80,"speed":100,"composite":86,"recommended":false,"releaseDate":"2025-02-05","lastUpdate":"2025-11-15"},{"id":"gemini-1.5-pro","name":"Gemini 1.5 Pro","provider":"Google DeepMind","category":"Google Gemini (Long-Context)","desc":"2,000,000 token context window capable of ingesting entire codebases and long video streams.","context":2097152,"maxOutput":8192,"isFree":true,"freeDetails":"Google AI Studio: 2 RPM, 32k TPM, 50 RPD ($0.00)","priceIn":"$0.00 (Free) / $1.25 (Paid)","priceOut":"$0.00 (Free) / $5.00 (Paid)","quality":70,"recency":60,"speed":45,"composite":70,"recommended":false,"releaseDate":"2024-02-15","lastUpdate":"2025-04-20"},{"id":"gemini-1.5-flash","name":"Gemini 1.5 Flash","provider":"Google DeepMind","category":"Google Gemini (Long-Context)","desc":"Fast, lightweight multimodal model with 1,000,000 tokens context.","context":1048576,"maxOutput":8192,"isFree":true,"freeDetails":"Google AI Studio: 15 RPM, 1M TPM ($0.00)","priceIn":"$0.00 (Free) / $0.075 (Paid)","priceOut":"$0.00 (Free) / $0.30 (Paid)","quality":65,"recency":60,"speed":85,"composite":71,"recommended":false,"releaseDate":"2024-05-14","lastUpdate":"2025-04-20"},{"id":"gemini-1.5-flash-8b","name":"Gemini 1.5 Flash 8B","provider":"Google DeepMind","category":"Google Gemini (Long-Context)","desc":"Compact 8-billion parameter version built for high-speed lightweight routing.","context":1048576,"maxOutput":8192,"isFree":true,"freeDetails":"Google AI Studio: 15 RPM ($0.00)","priceIn":"$0.00 (Free) / $0.0375 (Paid)","priceOut":"$0.00 (Free) / $0.15 (Paid)","quality":65,"recency":60,"speed":85,"composite":71,"recommended":false,"releaseDate":"2024-05-14","lastUpdate":"2025-04-20"},{"id":"gemma-2-27b-it","name":"Gemma 2 (27B Instruct)","provider":"Google DeepMind","category":"Google Gemma (Open Weights)","desc":"Google’s flagship open weights model with performance rivaling closed models.","context":8192,"maxOutput":4096,"isFree":true,"freeDetails":"Open Weights ($0.00) or Google AI Studio Free Quota","priceIn":"$0.00 (Free) / $0.27 (Vertex AI)","priceOut":"$0.00 (Free) / $0.27 (Vertex AI)","quality":45,"recency":55,"speed":50,"composite":47,"recommended":false,"releaseDate":"2024-06-27","lastUpdate":"2025-04-20"},{"id":"gemma-2-9b-it","name":"Gemma 2 (9B Instruct)","provider":"Google DeepMind","category":"Google Gemma (Open Weights)","desc":"High efficiency open weights model with exceptional reasoning-per-parameter ratio.","context":8192,"maxOutput":4096,"isFree":true,"freeDetails":"Open Weights ($0.00) or Google AI Studio Free Quota","priceIn":"$0.00 (Free) / $0.10 (Vertex AI)","priceOut":"$0.00 (Free) / $0.10 (Vertex AI)","quality":45,"recency":55,"speed":50,"composite":47,"recommended":false,"releaseDate":"2024-06-27","lastUpdate":"2025-04-20"},{"id":"claude-3-7-sonnet","name":"Claude 3.7 Sonnet (Vertex AI)","provider":"Anthropic","category":"Anthropic Claude on Google Cloud","desc":"Hybrid reasoning and instant response model available on Google Cloud Vertex AI.","context":200000,"maxOutput":8192,"isFree":false,"freeDetails":"Google Cloud billing per token consumption","priceIn":"$3.00","priceOut":"$15.00","quality":98,"recency":98,"speed":50,"composite":85,"recommended":false,"releaseDate":"2025-02-24","lastUpdate":"2026-09-01"},{"id":"claude-3-5-sonnet","name":"Claude 3.5 Sonnet (Vertex AI)","provider":"Anthropic","category":"Anthropic Claude on Google Cloud","desc":"Industry benchmark for code generation and multi-step reasoning on Vertex AI.","context":200000,"maxOutput":8192,"isFree":false,"freeDetails":"Google Cloud billing per token consumption","priceIn":"$3.00","priceOut":"$15.00","quality":86,"recency":70,"speed":50,"composite":71,"recommended":false,"releaseDate":"2024-10-22","lastUpdate":"2025-08-10"},{"id":"claude-3-5-haiku","name":"Claude 3.5 Haiku (Vertex AI)","provider":"Anthropic","category":"Anthropic Claude on Google Cloud","desc":"High speed, cost-effective Anthropic model running in Google Cloud.","context":200000,"maxOutput":8192,"isFree":false,"freeDetails":"Google Cloud billing per token consumption","priceIn":"$0.80","priceOut":"$4.00","quality":86,"recency":70,"speed":70,"composite":74,"recommended":false,"releaseDate":"2024-11-04","lastUpdate":"2025-08-10"},{"id":"llama-3.3-70b-instruct","name":"Meta Llama 3.3 (70B Instruct)","provider":"Meta","category":"Meta Llama 3 on Google Cloud","desc":"Meta’s latest 70-billion parameter model fully hosted on Google Cloud Vertex AI.","context":128000,"maxOutput":4096,"isFree":false,"freeDetails":"Google Cloud Vertex AI prediction pricing","priceIn":"$0.70","priceOut":"$0.90","quality":45,"recency":86,"speed":50,"composite":62,"recommended":false,"releaseDate":"2024-12-06","lastUpdate":"2025-11-15"},{"id":"llama-3.2-90b-vision-instruct","name":"Meta Llama 3.2 (90B Vision)","provider":"Meta","category":"Meta Llama 3 on Google Cloud","desc":"Premier open multimodal vision and text model on Google Cloud Vertex AI.","context":128000,"maxOutput":4096,"isFree":false,"freeDetails":"Google Cloud Vertex AI prediction pricing","priceIn":"$0.90","priceOut":"$1.20","quality":45,"recency":50,"speed":50,"composite":50,"recommended":false,"releaseDate":"2024-09-25","lastUpdate":"2024-12-15"},{"id":"llama-3.1-405b-instruct","name":"Meta Llama 3.1 (405B Instruct)","provider":"Meta","category":"Meta Llama 3 on Google Cloud","desc":"Massive 405-billion parameter frontier model running on Google TPU/GPU cluster.","context":128000,"maxOutput":4096,"isFree":false,"freeDetails":"Google Cloud Vertex AI prediction pricing","priceIn":"$3.50","priceOut":"$3.50","quality":45,"recency":99,"speed":50,"composite":65,"recommended":false,"releaseDate":"2024-07-23","lastUpdate":"2026-09-01"},{"id":"mistral-large-2411","name":"Mistral Large 2 (Vertex AI)","provider":"Mistral AI","category":"Mistral AI on Google Cloud","desc":"Mistral’s top-tier multilingual reasoning and coding model on Google Cloud.","context":128000,"maxOutput":4096,"isFree":false,"freeDetails":"Google Cloud Vertex AI prediction pricing","priceIn":"$2.00","priceOut":"$6.00","quality":75,"recency":50,"speed":50,"composite":59,"recommended":false,"releaseDate":"2024-11-18","lastUpdate":"2024-12-15"},{"id":"codestral-2501","name":"Codestral 25.01 (Vertex AI)","provider":"Mistral AI","category":"Mistral AI on Google Cloud","desc":"Specialized code completion, debugging, and fill-in-the-middle on Google Cloud.","context":256000,"maxOutput":4096,"isFree":false,"freeDetails":"Google Cloud Vertex AI prediction pricing","priceIn":"$0.30","priceOut":"$0.90","quality":94,"recency":50,"speed":50,"composite":70,"recommended":false,"releaseDate":"2025-01-16","lastUpdate":"2024-12-15"},{"id":"deepseek-r1","name":"DeepSeek R1 (Reasoning)","provider":"DeepSeek","category":"DeepSeek on Google Cloud","desc":"Frontier open reasoning model with transparent chain-of-thought verification on Google Cloud.","context":64000,"maxOutput":8192,"isFree":false,"freeDetails":"Vertex AI Model Garden compute rate","priceIn":"$0.55","priceOut":"$2.19","quality":95,"recency":95,"speed":50,"composite":81,"recommended":false,"releaseDate":"2025-01-20","lastUpdate":"2026-06-20"},{"id":"jamba-1.5-large","name":"AI21 Jamba 1.5 Large","provider":"AI21 Labs","category":"AI21 Labs & Cohere on Google Cloud","desc":"Hybrid Mamba-Transformer architecture offering 256,000 tokens long-context speed.","context":256000,"maxOutput":4096,"isFree":false,"freeDetails":"Google Cloud Vertex AI prediction pricing","priceIn":"$2.00","priceOut":"$8.00","quality":60,"recency":50,"speed":50,"composite":57,"recommended":false,"releaseDate":"2024-08-22","lastUpdate":"2024-12-15"},{"id":"command-r-plus","name":"Cohere Command R+","provider":"Cohere","category":"AI21 Labs & Cohere on Google Cloud","desc":"Enterprise Retrieval-Augmented Generation (RAG) model on Google Cloud.","context":128000,"maxOutput":4096,"isFree":false,"freeDetails":"Google Cloud Vertex AI prediction pricing","priceIn":"$2.50","priceOut":"$10.00","quality":58,"recency":50,"speed":50,"composite":53,"recommended":false,"releaseDate":"2024-04-04","lastUpdate":"2024-12-15"},{"id":"omniroute/gemini-3.8-flash","name":"OmniRoute Gemini 3.8 Flash (Edge Router)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"Frontier ultra-fast autonomous agentic model routed via internal OmniRoute daemon cluster.","context":1048576,"maxOutput":8192,"isFree":true,"freeDetails":"Direct edge routing via internal daemon cluster ($0.00 margin)","priceIn":"$0.00 (Self-Hosted) / $0.075 (Upstream)","priceOut":"$0.00 (Self-Hosted) / $0.300 (Upstream)","quality":99,"recency":100,"speed":65,"composite":95,"recommended":false,"releaseDate":"2026-05-14","lastUpdate":"2026-09-01"},{"id":"omniroute/gemini-3.1-pro","name":"OmniRoute Gemini 3.1 Pro (Edge Router)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"Premier enterprise reasoning frontier model with 2M context proxied via OmniRoute daemon cluster.","context":2097152,"maxOutput":8192,"isFree":true,"freeDetails":"Direct edge routing via internal daemon cluster ($0.00 margin)","priceIn":"$0.00 (Self-Hosted) / $1.25 (Upstream)","priceOut":"$0.00 (Self-Hosted) / $5.00 (Upstream)","quality":100,"recency":99,"speed":65,"composite":96,"recommended":false,"releaseDate":"2025-12-09","lastUpdate":"2026-09-01"},{"id":"omniroute/gemini-2.5-pro","name":"OmniRoute Gemini 2.5 Pro (Edge Router)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"High-availability routing proxy via OmniRoute daemon with automatic load balancing and fallback.","context":2097152,"maxOutput":8192,"isFree":true,"freeDetails":"Direct edge routing via internal daemon cluster ($0.00 margin)","priceIn":"$0.00 (Self-Hosted) / $1.25 (Upstream)","priceOut":"$0.00 (Self-Hosted) / $5.00 (Upstream)","quality":90,"recency":88,"speed":65,"composite":89,"recommended":false,"releaseDate":"2025-03-25","lastUpdate":"2026-02-15"},{"id":"omniroute/gemini-2.5-flash","name":"OmniRoute Gemini 2.5 Flash (Edge Router)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"Workhorse Google model routed via OmniRoute daemon. Fast, multimodal, 1M context.","context":1048576,"maxOutput":8192,"isFree":true,"freeDetails":"Direct edge routing via internal daemon cluster ($0.00 margin)","priceIn":"$0.00 (Self-Hosted) / $0.075 (Upstream)","priceOut":"$0.00 (Self-Hosted) / $0.30 (Upstream)","quality":93,"recency":88,"speed":65,"composite":88,"recommended":true,"releaseDate":"2025-06-17","lastUpdate":"2026-02-15"},{"id":"omniroute/gemini-2.0-flash","name":"OmniRoute Gemini 2.0 Flash (Edge Router)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"Next-gen streaming architecture routed via OmniRoute for high-frequency interactive dialogues.","context":1048576,"maxOutput":8192,"isFree":true,"freeDetails":"Direct edge routing via internal daemon cluster ($0.00 margin)","priceIn":"$0.00 (Self-Hosted) / $0.10 (Upstream)","priceOut":"$0.00 (Self-Hosted) / $0.40 (Upstream)","quality":83,"recency":80,"speed":65,"composite":82,"recommended":false,"releaseDate":"2024-12-11","lastUpdate":"2025-11-15"},{"id":"omniroute/deepseek-r1","name":"OmniRoute DeepSeek R1 (Daemon Cluster)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"DeepSeek R1 reasoning executed through local OmniRoute daemon cluster.","context":64000,"maxOutput":8192,"isFree":true,"freeDetails":"Routed through high-throughput OmniRoute node ($0.00 node fee)","priceIn":"$0.00 (Local) / $0.55 (Upstream)","priceOut":"$0.00 (Local) / $2.19 (Upstream)","quality":95,"recency":95,"speed":50,"composite":84,"recommended":false,"releaseDate":"2025-01-20","lastUpdate":"2026-06-20"},{"id":"omniroute/deepseek-v3","name":"OmniRoute DeepSeek V3 (Daemon Cluster)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"DeepSeek V3 671B MoE with extreme cost efficiency and high coding quality routed via OmniRoute.","context":64000,"maxOutput":8192,"isFree":true,"freeDetails":"Routed through high-throughput OmniRoute node ($0.00 node fee)","priceIn":"$0.00 (Local) / $0.14 (Upstream)","priceOut":"$0.00 (Local) / $0.28 (Upstream)","quality":45,"recency":95,"speed":50,"composite":67,"recommended":false,"releaseDate":"2024-12-26","lastUpdate":"2026-06-20"},{"id":"omniroute/llama-3.3-70b","name":"OmniRoute Llama 3.3 70B (Daemon Cluster)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"Meta Llama 3.3 70B Instruct open weights routed through OmniRoute daemon cluster.","context":128000,"maxOutput":4096,"isFree":true,"freeDetails":"Routed through high-throughput OmniRoute node ($0.00 node fee)","priceIn":"$0.00 (Local) / $0.59 (Upstream)","priceOut":"$0.00 (Local) / $0.79 (Upstream)","quality":85,"recency":86,"speed":50,"composite":79,"recommended":false,"releaseDate":"2024-12-06","lastUpdate":"2025-11-15"},{"id":"omniroute/qwen-2.5-coder-32b","name":"OmniRoute Qwen 2.5 Coder 32B (Daemon Cluster)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"Alibaba Qwen 2.5 Coder 32B code generation specialist routed via OmniRoute.","context":128000,"maxOutput":8192,"isFree":true,"freeDetails":"Routed through high-throughput OmniRoute node ($0.00 node fee)","priceIn":"$0.00 (Local) / $0.18 (Upstream)","priceOut":"$0.00 (Local) / $0.18 (Upstream)","quality":93,"recency":88,"speed":50,"composite":82,"recommended":false,"releaseDate":"2024-11-12","lastUpdate":"2026-02-15"},{"id":"omniroute/mistral-7b","name":"OmniRoute Mistral 7B (Daemon Cluster)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"Fast, reliable Mistral 7B lightweight instruction model routed via OmniRoute.","context":32768,"maxOutput":4096,"isFree":true,"freeDetails":"Routed through high-throughput OmniRoute node ($0.00 node fee)","priceIn":"$0.00 (Local) / $0.05 (Upstream)","priceOut":"$0.00 (Local) / $0.05 (Upstream)","quality":45,"recency":50,"speed":50,"composite":49,"recommended":false,"releaseDate":"2023-09-27","lastUpdate":"2024-12-15"},{"id":"omniroute/gpt-4o","name":"OmniRoute GPT-4o (Edge Proxy)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"OpenAI GPT-4o multimodal flagship proxied through OmniRoute daemon gateway.","context":128000,"maxOutput":16384,"isFree":false,"freeDetails":"Edge-routed OpenAI upstream billing","priceIn":"$2.50","priceOut":"$10.00","quality":82,"recency":75,"speed":50,"composite":70,"recommended":false,"releaseDate":"2024-05-13","lastUpdate":"2025-08-10"},{"id":"omniroute/gpt-4o-mini","name":"OmniRoute GPT-4o Mini (Edge Proxy)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"OpenAI GPT-4o Mini cost-efficient multimodal model proxied via OmniRoute.","context":128000,"maxOutput":16384,"isFree":true,"freeDetails":"Routed through high-throughput OmniRoute node ($0.00 node fee)","priceIn":"$0.00 (Local) / $0.15 (Upstream)","priceOut":"$0.00 (Local) / $0.60 (Upstream)","quality":82,"recency":75,"speed":65,"composite":75,"recommended":false,"releaseDate":"2024-07-18","lastUpdate":"2025-08-10"},{"id":"omniroute/o1","name":"OmniRoute OpenAI o1 (Edge Proxy)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"OpenAI o1 advanced reasoning model with chain-of-thought proxied via OmniRoute.","context":200000,"maxOutput":100000,"isFree":false,"freeDetails":"Edge-routed OpenAI upstream billing","priceIn":"$15.00","priceOut":"$60.00","quality":88,"recency":80,"speed":50,"composite":75,"recommended":false,"releaseDate":"2024-12-05","lastUpdate":"2025-11-15"},{"id":"omniroute/o3-mini","name":"OmniRoute OpenAI o3-mini (Edge Proxy)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"OpenAI o3-mini fast reasoning model with cost-effective chain-of-thought via OmniRoute.","context":200000,"maxOutput":100000,"isFree":true,"freeDetails":"Routed through high-throughput OmniRoute node ($0.00 node fee)","priceIn":"$0.00 (Local) / $1.10 (Upstream)","priceOut":"$0.00 (Local) / $4.40 (Upstream)","quality":88,"recency":80,"speed":65,"composite":81,"recommended":false,"releaseDate":"2025-01-31","lastUpdate":"2025-11-15"},{"id":"omniroute/claude-sonnet-4-5","name":"OmniRoute Claude Sonnet 4.5 (Edge Proxy)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"Anthropic Claude Sonnet 4.5 frontier model proxied through OmniRoute daemon gateway.","context":200000,"maxOutput":8192,"isFree":false,"freeDetails":"Edge-routed Anthropic upstream billing","priceIn":"$3.00","priceOut":"$15.00","quality":98,"recency":98,"speed":50,"composite":85,"recommended":false,"releaseDate":"2025-09-29","lastUpdate":"2026-09-01"},{"id":"omniroute/claude-3.5-sonnet","name":"OmniRoute Claude 3.5 Sonnet (Edge Proxy)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"Anthropic Claude 3.5 Sonnet proxied through high-reliability OmniRoute daemon gateway.","context":200000,"maxOutput":8192,"isFree":false,"freeDetails":"Edge-routed Anthropic upstream billing","priceIn":"$3.00","priceOut":"$15.00","quality":86,"recency":70,"speed":50,"composite":71,"recommended":false,"releaseDate":"2025-07-01","lastUpdate":"2025-08-10"},{"id":"omniroute/claude-3-5-haiku","name":"OmniRoute Claude 3.5 Haiku (Edge Proxy)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"High speed, cost-effective Anthropic Claude 3.5 Haiku routed via OmniRoute.","context":200000,"maxOutput":8192,"isFree":true,"freeDetails":"Routed through high-throughput OmniRoute node ($0.00 node fee)","priceIn":"$0.00 (Local) / $0.80 (Upstream)","priceOut":"$0.00 (Local) / $4.00 (Upstream)","quality":86,"recency":70,"speed":70,"composite":77,"recommended":false,"releaseDate":"2024-11-04","lastUpdate":"2025-08-10"},{"id":"omniroute/grok-2","name":"OmniRoute Grok 2 (Edge Proxy)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"xAI Grok 2 frontier model with real-time knowledge proxied via OmniRoute.","context":131072,"maxOutput":8192,"isFree":false,"freeDetails":"Edge-routed xAI upstream billing","priceIn":"$2.00","priceOut":"$10.00","quality":70,"recency":50,"speed":50,"composite":57,"recommended":false,"releaseDate":"2024-08-13","lastUpdate":"2024-12-15"},{"id":"deepseek/deepseek-r1:free","name":"DeepSeek R1 (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Frontier open reasoning model with chain-of-thought verification, 100% free via OpenRouter tier.","context":64000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier (20 RPM queue)","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":95,"recency":95,"speed":80,"composite":87,"recommended":false,"releaseDate":"2025-01-20","lastUpdate":"2026-06-20"},{"id":"meta-llama/llama-3.3-70b:free","name":"Llama 3.3 70B Instruct (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"State-of-the-art Meta 70B open weight instruction model hosted on OpenRouter free tier.","context":128000,"maxOutput":4096,"isFree":true,"freeDetails":"OpenRouter Community Free Tier (20 RPM queue)","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":85,"recency":86,"speed":80,"composite":82,"recommended":false,"releaseDate":"2024-12-06","lastUpdate":"2025-11-15"},{"id":"google/gemini-2.0-flash-exp:free","name":"Gemini 2.0 Flash Exp (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Ultra-fast Google experimental Gemini 2.0 Flash endpoint accessed via OpenRouter free gateway.","context":1048576,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":83,"recency":80,"speed":65,"composite":82,"recommended":false,"releaseDate":"2024-12-11","lastUpdate":"2025-11-15"},{"id":"qwen/qwen-2.5-coder-32b-instruct:free","name":"Qwen 2.5 Coder 32B (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Alibaba Qwen code generation specialist with 128k context on OpenRouter free tier.","context":128000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":93,"recency":88,"speed":50,"composite":82,"recommended":false,"releaseDate":"2024-11-12","lastUpdate":"2026-02-15"},{"id":"mistralai/mistral-7b-instruct:free","name":"Mistral 7B Instruct (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Fast, reliable 7B lightweight instruction model on OpenRouter free queue.","context":32768,"maxOutput":4096,"isFree":true,"freeDetails":"OpenRouter Community Free Tier","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":45,"recency":50,"speed":50,"composite":49,"recommended":false,"releaseDate":"2023-09-27","lastUpdate":"2024-12-15"},{"id":"anthropic/claude-3.5-haiku:free","name":"Claude 3.5 Haiku (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Anthropic Claude 3.5 Haiku fast inference model 100% free via OpenRouter community tier.","context":200000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":86,"recency":70,"speed":70,"composite":77,"recommended":false,"releaseDate":"2025-07-01","lastUpdate":"2025-08-10"},{"id":"google/gemini-3.0-flash:free","name":"Gemini 3.0 Flash (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Google Gemini 3.0 Flash ultra-fast model, 100% free via OpenRouter community tier.","context":1048576,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":45,"recency":96,"speed":65,"composite":74,"recommended":false,"releaseDate":"2025-11-06","lastUpdate":"2026-06-20"},{"id":"openai/gpt-4o-mini:free","name":"GPT-4o Mini (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"OpenAI GPT-4o Mini cost-efficient model, 100% free via OpenRouter community tier.","context":128000,"maxOutput":16384,"isFree":true,"freeDetails":"OpenRouter Community Free Tier","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":82,"recency":75,"speed":65,"composite":75,"recommended":false,"releaseDate":"2024-07-18","lastUpdate":"2025-08-10"},{"id":"cognitivecomputations/dolphin3.0-r1-2506:free","name":"Dolphin 3.0 R1 2506 (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Open-source reasoning model Dolphin 3.0 R1 fine-tuned for instruction following, free on OpenRouter.","context":128000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":45,"recency":96,"speed":50,"composite":68,"recommended":false,"releaseDate":"2025-06-15","lastUpdate":"2026-06-20"},{"id":"openrouter/free","name":"OpenRouter Free Models Router","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Meta-router that auto-picks any currently-available 100% free OpenRouter model. Never dies from a single model removal — TOP-1 entry choice.","context":200000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier (20 RPM queue)","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":50,"recency":50,"speed":80,"composite":59,"recommended":true,"releaseDate":"2025-07-01","lastUpdate":"2024-12-15"},{"id":"nvidia/nemotron-3-ultra-550b-a55b:free","name":"NVIDIA Nemotron 3 Ultra 550B (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Smartest free model of the fleet: NVIDIA Nemotron 3 Ultra 550B MoE (55B active) reasoning, 1M context, free community tier.","context":1000000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier (20 RPM queue)","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":45,"recency":50,"speed":80,"composite":60,"recommended":false,"releaseDate":"2025-07-01","lastUpdate":"2024-12-15"},{"id":"thinkingmachines/inkling:free","name":"Thinking Machines Inkling (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Thinking Machines flagship with 1M context on OpenRouter free tier.","context":1048576,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier (20 RPM queue)","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":45,"recency":50,"speed":80,"composite":60,"recommended":false,"releaseDate":"2025-04-10","lastUpdate":"2024-12-15"},{"id":"thinkingmachines/inkling-small:free","name":"Thinking Machines Inkling Small (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Fast small variant of Inkling, 1M context, free community tier.","context":1048576,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier (20 RPM queue)","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":45,"recency":50,"speed":80,"composite":60,"recommended":false,"releaseDate":"2025-04-14","lastUpdate":"2024-12-15"},{"id":"nvidia/nemotron-3-super-120b-a12b:free","name":"NVIDIA Nemotron 3 Super 120B (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"NVIDIA Nemotron 3 Super 120B MoE (12B active), 262k context, free community tier.","context":262144,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier (20 RPM queue)","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":45,"recency":50,"speed":80,"composite":58,"recommended":false,"releaseDate":"2025-10-24","lastUpdate":"2024-12-15"},{"id":"dots-studio/dots-3-note-preview:free","name":"Dots Studio Dots3-Note Preview (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Dots3-Note 512k-context preview model on OpenRouter free tier.","context":512000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier (20 RPM queue)","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":45,"recency":50,"speed":80,"composite":58,"recommended":false,"releaseDate":"2025-07-02","lastUpdate":"2024-12-15"},{"id":"google/gemma-4-31b-it:free","name":"Google Gemma 4 31B IT (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Google Gemma 4 31B open-weights instruct via OpenRouter community tier (does NOT consume our Google account).","context":262144,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier (20 RPM queue)","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":45,"recency":50,"speed":80,"composite":58,"recommended":false,"releaseDate":"2025-10-16","lastUpdate":"2024-12-15"},{"id":"cohere/north-mini-code:free","name":"Cohere North Mini Code (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Cohere North Mini coding specialist, 256k context, free community tier.","context":256000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier (20 RPM queue)","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":45,"recency":50,"speed":95,"composite":60,"recommended":false,"releaseDate":"2025-08-05","lastUpdate":"2024-12-15"},{"id":"inclusionai/ling-3.0-flash-sante:free","name":"inclusionAI Ling 3.0 Flash Sante (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"inclusionAI Ling 3.0 Flash reasoning model, 262k context, free community tier.","context":262144,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier (20 RPM queue)","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":45,"recency":96,"speed":95,"composite":76,"recommended":false,"releaseDate":"2025-10-07","lastUpdate":"2026-06-20"},{"id":"poolside/laguna-s-2.1:free","name":"Poolside Laguna S 2.1 (Free on OpenRouter)","provider":"OpenRouter","category":"OpenRouter Free Models","desc":"Poolside Laguna S 2.1 code-generation model, 262k context, free community tier.","context":262144,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter Community Free Tier (20 RPM queue)","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":45,"recency":50,"speed":80,"composite":58,"recommended":false,"releaseDate":"2025-09-12","lastUpdate":"2024-12-15"},{"id":"omni/cf-gpt-oss-120b","name":"OmniRoute CF GPT-OSS 120B (Cloudflare via edge)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"OpenAI GPT-OSS 120B open-weights routed through Cloudflare Workers AI via the local OmniRoute edge daemon.","context":131072,"maxOutput":8192,"isFree":true,"freeDetails":"Self-hosted edge routing ($0.00 node fee)","priceIn":"$0.00 (Self-Hosted)","priceOut":"$0.00 (Self-Hosted)","quality":45,"recency":50,"speed":50,"composite":52,"recommended":false,"releaseDate":"2025-07-01","lastUpdate":"2024-12-15"},{"id":"omni/cf-llama-3.3-70b","name":"OmniRoute CF Llama 3.3 70B (Cloudflare via edge)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"Meta Llama 3.3 70B Instruct via Cloudflare Workers AI routed by the local OmniRoute edge daemon.","context":128000,"maxOutput":4096,"isFree":true,"freeDetails":"Self-hosted edge routing ($0.00 node fee)","priceIn":"$0.00 (Self-Hosted)","priceOut":"$0.00 (Self-Hosted)","quality":85,"recency":86,"speed":50,"composite":79,"recommended":false,"releaseDate":"2025-07-01","lastUpdate":"2025-11-15"},{"id":"omni/cf-qwen2.5-coder-32b","name":"OmniRoute CF Qwen 2.5 Coder 32B (Cloudflare via edge)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"Alibaba Qwen 2.5 Coder 32B code specialist via Cloudflare Workers AI on the OmniRoute edge.","context":128000,"maxOutput":8192,"isFree":true,"freeDetails":"Self-hosted edge routing ($0.00 node fee)","priceIn":"$0.00 (Self-Hosted)","priceOut":"$0.00 (Self-Hosted)","quality":93,"recency":88,"speed":50,"composite":82,"recommended":false,"releaseDate":"2025-07-01","lastUpdate":"2026-02-15"},{"id":"omni/groq-gpt-oss-120b","name":"OmniRoute Groq GPT-OSS 120B (Groq via edge)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"OpenAI GPT-OSS 120B on Groq LPU ultra-low-latency inference via the OmniRoute edge daemon.","context":131072,"maxOutput":8192,"isFree":true,"freeDetails":"Groq free tier routed by self-hosted edge ($0.00 node fee)","priceIn":"$0.00 (Groq Free Tier)","priceOut":"$0.00 (Groq Free Tier)","quality":70,"recency":50,"speed":50,"composite":61,"recommended":false,"releaseDate":"2025-07-01","lastUpdate":"2024-12-15"},{"id":"omni/zai-glm-5.3-flash","name":"OmniRoute Z.ai GLM 5.3 Flash (edge)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"Z.ai GLM 5.3 Flash fast frontier model routed by the OmniRoute edge daemon.","context":128000,"maxOutput":8192,"isFree":true,"freeDetails":"Z.ai free tier routed by self-hosted edge ($0.00 node fee)","priceIn":"$0.00 (Z.ai Free Tier)","priceOut":"$0.00 (Z.ai Free Tier)","quality":45,"recency":50,"speed":65,"composite":54,"recommended":false,"releaseDate":"2025-07-01","lastUpdate":"2024-12-15"},{"id":"omni/or-nemotron-3-ultra-550b","name":"OmniRoute OR Nemotron 3 Ultra 550B (OpenRouter via edge)","provider":"OmniRoute","category":"OmniRoute Daemon Cluster","desc":"NVIDIA Nemotron 3 Ultra 550B MoE routed through OpenRouter free tier by the OmniRoute edge daemon.","context":1000000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenRouter community free tier routed by self-hosted edge ($0.00 node fee)","priceIn":"$0.00 (100% Free)","priceOut":"$0.00 (100% Free)","quality":45,"recency":50,"speed":50,"composite":57,"recommended":false,"releaseDate":"2025-07-01","lastUpdate":"2024-12-15"},{"id":"openai/gpt-4o","name":"GPT-4o (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"OpenAI GPT-4o multimodal flagship with 128k context on OpenRouter.","context":128000,"maxOutput":16384,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$2.50","priceOut":"$10.00","quality":82,"recency":75,"speed":50,"composite":70,"recommended":false,"releaseDate":"2024-05-13","lastUpdate":"2025-08-10"},{"id":"openai/gpt-4o-mini","name":"GPT-4o Mini (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"OpenAI GPT-4o Mini cost-efficient multimodal model on OpenRouter.","context":128000,"maxOutput":16384,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$0.15","priceOut":"$0.60","quality":82,"recency":75,"speed":65,"composite":72,"recommended":false,"releaseDate":"2024-07-18","lastUpdate":"2025-08-10"},{"id":"openai/o1-preview","name":"OpenAI o1 Preview (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"OpenAI o1 advanced reasoning model with chain-of-thought on OpenRouter.","context":200000,"maxOutput":100000,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$15.00","priceOut":"$60.00","quality":88,"recency":80,"speed":50,"composite":75,"recommended":false,"releaseDate":"2024-09-12","lastUpdate":"2025-11-15"},{"id":"openai/o1-mini","name":"OpenAI o1 Mini (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"OpenAI o1 Mini fast reasoning model on OpenRouter.","context":200000,"maxOutput":100000,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$1.10","priceOut":"$4.40","quality":88,"recency":80,"speed":65,"composite":77,"recommended":false,"releaseDate":"2024-09-12","lastUpdate":"2025-11-15"},{"id":"anthropic/claude-3.5-sonnet","name":"Claude 3.5 Sonnet (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"Anthropic Claude 3.5 Sonnet industry-leading code and reasoning model on OpenRouter.","context":200000,"maxOutput":8192,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$3.00","priceOut":"$15.00","quality":86,"recency":70,"speed":50,"composite":71,"recommended":false,"releaseDate":"2025-07-01","lastUpdate":"2025-08-10"},{"id":"anthropic/claude-3-opus","name":"Claude 3 Opus (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"Anthropic Claude 3 Opus frontier model for complex reasoning on OpenRouter.","context":200000,"maxOutput":8192,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$15.00","priceOut":"$75.00","quality":45,"recency":50,"speed":50,"composite":49,"recommended":false,"releaseDate":"2024-03-04","lastUpdate":"2024-12-15"},{"id":"google/gemini-2.5-flash","name":"Gemini 2.5 Flash (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"Google Gemini 2.5 Flash fast multimodal model on OpenRouter.","context":1048576,"maxOutput":8192,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$0.075","priceOut":"$0.30","quality":88,"recency":88,"speed":65,"composite":86,"recommended":false,"releaseDate":"2025-06-17","lastUpdate":"2026-02-15"},{"id":"google/gemini-3.0-pro-exp","name":"Gemini 3.0 Pro Exp (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"Google Gemini 3.0 Pro experimental frontier model on OpenRouter.","context":2097152,"maxOutput":8192,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$1.25","priceOut":"$5.00","quality":45,"recency":96,"speed":65,"composite":73,"recommended":false,"releaseDate":"2025-11-18","lastUpdate":"2026-06-20"},{"id":"deepseek/deepseek-chat-v3-0324","name":"DeepSeek V3 (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"DeepSeek V3 671B MoE model with extreme cost efficiency and high coding quality.","context":64000,"maxOutput":8192,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$0.14","priceOut":"$0.28","quality":45,"recency":50,"speed":50,"composite":49,"recommended":false,"releaseDate":"2025-03-24","lastUpdate":"2024-12-15"},{"id":"meta-llama/llama-3.1-405b-instruct","name":"Llama 3.1 405B (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"Meta Llama 3.1 405B frontier open weights model on OpenRouter.","context":128000,"maxOutput":4096,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$3.50","priceOut":"$3.50","quality":82,"recency":99,"speed":50,"composite":78,"recommended":false,"releaseDate":"2024-07-23","lastUpdate":"2026-09-01"},{"id":"mistralai/mistral-large-3","name":"Mistral Large 3 (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"Mistral Large 3 top-tier multilingual reasoning and coding model on OpenRouter.","context":128000,"maxOutput":32000,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$2.00","priceOut":"$6.00","quality":75,"recency":50,"speed":50,"composite":59,"recommended":false,"releaseDate":"2025-03-05","lastUpdate":"2024-12-15"},{"id":"qwen/qwen-2.5-72b-instruct","name":"Qwen 2.5 72B (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"Alibaba Qwen 2.5 72B large instruction model on OpenRouter.","context":32000,"maxOutput":8192,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$0.90","priceOut":"$0.90","quality":45,"recency":88,"speed":50,"composite":59,"recommended":false,"releaseDate":"2024-09-19","lastUpdate":"2026-02-15"},{"id":"x-ai/grok-2","name":"Grok 2 (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"xAI Grok 2 frontier model with real-time knowledge on OpenRouter.","context":131072,"maxOutput":8192,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$2.00","priceOut":"$10.00","quality":70,"recency":50,"speed":50,"composite":57,"recommended":false,"releaseDate":"2024-08-13","lastUpdate":"2024-12-15"},{"id":"perplexity/llama-3.1-sonar-405b-instruct","name":"Perplexity Sonar 405B (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"Perplexity Llama 3.1 Sonar 405B with real-time web search integration on OpenRouter.","context":128000,"maxOutput":8192,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$3.50","priceOut":"$14.00","quality":45,"recency":55,"speed":50,"composite":50,"recommended":false,"releaseDate":"2024-09-13","lastUpdate":"2025-04-20"},{"id":"nvidia/llama-3.1-nemotron-70b-instruct","name":"NVIDIA Nemotron 70B (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"NVIDIA NeMo Nemotron 70B RLHF-optimized instruction model on OpenRouter.","context":128000,"maxOutput":4096,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$0.59","priceOut":"$0.79","quality":45,"recency":55,"speed":50,"composite":51,"recommended":false,"releaseDate":"2024-10-04","lastUpdate":"2025-04-20"},{"id":"deepseek/deepseek-r1","name":"DeepSeek R1 (OpenRouter Premium)","provider":"OpenRouter","category":"OpenRouter Premium","desc":"DeepSeek R1 reasoning model on OpenRouter (higher limits than free tier).","context":64000,"maxOutput":8192,"isFree":false,"freeDetails":"OpenRouter credit balance","priceIn":"$0.55","priceOut":"$2.19","quality":95,"recency":95,"speed":50,"composite":81,"recommended":false,"releaseDate":"2025-01-20","lastUpdate":"2026-06-20"},{"id":"opencode/go-coder-32b","name":"OpenCode Go Coder 32B","provider":"OpenCode AI","category":"OpenCode Go Platforms","desc":"Specialized enterprise coding platform model with automated unit test generation and refactoring.","context":64000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenCode Developer Community Quota","priceIn":"$0.00 (Dev Tier) / $0.20 (Prod)","priceOut":"$0.00 (Dev Tier) / $0.60 (Prod)","quality":45,"recency":50,"speed":50,"composite":51,"recommended":false,"releaseDate":"2026-02-10","lastUpdate":"2024-12-15"},{"id":"opencode/go-fast","name":"OpenCode Go Fast (Low-Latency)","provider":"OpenCode AI","category":"OpenCode Go Platforms","desc":"Ultra-low latency code agent model optimized for autocomplete and fast interactive edits.","context":32768,"maxOutput":4096,"isFree":true,"freeDetails":"OpenCode Developer Community Quota","priceIn":"$0.00 (Dev Tier) / $0.08 (Prod)","priceOut":"$0.00 (Dev Tier) / $0.24 (Prod)","quality":45,"recency":50,"speed":50,"composite":49,"recommended":false,"releaseDate":"2026-03-01","lastUpdate":"2024-12-15"},{"id":"opencode/zen-coder-pro","name":"OpenCode Zen Coder Pro","provider":"OpenCode AI","category":"OpenCode Go Platforms","desc":"Zen-grade enterprise coding model with multi-language refactoring, AST analysis, and security audit. Pro tier with deeper reasoning.","context":128000,"maxOutput":16384,"isFree":true,"freeDetails":"OpenCode Zen Developer Community Quota","priceIn":"$0.00 (Dev Tier) / $0.40 (Prod)","priceOut":"$0.00 (Dev Tier) / $1.20 (Prod)","quality":50,"recency":50,"speed":50,"composite":54,"recommended":true,"releaseDate":"2026-01-20","lastUpdate":"2024-12-15"},{"id":"opencode/zen-fast-7b","name":"OpenCode Zen Fast 7B (Edge Coder)","provider":"OpenCode AI","category":"OpenCode Go Platforms","desc":"Lightweight 7B Zen-fast edge coder optimized for IDE autocomplete and inline refactoring at sub-100ms latency.","context":32768,"maxOutput":4096,"isFree":true,"freeDetails":"OpenCode Zen Developer Community Quota","priceIn":"$0.00 (Dev Tier) / $0.04 (Prod)","priceOut":"$0.00 (Dev Tier) / $0.12 (Prod)","quality":45,"recency":50,"speed":50,"composite":49,"recommended":false,"releaseDate":"2026-02-14","lastUpdate":"2024-12-15"},{"id":"opencode/zen-reasoner-32b","name":"OpenCode Zen Reasoner 32B","provider":"OpenCode AI","category":"OpenCode Go Platforms","desc":"Deep chain-of-thought reasoning coder for complex algorithms, architectural refactors, and bug forensics.","context":128000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenCode Zen Developer Community Quota","priceIn":"$0.00 (Dev Tier) / $0.30 (Prod)","priceOut":"$0.00 (Dev Tier) / $0.90 (Prod)","quality":45,"recency":50,"speed":50,"composite":52,"recommended":false,"releaseDate":"2026-03-04","lastUpdate":"2024-12-15"},{"id":"opencode/zen-multi-lang-70b","name":"OpenCode Zen Multi-Lang 70B","provider":"OpenCode AI","category":"OpenCode Go Platforms","desc":"70B frontier code model supporting 100+ languages with deep context and CI/CD-grade refactoring.","context":200000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenCode Zen Developer Community Quota","priceIn":"$0.00 (Dev Tier) / $0.60 (Prod)","priceOut":"$0.00 (Dev Tier) / $1.80 (Prod)","quality":45,"recency":50,"speed":50,"composite":54,"recommended":false,"releaseDate":"2026-03-18","lastUpdate":"2024-12-15"},{"id":"opencode/zen-security-auditor","name":"OpenCode Zen Security Auditor","provider":"OpenCode AI","category":"OpenCode Go Platforms","desc":"Specialized security audit coder trained on OWASP Top 10, CVE database, and zero-trust patterns.","context":64000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenCode Zen Developer Community Quota","priceIn":"$0.00 (Dev Tier) / $0.35 (Prod)","priceOut":"$0.00 (Dev Tier) / $1.05 (Prod)","quality":45,"recency":50,"speed":50,"composite":51,"recommended":false,"releaseDate":"2026-04-02","lastUpdate":"2024-12-15"},{"id":"opencode/zen-test-gen","name":"OpenCode Zen Test Generator","provider":"OpenCode AI","category":"OpenCode Go Platforms","desc":"Automated unit test and integration test generation. Supports Jest, pytest, JUnit, Go test frameworks.","context":64000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenCode Zen Developer Community Quota","priceIn":"$0.00 (Dev Tier) / $0.25 (Prod)","priceOut":"$0.00 (Dev Tier) / $0.75 (Prod)","quality":45,"recency":50,"speed":50,"composite":51,"recommended":false,"releaseDate":"2026-04-09","lastUpdate":"2024-12-15"},{"id":"opencode/zen-docs-writer","name":"OpenCode Zen Docs Writer","provider":"OpenCode AI","category":"OpenCode Go Platforms","desc":"Technical documentation generator producing JSDoc, OpenAPI specs, README files, and architecture diagrams.","context":64000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenCode Zen Developer Community Quota","priceIn":"$0.00 (Dev Tier) / $0.18 (Prod)","priceOut":"$0.00 (Dev Tier) / $0.54 (Prod)","quality":45,"recency":50,"speed":50,"composite":51,"recommended":false,"releaseDate":"2026-04-15","lastUpdate":"2024-12-15"},{"id":"opencode/zen-frontend-react","name":"OpenCode Zen Frontend (React/Next.js)","provider":"OpenCode AI","category":"OpenCode Go Platforms","desc":"Frontend specialist for React 19, Next.js 15, TypeScript, Tailwind CSS, and component architecture.","context":64000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenCode Zen Developer Community Quota","priceIn":"$0.00 (Dev Tier) / $0.22 (Prod)","priceOut":"$0.00 (Dev Tier) / $0.66 (Prod)","quality":45,"recency":50,"speed":50,"composite":51,"recommended":false,"releaseDate":"2026-04-21","lastUpdate":"2024-12-15"},{"id":"opencode/zen-backend-go","name":"OpenCode Zen Backend (Go/Rust)","provider":"OpenCode AI","category":"OpenCode Go Platforms","desc":"Backend systems specialist for Go, Rust, gRPC, microservices, and high-throughput APIs.","context":64000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenCode Zen Developer Community Quota","priceIn":"$0.00 (Dev Tier) / $0.22 (Prod)","priceOut":"$0.00 (Dev Tier) / $0.66 (Prod)","quality":45,"recency":50,"speed":50,"composite":51,"recommended":false,"releaseDate":"2026-04-28","lastUpdate":"2024-12-15"},{"id":"opencode/zen-devops-k8s","name":"OpenCode Zen DevOps (K8s/Terraform)","provider":"OpenCode AI","category":"OpenCode Go Platforms","desc":"DevOps and SRE specialist for Kubernetes manifests, Terraform modules, Helm charts, and CI/CD pipelines.","context":64000,"maxOutput":8192,"isFree":true,"freeDetails":"OpenCode Zen Developer Community Quota","priceIn":"$0.00 (Dev Tier) / $0.28 (Prod)","priceOut":"$0.00 (Dev Tier) / $0.84 (Prod)","quality":45,"recency":50,"speed":50,"composite":51,"recommended":false,"releaseDate":"2026-05-05","lastUpdate":"2024-12-15"}];
@@ -2170,9 +2527,56 @@
       document.getElementById('step-detail-body').textContent = data.body[currentLang] || data.body.en;
     }
 
+    // CLIPBOARD COPY UTILITIES
+    let toastTimeout = null;
+    function showToast(msg) {
+      const toast = document.getElementById('copy-toast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.add('show');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.style.top = '-9999px';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+      } catch (e) {
+        console.warn('ExecCommand copy failed:', e);
+      }
+      document.body.removeChild(ta);
+    }
+
+    function copyText(text) {
+      if (!text) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('COPIED: ' + text);
+        }).catch(() => {
+          fallbackCopy(text);
+          showToast('COPIED: ' + text);
+        });
+      } else {
+        fallbackCopy(text);
+        showToast('COPIED: ' + text);
+      }
+    }
+
     // 94 MODELS ROSTER LOGIC
     let activeModelFilter = 'all';
     let modelSearchQuery = '';
+    let modelSearchTimer = null;
 
     function filterModels(f) {
       activeModelFilter = f;
@@ -2183,8 +2587,11 @@
     }
 
     function searchModels(q) {
-      modelSearchQuery = (q || '').toLowerCase().trim();
-      renderModelsTable();
+      if (modelSearchTimer) clearTimeout(modelSearchTimer);
+      modelSearchTimer = setTimeout(() => {
+        modelSearchQuery = (q || '').toLowerCase().trim();
+        renderModelsTable();
+      }, 100);
     }
 
     function renderModelsTable() {
@@ -2198,6 +2605,13 @@
         const s = (m.name + ' ' + m.id + ' ' + m.provider + ' ' + (m.category || '') + ' ' + (m.desc || '')).toLowerCase();
         return s.includes(modelSearchQuery);
       });
+
+      const countBadge = document.getElementById('models-count-badge');
+      if (countBadge) {
+        countBadge.textContent = (filtered.length === rawCatalog.length) 
+          ? rawCatalog.length + ' models' 
+          : filtered.length + ' / ' + rawCatalog.length + ' models';
+      }
 
       if (filtered.length === 0) {
         tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--fg-dim); padding: 24px;">No models found</td></tr>';
@@ -2234,6 +2648,7 @@
     let allProcesses = [];
     let selectedCategory = 'all';
     let searchQuery = '';
+    let procSearchTimer = null;
 
     function filterProcessCategory(cat) {
       selectedCategory = cat;
@@ -2244,8 +2659,11 @@
     }
 
     function handleProcessSearch(q) {
-      searchQuery = (q || '').toLowerCase().trim();
-      renderProcessTable();
+      if (procSearchTimer) clearTimeout(procSearchTimer);
+      procSearchTimer = setTimeout(() => {
+        searchQuery = (q || '').toLowerCase().trim();
+        renderProcessTable();
+      }, 100);
     }
 
     function renderProcessTable() {
@@ -2259,6 +2677,27 @@
         const target = (p.name + ' ' + (p.role || '') + ' ' + (p.pid || '') + ' ' + (p.node || '')).toLowerCase();
         return target.includes(searchQuery);
       });
+
+      const pl = document.getElementById('process-count-label');
+      if (pl) {
+        const total = allProcesses.length;
+        const count = filtered.length;
+        if (count === total || total === 0) {
+          const countLabel = {
+            en: 'Tracking ' + total + ' active processes',
+            uk: 'Відстежується ' + total + ' активних процесів',
+            ru: 'Отслеживается ' + total + ' активных процессов'
+          };
+          pl.textContent = countLabel[currentLang] || countLabel.en;
+        } else {
+          const countLabel = {
+            en: 'Showing ' + count + ' of ' + total + ' processes',
+            uk: 'Показано ' + count + ' з ' + total + ' процесів',
+            ru: 'Показано ' + count + ' из ' + total + ' процессов'
+          };
+          pl.textContent = countLabel[currentLang] || countLabel.en;
+        }
+      }
 
       if (filtered.length === 0) {
         tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--fg-dim); padding: 24px;">No processes found</td></tr>';
@@ -2285,12 +2724,27 @@
       return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    // TELEMETRY FETCHER
+    // TELEMETRY FETCHER WITH PAGE VISIBILITY MANAGEMENT
+    let telemetryTimer = null;
+
     async function fetchTelemetry() {
       try {
         const res = await fetch('/api/logs?_t=' + Date.now());
         if (!res.ok) return;
         const data = await res.json();
+
+        // Update live poll timestamp indicator
+        const pollEl = document.getElementById('poll-indicator');
+        if (pollEl) {
+          const now = new Date();
+          const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          const pollTexts = {
+            en: 'Auto-sync: 4s · Synced ' + timeStr,
+            uk: 'Автосинхронізація: 4с · Синхр. ' + timeStr,
+            ru: 'Автосинхронизация: 4с · Синхр. ' + timeStr
+          };
+          pollEl.textContent = pollTexts[currentLang] || pollTexts.en;
+        }
 
         if (data.computeMetrics) {
           const m = data.computeMetrics;
@@ -2331,13 +2785,6 @@
 
         if (data.processes && Array.isArray(data.processes)) {
           allProcesses = data.processes;
-          const countLabel = {
-            en: 'Tracking ' + allProcesses.length + ' active processes',
-            uk: 'Відстежується ' + allProcesses.length + ' активних процесів',
-            ru: 'Отслеживается ' + allProcesses.length + ' активных процессов'
-          };
-          const pl = document.getElementById('process-count-label');
-          if (pl) pl.textContent = countLabel[currentLang] || countLabel.en;
           renderProcessTable();
         }
 
@@ -2361,13 +2808,109 @@
       }
     }
 
+    function startTelemetryPolling() {
+      if (telemetryTimer) clearInterval(telemetryTimer);
+      telemetryTimer = setInterval(() => {
+        if (!document.hidden) {
+          fetchTelemetry();
+        }
+      }, 4000);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        fetchTelemetry();
+        startTelemetryPolling();
+      } else {
+        if (telemetryTimer) {
+          clearInterval(telemetryTimer);
+          telemetryTimer = null;
+        }
+      }
+    });
+
+    // SINGLE-VIEWPORT TABS NAVIGATION
+    function vpShow(secId) {
+      const sec = document.getElementById(secId);
+      if (sec) {
+        const header = document.querySelector('header');
+        const headerHeight = header ? header.offsetHeight : 70;
+        const targetTop = sec.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12;
+        window.scrollTo({
+          top: Math.max(0, targetTop),
+          behavior: 'smooth'
+        });
+      }
+      document.querySelectorAll('.vp-tab').forEach(t => {
+        t.classList.toggle('active', t.getAttribute('data-sec') === secId);
+      });
+    }
+
+    // SCROLL LISTENER: BACK TO TOP + ACTIVE TAB SYNCHRONIZATION
+    window.addEventListener('scroll', () => {
+      const btt = document.getElementById('btn-back-to-top');
+      if (btt) {
+        if (window.pageYOffset > 300) {
+          btt.classList.add('show');
+        } else {
+          btt.classList.remove('show');
+        }
+      }
+
+      const sections = document.querySelectorAll('.section-block[id]');
+      let currentSec = 's01';
+      sections.forEach(sec => {
+        const top = sec.getBoundingClientRect().top;
+        if (top <= 140) currentSec = sec.id;
+      });
+      document.querySelectorAll('.vp-tab').forEach(t => {
+        t.classList.toggle('active', t.getAttribute('data-sec') === currentSec);
+      });
+    }, { passive: true });
+
+    // KEYBOARD SHORTCUTS
+    window.addEventListener('keydown', (e) => {
+      const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+      const isInput = activeTag === 'input' || activeTag === 'textarea';
+
+      if (e.key === 'Escape') {
+        if (isInput) {
+          document.activeElement.value = '';
+          if (document.activeElement.id === 'model-search-input') searchModels('');
+          if (document.activeElement.id === 'proc-search') handleProcessSearch('');
+          document.activeElement.blur();
+        }
+        return;
+      }
+
+      if (isInput) return;
+
+      // 1-8 section quick navigation
+      if (e.key >= '1' && e.key <= '8') {
+        vpShow('s0' + e.key);
+      } else if (e.key === 't' || e.key === 'T') {
+        toggleTheme();
+      } else if (e.key === 'l' || e.key === 'L') {
+        const langs = ['en', 'uk', 'ru'];
+        const nextLang = langs[(langs.indexOf(currentLang) + 1) % langs.length];
+        setLanguage(nextLang);
+      } else if (e.key === '/') {
+        e.preventDefault();
+        const mInput = document.getElementById('model-search-input');
+        if (mInput) {
+          mInput.focus();
+          mInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    });
+
     // INITIALIZATION
     document.addEventListener('DOMContentLoaded', () => {
       initTheme();
       setLanguage(currentLang);
       renderModelsTable();
       fetchTelemetry();
-      setInterval(fetchTelemetry, 4000);
+      startTelemetryPolling();
     });
   </script>
 </body>

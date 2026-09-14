@@ -175,60 +175,37 @@ export class TuiRenderer {
     }
 
     const llmBlock = `[ МАТРИЦА LLM-ПРОВАЙДЕРОВ И МОДЕЛЕЙ // LLM & MULTI-AGENT STATUS ]:
-  • GOOGLE GEMINI (ADC):   Gemini 2.5 Flash, 3.8 Flash, Pro (1M ctx)     | [ONLINE] 🟢
-  • OMNIROUTE (Port 20128): 94 модели · LPU Groq/Cerebras (800 t/s)      | [ONLINE] 🟢
-  • OPENROUTER HUB:        56 бесплатных кодинг-моделей (DeepSeek, Qwen)  | [ONLINE] 🟢
-  • CONSILIUM AGENTS:      Antigravity agy, OpenCode, Serena, KiloCode   | [ONLINE] 🟢`;
+  • GOOGLE GEMINI (ADC):   Gemini 2.5 Flash, 3.8 Flash, Pro (1M ctx)     | [ONLINE] ●
+  • OMNIROUTE (Port 20128): 94 модели · LPU Groq/Cerebras (800 t/s)      | [ONLINE] ●
+  • OPENROUTER HUB:        56 бесплатных кодинг-моделей (DeepSeek, Qwen)  | [ONLINE] ●
+  • CONSILIUM AGENTS:      Antigravity agy, OpenCode, Serena, KiloCode   | [ONLINE] ●`;
 
     const secBlock = `[ КОНТУР БЕЗОПАСНОСТИ И ЗАЩИТЫ // SECURITY & AUTO-REAP SHIELD ]:
-  • EARLYOOM DAEMON:       Active (Пороги: <10% RAM, >80% Swap)          | [ARMED] 🟢
-  • EVA-WATCHDOG TIMER:    Каждые 3 мин (Сброс Tl-пауз > 20 мин)         | [ACTIVE] 🟢
-  • FAIL2BAN SSH JAIL:     Активен · Мониторинг брутфорса и ботнетов     | [ARMED] 🟢
-  • WIREGUARD ENCRYPTION:  ChaCha20-Poly1305 · Закрытый контур           | [SECURE] 🟢`;
+  • EARLYOOM DAEMON:       Active (Пороги: <10% RAM, >80% Swap)          | [ARMED] ●
+  • EVA-WATCHDOG TIMER:    Каждые 3 мин (Сброс Tl-пауз > 20 мин)         | [ACTIVE] ●
+  • FAIL2BAN SSH JAIL:     Активен · Мониторинг брутфорса и ботнетов     | [ARMED] ●
+  • WIREGUARD ENCRYPTION:  ChaCha20-Poly1305 · Закрытый контур           | [SECURE] ●`;
 
     if (body) {
       let hydrated = body;
+      const nowUtcStr = new Date().toISOString().replace('T', ' ').substring(11, 19) + ' UTC';
+      hydrated = hydrated.replace(/<!--\s*TIME\s*-->/g, nowUtcStr).replace(/\{\{TIME\}\}/g, nowUtcStr);
 
-      if (hydrated.includes('<!-- SLOT:LLM_MATRIX -->')) {
-        hydrated = hydrated.replace(
-          /<!-- SLOT:LLM_MATRIX -->[\s\S]*?<!-- \/SLOT:LLM_MATRIX -->/g,
-          `<!-- SLOT:LLM_MATRIX -->\n${llmBlock}\n<!-- /SLOT:LLM_MATRIX -->`
-        );
-      }
+      const replaceSlot = (name: string, content: string) => {
+        const pairedRegex = new RegExp(`<!--\\s*SLOT:${name}\\s*-->[\\s\\S]*?<!--\\s*\\/SLOT:${name}\\s*-->`, 'g');
+        if (pairedRegex.test(hydrated)) {
+          hydrated = hydrated.replace(pairedRegex, `<!-- SLOT:${name} -->\n${content}\n<!-- /SLOT:${name} -->`);
+        } else {
+          hydrated = hydrated.replace(new RegExp(`<!--\\s*SLOT:${name}\\s*-->`, 'g'), content);
+        }
+        hydrated = hydrated.replace(new RegExp(`\\{\\{SLOT_${name}\\}\\}`, 'g'), content);
+      };
 
-      if (hydrated.includes('<!-- SLOT:SECURITY_SHIELD -->')) {
-        hydrated = hydrated.replace(
-          /<!-- SLOT:SECURITY_SHIELD -->[\s\S]*?<!-- \/SLOT:SECURITY_SHIELD -->/g,
-          `<!-- SLOT:SECURITY_SHIELD -->\n${secBlock}\n<!-- /SLOT:SECURITY_SHIELD -->`
-        );
-      }
-
-      if (hydrated.includes('<!-- SLOT:TELEMETRY -->')) {
-        hydrated = hydrated.replace(
-          /<!-- SLOT:TELEMETRY -->[\s\S]*?<!-- \/SLOT:TELEMETRY -->/g,
-          `<!-- SLOT:TELEMETRY -->\n${telemetryBlock}\n<!-- /SLOT:TELEMETRY -->`
-        );
-      } else if (hydrated.includes('{{SLOT_TELEMETRY}}')) {
-        hydrated = hydrated.replace('{{SLOT_TELEMETRY}}', telemetryBlock);
-      }
-
-      if (hydrated.includes('<!-- SLOT:PROCESS_WATCHER -->')) {
-        hydrated = hydrated.replace(
-          /<!-- SLOT:PROCESS_WATCHER -->[\s\S]*?<!-- \/SLOT:PROCESS_WATCHER -->/g,
-          `<!-- SLOT:PROCESS_WATCHER -->\n${procBlock}\n<!-- /SLOT:PROCESS_WATCHER -->`
-        );
-      } else if (hydrated.includes('{{SLOT_PROCESS_WATCHER}}')) {
-        hydrated = hydrated.replace('{{SLOT_PROCESS_WATCHER}}', procBlock);
-      }
-
-      if (hydrated.includes('<!-- SLOT:LOG_STREAM -->')) {
-        hydrated = hydrated.replace(
-          /<!-- SLOT:LOG_STREAM -->[\s\S]*?<!-- \/SLOT:LOG_STREAM -->/g,
-          `<!-- SLOT:LOG_STREAM -->\n${logBlock}\n<!-- /SLOT:LOG_STREAM -->`
-        );
-      } else if (hydrated.includes('{{SLOT_LOG_STREAM}}')) {
-        hydrated = hydrated.replace('{{SLOT_LOG_STREAM}}', logBlock);
-      }
+      replaceSlot('LLM_MATRIX', llmBlock);
+      replaceSlot('SECURITY_SHIELD', secBlock);
+      replaceSlot('TELEMETRY', telemetryBlock);
+      replaceSlot('PROCESS_WATCHER', procBlock);
+      replaceSlot('LOG_STREAM', logBlock);
 
       hydrated = hydrated
         .replace(/<!--\s*SLOT:[A-Z_]+\s*-->\r?\n?/g, '')
@@ -255,13 +232,13 @@ export class TuiRenderer {
     });
     out += '  [->] https://github.com/evaline-online :: Официальная Организация GitHub (26 Репозиториев)\n';
     out += '────────────────────────────────────────────────────────────────────────────\n';
+    out += 'evabot@evaline-mesh:~$ █\n';
+    out += '────────────────────────────────────────────────────────────────────────────\n';
     out += telemetryBlock + '\n';
     out += '────────────────────────────────────────────────────────────────────────────\n';
     out += procBlock + '\n';
     out += '────────────────────────────────────────────────────────────────────────────\n';
     out += logBlock + '\n';
-    out += '────────────────────────────────────────────────────────────────────────────\n';
-    out += 'evabot@evaline-mesh:~$ █\n';
     return out;
   }
 

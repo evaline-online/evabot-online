@@ -10,7 +10,7 @@
 <header class="top-nav" role="banner">
   <div class="brand-row">
     <a href="https://evaline.online" class="brand-title">
-      <span class="logo-gem">◆</span> EVALINE // EVANETWORK
+      <span class="logo-gem">◆</span> EVALINE NETWORK (EVANET)
     </a>
     <div class="cluster-status-pill" id="cluster-status-indicator">
       <span class="pulse-dot"></span>
@@ -19,6 +19,8 @@
   </div>
 
   <!-- Master Controls Toolbar: Language, Themes, Accordions, Diagrams, Export -->
+  <details class="toolbar-accordion" id="header-accordion">
+    <summary class="toolbar-summary">⚙ <span>Панель керування (Мова / Оформлення / Секції / Схеми / Експорт)</span></summary>
   <div class="toolbar-container" role="toolbar" aria-label="Manifesto Controls">
     <div class="toolbar-group">
       <span class="toolbar-label"><span>Мова:</span></span>
@@ -32,14 +34,17 @@
     <div class="toolbar-group">
       <span class="toolbar-label"><span>Оформлення:</span></span>
       <div class="btn-group theme-switcher" role="group" aria-label="Theme Selector">
-        <button type="button" class="theme-btn active" data-theme="web" onclick="setTheme('web')" title="Полноценный веб поверх терминального стиля">
-          🖥️ <span>Веб</span>
-        </button>
-        <button type="button" class="theme-btn" data-theme="terminal" onclick="setTheme('terminal')" title="Зеленый моноширинный терминал">
-          📟 <span>Термінал</span>
+        <button type="button" class="theme-btn active" data-theme="cyber" onclick="setTheme('cyber')" title="Киберпанк (Неон / Dark)">
+          🎨 <span>Кіберпанк</span>
         </button>
         <button type="button" class="theme-btn" data-theme="raw" onclick="setTheme('raw')" title="Чистый HTML без стилей оформления">
           📄 <span>Без стилів</span>
+        </button>
+        <button type="button" class="theme-btn" data-theme="paper" onclick="setTheme('paper')" title="Бумажный светлый минимализм">
+          ☀️ <span>Папір</span>
+        </button>
+        <button type="button" class="theme-btn" data-theme="terminal" onclick="setTheme('terminal')" title="Зеленый моноширинный терминал">
+          📟 <span>Термінал</span>
         </button>
       </div>
     </div>
@@ -83,19 +88,13 @@
       </div>
     </div>
   </div>
+  </details>
 </header>
 
 <div class="container">
 
   <!-- HERO SECTION -->
   <section class="hero">
-    <pre class="hero-ascii" aria-label="EVALINE ASCII logo">
-   _______    _____    __    _____   ________
-  / ____/ |  / /   |  / /   /  _/ | / / ____/
- / __/  | | / / /| | / /    / //  |/ / __/
-/ /___  | |/ / ___ |/ /____/ // /|  / /___
-/_____/  |___/_/  |_/_____/___/_/ |_/_____/
-</pre>
     <div class="hero-eyebrow">
       <span>СУВЕРЕННА АГЕНТСЬКА ФАБРИКА ТА РЕАЛЬНЕ ВИРОБНИЦТВО ПОЛІМЕРІВ</span>
     </div>
@@ -108,6 +107,9 @@
 
     <!-- Quick Jump Links -->
     <div class="hero-links" style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px;">
+      <a href="#monetization-top" class="btn-ctrl" style="text-decoration: none; padding: 8px 16px; border-color: rgba(255,214,0,0.6);">
+        🪙 <span class="t-ru">Топ-20 автономного заработка</span><span class="t-uk" hidden>Топ-20 автономного заробітку</span><span class="t-en" hidden>Top-20 Autonomous Earning</span>
+      </a>
       <a href="#models-matrix" class="btn-ctrl" style="text-decoration: none; padding: 8px 16px;">
         📊 <span>Матриця 94 LLM-моделей</span>
       </a>
@@ -123,6 +125,43 @@
     </div>
   </section>
   <hr class="section-divider">
+
+  <!-- FORMULA: ONE HUB -> A TRILLION -->
+  <section class="section" id="formula-trillion">
+    <div class="section-header">
+      <div class="section-num">00</div>
+      <h2 class="section-title"><span>Формула: від одного центру до трильйона</span></h2>
+    </div>
+
+    <div class="infographic-panel">
+      <p class="formula-line"><span>1 центральний хаб → 10 заводів → 100 агентств → 1 000 клієнтів → 10 000 агентів → 100 000 угод → 1 000 000 транзакцій → 10 000 000 кліків трафіку → 100 000 000 маржинальних операцій → 1 000 000 000 000 $ кумулятивного обороту</span></p>
+      <p><span>Кожен наступний рівень подвоює мережу через три лінії монетизації, тому один центр з часом досягає трильйонного масштабу.</span></p>
+    </div>
+
+    <h3 class="section-title" style="font-size:1.1rem;margin:18px 0 10px;"><span>Три лінії монетизації</span></h3>
+    <p><strong><span>1) Продаж токенів EVA / CONSILIUM.</span></strong> <span>Емісія та продаж власних токенів учасникам мережі, клієнтам та інвесторам; частина виручки повертається у виробництво полімерів та зростання флоту агентів.</span></p>
+    <p><strong><span>2) Перепродаж трафіку.</span></strong> <span>Закуповуємо трафік оптом за низькою ціною у джерел і перепродаємо його агентам, агентствам та рекламним кампаніям — арбітраж на різниці між вхідною та вихідною ціною 1 000 кліків.</span></p>
+    <p><strong><span>3) Арбітраж токенів Консиліуму.</span></strong> <span>Купуємо токени на одних майданчиках і періодах дешевше, продаємо дорожче — на різниці цін, ліквідності та спот/ф'ючерсів формується арбітражна маржа.</span></p>
+
+    <table class="kpi-table" border="1" cellpadding="8" cellspacing="0" width="100%" style="margin-top:16px;">
+      <thead>
+        <tr>
+          <th><span>Крок</span></th>
+          <th><span>Мережа</span></th>
+          <th><span>Кумулятивний оборот</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td><span>1 центр</span></td><td>$1</td></tr>
+        <tr><td>2</td><td><span>10 заводів</span></td><td>$1 000</td></tr>
+        <tr><td>3</td><td><span>100 агентств</span></td><td>$100 000</td></tr>
+        <tr><td>4</td><td><span>1 000 клієнтів</span></td><td>$10 000 000</td></tr>
+        <tr><td>5</td><td><span>10 000 агентів</span></td><td>$1 000 000 000</td></tr>
+        <tr><td>6</td><td><span>100 000 угод</span></td><td>$100 000 000 000</td></tr>
+        <tr><td>7</td><td><span>1 000 000 транзакцій</span></td><td>$1 000 000 000 000</td></tr>
+      </tbody>
+    </table>
+  </section>
   <!-- =========================================================================
        SECTION 01: PROBLEM-STATEMENT
        ========================================================================= -->

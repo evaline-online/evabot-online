@@ -32,12 +32,113 @@ def get_footer():
 
 def get_scripts():
     return '''
+<!-- MERMAID.JS CDN ENGINE & INITIALIZATION -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+<!-- MARKMAP.JS CDN (Markdown Mind Map) -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.18.12/dist/browser/index.iife.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script>
+
 <!-- EMBEDDED MODELS REGISTRY DATA & INTERACTIVE CLIENT ENGINE -->
 <script>
   const RAW_MODELS = ''' + models_json_str + ''';
   const GLOSSARY_ITEMS = ''' + glossary_json_str + ''';
 
-  let currentLang = localStorage.getItem('evaline_lang') || 'ru';
+  // Mermaid Engine Initialization
+  if (typeof mermaid !== 'undefined') {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background: '#07090e',
+        mainBkg: '#0d111a',
+        nodeBorder: '#00e676',
+        primaryColor: '#0e1824',
+        primaryTextColor: '#e6edf3',
+        primaryBorderColor: 'rgba(0, 230, 118, 0.4)',
+        lineColor: '#38bdf8',
+        secondaryColor: '#161f30',
+        tertiaryColor: '#111722',
+        fontFamily: 'Roboto, sans-serif'
+      },
+      securityLevel: 'loose'
+    });
+  }
+
+  // Markmap Engine Initialization & Render
+  let markmapInstances = new Map();
+
+  async function renderVisibleMarkmap() {
+    if (typeof window.markmap === 'undefined' || !window.markmap.Transformer || !window.markmap.Markmap) {
+      return;
+    }
+    const elements = Array.from(document.querySelectorAll('.diagram-canvas .markmap'));
+    for (const el of elements) {
+      if (el.offsetParent !== null && !el.getAttribute('data-processed')) {
+        try {
+          const lang = el.getAttribute('data-lang') || currentLang;
+          const markdown = el.getAttribute(`data-md-${lang}`) || el.getAttribute('data-md-ru') || '';
+          if (!markdown) continue;
+
+          const { Transformer, Markmap } = window.markmap;
+          const transformer = new Transformer();
+          const { root } = transformer.transform(markdown);
+
+          const svgEl = el.querySelector('svg') || document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          if (!el.querySelector('svg')) {
+            el.innerHTML = '';
+            el.appendChild(svgEl);
+          }
+          svgEl.style.maxWidth = '100%';
+          svgEl.style.width = '100%';
+          svgEl.style.height = 'auto';
+          svgEl.style.maxHeight = '70vh';
+
+          Markmap.create(svgEl, {
+            autoFit: true,
+            duration: 300,
+            initialExpandDepth: 3,
+            color: (d) => {
+              const depth = d.depth || 0;
+              const colors = ['#ffd600', '#38bdf8', '#00e5ff', '#00e676', '#b388ff', '#f87171'];
+              return colors[depth % colors.length];
+            }
+          }, root);
+
+          el.setAttribute('data-processed', 'true');
+          markmapInstances.set(el, { root, svg: svgEl });
+        } catch (err) {
+          console.warn('Markmap render error:', err);
+        }
+      }
+    }
+  }
+
+  async function renderVisibleMermaid() {
+    if (typeof mermaid === 'undefined') return;
+    const elements = Array.from(document.querySelectorAll('.mermaid'));
+    for (const el of elements) {
+      if (el.offsetParent !== null && !el.getAttribute('data-processed')) {
+        try {
+          await mermaid.run({ nodes: [el] });
+          const svg = el.querySelector('svg');
+          if (svg) {
+            svg.style.maxWidth = '100%';
+            svg.style.width = '100%';
+            svg.style.height = 'auto';
+            svg.removeAttribute('height');
+          }
+        } catch (err) {
+          console.warn('Mermaid render error:', err);
+        }
+      }
+    }
+  }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  let currentLang = urlParams.get('lang') || localStorage.getItem('evaline_lang') || 'ru';
   let currentFilter = 'free';
   let currentSort = 'quality';
   let searchQuery = '';
@@ -45,20 +146,116 @@ def get_scripts():
   let currentGlossaryFilter = 'all';
   let glossarySearchQuery = '';
 
+  // Master Theme Controller: 'cyber', 'raw', 'paper', 'terminal'
+  let currentTheme = urlParams.get('theme') || localStorage.getItem('evaline_theme') || 'cyber';
+
+  function setTheme(theme) {
+    if (!['cyber', 'raw', 'paper', 'terminal'].includes(theme)) theme = 'cyber';
+    currentTheme = theme;
+    localStorage.setItem('evaline_theme', theme);
+    const styleEl = document.getElementById('main-manifesto-styles');
+
+    // Update theme switcher active button states
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-theme') === theme);
+    });
+
+    if (theme === 'raw') {
+      if (styleEl) styleEl.disabled = true;
+      document.documentElement.setAttribute('data-theme', 'raw');
+      // In raw mode, hide Mermaid vector canvas and ensure clean ASCII text art is visible
+      document.querySelectorAll('.diagram-canvas').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.ascii-toggle').forEach(el => {
+        el.style.display = 'block';
+        el.open = true;
+      });
+    } else {
+      if (styleEl) styleEl.disabled = false;
+      document.documentElement.setAttribute('data-theme', theme);
+      // Restore diagram visibility based on active diagram mode
+      if (currentDiagramMode !== 'ascii') {
+        document.querySelectorAll('.diagram-canvas').forEach(el => el.style.display = 'block');
+        document.querySelectorAll('.diagram-canvas .markmap').forEach(el => el.style.display = 'block');
+      }
+      if (currentDiagramMode === 'vector') {
+        document.querySelectorAll('.ascii-toggle').forEach(el => el.style.display = 'none');
+      }
+      setTimeout(renderVisibleMermaid, 50);
+      setTimeout(renderVisibleMarkmap, 50);
+    }
+  }
+
+  function toggleStyles() {
+    setTheme(currentTheme === 'raw' ? 'cyber' : 'raw');
+  }
+
+  // Diagram Display Controller: 'all', 'vector', 'ascii'
+  let currentDiagramMode = urlParams.get('diag') || 'all';
+  function toggleDiagramMode(mode) {
+    if (!['all', 'vector', 'ascii'].includes(mode)) mode = 'all';
+    currentDiagramMode = mode;
+    document.querySelectorAll('.diagram-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-diag-mode') === mode);
+    });
+    document.querySelectorAll('.diagram-canvas').forEach(el => {
+      el.style.display = (mode === 'ascii' || currentTheme === 'raw') ? 'none' : 'block';
+    });
+    document.querySelectorAll('.diagram-canvas .markmap').forEach(el => {
+      el.style.display = (mode === 'ascii' || currentTheme === 'raw') ? 'none' : 'block';
+    });
+    document.querySelectorAll('.ascii-toggle').forEach(el => {
+      if (mode === 'vector') {
+        el.style.display = 'none';
+        el.open = false;
+      } else if (mode === 'ascii') {
+        el.style.display = 'block';
+        el.open = true;
+      } else {
+        el.style.display = 'block';
+      }
+    });
+    if (mode !== 'ascii') {
+      setTimeout(renderVisibleMermaid, 50);
+      setTimeout(renderVisibleMarkmap, 50);
+    }
+  }
+
   // Language Switcher Function
   function setLanguage(lang) {
     if (!['ru', 'uk', 'en'].includes(lang)) lang = 'ru';
     currentLang = lang;
+    document.documentElement.setAttribute('lang', lang);
     document.documentElement.setAttribute('data-lang', lang);
     localStorage.setItem('evaline_lang', lang);
 
     document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      btn.classList.toggle('active', btn.getAttribute('data-value') === lang);
+    });
+
+    // Native attribute manipulation for pure HTML / CSS-off mode
+    document.querySelectorAll('.t-ru').forEach(el => {
+      if (lang === 'ru') el.removeAttribute('hidden');
+      else el.setAttribute('hidden', '');
+    });
+    document.querySelectorAll('.t-uk').forEach(el => {
+      if (lang === 'uk') el.removeAttribute('hidden');
+      else el.setAttribute('hidden', '');
+    });
+    document.querySelectorAll('.t-en').forEach(el => {
+      if (lang === 'en') el.removeAttribute('hidden');
+      else el.setAttribute('hidden', '');
+    });
+
+    // Update markmap content for new language
+    document.querySelectorAll('.diagram-canvas .markmap').forEach(el => {
+      el.removeAttribute('data-processed');
     });
 
     renderModels();
     renderGlossary();
     updateRoiCalc();
+    setTimeout(renderVisibleMermaid, 60);
+    setTimeout(renderVisibleMarkmap, 60);
   }
 
   // Global Accordion Controller
@@ -66,6 +263,10 @@ def get_scripts():
     document.querySelectorAll('details.accordion-section, details.sub-accordion').forEach(d => {
       d.open = isOpen;
     });
+    if (isOpen) {
+      setTimeout(renderVisibleMermaid, 80);
+      setTimeout(renderVisibleMarkmap, 80);
+    }
   }
 
   function formatTokensClient(t) {
@@ -269,8 +470,15 @@ def get_scripts():
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    // Initial language apply
+    // All content accordions start closed (no open attribute, and force-close here too)
+    document.querySelectorAll('details.accordion-section, details.sub-accordion').forEach(d => {
+      d.open = false;
+    });
+
+    // Initial theme, language, and diagram mode apply
+    setTheme(currentTheme);
     setLanguage(currentLang);
+    toggleDiagramMode(currentDiagramMode);
 
     // Matrix filter tabs
     document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -321,7 +529,125 @@ def get_scripts():
 
     checkCluster();
     setInterval(checkCluster, 15000);
+
+    // Event Delegation for Toolbar Actions (data-action buttons)
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+
+      const action = btn.getAttribute('data-action');
+      const value = btn.getAttribute('data-value');
+
+      switch (action) {
+        case 'set-language':
+          setLanguage(value);
+          break;
+        case 'set-theme':
+          setTheme(value);
+          break;
+        case 'set-diagram-mode':
+          toggleDiagramMode(value);
+          break;
+        case 'toggle-all-accordions':
+          toggleAllAccordions(value === 'true');
+          break;
+      }
+    });
+
+    // Dynamic Mermaid/Markmap rendering on details toggle
+    document.querySelectorAll('details.accordion-section, details.sub-accordion').forEach(det => {
+      det.addEventListener('toggle', () => {
+        if (det.open) {
+          setTimeout(renderVisibleMermaid, 50);
+          setTimeout(renderVisibleMarkmap, 50);
+          det.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Initial render of visible diagrams
+    setTimeout(renderVisibleMermaid, 150);
+    setTimeout(renderVisibleMarkmap, 150);
   });
+
+    // ===== Mindmap TOC builder =====
+    function tocActiveLang() {
+      return document.documentElement.getAttribute('data-lang') || 'ru';
+    }
+    function tocText(el) {
+      if (!el) return '';
+      var lang = tocActiveLang();
+      var span = el.querySelector('.t-'+lang);
+      if (span && span.textContent.trim()) return span.textContent.trim();
+      var any = el.querySelector('.t-ru');
+      return (any ? any.textContent : el.textContent) || '';
+    }
+    function buildTocMindmap() {
+      var root = document.getElementById('toc-tree');
+      if (!root) return;
+      var sections = document.querySelectorAll('details.accordion-section');
+      var ul = document.createElement('ul');
+      ul.className = 'toc-mindmap-tree';
+      sections.forEach(function(sec) {
+        if (!sec.id || sec.id === 'manifesto-toc') return;
+        var num = sec.querySelector('.summary-num');
+        var title = sec.querySelector('.summary-title');
+        var item = document.createElement('li');
+        var a = document.createElement('a');
+        a.href = '#' + sec.id;
+        var numTxt = document.createElement('span');
+        numTxt.className = 'toc-node-num';
+        numTxt.textContent = (num ? num.textContent : '');
+        a.appendChild(numTxt);
+        var label = document.createElement('span');
+        label.textContent = tocText(title) || sec.id;
+        a.appendChild(label);
+        a.addEventListener('click', function(e) {
+          e.preventDefault();
+          sec.setAttribute('open','');
+          var y = sec.getBoundingClientRect().top + window.scrollY - 20;
+          window.scrollTo({top:y, behavior:'smooth'});
+          setTimeout(renderVisibleMermaid, 80);
+          setTimeout(renderVisibleMarkmap, 80);
+        });
+        item.appendChild(a);
+        var subs = sec.querySelectorAll('details.sub-accordion');
+        if (subs.length) {
+          var subUl = document.createElement('ul');
+          subs.forEach(function(sub) {
+            var sTitle = sub.querySelector('.sub-title');
+            var li = document.createElement('li');
+            li.className = 'toc-sub-item';
+            var sa = document.createElement('a');
+            sa.href = '#' + sub.id;
+            var sLabel = document.createElement('span');
+            sLabel.textContent = tocText(sTitle) || sub.id;
+            sa.appendChild(sLabel);
+            sa.addEventListener('click', function(e) {
+              e.preventDefault();
+              sub.setAttribute('open','');
+              var pdet = sub.closest('details.accordion-section');
+              if (pdet) pdet.setAttribute('open','');
+              var y = sub.getBoundingClientRect().top + window.scrollY - 20;
+              window.scrollTo({top:y, behavior:'smooth'});
+              setTimeout(renderVisibleMermaid, 80);
+              setTimeout(renderVisibleMarkmap, 80);
+            });
+            li.appendChild(sa);
+            subUl.appendChild(li);
+          });
+          item.appendChild(subUl);
+        }
+        ul.appendChild(item);
+      });
+      root.innerHTML = '';
+      root.appendChild(ul);
+    }
+    setTimeout(buildTocMindmap, 260);
+    document.querySelectorAll('[data-action="set-language"]').forEach(function(b){
+      b.addEventListener('click', function(){ setTimeout(buildTocMindmap, 90); });
+    });
+
 </script>
 
 </body>

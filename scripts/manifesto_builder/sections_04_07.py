@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from helpers import t, accordion_section, sub_accordion
+import infographics_builder
+import models_renderer
 
 def get_section_04(prerendered_models_html):
     sub1 = sub_accordion(
@@ -93,12 +95,33 @@ def get_section_04(prerendered_models_html):
     </div>
 '''
 
-    content = f'''      <p class="lead-text">{lead}</p>
+    # Compact one-line list: all 94 models + Top-N
+    all_lines = models_renderer.get_models_line_list(with_dates=True)
+    top_lines = models_renderer.get_models_top_list(
+        "🏆 ТОП-20 моделей по совокупному интеллекту (IQ)",
+        "🏆 ТОП-20 моделей за сукупним інтелектом (IQ)",
+        "🏆 Top-20 Models by Composite Intelligence (IQ)",
+        n=20, with_dates=True)
+
+    info_panel = infographics_builder.get_infographic_04()
+
+    content = f'''      {info_panel}
+      <p class="lead-text">{lead}</p>
       {sub1}
       {sub2}
       {sub3}
       {sub4}
-      {matrix_controls}'''
+      {matrix_controls}
+
+      <!-- One-line model registry: plain-text readable, terminal/raw friendly -->
+      <div class="model-line-list">
+        <div class="model-list-header">{t("📋 Полный реестр 94 моделей (одна строка = одна модель)", "📋 Повний реєстр 94 моделей (один рядок = одна модель)", "📋 Full Registry of 94 Models (one line = one model)")}</div>
+        {all_lines}
+      </div>
+
+      <div class="model-line-list">
+        {top_lines}
+      </div>'''
 
     return accordion_section(
         "models-matrix", "04",
@@ -106,7 +129,7 @@ def get_section_04(prerendered_models_html):
         "Матриця 94 LLM-моделей: Федерація інтелекту без вендор-локу",
         "94-Model Multi-Provider Matrix: Sovereign Intelligence Federation",
         "94 модели онлайн", "94 моделі онлайн", "94 Active LLMs",
-        content, open=True
+        content, open=False
     )
 
 def get_section_05():
@@ -117,7 +140,7 @@ def get_section_05():
         "Question 5.1: What are the benchmark results: single chatbot vs. EvaLine Consilium?",
         "Факторный анализ", "Факторний аналіз", "Factor Analysis",
         f'''<div class="table-responsive">
-        <table class="comparison-table">
+        <table class="comparison-table" border="1" cellpadding="8" cellspacing="0">
           <thead>
             <tr>
               <th>{t("Критерий оценки", "Критерій оцінки", "Evaluation Criteria")}</th>
@@ -128,33 +151,33 @@ def get_section_05():
           <tbody>
             <tr>
               <td><strong>{t("Архитектура исполнения", "Архітектура виконання", "Execution Architecture")}</strong></td>
-              <td>{t("Одиночные ответы в окне чата без интеграции.", "Поодинокі відповіді у вікні чату без інтеграції.", "Isolated text prompt-reply in a browser widget.")}</td>
-              <td class="col-highlight">{t("Автономный штат специалистов, работающих сквозным циклом.", "Автономний штат спеціалістів наскрізного циклу.", "Autonomous staff of specialized agents in a full-cycle loop.")}</td>
+              <td data-label="{t('Обычный чат-бот', 'Звичайний чат-бот', 'Generic Chatbot')}">{t("Одиночные ответы в окне чата без интеграции.", "Поодинокі відповіді у вікні чату без інтеграції.", "Isolated text prompt-reply in a browser widget.")}</td>
+              <td class="col-highlight" data-label="{t('Консилиум', 'Консиліум', 'Consilium')}">{t("Автономный штат специалистов, работающих сквозным циклом.", "Автономний штат спеціалістів наскрізного циклу.", "Autonomous staff of specialized agents in a full-cycle loop.")}</td>
             </tr>
             <tr>
               <td><strong>{t("Устойчивость к галлюцинациям", "Стійкість до галюцинацій", "Hallucination Defense")}</strong></td>
-              <td>{t("Низкая: модель склонна уверенно выдумывать факты.", "Низька: модель схильна впевнено вигадувати факти.", "Low: standalone models hallucinate with high linguistic confidence.")}</td>
-              <td class="col-highlight">{t("Высокая: перекрёстный аудит несколькими независимыми LLM (точность 99.4%).", "Висока: перехресний аудит кількома незалежними LLM (точність 99.4%).", "High: heterogeneous cross-model debate and RAG verification (99.4% precision).")}</td>
+              <td data-label="{t('Обычный чат-бот', 'Звичайний чат-бот', 'Generic Chatbot')}">{t("Низкая: модель склонна уверенно выдумывать факты.", "Низька: модель схильна впевнено вигадувати факти.", "Low: standalone models hallucinate with high linguistic confidence.")}</td>
+              <td class="col-highlight" data-label="{t('Консилиум', 'Консиліум', 'Consilium')}">{t("Высокая: перекрёстный аудит несколькими независимыми LLM (точность 99.4%).", "Висока: перехресний аудит кількома незалежними LLM (точність 99.4%).", "High: heterogeneous cross-model debate and RAG verification (99.4% precision).")}</td>
             </tr>
             <tr>
               <td><strong>{t("Выполнение действий в IT и цехе", "Виконання дій в IT та цеху", "Tool Integration & Actions")}</strong></td>
-              <td>{t("Невозможно (только текстовые советы и сниппеты).", "Неможливо (лише поради та шматочки тексту).", "None (passive text generation and advice only).")}</td>
-              <td class="col-highlight">{t("Прямое управление серверами, кодом, ЧПУ-раскроем и Docker через MCP.", "Пряме керування серверами, кодом, верстатами ЧПК та Docker через MCP.", "Direct server orchestration, Git commits, CNC cutting, and Docker via MCP.")}</td>
+              <td data-label="{t('Обычный чат-бот', 'Звичайний чат-бот', 'Generic Chatbot')}">{t("Невозможно (только текстовые советы и сниппеты).", "Неможливо (лише поради та шматочки тексту).", "None (passive text generation and advice only).")}</td>
+              <td class="col-highlight" data-label="{t('Консилиум', 'Консиліум', 'Consilium')}">{t("Прямое управление серверами, кодом, ЧПУ-раскроем и Docker через MCP.", "Пряме керування серверами, кодом, верстатами ЧПК та Docker через MCP.", "Direct server orchestration, Git commits, CNC cutting, and Docker via MCP.")}</td>
             </tr>
             <tr>
               <td><strong>{t("Безопасность корпоративных данных", "Безпека корпоративних даних", "Enterprise Data Security")}</strong></td>
-              <td>{t("Утечка коммерческой тайны на сервера сторонней компании.", "Витік комерційної таємниці на сервери сторонніх компаній.", "Data ingested for training on public commercial servers.")}</td>
-              <td class="col-highlight">{t("Суверенная архитектура: закрытый WireGuard контур и изолированные БД.", "Суверенна архітектура: закритий WireGuard контур та ізольовані БД.", "Sovereign architecture: encrypted WireGuard tunnel and local private DBs.")}</td>
+              <td data-label="{t('Обычный чат-бот', 'Звичайний чат-бот', 'Generic Chatbot')}">{t("Утечка коммерческой тайны на сервера сторонней компании.", "Витік комерційної таємниці на сервери сторонніх компаній.", "Data ingested for training on public commercial servers.")}</td>
+              <td class="col-highlight" data-label="{t('Консилиум', 'Консиліум', 'Consilium')}">{t("Суверенная архитектура: закрытый WireGuard контур и изолированные БД.", "Суверенна архітектура: закритий WireGuard контур та ізольовані БД.", "Sovereign architecture: encrypted WireGuard tunnel and local private DBs.")}</td>
             </tr>
             <tr>
               <td><strong>{t("Зависимость от одного провайдера", "Залежність від одного провайдера", "Vendor Lock-in Risk")}</strong></td>
-              <td>{t("100% зависимость: при сбое провайдера процесс встаёт.", "100% залежність: при збої провайдера процес зупиняється.", "100% dependent: outage at a single provider halts business.")}</td>
-              <td class="col-highlight">{t("Федерация из 94 моделей с автоматическим переключением резерва.", "Федерація з 94 моделей з автоматичним перемиканням резерву.", "Federation of 94 models with automatic sub-second failover.")}</td>
+              <td data-label="{t('Обычный чат-бот', 'Звичайний чат-бот', 'Generic Chatbot')}">{t("100% зависимость: при сбое провайдера процесс встаёт.", "100% залежність: при збої провайдера процес зупиняється.", "100% dependent: outage at a single provider halts business.")}</td>
+              <td class="col-highlight" data-label="{t('Консилиум', 'Консиліум', 'Consilium')}">{t("Федерация из 94 моделей с автоматическим переключением резерва.", "Федерація з 94 моделей з автоматичним перемиканням резерву.", "Federation of 94 models with automatic sub-second failover.")}</td>
             </tr>
             <tr>
               <td><strong>{t("Экономика владения (TCO)", "Економіка володіння (TCO)", "Total Cost of Ownership")}</strong></td>
-              <td>{t("Фиксированная дорогая подписка на каждого пользователя.", "Фіксована дорога підписка на кожного користувача.", "Expensive per-seat subscriptions with unpredictable overages.")}</td>
-              <td class="col-highlight">{t("Гибридный пул: 90% задач на бесплатном слое, ROI 400%–900%.", "Гібридний пул: 90% завдань на безкоштовному шарі, ROI 400%–900%.", "Hybrid pool: 90% of volume on free tier, 400%–900% ROI.")}</td>
+              <td data-label="{t('Обычный чат-бот', 'Звичайний чат-бот', 'Generic Chatbot')}">{t("Фиксированная дорогая подписка на каждого пользователя.", "Фіксована дорога підписка на кожного користувача.", "Expensive per-seat subscriptions with unpredictable overages.")}</td>
+              <td class="col-highlight" data-label="{t('Консилиум', 'Консиліум', 'Consilium')}">{t("Гибридный пул: 90% задач на бесплатном слое, ROI 400%–900%.", "Гібридний пул: 90% завдань на безкоштовному шарі, ROI 400%–900%.", "Hybrid pool: 90% of volume on free tier, 400%–900% ROI.")}</td>
             </tr>
           </tbody>
         </table>
@@ -193,7 +216,10 @@ def get_section_05():
         "An objective technical audit demonstrates the structural superiority of the distributed Consilium architecture over standalone consumer chatbots:"
     )
 
-    content = f'''      <p class="lead-text">{lead}</p>
+    info_panel = infographics_builder.get_infographic_05()
+
+    content = f'''      {info_panel}
+      <p class="lead-text">{lead}</p>
       {sub1}
       {sub2}
       {sub3}'''
@@ -204,7 +230,7 @@ def get_section_05():
         "Порівняльний аудит: Одиночний чат-бот vs Система «Євалайн Консиліум»",
         "Comparative Audit: Standalone Chatbot vs. EvaLine Consilium System",
         "Технический аудит", "Технічний аудит", "Technical Audit",
-        content, open=True
+        content, open=False
     )
 
 def get_section_06():
@@ -266,7 +292,10 @@ def get_section_06():
         "EvaLine infrastructure is engineered to defense-grade fault tolerance with full geographic and energy redundancy:"
     )
 
-    content = f'''      <p class="lead-text">{lead}</p>
+    info_panel = infographics_builder.get_infographic_06()
+
+    content = f'''      {info_panel}
+      <p class="lead-text">{lead}</p>
       {sub1}
       {sub2}
       {sub3}
@@ -278,7 +307,7 @@ def get_section_06():
         "Військова стійкість, блекаут-резистентність та кластер двох вузлів",
         "Military Resilience, Blackout Defense & Dual-Node Cluster Topology",
         "Отказоустойчивость", "Відмовостійкість", "High Availability",
-        content, open=True
+        content, open=False
     )
 
 def get_section_07():
@@ -369,7 +398,10 @@ def get_section_07():
         "Our unified digital ecosystem links specialized domain endpoints and API services for comprehensive enterprise operations:"
     )
 
-    content = f'''      <p class="lead-text">{lead}</p>
+    info_panel = infographics_builder.get_infographic_07()
+
+    content = f'''      {info_panel}
+      <p class="lead-text">{lead}</p>
       {sub1}
       {sub2}
       {sub3}'''
@@ -380,5 +412,5 @@ def get_section_07():
         "Єдина екосистема: Каталог доменів та сервісів",
         "Unified Ecosystem: Domain Directory & Public Services Hub",
         "4 домена кластера", "4 домени кластера", "4 Cluster Domains",
-        content, open=True
+        content, open=False
     )

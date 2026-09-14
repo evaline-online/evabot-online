@@ -12,27 +12,28 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Roboto+Slab:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style id="main-manifesto-styles">
-:root {
-      --bg: #060b09;
-      --bg-card: rgba(8, 18, 14, 0.82);
-      --bg-card-hover: rgba(10, 26, 19, 0.96);
-      --border: rgba(0, 255, 120, 0.10);
-      --border-accent: rgba(0, 230, 118, 0.40);
-      --border-cyan: rgba(0, 220, 255, 0.30);
 
-      --fg: #d7f5e4;
-      --fg-muted: #7fae97;
-      --fg-subtle: #4f7a66;
-
-      --accent-green: #00ff88;
-      --accent-cyan: #00d8ff;
-      --accent-blue: #38d8f8;
-      --accent-amber: #ffd34d;
-      --accent-purple: #c79bff;
-
-      /* Roboto base; headings lean mono for terminal-on-web identity */
+    :root {
+      --bg: #07090e;
+      --bg-card: rgba(14, 18, 27, 0.82);
+      --bg-card-hover: rgba(20, 26, 40, 0.96);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(0, 230, 118, 0.4);
+      --border-cyan: rgba(0, 229, 255, 0.35);
+      
+      --fg: #e6edf3;
+      --fg-muted: #8b949e;
+      --fg-subtle: #57606a;
+      
+      --accent-green: #00e676;
+      --accent-cyan: #00e5ff;
+      --accent-blue: #38bdf8;
+      --accent-amber: #ffd600;
+      --accent-purple: #b388ff;
+      
+      /* Pure Roboto Typography Hierarchy */
       --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      --font-display: 'Roboto Mono', 'Roboto Condensed', monospace;
+      --font-display: 'Roboto Condensed', 'Roboto', sans-serif;
       --font-slab: 'Roboto Slab', serif;
       --font-mono: 'Roboto Mono', monospace;
     }
@@ -47,10 +48,10 @@
       font-size: 16px;
       line-height: 1.68;
       overflow-x: hidden;
-      background-image:
-        radial-gradient(circle at 10% 10%, rgba(0, 255, 130, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 90% 15%, rgba(0, 216, 255, 0.04) 0%, transparent 45%),
-        radial-gradient(circle at 50% 85%, rgba(0, 255, 130, 0.03) 0%, transparent 50%);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(0, 230, 118, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 15%, rgba(0, 229, 255, 0.04) 0%, transparent 45%),
+        radial-gradient(circle at 50% 85%, rgba(56, 189, 248, 0.03) 0%, transparent 50%);
       background-attachment: fixed;
     }
 
@@ -505,83 +506,6 @@
       box-shadow: 0 0 16px rgba(179, 136, 255, 0.2);
     }
 
-    /* Models Matrix filter buttons + search bar (fluid, wraps on phones) */
-    .filter-tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .filter-btn {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
-      color: var(--fg-muted);
-      padding: 9px 16px;
-      border-radius: 8px;
-      font-family: var(--font-sans);
-      font-size: 0.86rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      min-width: 0;
-      max-width: 100%;
-    }
-    .filter-btn:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-    }
-    .filter-btn.active[data-filter="free"] {
-      background: rgba(0, 230, 118, 0.15);
-      border-color: var(--accent-green);
-      color: var(--accent-green);
-      box-shadow: 0 0 14px rgba(0, 230, 118, 0.18);
-    }
-    .filter-btn.active[data-filter="paid"] {
-      background: rgba(0, 229, 255, 0.15);
-      border-color: var(--accent-cyan);
-      color: var(--accent-cyan);
-      box-shadow: 0 0 14px rgba(0, 229, 255, 0.18);
-    }
-    .filter-btn.active[data-filter="all"] {
-      background: rgba(179, 136, 255, 0.15);
-      border-color: var(--accent-purple);
-      color: #fff;
-      box-shadow: 0 0 14px rgba(179, 136, 255, 0.18);
-    }
-    .search-sort-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .matrix-search-input {
-      flex: 1 1 240px;
-      min-width: 0;
-      max-width: 100%;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--fg);
-      font-family: var(--font-sans);
-      font-size: 0.92rem;
-      padding: 10px 14px;
-      outline: none;
-    }
-    .matrix-search-input:focus {
-      border-color: var(--accent-green);
-    }
-    .matrix-select {
-      flex: 1 1 220px;
-      min-width: 0;
-      max-width: 100%;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--fg);
-      font-family: var(--font-sans);
-      font-size: 0.9rem;
-      padding: 10px 12px;
-      cursor: pointer;
-    }
-
     .matrix-sort-bar {
       display: flex;
       align-items: center;
@@ -778,100 +702,6 @@
       border-left: 3px solid var(--accent-cyan);
       padding: 8px 12px;
       border-radius: 0 6px 6px 0;
-    }
-
-    .model-dates {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px 18px;
-      font-family: var(--font-mono);
-      font-size: 0.76rem;
-      color: var(--fg-muted);
-      padding-top: 4px;
-      border-top: 1px dashed rgba(255, 255, 255, 0.06);
-      margin-top: 4px;
-    }
-    .model-dates strong {
-      color: var(--accent-purple);
-      font-weight: 700;
-    }
-    [data-theme="terminal"] .model-dates strong {
-      color: #ffb000;
-    }
-
-    /* One-line model registry: 1 line = 1 model (terminal/raw friendly) */
-    .model-line-list {
-      margin-top: 26px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      overflow-x: auto;
-    }
-    .model-list-header {
-      font-weight: 700;
-      color: var(--accent-cyan);
-      letter-spacing: 0.02em;
-      padding: 8px 4px 10px;
-      font-family: var(--font-sans);
-    }
-    .model-line {
-      display: grid;
-      grid-template-columns: 34px 240px 150px 58px 1fr;
-      align-items: baseline;
-      gap: 10px;
-      padding: 4px 6px;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
-      line-height: 1.45;
-      white-space: nowrap;
-    }
-    .model-line:hover {
-      background: rgba(255, 255, 255, 0.04);
-    }
-    .ml-idx {
-      color: var(--fg-subtle);
-      text-align: right;
-      font-size: 0.72rem;
-    }
-    .ml-name {
-      color: var(--fg);
-      font-weight: 700;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .ml-prov {
-      color: var(--accent-cyan);
-      font-size: 0.74rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .ml-iq {
-      color: var(--accent-amber);
-      font-weight: 700;
-      text-align: right;
-    }
-    .ml-desc {
-      color: var(--fg-muted);
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .ml-dates {
-      color: var(--accent-purple);
-      font-size: 0.74rem;
-      white-space: nowrap;
-    }
-    @media (max-width: 720px) {
-      .model-line {
-        grid-template-columns: 26px 1fr auto;
-        gap: 6px;
-        white-space: normal;
-      }
-      .model-line .ml-prov, .model-line .ml-iq {
-        display: none;
-      }
-      .ml-desc {
-        grid-column: 2 / -1;
-      }
     }
 
     .model-pricing-box {
@@ -1829,7 +1659,7 @@ details.accordion-section[open] {
 summary.accordion-summary {
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: space-between;
   padding: clamp(16px, 2.5vw, 22px) clamp(18px, 3vw, 28px);
   background: rgba(14, 18, 27, 0.95);
   cursor: pointer;
@@ -1841,28 +1671,33 @@ summary.accordion-summary {
 summary.accordion-summary::-webkit-details-marker {
   display: none;
 }
-summary.accordion-summary::before {
-  content: "▶";
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  color: var(--accent-green);
-  transition: transform 0.25s ease;
-  display: inline-block;
-  flex-shrink: 0;
-}
-details.accordion-section[open] > summary.accordion-summary::before {
-  transform: rotate(90deg);
-  color: var(--accent-cyan);
-}
 details.accordion-section[open] > summary.accordion-summary {
   border-bottom-color: var(--border);
   background: rgba(18, 24, 38, 0.98);
+}
+.summary-left {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.8vw, 16px);
+  flex: 1;
+}
+.summary-chevron {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  color: var(--accent);
+  transition: transform 0.3s ease;
+  display: inline-block;
+  width: 18px;
+  text-align: center;
+}
+details.accordion-section[open] > summary.accordion-summary .summary-chevron {
+  transform: rotate(90deg);
 }
 .summary-num {
   font-family: var(--font-mono);
   font-size: clamp(0.85rem, 1.3vw, 1.05rem);
   font-weight: 700;
-  color: var(--accent-green);
+  color: var(--accent);
   background: rgba(0, 230, 118, 0.1);
   border: 1px solid var(--border-accent);
   padding: 4px 10px;
@@ -1872,12 +1707,11 @@ details.accordion-section[open] > summary.accordion-summary {
 }
 .summary-title {
   font-family: var(--font-display);
-  font-size: clamp(1.1rem, 1.9vw, 1.45rem);
+  font-size: clamp(1.1rem, 1.9vw, 1.5rem);
   font-weight: 700;
   color: #fff;
   margin: 0;
   line-height: 1.35;
-  flex: 1;
 }
 .summary-badge {
   font-family: var(--font-mono);
@@ -1888,8 +1722,6 @@ details.accordion-section[open] > summary.accordion-summary {
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--fg-muted);
   white-space: nowrap;
-  flex-shrink: 0;
-  margin-left: auto;
 }
 
 .accordion-content {
@@ -1915,7 +1747,7 @@ details.sub-accordion[open] {
 summary.sub-summary {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
   padding: 13px 18px;
   cursor: pointer;
   user-select: none;
@@ -1927,50 +1759,50 @@ summary.sub-summary {
 summary.sub-summary::-webkit-details-marker {
   display: none;
 }
-summary.sub-summary::before {
-  content: "▶";
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--accent-cyan);
-  transition: transform 0.25s ease;
-  display: inline-block;
-  flex-shrink: 0;
-}
-details.sub-accordion[open] > summary.sub-summary::before {
-  transform: rotate(90deg);
-  color: var(--accent-green);
-}
 details.sub-accordion[open] > summary.sub-summary {
   border-bottom-color: rgba(255, 255, 255, 0.06);
   background: rgba(20, 28, 44, 0.85);
 }
+.sub-summary-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+.sub-chevron {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--cyan);
+  transition: transform 0.25s ease;
+  display: inline-block;
+  width: 14px;
+  text-align: center;
+}
+details.sub-accordion[open] > summary.sub-summary .sub-chevron {
+  transform: rotate(90deg);
+}
 .sub-icon {
-  font-size: 1.1rem;
-  flex-shrink: 0;
+  font-size: 1.15rem;
+  line-height: 1;
 }
 .sub-title {
-  font-family: var(--font-sans);
-  font-size: 1.02rem;
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 1.4vw, 1.18rem);
   font-weight: 600;
-  color: #fff;
-  line-height: 1.4;
-  flex: 1;
+  color: var(--fg);
+  margin: 0;
 }
 .sub-badge {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  padding: 2px 10px;
+  font-size: 0.7rem;
+  padding: 3px 9px;
   border-radius: 12px;
   background: rgba(0, 229, 255, 0.08);
   border: 1px solid rgba(0, 229, 255, 0.25);
-  color: var(--accent-cyan);
-  white-space: nowrap;
-  flex-shrink: 0;
-  margin-left: auto;
+  color: var(--cyan);
 }
 .sub-content {
-  padding: 16px 20px 22px;
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 18px 20px;
 }
 
 
@@ -2017,939 +1849,94 @@ details.sub-accordion[open] > summary.sub-summary {
   margin-bottom: 14px;
   text-transform: uppercase;
 }
-
-/* Additional Theme Accents & Control Bar Styles */
-:root {
-  --accent: #00e676;
-  --cyan: #00e5ff;
-  --accent-red: #f87171;
-}
-
-.mode-controls {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.btn-ctrl {
-  background: rgba(20, 26, 40, 0.8);
-  border: 1px solid var(--border);
-  color: var(--fg-muted);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 5px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  text-decoration: none;
-}
-.btn-ctrl:hover {
-  color: var(--cyan);
-  border-color: var(--border-cyan);
-  background: rgba(0, 229, 255, 0.08);
-}
-.btn-ctrl.styles-disabled {
-  background: rgba(255, 214, 0, 0.15);
-  border-color: var(--accent-amber);
-  color: var(--accent-amber);
-}
-
-/* ==========================================================================
-   INFOGRAPHICS, KPI GAUGES, MERMAID & DASHBOARDS
-   ========================================================================== */
-.infographic-panel {
-  background: linear-gradient(135deg, rgba(14, 18, 27, 0.92) 0%, rgba(10, 14, 22, 0.95) 100%);
-  border: 1px solid rgba(0, 230, 118, 0.22);
-  border-radius: 14px;
-  padding: 22px 24px;
-  margin: 16px 0 24px 0;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  position: relative;
-  overflow: hidden;
-}
-.infographic-panel::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #00e676, #00e5ff, #38bdf8, transparent);
-}
-.infographic-header {
-  margin-bottom: 20px;
-}
-.infographic-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 10px;
-}
-.infographic-icon {
-  font-size: 2rem;
-  line-height: 1;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 10px;
-  border-radius: 12px;
-}
-.infographic-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--accent);
-  text-transform: uppercase;
-}
-.infographic-title {
-  font-family: var(--font-display);
-  font-size: 1.28rem;
-  font-weight: 700;
-  color: #fff;
-  margin: 2px 0 0 0;
-}
-.infographic-desc {
-  color: var(--fg-muted);
-  font-size: 0.92rem;
-  line-height: 1.55;
-  max-width: 900px;
-}
-
-/* KPI Metrics Grid */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-  margin-bottom: 22px;
-}
-.kpi-card {
-  background: rgba(18, 24, 38, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+/* ===== TOC mindmap + header accordion (added) ===== */
+.toolbar-accordion {
+  background: rgba(14,18,27,0.6);
+  border: 1px solid var(--border, rgba(255,255,255,0.1));
   border-radius: 10px;
-  padding: 16px;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-  position: relative;
+  margin: 12px auto;
+  max-width: 1200px;
   overflow: hidden;
 }
-.kpi-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.18);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-}
-.kpi-card::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-}
-.kpi-green::after { background: #00e676; }
-.kpi-cyan::after { background: #00e5ff; }
-.kpi-amber::after { background: #ffd600; }
-.kpi-purple::after { background: #b388ff; }
-.kpi-red::after { background: #f87171; }
-
-.kpi-val {
-  font-family: var(--font-display);
-  font-size: 1.85rem;
-  font-weight: 900;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: #fff;
-  margin-bottom: 4px;
-}
-.kpi-green .kpi-val { color: #00e676; text-shadow: 0 0 12px rgba(0, 230, 118, 0.3); }
-.kpi-cyan .kpi-val { color: #00e5ff; text-shadow: 0 0 12px rgba(0, 229, 255, 0.3); }
-.kpi-amber .kpi-val { color: #ffd600; text-shadow: 0 0 12px rgba(255, 214, 0, 0.3); }
-.kpi-purple .kpi-val { color: #c084fc; text-shadow: 0 0 12px rgba(192, 132, 252, 0.3); }
-.kpi-red .kpi-val { color: #f87171; text-shadow: 0 0 12px rgba(248, 113, 113, 0.3); }
-
-.kpi-lbl {
-  font-family: var(--font-sans);
-  font-size: 0.88rem;
+.toolbar-accordion summary.toolbar-summary {
+  cursor: pointer;
+  padding: 12px 18px;
   font-weight: 600;
-  color: #e6edf3;
-  margin-bottom: 4px;
-}
-.kpi-sub {
-  font-size: 0.76rem;
-  color: var(--fg-muted);
-  line-height: 1.35;
-}
-
-/* Diagram Box & Mermaid */
-.diagram-box {
-  background: rgba(10, 14, 22, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 16px 18px;
-  overflow: hidden;
-}
-.diagram-box-header {
+  font-size: 0.95em;
+  letter-spacing: 0.04em;
+  list-style: none;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  flex-wrap: wrap;
   gap: 10px;
-}
-.diagram-box-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--cyan);
-}
-.diagram-pulse-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--cyan);
-  box-shadow: 0 0 8px var(--cyan);
-  animation: pulse-dot 2s infinite;
-}
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.85); }
-}
-.diagram-badge {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  background: rgba(0, 229, 255, 0.08);
-  border: 1px solid rgba(0, 229, 255, 0.3);
-  color: var(--cyan);
-  padding: 3px 8px;
-  border-radius: 4px;
-}
-.diagram-canvas {
-  overflow: hidden;
-  padding: 10px 0;
-  display: flex;
-  justify-content: center;
-}
-.diagram-canvas .mermaid {
-  min-width: 0;
-  max-width: 100%;
-  width: 100%;
-  text-align: center;
-  position: relative;
-}
-.diagram-canvas .mermaid svg {
-  width: 100% !important; /* override any pixel width attrs mermaid may set */
-  max-width: 100% !important;
-  height: auto !important;
-  margin: 0 auto;
-}
-.diagram-canvas .mermaid::after {
-  content: '⤢ dbl-click / pinch to zoom · drag to pan';
-  position: absolute;
-  right: 8px;
-  bottom: 6px;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.62rem;
-  color: rgba(230, 237, 243, 0.35);
-  pointer-events: none;
-}
-
-/* MARKMAP (zoomable mindmaps) — pan/zoom makes portrait phones fully readable */
-.diagram-canvas .markmap {
-  width: 100%;
-  height: clamp(320px, 55vh, 500px);
-  min-height: 300px;
-  border: 1px solid rgba(0, 255, 136, 0.18);
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.35);
-  position: relative;
-  overflow: hidden;
-  color: #e6edf3; /* node label text inherits this */
-  touch-action: none; /* let markmap handle pan/zoom gestures */
-}
-.diagram-canvas .markmap svg {
-  width: 100%;
-  height: 100%;
-}
-.diagram-canvas .markmap::after {
-  content: '⟲ scroll / pinch to zoom · drag to pan';
-  position: absolute;
-  right: 8px;
-  bottom: 6px;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.62rem;
-  color: rgba(230, 237, 243, 0.35);
-  pointer-events: none;
-}
-@media (max-width: 480px) {
-  .diagram-canvas .markmap {
-    height: clamp(280px, 50vh, 420px);
-    min-height: 260px;
-  }
-}
-
-/* ASCII Fallback Toggle — web theme is vector-only; ASCII art lives in terminal/raw */
-.ascii-toggle {
-  display: none;
-  margin-top: 12px;
-  border-top: 1px dashed rgba(255, 255, 255, 0.08);
-  padding-top: 10px;
-}
-[data-theme="terminal"] .ascii-toggle {
-  display: block;
-}
-.ascii-toggle-btn {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--fg-muted);
-  cursor: pointer;
-  outline: none;
-}
-.ascii-toggle-btn:hover {
-  color: var(--cyan);
-}
-.ascii-diagram {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  line-height: 1.4;
-  color: #38bdf8;
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 14px;
-  overflow-x: auto;
-  margin: 10px 0 0 0;
-}
-
-/* SVG Tetraktys Pyramid */
-.tetraktys-svg-card {
-  background: rgba(14, 18, 27, 0.75);
-  border: 1px solid rgba(0, 230, 118, 0.2);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 20px;
-}
-.tetraktys-svg-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-.tetraktys-svg-title {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--accent-amber);
-}
-.svg-node circle {
-  transition: transform 0.2s ease, stroke-width 0.2s ease;
-  cursor: pointer;
-}
-.svg-node:hover circle {
-  filter: brightness(1.2);
-}
-
-/* =========================================================================
-   MASTER CONTROLS TOOLBAR & THEME PRESETS
-   ========================================================================= */
-.top-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 16px clamp(16px, 3vw, 32px);
-  background: rgba(10, 14, 22, 0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-.brand-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.toolbar-container {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px 18px;
-  padding-top: 10px;
-  border-top: 1px dashed rgba(255, 255, 255, 0.08);
-}
-
-.toolbar-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.toolbar-label {
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  color: var(--fg-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-}
-
-.btn-group {
-  display: inline-flex;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  overflow: hidden;
-}
-
-.btn-group .btn-ctrl,
-.btn-group .theme-btn,
-.btn-group .lang-btn,
-.btn-group .diagram-btn {
-  background: transparent;
-  border: none;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--fg-muted);
-  padding: 5px 11px;
-  font-size: 0.8rem;
-  font-family: var(--font-mono);
-  font-weight: 500;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.btn-group button:last-child,
-.btn-group a:last-child {
-  border-right: none;
-}
-
-.btn-group .btn-ctrl:hover,
-.btn-group .theme-btn:hover,
-.btn-group .lang-btn:hover,
-.btn-group .diagram-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
-}
-
-.btn-group .active {
-  background: rgba(0, 230, 118, 0.15) !important;
-  color: var(--accent-green) !important;
-  font-weight: 700;
-  box-shadow: inset 0 0 10px rgba(0, 230, 118, 0.2);
-}
-
-/* Section Divider */
-.section-divider {
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
-  margin: 32px 0;
-}
-
-/* =========================================================================
-   SEMANTIC KPI METRIC TABLE (Cyber UI Styling)
-   ========================================================================= */
-.kpi-table {
-  width: 100%;
-  border-collapse: collapse;
-  border: 1px solid var(--border);
-  background: rgba(14, 18, 27, 0.75);
-  border-radius: 10px;
-  margin: 16px 0 24px;
-  overflow: hidden;
-}
-
-.kpi-table th {
-  background: rgba(0, 230, 118, 0.07);
-  color: var(--accent-green);
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 10px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.kpi-table td {
-  padding: 12px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: var(--fg);
-}
-
-.kpi-val-cell {
-  font-family: var(--font-mono);
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--accent-cyan);
-}
-
-.kpi-row.kpi-green .kpi-val-cell { color: var(--accent-green); }
-.kpi-row.kpi-cyan .kpi-val-cell { color: var(--accent-cyan); }
-.kpi-row.kpi-purple .kpi-val-cell { color: var(--accent-purple); }
-.kpi-row.kpi-amber .kpi-val-cell { color: var(--accent-amber); }
-.kpi-row.kpi-red .kpi-val-cell { color: #f87171; }
-
-.kpi-lbl-cell strong {
-  color: #fff;
-  font-size: 0.95rem;
-}
-
-.kpi-sub-cell small {
-  color: var(--fg-muted);
-  font-size: 0.82rem;
-  line-height: 1.35;
-}
-
-/* =========================================================================
-   THEME: TERMINAL CRT (Monospace Green Phosphor on Black)
-   ========================================================================= */
-[data-theme="terminal"] {
-  --bg: #050505;
-  --bg-card: rgba(0, 20, 10, 0.85);
-  --bg-card-hover: rgba(0, 30, 15, 0.95);
-  --border: #00ff66;
-  --border-accent: #00ff66;
-  --border-cyan: #ffb000;
-  --fg: #a7f3d0;
-  --fg-muted: #34d399;
-  --fg-subtle: #059669;
-  --accent-green: #00ff66;
-  --accent-cyan: #ffb000;
-  --accent-blue: #00ffcc;
-  --accent-amber: #ffb000;
-  --font-sans: 'Roboto Mono', monospace;
-  --font-display: 'Roboto Mono', monospace;
-}
-
-[data-theme="terminal"] body {
-  background-color: #050505;
-  color: #00ff66;
-  font-family: 'Roboto Mono', monospace;
-  background-image: linear-gradient(rgba(0, 255, 100, 0.03) 50%, rgba(0, 0, 0, 0.25) 50%);
-  background-size: 100% 4px;
-}
-
-[data-theme="terminal"] .summary-title {
-  color: #00ff66;
-  font-family: 'Roboto Mono', monospace;
-}
-
-[data-theme="terminal"] .kpi-val {
-  color: #ffb000;
-}
-
-[data-theme="terminal"] .hero-title span {
-  background: none !important;
-  -webkit-text-fill-color: #00ff66 !important;
-  color: #00ff66 !important;
-}
-
-[data-theme="terminal"] .kpi-table th {
-  background: rgba(0, 255, 100, 0.1);
-  color: #00ff66;
-}
-
-[data-theme="terminal"] .model-line {
-  grid-template-columns: 30px 1fr 120px 48px;
-  border-bottom-color: rgba(0, 255, 102, 0.1);
-}
-[data-theme="terminal"] .model-line .ml-desc {
-  display: none;
-}
-[data-theme="terminal"] .ml-name {
-  color: #00ff66;
-}
-[data-theme="terminal"] .ml-prov {
-  color: #00ffcc;
-}
-[data-theme="terminal"] .ml-dates {
-  color: #ffb000;
-}
-
-/* ASCII hero logo: hidden in graphical themes, shown in terminal + raw */
-.hero-ascii {
-  display: none;
-}
-[data-theme="terminal"] .hero-ascii {
-  display: block;
-  font-family: 'Roboto Mono', monospace;
-  font-size: 13px;
-  line-height: 1.2;
-  color: #00ff66;
-  text-shadow: 0 0 8px rgba(0, 255, 102, 0.6);
-  margin: 0 0 18px;
-  overflow-x: auto;
-  white-space: pre;
-  max-width: 100%;
-}
-
-/* Terminal CRT fine-tuning: crisp scanlines, boxed prompts, terminal cursor */
-[data-theme="terminal"] .top-nav {
-  border-bottom: 1px solid rgba(0, 255, 102, 0.35);
-}
-[data-theme="terminal"] .brand-title,
-[data-theme="terminal"] .toolbar-label {
-  color: #00ff66;
-}
-[data-theme="terminal"] .btn-ctrl,
-[data-theme="terminal"] .theme-btn,
-[data-theme="terminal"] .lang-btn,
-[data-theme="terminal"] .diagram-btn,
-[data-theme="terminal"] .export-link {
-  border-color: rgba(0, 255, 102, 0.4);
-  color: #00ff66;
-  background: rgba(0, 20, 10, 0.6);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-family: 'Roboto Mono', monospace;
-}
-[data-theme="terminal"] .btn-ctrl:hover,
-[data-theme="terminal"] .theme-btn:hover,
-[data-theme="terminal"] .lang-btn:hover,
-[data-theme="terminal"] .diagram-btn:hover {
-  background: rgba(0, 255, 102, 0.12);
-  box-shadow: 0 0 10px rgba(0, 255, 102, 0.25);
-}
-[data-theme="terminal"] .active {
-  background: rgba(0, 255, 102, 0.18) !important;
-  box-shadow: 0 0 12px rgba(0, 255, 102, 0.35) !important;
-}
-[data-theme="terminal"] details.accordion-section,
-[data-theme="terminal"] details.sub-accordion {
-  border-color: rgba(0, 255, 102, 0.3);
-  background: rgba(0, 20, 10, 0.5);
-}
-[data-theme="terminal"] details.accordion-section[open] > summary.accordion-summary,
-[data-theme="terminal"] details.sub-accordion[open] > summary.sub-summary {
-  border-bottom: 1px dashed rgba(0, 255, 102, 0.4);
-}
-[data-theme="terminal"] .summary-num {
-  color: #ffb000;
-  font-family: 'Roboto Mono', monospace;
-}
-[data-theme="terminal"] .kpi-val {
-  text-shadow: 0 0 8px rgba(255, 176, 0, 0.6);
-}
-[data-theme="terminal"] a {
-  color: #00ffcc;
-}
-[data-theme="terminal"] ::selection {
-  background: rgba(0, 255, 102, 0.3);
-}
-
-/* =========================================================================
-   MOBILE & TOUCH OPTIMIZATION (all 3 themes)
-   ========================================================================= */
+  color: var(--fg, #e6edf3);
+  background: rgba(255,255,255,0.04);
+  user-select: none;
+}
+.toolbar-accordion summary.toolbar-summary::-webkit-details-marker { display: none; }
+.toolbar-accordion summary.toolbar-summary::after { content: "▾"; margin-left: auto; transition: transform .2s; }
+.toolbar-accordion[open] summary.toolbar-summary::after { transform: rotate(180deg); }
+.toc-mindmap .toc-mindmap-tree { list-style: none; margin: 0; padding: 0 4px; display: grid; gap: 6px; }
+.toc-mindmap .toc-mindmap-tree ul { list-style: none; margin: 6px 0 6px 18px; padding-left: 14px; border-left: 1px dashed rgba(255,255,255,0.15); display: grid; gap: 4px; }
+.toc-mindmap .toc-mindmap-tree li { margin: 0; }
+.toc-mindmap .toc-mindmap-tree a { display: inline-flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; padding: 5px 10px; border-radius: 8px; background: rgba(255,255,255,0.03); transition: background .15s; width: 100%; box-sizing: border-box; }
+.toc-mindmap .toc-mindmap-tree a:hover { background: rgba(0,230,118,0.12); text-decoration: none; }
+.toc-mindmap .toc-node-num { font-family: ui-monospace, monospace; opacity: 0.6; font-size: 0.8em; }
+.toc-mindmap .toc-sub-item a { font-size: 0.92em; padding-left: 14px; }
+.toc-toplink { text-decoration: none; color: #00e676; }
 @media (max-width: 768px) {
-  .top-nav {
-    padding: 12px 14px;
-    gap: 10px;
-  }
-  .toolbar-container {
-    gap: 8px 10px;
-    padding-top: 8px;
-  }
-  .toolbar-label {
-    display: none;
-  }
-  .btn-group .btn-ctrl,
-  .btn-group .theme-btn,
-  .btn-group .lang-btn,
-  .btn-group .diagram-btn {
-    padding: 7px 10px;
-    font-size: 0.74rem;
-    white-space: nowrap;
-  }
-  .toolbar-group,
-  .toolbar-container {
-    flex-wrap: wrap;
-  }
-  .hero-title {
-    font-size: clamp(1.3rem, 5vw, 2rem) !important;
-    line-height: 1.25 !important;
-  }
-  .hero-eyebrow {
-    font-size: 0.7rem !important;
-  }
-  .hero-desc {
-    font-size: 0.9rem !important;
-  }
-  .kpi-table {
-    display: block;
-  }
-  .kpi-table thead {
-    display: none;
-  }
-  .kpi-table tbody,
-  .kpi-table tr,
-  .kpi-table td {
-    display: block;
-    width: 100%;
-  }
-  .kpi-table tr {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 2px 12px;
-    padding: 10px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  }
-  .kpi-table td {
-    border: none;
-    padding: 2px 0;
-  }
-  .kpi-val-cell {
-    grid-column: 1;
-    align-self: start;
-  }
-  .kpi-lbl-cell {
-    grid-column: 2;
-  }
-  .kpi-sub-cell {
-    grid-column: 1 / -1;
-  }
-  .kpi-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
-  }
-  .model-line {
-    grid-template-columns: 26px 1fr auto;
-    white-space: normal;
-    align-items: start;
-    gap: 6px;
-  }
-  .model-line .ml-prov,
-  .model-line .ml-iq {
-    display: none;
-  }
-  .model-line .ml-desc {
-    grid-column: 2 / -1;
-    white-space: normal;
-  }
-  .model-line .ml-dates {
-    grid-column: 2 / -1;
-  }
-  .summary-title {
-    font-size: 0.98rem !important;
-  }
-  .summary-num {
-    display: none !important;
-  }
-  details.accordion-section[open] > summary.accordion-summary {
-    padding: 12px 14px !important;
-  }
+  .kpi-table, .comparison-table { display: block; overflow-x: auto; }
+  .infographic-panel { overflow-x: auto; }
+  .sub-content, .accordion-content { overflow-x: auto; }
 }
+    /* Module Box fieldset/legend */
+    fieldset.module-box {
+      border: 1px solid var(--border-accent);
+      border-radius: 12px;
+      padding: 0;
+      margin: 18px 0;
+      background: var(--bg-card);
+      overflow: hidden;
+    }
+    legend.module-title {
+      padding: 8px 16px;
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      font-weight: 700;
+      color: var(--accent-green);
+      background: rgba(0, 230, 118, 0.08);
+      border: 1px solid var(--border-accent);
+      border-radius: 8px;
+      margin: 12px;
+      box-shadow: 0 2px 8px rgba(0, 230, 118, 0.15);
+    }
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
+    details.accordion-section, details.sub-accordion { scroll-margin-top: 20px; }
 
-@media (max-width: 480px) {
-  .brand-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  .hero-links {
-    justify-content: center;
-  }
-  .hero-links .btn-ctrl {
-    padding: 7px 12px !important;
-    font-size: 0.78rem !important;
-    flex: 1 1 auto;
-    justify-content: center;
-  }
-  .toolbar-group .btn-group {
-    max-width: 100%;
-  }
-  .toolbar-group {
-    width: 100%;
-  }
-  .toolbar-group .btn-group {
-    flex-wrap: wrap;
-  }
-  summary.accordion-summary {
-    flex-wrap: wrap;
-    row-gap: 6px;
-  }
-  .summary-title {
-    min-width: 0;
-    overflow-wrap: anywhere;
-  }
-  .summary-badge {
-    white-space: normal;
-    margin-left: 0;
-    min-width: 0;
-    overflow-wrap: anywhere;
-  }
-  .model-line-list {
-    font-size: 0.76rem;
-  }
-  .ml-name {
-    font-size: 0.82rem;
-  }
-  .model-metrics {
-    flex-wrap: wrap;
-  }
-  .metric-pill {
-    font-size: 0.68rem;
-    padding: 3px 8px;
-  }
-  .model-card {
-    padding: 16px;
-  }
-  .diagram-box,
-  .infographic-panel {
-    padding: 12px !important;
-  }
-  .sub-summary {
-    flex-wrap: wrap;
-    row-gap: 6px;
-  }
-  .sub-title {
-    min-width: 0;
-    overflow-wrap: anywhere;
-  }
-  .sub-badge {
-    white-space: normal;
-    min-width: 0;
-    overflow-wrap: anywhere;
-  }
-  .phase-card {
-    padding: 14px;
-    gap: 12px;
-  }
-  .glossary-header,
-  .model-card-header,
-  .infographic-title-wrap {
-    flex-wrap: wrap;
-  }
-  .glossary-category-pill,
-  .provider-badge {
-    white-space: normal;
-  }
-  .infographic-title {
-    min-width: 0;
-    overflow-wrap: anywhere;
-  }
-
-  .ascii-diagram {
-    font-size: 0.65rem;
-    padding: 10px;
-  }
-  [data-theme="terminal"] .hero-ascii {
-    font-size: 10px;
-  }
-}
-
-/* comparison table -> stacked cards up to 640px: no horizontal scroll anywhere */
-@media (max-width: 640px) {
-  .comparison-table,
-  .comparison-table tbody,
-  .comparison-table tr,
-  .comparison-table td {
-    display: block;
-    width: 100%;
-  }
-  .comparison-table thead {
-    display: none;
-  }
-  .comparison-table {
-    border: none;
-    background: transparent;
-  }
-  .comparison-table tr {
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    margin-bottom: 12px;
-    overflow: hidden;
-  }
-  .comparison-table td {
-    border: none;
-    border-top: 1px dashed rgba(255, 255, 255, 0.06);
-    padding: 10px 12px;
-  }
-  .comparison-table td::before {
-    content: attr(data-label);
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--accent-cyan);
-    margin-bottom: 4px;
-  }
-  .comparison-table td.col-highlight::before {
-    color: var(--accent-green);
-  }
-}
-
-@media (max-width: 360px) {
-  .btn-group .btn-ctrl,
-  .btn-group .theme-btn,
-  .btn-group .lang-btn,
-  .btn-group .diagram-btn {
-    padding: 6px 8px;
-    font-size: 0.7rem;
-    gap: 2px;
-  }
-  .container {
-    padding: 16px 12px 60px;
-  }
-  .toolbar-label {
-    display: none;
-  }
-}
-
-/* Print Optimization */
-@media print {
-  .top-nav, .accordion-controls, .theme-switcher, .lang-switcher {
-    display: none !important;
-  }
-  body {
-    background: #fff !important;
-    color: #000 !important;
-  }
-  details {
-    display: block !important;
-    border: none !important;
-    margin: 20px 0 !important;
-  }
-  details[open] {
-    display: block !important;
-  }
-  .accordion-content {
-    display: block !important;
-    padding: 0 !important;
-  }
-  summary {
-    font-size: 1.3rem !important;
-    font-weight: bold !important;
-    list-style: none !important;
-  }
-  .kpi-table {
-    border: 1px solid #000 !important;
-  }
-  .kpi-table th, .kpi-table td {
-    border: 1px solid #000 !important;
-    color: #000 !important;
-  }
-}
+    /* Anti-overflow hardening: additive, non-aggressive */    /* Anti-overflow hardening: additive, non-aggressive */
+    img, picture, video, canvas, svg { max-width: 100%; height: auto; }
+    table { max-width: 100%; }
+    .kpi-table, .comparison-table, .table-responsive, .table-container, table { display: block; overflow-x: auto; }
+    .accordion-content, .sub-content, .infographic-panel, .panel, .table-responsive { min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+    .diagram-canvas, .ascii-diagram, pre, code { white-space: pre-wrap; word-break: break-word; max-width: 100%; }
 
 
-
+  </style>
+<style id="reset-styles">
+    /* RESET ONLY: cross-browser/cross-OS unification, no design. Survives ?theme=raw */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; line-height: 1.5; }
+    body { margin: 0; min-height: 100dvh; }
+    h1,h2,h3,h4,h5,h6,p,figure,blockquote,dl,dd,hr,pre { margin: 0; }
+    ul,ol { padding-inline-start: 24px; }
+    img,picture,video,canvas { max-width: 100%; height: auto; }
+    button,input,select,textarea { font: inherit; color: inherit; background: none; border: none; }
+    details > summary { cursor: pointer; list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+    table { border-collapse: collapse; border-spacing: 0; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    strong,b { font-weight: 700; }
+    [hidden] { display: none !important; }
   </style>
 </head>
 <body>
@@ -2957,7 +1944,7 @@ details.sub-accordion[open] > summary.sub-summary {
 <header class="top-nav" role="banner">
   <div class="brand-row">
     <a href="https://evaline.online" class="brand-title">
-      <span class="logo-gem">◆</span> EVALINE // EVANETWORK
+      <span class="logo-gem">◆</span> EVALINE NETWORK (EVANET)
     </a>
     <div class="cluster-status-pill" id="cluster-status-indicator">
       <span class="pulse-dot"></span>
@@ -2966,6 +1953,8 @@ details.sub-accordion[open] > summary.sub-summary {
   </div>
 
   <!-- Master Controls Toolbar: Language, Themes, Accordions, Diagrams, Export -->
+  <details class="toolbar-accordion" id="header-accordion">
+    <summary class="toolbar-summary">⚙ <span class="t-ru">Панель управления (Язык / Оформление / Секции / Схемы / Экспорт)</span><span class="t-uk" hidden>Панель керування (Мова / Оформлення / Секції / Схеми / Експорт)</span><span class="t-en" hidden>Control Panel (Language / Style / Sections / Diagrams / Export)</span></summary>
   <div class="toolbar-container" role="toolbar" aria-label="Manifesto Controls">
     <div class="toolbar-group">
       <span class="toolbar-label"><span class="t-ru">Язык:</span><span class="t-uk" hidden>Мова:</span><span class="t-en" hidden>Lang:</span></span>
@@ -2979,14 +1968,17 @@ details.sub-accordion[open] > summary.sub-summary {
     <div class="toolbar-group">
       <span class="toolbar-label"><span class="t-ru">Оформление:</span><span class="t-uk" hidden>Оформлення:</span><span class="t-en" hidden>Style:</span></span>
       <div class="btn-group theme-switcher" role="group" aria-label="Theme Selector">
-        <button type="button" class="theme-btn active" data-theme="web" onclick="setTheme('web')" title="Полноценный веб поверх терминального стиля">
-          🖥️ <span class="t-ru">Веб</span><span class="t-uk" hidden>Веб</span><span class="t-en" hidden>Web</span>
-        </button>
-        <button type="button" class="theme-btn" data-theme="terminal" onclick="setTheme('terminal')" title="Зеленый моноширинный терминал">
-          📟 <span class="t-ru">Терминал</span><span class="t-uk" hidden>Термінал</span><span class="t-en" hidden>Terminal</span>
+        <button type="button" class="theme-btn active" data-theme="cyber" onclick="setTheme('cyber')" title="Киберпанк (Неон / Dark)">
+          🎨 <span class="t-ru">Киберпанк</span><span class="t-uk" hidden>Кіберпанк</span><span class="t-en" hidden>Cyber UI</span>
         </button>
         <button type="button" class="theme-btn" data-theme="raw" onclick="setTheme('raw')" title="Чистый HTML без стилей оформления">
           📄 <span class="t-ru">Без стилей</span><span class="t-uk" hidden>Без стилів</span><span class="t-en" hidden>Raw HTML</span>
+        </button>
+        <button type="button" class="theme-btn" data-theme="paper" onclick="setTheme('paper')" title="Бумажный светлый минимализм">
+          ☀️ <span class="t-ru">Бумага</span><span class="t-uk" hidden>Папір</span><span class="t-en" hidden>Paper Light</span>
+        </button>
+        <button type="button" class="theme-btn" data-theme="terminal" onclick="setTheme('terminal')" title="Зеленый моноширинный терминал">
+          📟 <span class="t-ru">Терминал</span><span class="t-uk" hidden>Термінал</span><span class="t-en" hidden>Terminal</span>
         </button>
       </div>
     </div>
@@ -3030,19 +2022,13 @@ details.sub-accordion[open] > summary.sub-summary {
       </div>
     </div>
   </div>
+  </details>
 </header>
 
 <div class="container">
 
   <!-- HERO SECTION -->
   <section class="hero">
-    <pre class="hero-ascii" aria-label="EVALINE ASCII logo">
-   _______    _____    __    _____   ________
-  / ____/ |  / /   |  / /   /  _/ | / / ____/
- / __/  | | / / /| | / /    / //  |/ / __/
-/ /___  | |/ / ___ |/ /____/ // /|  / /___
-/_____/  |___/_/  |_/_____/___/_/ |_/_____/
-</pre>
     <div class="hero-eyebrow">
       <span class="t-ru">СУВЕРЕННАЯ АГЕНТСКАЯ ФАБРИКА & РЕАЛЬНОЕ ПРОИЗВОДСТВО ПОЛИМЕРОВ</span><span class="t-uk" hidden>СУВЕРЕННА АГЕНТСЬКА ФАБРИКА ТА РЕАЛЬНЕ ВИРОБНИЦТВО ПОЛІМЕРІВ</span><span class="t-en" hidden>SOVEREIGN AGENT FACTORY & PHYSICAL POLYMER MANUFACTURING</span>
     </div>
@@ -3055,6 +2041,9 @@ details.sub-accordion[open] > summary.sub-summary {
 
     <!-- Quick Jump Links -->
     <div class="hero-links" style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px;">
+      <a href="#monetization-top" class="btn-ctrl" style="text-decoration: none; padding: 8px 16px; border-color: rgba(255,214,0,0.6);">
+        🪙 <span class="t-ru">Топ-20 автономного заработка</span><span class="t-uk" hidden>Топ-20 автономного заробітку</span><span class="t-en" hidden>Top-20 Autonomous Earning</span>
+      </a>
       <a href="#models-matrix" class="btn-ctrl" style="text-decoration: none; padding: 8px 16px;">
         📊 <span class="t-ru">Матрица 94 LLM-моделей</span><span class="t-uk" hidden>Матриця 94 LLM-моделей</span><span class="t-en" hidden>94-Model LLM Matrix</span>
       </a>
@@ -3070,9 +2059,24 @@ details.sub-accordion[open] > summary.sub-summary {
     </div>
   </section>
   <hr class="section-divider">
+
+  <details class="accordion-section toc-mindmap" id="manifesto-toc">
+    <summary class="accordion-summary">
+      <span class="summary-num">[TOC]</span>
+      <span class="summary-title"><strong>Карта Манифеста — Mindmap-оглавление (вложенные аккордеоны)</strong></span>
+      <span class="summary-badge"><a href="#problem-statement" class="toc-toplink" onclick="event.stopPropagation();return true;">&#9881; К первой секции</a></span>
+    </summary>
+    <div class="accordion-content">
+      <p class="lead-text" style="font-size:0.92em;opacity:0.85;">Дерево секций и под-параграфов. Разверните ветку и кликните заголовок, чтобы перейти к раскрытому аккордеону. Язык обновления автоматический.</p>
+      <div id="toc-tree-root"><ul class="toc-mindmap-tree" id="toc-tree"><li class="toc-loading">Оглавление строится из живой структуры документа…</li></ul></div>
+    </div>
+  </details>
+  <hr class="section-divider">
   <!-- =========================================================================
        SECTION 01: PROBLEM-STATEMENT
        ========================================================================= -->
+  <fieldset class="module-box" data-section="problem-statement">
+    <legend class="module-title">01. Проблема рынка: почему бизнесу недостаточно обычных чат-ботов</legend>
   <details class="accordion-section" open id="problem-statement">
     <summary class="accordion-summary">
       <span class="summary-num">[01]</span>
@@ -3263,6 +2267,8 @@ details.sub-accordion[open] > summary.sub-summary {
   <!-- =========================================================================
        SECTION 02: AGENT-FACTORY
        ========================================================================= -->
+  <fieldset class="module-box" data-section="agent-factory">
+    <legend class="module-title">02. EvaNetwork: Фабрика агентов и автономное ИИ-агентство</legend>
   <details class="accordion-section" id="agent-factory">
     <summary class="accordion-summary">
       <span class="summary-num">[02]</span>
@@ -3399,6 +2405,8 @@ details.sub-accordion[open] > summary.sub-summary {
   <!-- =========================================================================
        SECTION 03: CONSILIUM-SYSTEM
        ========================================================================= -->
+  <fieldset class="module-box" data-section="consilium-system">
+    <legend class="module-title">03. Система «Евалайн Консилиум»: Как работает коллегиальный разум</legend>
   <details class="accordion-section" id="consilium-system">
     <summary class="accordion-summary">
       <span class="summary-num">[03]</span>
@@ -3615,6 +2623,8 @@ details.sub-accordion[open] > summary.sub-summary {
   <!-- =========================================================================
        SECTION 04: MODELS-MATRIX
        ========================================================================= -->
+  <fieldset class="module-box" data-section="models-matrix">
+    <legend class="module-title">04. Матрица 94 LLM-моделей: Федерация интеллекта без вендор-лока</legend>
   <details class="accordion-section" id="models-matrix">
     <summary class="accordion-summary">
       <span class="summary-num">[04]</span>
@@ -5446,6 +4456,8 @@ details.sub-accordion[open] > summary.sub-summary {
   <!-- =========================================================================
        SECTION 05: COMPARATIVE-AUDIT
        ========================================================================= -->
+  <fieldset class="module-box" data-section="comparative-audit">
+    <legend class="module-title">05. Сравнительный аудит: Одиночный чат-бот vs Система «Евалайн Консилиум»</legend>
   <details class="accordion-section" id="comparative-audit">
     <summary class="accordion-summary">
       <span class="summary-num">[05]</span>
@@ -5692,6 +4704,8 @@ details.sub-accordion[open] > summary.sub-summary {
   <!-- =========================================================================
        SECTION 06: MILITARY-RESILIENCE
        ========================================================================= -->
+  <fieldset class="module-box" data-section="military-resilience">
+    <legend class="module-title">06. Военная устойчивость, блэкаут-резистентность и кластер двух узлов</legend>
   <details class="accordion-section" id="military-resilience">
     <summary class="accordion-summary">
       <span class="summary-num">[06]</span>
@@ -5884,6 +4898,8 @@ details.sub-accordion[open] > summary.sub-summary {
   <!-- =========================================================================
        SECTION 07: ECOSYSTEM-CATALOG
        ========================================================================= -->
+  <fieldset class="module-box" data-section="ecosystem-catalog">
+    <legend class="module-title">07. Единая экосистема: Каталог доменов и сервисов</legend>
   <details class="accordion-section" id="ecosystem-catalog">
     <summary class="accordion-summary">
       <span class="summary-num">[07]</span>
@@ -6061,12 +5077,6 @@ details.sub-accordion[open] > summary.sub-summary {
           <div class="hub-item-domain">evaline.website</div>
           <div class="hub-item-desc"><span class="t-ru">Единый навигационный каталог всех сервисов, продуктов, инструментов и точек входа компании.</span><span class="t-uk" hidden>Єдиний навігаційний каталог усіх сервісів, продуктів, інструментів та точок входу компанії.</span><span class="t-en" hidden>Unified navigation gateway across all company services, product catalogs, and corporate entry points.</span></div>
         </a>
-
-        <a href="https://github.com/evaline-online" target="_blank" rel="noopener" class="hub-item">
-          <span class="hub-item-badge" style="border-color: rgba(255, 214, 0, 0.4); color: var(--yellow);"><span class="t-ru">Открытый код</span><span class="t-uk" hidden>Відкритий код</span><span class="t-en" hidden>Open Source</span></span>
-          <div class="hub-item-domain">github.com/evaline-online</div>
-          <div class="hub-item-desc"><span class="t-ru">Официальная организация GitHub: 14 открытых репозиториев, монорепозиторий EvaBot, документация и автоматизация.</span><span class="t-uk" hidden>Офіційна організація GitHub: 14 відкритих репозиторіїв, монорепозиторій EvaBot, документація та автоматизація.</span><span class="t-en" hidden>Official GitHub Organization: 14 open-source repositories, EvaBot monorepo, tooling, and CI/CD pipelines.</span></div>
-        </a>
       </div>
       </div>
     </details>
@@ -6101,6 +5111,8 @@ details.sub-accordion[open] > summary.sub-summary {
   <!-- =========================================================================
        SECTION 08: BUSINESS-SOLUTIONS
        ========================================================================= -->
+  <fieldset class="module-box" data-section="business-solutions">
+    <legend class="module-title">08. Решение задач бизнеса, интеграция производства и анатомия EvaBot</legend>
   <details class="accordion-section" id="business-solutions">
     <summary class="accordion-summary">
       <span class="summary-num">[08]</span>
@@ -7101,8 +6113,685 @@ details.sub-accordion[open] > summary.sub-summary {
   </details>
   <hr class="section-divider">
   <!-- =========================================================================
+       SECTION 11: TOP-PROFESSIONS
+       ========================================================================= -->
+  <fieldset class="module-box" data-section="top-professions">
+    <legend class="module-title">11. Топ профессий и агентов: высокооплачиваемые, самые ценные роли и LLM-агенты Consilium</legend>
+  <details class="accordion-section" id="top-professions">
+    <summary class="accordion-summary">
+      <span class="summary-num">[11]</span>
+      <span class="summary-title"><strong class="t-ru">Топ профессий и агентов: высокооплачиваемые, самые ценные роли и LLM-агенты Consilium</strong><strong class="t-uk" hidden>Топ професій та агентів: високооплачувані, найцінніші ролі та LLM-агенти Consilium</strong><strong class="t-en" hidden>Top Professions & Agents: highest-paid, most valuable roles, and Consilium LLM agents</strong></span>
+      <span class="summary-badge">[<span class="t-ru">3 вложенных раздела</span><span class="t-uk" hidden>3 вкладені розділи</span><span class="t-en" hidden>3 nested sections</span>]</span>
+    </summary>
+    <div class="accordion-content">
+          <details class="sub-accordion" id="sub-11-1">
+      <summary class="sub-summary">
+        <span class="sub-icon">💲</span> <span class="sub-title"><strong class="t-ru">11.1 Топ высокооплачиваемых профессий (2026): вилки зарплат</strong><strong class="t-uk" hidden>11.1 Топ високооплачуваних професій (2026): вилки зарплат</strong><strong class="t-en" hidden>11.1 Top high-paying professions (2026): salary ranges</strong></span> <span class="sub-badge">[<span class="t-ru">14 позиций</span><span class="t-uk" hidden>14 позицій</span><span class="t-en" hidden>14 roles</span>]</span>
+      </summary>
+      <div class="sub-content">
+      <p class="lead-text"><span class="t-ru">Вилки — реальные, для опытных специалистов рынка США/ЕС (C-level и Quant — выше из-за бонусов). В 2026 лидируют AI/ML, квант-финансы и инженерные роли с уклоном в данные и автоматизацию.</span><span class="t-uk" hidden>Вилки — реальні, для досвідчених фахівців ринку США/ЄС (C-level та Quant — вище через бонуси). У 2026 лідирують ШІ/ML, квант-фінанси та інженерні ролі з ухилом у дані та автоматизацію.</span><span class="t-en" hidden>Ranges are real, for senior US/EU-market specialists (C-level and Quant are higher due to bonuses). In 2026 the leaders are AI/ML, quant finance, and engineering roles skewed toward data and automation.</span></p>
+      <table class="kpi-table" border="1" cellpadding="8" cellspacing="0" width="100%">
+        <tbody>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Разработчик AI/ML (AGI-инженер)</span><span class="t-uk" hidden>Розробник ШІ/ML (AGI-інженер)</span><span class="t-en" hidden>AI/ML Engineer (AGI)</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$150–400k/год</span><span class="t-uk" hidden>$150–400k/рік</span><span class="t-en" hidden>$150–400k/yr</span></strong></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Data Scientist / ML Research</span><span class="t-uk" hidden>Data Scientist / ML Research</span><span class="t-en" hidden>Data Scientist / ML Research</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$120–300k/год</span><span class="t-uk" hidden>$120–300k/рік</span><span class="t-en" hidden>$120–300k/yr</span></strong></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Инженер робототехники</span><span class="t-uk" hidden>Інженер робототехніки</span><span class="t-en" hidden>Robotics Engineer</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$110–260k/год</span><span class="t-uk" hidden>$110–260k/рік</span><span class="t-en" hidden>$110–260k/yr</span></strong></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Инженер-нефтегаз (даунстрим)</span><span class="t-uk" hidden>Інженер-нафтогаз (даунстрим)</span><span class="t-en" hidden>Oil & Gas Engineer (downstream)</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$90–220k/год</span><span class="t-uk" hidden>$90–220k/рік</span><span class="t-en" hidden>$90–220k/yr</span></strong></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Хирург / анестезиолог</span><span class="t-uk" hidden>Хірург / анестезіолог</span><span class="t-en" hidden>Surgeon / Anesthesiologist</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$120–300k/год</span><span class="t-uk" hidden>$120–300k/рік</span><span class="t-en" hidden>$120–300k/yr</span></strong></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Пилот-капитан / авиация</span><span class="t-uk" hidden>Пілот-капітан / авіація</span><span class="t-en" hidden>Airline Captain / Aviation</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$100–250k/год</span><span class="t-uk" hidden>$100–250k/рік</span><span class="t-en" hidden>$100–250k/yr</span></strong></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Финансист / инвестиционный банкир</span><span class="t-uk" hidden>Фінансист / інвестиційний банкір</span><span class="t-en" hidden>Finance / Investment Banker</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$130–350k/год</span><span class="t-uk" hidden>$130–350k/рік</span><span class="t-en" hidden>$130–350k/yr</span></strong></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Квант-аналитик (Quant)</span><span class="t-uk" hidden>Квант-аналітик (Quant)</span><span class="t-en" hidden>Quantitative Analyst (Quant)</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$150–500k/год</span><span class="t-uk" hidden>$150–500k/рік</span><span class="t-en" hidden>$150–500k/yr</span></strong></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Юрист (корпоративный/патентный)</span><span class="t-uk" hidden>Юрист (корпоративний/патентний)</span><span class="t-en" hidden>Corporate / Patent Lawyer</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$120–350k/год</span><span class="t-uk" hidden>$120–350k/рік</span><span class="t-en" hidden>$120–350k/yr</span></strong></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">C-level (CTO/CIO/CDO)</span><span class="t-uk" hidden>C-level (CTO/CIO/CDO)</span><span class="t-en" hidden>C-level (CTO/CIO/CDO)</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$250k–2M+/год</span><span class="t-uk" hidden>$250k–2M+/рік</span><span class="t-en" hidden>$250k–2M+/yr</span></strong></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Director of AI / ИИ-архитектор предприятия</span><span class="t-uk" hidden>Director of AI / ШІ-архітектор підприємства</span><span class="t-en" hidden>Director of AI / Enterprise Architect</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$180–400k/год</span><span class="t-uk" hidden>$180–400k/рік</span><span class="t-en" hidden>$180–400k/yr</span></strong></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Инженер по ИИ-безопасности (CISO, AI red-team)</span><span class="t-uk" hidden>Інженер з ШІ-безпеки (CISO, AI red-team)</span><span class="t-en" hidden>AI Security / Red-team Engineer</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$140–320k/год</span><span class="t-uk" hidden>$140–320k/рік</span><span class="t-en" hidden>$140–320k/yr</span></strong></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Cloud/Infrastructure (Kubernetes/MLOps)</span><span class="t-uk" hidden>Cloud/Infrastructure (Kubernetes/MLOps)</span><span class="t-en" hidden>Cloud / MLOps Engineer</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$110–250k/год</span><span class="t-uk" hidden>$110–250k/рік</span><span class="t-en" hidden>$110–250k/yr</span></strong></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Специалист по данным IoT/энергетике</span><span class="t-uk" hidden>Спеціаліст з даних IoT/енергетиці</span><span class="t-en" hidden>IoT / Energy Data Specialist</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$90–200k/год</span><span class="t-uk" hidden>$90–200k/рік</span><span class="t-en" hidden>$90–200k/yr</span></strong></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Консультант по автоматизации производства</span><span class="t-uk" hidden>Консультант з автоматизації виробництва</span><span class="t-en" hidden>Industrial Automation Consultant</span></strong></td>
+            <td class="kpi-lbl-cell" align="right"><strong class="kpi-val"><span class="t-ru">$80–180k/год</span><span class="t-uk" hidden>$80–180k/рік</span><span class="t-en" hidden>$80–180k/yr</span></strong></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </details>
+
+          <details class="sub-accordion" id="sub-11-2">
+      <summary class="sub-summary">
+        <span class="sub-icon">❤️</span> <span class="sub-title"><strong class="t-ru">11.2 Самые важные и полезные профессии (независимо от зарплаты)</strong><strong class="t-uk" hidden>11.2 Найважливіші та найкорисніші професії (незалежно від зарплати)</strong><strong class="t-en" hidden>11.2 Most valuable & useful professions (regardless of salary)</strong></span> <span class="sub-badge">[<span class="t-ru">12 позиций</span><span class="t-uk" hidden>12 позицій</span><span class="t-en" hidden>12 roles</span>]</span>
+      </summary>
+      <div class="sub-content">
+      <p class="lead-text"><span class="t-ru">Здесь ценность измеряется не $, а влиянием на выживание и развитие людей. Эти профессии ИИ не «заменяет», а в первую очередь должен усиливать.</span><span class="t-uk" hidden>Тут цінність вимірюється не $, а впливом на виживання та розвиток людей. Ці професії ШІ не «замінює», а насамперед має посилювати.</span><span class="t-en" hidden>Here value is measured not in $ but in impact on human survival and development. AI should not "replace" these professions so much as amplify them.</span></p>
+      <table class="kpi-table" border="1" cellpadding="8" cellspacing="0" width="100%">
+        <tbody>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Врач / медсестра / скорая</span><span class="t-uk" hidden>Лікар / медсестра / швидка</span><span class="t-en" hidden>Doctor / Nurse / Paramedic</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Спасают жизни, диагностируют, лечат — фундамент общества.</span><span class="t-uk" hidden>Рятують життя, діагностують, лікують — фундамент суспільства.</span><span class="t-en" hidden>Save lives, diagnose, treat — the bedrock of society.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Учитель / преподаватель</span><span class="t-uk" hidden>Вчитель / викладач</span><span class="t-en" hidden>Teacher / Educator</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Формируют человеческий и интеллектуальный капитал будущего.</span><span class="t-uk" hidden>Формують людський та інтелектуальний капітал майбутнього.</span><span class="t-en" hidden>Build the human and intellectual capital of the future.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Инженер-эколог / климатолог</span><span class="t-uk" hidden>Інженер-еколог / кліматолог</span><span class="t-en" hidden>Environmental Engineer / Climatologist</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Планета без ресурсов — нечем управлять; экология = выживание.</span><span class="t-uk" hidden>Планета без ресурсів — нема чим керувати; екологія = виживання.</span><span class="t-en" hidden>A planet without resources can't be run; ecology = survival.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Пожарный / спасатель / МЧС</span><span class="t-uk" hidden>Пожежний / рятувальник / ДСНС</span><span class="t-en" hidden>Firefighter / Rescuer / Emergency</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Готовы рисковать жизнью, когда все бегут — стоять.</span><span class="t-uk" hidden>Готові ризикувати життям, коли всі біжать — стояти.</span><span class="t-en" hidden>Ready to risk their lives while everyone else runs.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Аграрий / фермер / агроном</span><span class="t-uk" hidden>Аграрій / фермер / агроном</span><span class="t-en" hidden>Farmer / Agronomist</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Без еды нет ни экономики, ни ИИ; продовольственная безопасность.</span><span class="t-uk" hidden>Без їжі немає ні економіки, ні ШІ; продовольча безпека.</span><span class="t-en" hidden>No food, no economy, no AI; food security is foundational.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Логист / водитель / оператор цепи поставок</span><span class="t-uk" hidden>Логіст / водій / оператор ланцюга поставок</span><span class="t-en" hidden>Logistician / Driver / Supply-chain Operator</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Двигают товары и людей — артерии экономики.</span><span class="t-uk" hidden>Рухають товари та людей — артерії економіки.</span><span class="t-en" hidden>Move goods and people — the arteries of the economy.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Специалист по кибербезопасности</span><span class="t-uk" hidden>Фахівець з кібербезпеки</span><span class="t-en" hidden>Cybersecurity Specialist</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">В цифровом мире — защитники границ государства и бизнеса.</span><span class="t-uk" hidden>У цифровому світі — захисники кордонів держави та бізнесу.</span><span class="t-en" hidden>In a digital world, they defend the borders of state and business.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Сантехник / электрик / строитель</span><span class="t-uk" hidden>Сантехнік / електрик / будівельник</span><span class="t-en" hidden>Plumber / Electrician / Builder</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Жильё, вода, свет — то, без чего рушатся города.</span><span class="t-uk" hidden>Житло, вода, світло — те, без чого руйнуються міста.</span><span class="t-en" hidden>Housing, water, power — without them cities collapse.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Учёный / исследователь</span><span class="t-uk" hidden>Вчений / дослідник</span><span class="t-en" hidden>Scientist / Researcher</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Раздвигают границы знаний, дают почву для всех технологий.</span><span class="t-uk" hidden>Розширюють межі знань, дають ґрунт для всіх технологій.</span><span class="t-en" hidden>Expand the boundaries of knowledge, ground for all tech.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Психолог / психиатр / соцработа</span><span class="t-uk" hidden>Психолог / психіатр / соцробота</span><span class="t-en" hidden>Psychologist / Psychiatrist / Social worker</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Ментальное здоровье — самое недооценённое богатство.</span><span class="t-uk" hidden>Ментальне здоров'я — найбільш недооцінене багатство.</span><span class="t-en" hidden>Mental health is the most undervalued wealth.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Энергетик / электросети</span><span class="t-uk" hidden>Енергетик / електромережі</span><span class="t-en" hidden>Power engineer / Grid operator</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Электроэнергия — база дата-центров и всех систем.</span><span class="t-uk" hidden>Електроенергія — база дата-центрів та всіх систем.</span><span class="t-en" hidden>Electricity underpins data centers and every system.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Работник водоканала / водоочистка</span><span class="t-uk" hidden>Працівник водоканалу / водоочищення</span><span class="t-en" hidden>Water utility / sanitation</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Чистая вода предотвращает больше смертей, чем любая медицина.</span><span class="t-uk" hidden>Чиста вода запобігає більше смертей, ніж будь-яка медицина.</span><span class="t-en" hidden>Clean water prevents more deaths than any medicine.</span></small></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </details>
+
+          <details class="sub-accordion" id="sub-11-3">
+      <summary class="sub-summary">
+        <span class="sub-icon">🤖</span> <span class="sub-title"><strong class="t-ru">11.3 Топ LLM-агентов (на базе системы Consilium): где заменяют, где дополняют</strong><strong class="t-uk" hidden>11.3 Топ LLM-агентів (на базі системи Consilium): де замінюють, де доповнюють</strong><strong class="t-en" hidden>11.3 Top LLM agents (Consilium-based): where they replace vs augment</strong></span> <span class="sub-badge">[<span class="t-ru">14 агентов</span><span class="t-uk" hidden>14 агентів</span><span class="t-en" hidden>14 agents</span>]</span>
+      </summary>
+      <div class="sub-content">
+      <p class="lead-text"><span class="t-ru">Один и тот же агент может «заменять» рутинную часть работы и «дополнять» человека на уровне решений и ответственности. Красным помечено, где агент берёт на себя рутинный поток целиком, голубым — где человек остаётся в контуре.</span><span class="t-uk" hidden>Той самий агент може «замінювати» рутинну частину роботи та «доповнювати» людину на рівні рішень і відповідальності. Червоним позначено, де агент бере на себе рутинний потік повністю, синім — де людина залишається в контурі.</span><span class="t-en" hidden>The same agent can "replace" the routine part of a job and "augment" the human at the level of decisions and accountability. Red marks where the agent owns the routine flow outright; blue marks where a human stays in the loop.</span></p>
+      <table class="kpi-table" border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th width="34%" align="left"><span class="t-ru">Агент</span><span class="t-uk" hidden>Агент</span><span class="t-en" hidden>Agent</span></th>
+            <th width="20%" align="center"><span class="t-ru">Роль ИИ</span><span class="t-uk" hidden>Роль ШІ</span><span class="t-en" hidden>AI role</span></th>
+            <th width="46%" align="left"><span class="t-ru">Что делает / где граница</span><span class="t-uk" hidden>Що робить / де межа</span><span class="t-en" hidden>What it does / boundary</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Агент-аналитик (BI/данные)</span><span class="t-uk" hidden>Агент-аналітик (BI/дані)</span><span class="t-en" hidden>Analyst agent (BI/data)</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><small><strong><span class="t-ru">Дополняет</span><span class="t-uk" hidden>Доповнює</span><span class="t-en" hidden>Augments</span></strong></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Отчёты, дашборды, ad-hoc запросы — автономно; интерпретация остаётся за человеком.</span><span class="t-uk" hidden>Звіти, дашборди, ad-hoc запити — автономно; інтерпретація залишається за людиною.</span><span class="t-en" hidden>Reports, dashboards, ad-hoc queries autonomously; interpretation stays human.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Агент-код-ревьюер</span><span class="t-uk" hidden>Агент-код-рев'юер</span><span class="t-en" hidden>Code-review agent</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><small><strong><span class="t-ru">Дополняет</span><span class="t-uk" hidden>Доповнює</span><span class="t-en" hidden>Augments</span></strong></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Ищет баги, уязвимости, стиль; финальное решение и ответственность — у человека.</span><span class="t-uk" hidden>Шукає баги, вразливості, стиль; фінальне рішення та відповідальність — у людини.</span><span class="t-en" hidden>Finds bugs, vulnerabilities, style; the final call and accountability stay human.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-red">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Агент-TA / HR-скринер</span><span class="t-uk" hidden>Агент-TA / HR-скринер</span><span class="t-en" hidden>TA / HR-screener agent</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><small><strong><span class="t-ru">Заменяет в рутине</span><span class="t-uk" hidden>Замінює в рутині</span><span class="t-en" hidden>Replaces in routine</span></strong></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Скрининг резюме, ассессмент, первичные интервью; решение по кандидату — человек.</span><span class="t-uk" hidden>Скринінг резюме, ассесмент, первинні інтерв'ю; рішення щодо кандидата — людина.</span><span class="t-en" hidden>Resume screening, assessment, first interviews; hiring calls stay human.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-red">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Агент-маркетолог</span><span class="t-uk" hidden>Агент-маркетолог</span><span class="t-en" hidden>Marketing agent</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><small><strong><span class="t-ru">Заменяет в рутине</span><span class="t-uk" hidden>Замінює в рутині</span><span class="t-en" hidden>Replaces in routine</span></strong></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Контент, сегментация, A/B, отчётность; стратегия и тон бренда — человек.</span><span class="t-uk" hidden>Контент, сегментація, A/B, звітність; стратегія та тон бренду — людина.</span><span class="t-en" hidden>Content, segmentation, A/B, reporting; strategy and brand tone stay human.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Агент-юрист</span><span class="t-uk" hidden>Агент-юрист</span><span class="t-en" hidden>Legal agent</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><small><strong><span class="t-ru">Дополняет</span><span class="t-uk" hidden>Доповнює</span><span class="t-en" hidden>Augments</span></strong></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Договоры, проверка норм, ответы на исковые риски; подпись и ответственность — юрист.</span><span class="t-uk" hidden>Договори, перевірка норм, відповіді на позовні ризики; підпис та відповідальність — юрист.</span><span class="t-en" hidden>Contracts, compliance checks, litigation risk; signature and liability stay with the lawyer.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Агент-бухгалтер</span><span class="t-uk" hidden>Агент-бухгалтер</span><span class="t-en" hidden>Accountant agent</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><small><strong><span class="t-ru">Дополняет</span><span class="t-uk" hidden>Доповнює</span><span class="t-en" hidden>Augments</span></strong></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Первичка, начисления, сверка; налоговая ответственность — человек.</span><span class="t-uk" hidden>Первинка, нарахування, звірка; податкова відповідальність — людина.</span><span class="t-en" hidden>Bookkeeping, accruals, reconciliation; tax liability stays human.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Агент-мед-консультант</span><span class="t-uk" hidden>Агент-мед-консультант</span><span class="t-en" hidden>Medical triage agent</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><small><strong><span class="t-ru">Дополняет</span><span class="t-uk" hidden>Доповнює</span><span class="t-en" hidden>Augments</span></strong></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Триаж, напоминания, обзоры литературы; диагноз и назначения — только врач.</span><span class="t-uk" hidden>Тріаж, нагадування, огляди літератури; діагноз і призначення — лише лікар.</span><span class="t-en" hidden>Triage, reminders, literature review; diagnosis and prescriptions are doctor-only.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-red">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Агент-тьютор</span><span class="t-uk" hidden>Агент-тьютор</span><span class="t-en" hidden>Tutor agent</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><small><strong><span class="t-ru">Заменяет в рутине</span><span class="t-uk" hidden>Замінює в рутині</span><span class="t-en" hidden>Replaces in routine</span></strong></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Объяснение, практика, адаптация темпа; наставничество и мотивация — человек.</span><span class="t-uk" hidden>Пояснення, практика, адаптація темпу; наставництво та мотивація — людина.</span><span class="t-en" hidden>Explanation, practice, adaptive pace; mentorship and motivation stay human.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-red">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Агент-поддержка</span><span class="t-uk" hidden>Агент-підтримка</span><span class="t-en" hidden>Support agent</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><small><strong><span class="t-ru">Заменяет в рутине</span><span class="t-uk" hidden>Замінює в рутині</span><span class="t-en" hidden>Replaces in routine</span></strong></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Tier-1 вопросы, эскалация, база знаний; сложные эмоциональные кейсы — человек.</span><span class="t-uk" hidden>Tier-1 питання, ескалація, база знань; складні емоційні кейси — людина.</span><span class="t-en" hidden>Tier-1 questions, escalation, knowledge base; complex emotional cases stay human.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Агент-продавец (SDR)</span><span class="t-uk" hidden>Агент-продавець (SDR)</span><span class="t-en" hidden>Sales / SDR agent</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><small><strong><span class="t-ru">Дополняет</span><span class="t-uk" hidden>Доповнює</span><span class="t-en" hidden>Augments</span></strong></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Лиды, квалификация, первые касания; закрытие и отношения — человек.</span><span class="t-uk" hidden>Ліди, кваліфікація, перші дотики; закриття та стосунки — людина.</span><span class="t-en" hidden>Leads, qualification, first touches; closing and relationships stay human.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Агент-исследователь</span><span class="t-uk" hidden>Агент-дослідник</span><span class="t-en" hidden>Research agent</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><small><strong><span class="t-ru">Дополняет</span><span class="t-uk" hidden>Доповнює</span><span class="t-en" hidden>Augments</span></strong></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Глубокий поиск, синтез, обзоры; научная валидация — человек.</span><span class="t-uk" hidden>Глибокий пошук, синтез, огляди; наукова валідація — людина.</span><span class="t-en" hidden>Deep search, synthesis, reviews; scientific validation stays human.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">«Профессор» для ИИ-консилиума</span><span class="t-uk" hidden>«Професор» для ШІ-консиліуму</span><span class="t-en" hidden>"Professor" for the AI Consilium</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><small><strong><span class="t-ru">Дополняет (внутри системы)</span><span class="t-uk" hidden>Доповнює (всередині системи)</span><span class="t-en" hidden>Augments (in-system)</span></strong></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Экспертная роль в дебате EvaLine Consilium: верификация логики и контраргументы против галлюцинаций.</span><span class="t-uk" hidden>Експертна роль у дебаті EvaLine Consilium: верифікація логіки та контраргументи проти галюцинацій.</span><span class="t-en" hidden>Expert role in the EvaLine Consilium debate: logic verification and counter-arguments against hallucinations.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Агент-контроль качества (QA)</span><span class="t-uk" hidden>Агент-контроль якості (QA)</span><span class="t-en" hidden>QA / QC agent</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><small><strong><span class="t-ru">Дополняет</span><span class="t-uk" hidden>Доповнює</span><span class="t-en" hidden>Augments</span></strong></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Тесты, регрессии, аудит контента; приёмка — человек.</span><span class="t-uk" hidden>Тести, регресії, аудит контенту; приймання — людина.</span><span class="t-en" hidden>Tests, regressions, content audit; acceptance stays human.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-red">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Агент-логистика/склад</span><span class="t-uk" hidden>Агент-логістика/склад</span><span class="t-en" hidden>Logistics / warehouse agent</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><small><strong><span class="t-ru">Заменяет в рутине</span><span class="t-uk" hidden>Замінює в рутині</span><span class="t-en" hidden>Replaces in routine</span></strong></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Маршруты, инвентаризация, заказы; стратегия сети и форс-мажор — человек.</span><span class="t-uk" hidden>Маршрути, інвентаризація, замовлення; стратегія мережі та форс-мажор — людина.</span><span class="t-en" hidden>Routing, inventory, ordering; network strategy and force-majeure stay human.</span></small></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </details>
+
+    </div>
+  </details>
+  <hr class="section-divider">
+  <!-- =========================================================================
+       SECTION 10: TRILLION-PATH
+       ========================================================================= -->
+  <fieldset class="module-box" data-section="trillion-path">
+    <legend class="module-title">10. Окупаемость и путь к Триллиону: экономика AI-агентов, агентств, GPU и план до $1T</legend>
+  <details class="accordion-section" id="trillion-path">
+    <summary class="accordion-summary">
+      <span class="summary-num">[10]</span>
+      <span class="summary-title"><strong class="t-ru">Окупаемость и путь к Триллиону: экономика AI-агентов, агентств, GPU и план до $1T</strong><strong class="t-uk" hidden>Окупність і шлях до Трильйона: економіка ШІ-агентів, агенцій, GPU та план до $1T</strong><strong class="t-en" hidden>Payback & the $1 Trillion Path: agent economics, agency ARR, GPU clouds, and the $1T roadmap</strong></span>
+      <span class="summary-badge">[<span class="t-ru">5 разделов</span><span class="t-uk" hidden>5 розділів</span><span class="t-en" hidden>5 subsections</span>]</span>
+    </summary>
+    <div class="accordion-content">
+          <details class="sub-accordion" id="sub-10-1">
+      <summary class="sub-summary">
+        <span class="sub-icon">🛠️</span> <span class="sub-title"><strong class="t-ru">10.1 Сколько стоит создать AI-агента: 5 уровней затрат (2026)</strong><strong class="t-uk" hidden>10.1 Скільки коштує створити ШІ-агента: 5 рівнів витрат (2026)</strong><strong class="t-en" hidden>10.1 How much does an AI agent cost to build: 5 cost tiers (2026)</strong></span> <span class="sub-badge">[<span class="t-ru">от $0 до $10k+/мес</span><span class="t-uk" hidden>від $0 до $10k+/міс</span><span class="t-en" hidden>from $0 to $10k+/mo</span>]</span>
+      </summary>
+      <div class="sub-content">
+      <p class="lead-text"><span class="t-ru">Стоимость зависит не от «магии», а от выбора: локальная open-source модель — бесплатно; frontier-API — доли цента за запрос; собственный финтюнинг и суперагентный консилиум — тысячи долларов. Ниже — реальные вилки 2026 года по топовым провайдерам (GPT-5 / Claude / Gemini / DeepSeek / Qwen / Llama): входные токены ~$0.05–15 за млн, выходные ~$0.20–60 за млн; open-source self-hosted ≈ $0 (кроме железа).</span><span class="t-uk" hidden>Вартість залежить не від «магії», а від вибору: локальна open-source модель — безкоштовно; frontier-API — частки цента за запит; власний фінтюнінг і суперагентний консиліум — тисячі доларів. Нижче — реальні вилки 2026 року за топовими провайдерами (GPT-5 / Claude / Gemini / DeepSeek / Qwen / Llama): вхідні токени ~$0.05–15 за млн, вихідні ~$0.20–60 за млн; open-source self-hosted ≈ $0 (крім заліза).</span><span class="t-en" hidden>Cost is a choice, not magic: a local open-source model is free; frontier APIs cost fractions of a cent per request; proprietary fine-tuning and a super-agent Consilium run to thousands of dollars. Below are real 2026 ranges across top providers (GPT-5 / Claude / Gemini / DeepSeek / Qwen / Llama): ~$0.05–15 per M input and ~$0.20–60 per M output tokens; self-hosted open-source ≈ $0 (hardware aside).</span></p>
+      <table class="kpi-table" border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th width="24%" align="left"><span class="t-ru">Уровень</span><span class="t-uk" hidden>Рівень</span><span class="t-en" hidden>Tier</span></th>
+            <th width="18%" align="center"><span class="t-ru">Затраты</span><span class="t-uk" hidden>Витрати</span><span class="t-en" hidden>Cost</span></th>
+            <th width="58%" align="left"><span class="t-ru">Что и зачем</span><span class="t-uk" hidden>Що і навіщо</span><span class="t-en" hidden>What & why</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong class="kpi-val"><span class="t-ru">Бесплатно</span><span class="t-uk" hidden>Безкоштовно</span><span class="t-en" hidden>Free</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong><span class="t-ru">0 $/мес</span><span class="t-uk" hidden>0 $/міс</span><span class="t-en" hidden>$0/mo</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Локальная open-source модель (Llama 3.3/Qwen/DeepSeek-R1 на своём ПК) или free-quota API. WebUI, Ollama, vLLM на домашнем GPU. Отличный старт: цена = ваш ПК и электричество.</span><span class="t-uk" hidden>Локальна open-source модель (Llama 3.3/Qwen/DeepSeek-R1 на власному ПК) або free-quota API. WebUI, Ollama, vLLM на домашньому GPU. Чудовий старт: ціна = ваш ПК та електроенергія.</span><span class="t-en" hidden>Local open-source model (Llama 3.3/Qwen/DeepSeek-R1 on your PC) or free-quota API. WebUI/Ollama/vLLM on a home GPU. Great start — your only cost is hardware and electricity.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong class="kpi-val"><span class="t-ru">Low-cost (флоу без API)</span><span class="t-uk" hidden>Low-cost (флоу без API)</span><span class="t-en" hidden>Low-cost (no-API flows)</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong><span class="t-ru">0–5 $/мес</span><span class="t-uk" hidden>0–5 $/міс</span><span class="t-en" hidden>$0–5/mo</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Автоматизации n8n/Zapier + бесплатные модели через шлюз. Агентные цепочки без платных токенов: сбор заявок, уведомления, парсинг. Себестоимость ≈ 0, масштаб = количеству лидов.</span><span class="t-uk" hidden>Автоматизації n8n/Zapier + безкоштовні моделі через шлюз. Агентні ланцюжки без платних токенів: збір заявок, сповіщення, парсинг. Собівартість ≈ 0, масштаб = кількості лідів.</span><span class="t-en" hidden>n8n/Zapier automations + free models via a router gateway. Agent chains with zero paid tokens: lead capture, alerts, parsing. Near-zero cost, scale limited only by lead flow.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong class="kpi-val"><span class="t-ru">Средний (API)</span><span class="t-uk" hidden>Середній (API)</span><span class="t-en" hidden>Mid-tier (API)</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong><span class="t-ru">5–100 $/мес</span><span class="t-uk" hidden>5–100 $/міс</span><span class="t-en" hidden>$5–100/mo</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Продакшн-боты на GPT/Claude/Gemini: ~$1–15 за млн входных и $5–60 за млн выходных токенов frontier-моделей. До сотен тысяч токенов/мес. Окупается первым же клиентом.</span><span class="t-uk" hidden>Продакшн-боти на GPT/Claude/Gemini: ~$1–15 за млн вхідних і $5–60 за млн вихідних токенів frontier-моделей. До сотень тисяч токенів/міс. Окупається першим клієнтом.</span><span class="t-en" hidden>Production bots on GPT/Claude/Gemini: ~$1–15 per M input and $5–60 per M output tokens for frontier models. Up to a few hundred k tokens/mo. Pays for itself with the first client.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong class="kpi-val"><span class="t-ru">Тяжёлый (финтюнинг + GPU)</span><span class="t-uk" hidden>Важкий (фінтюнінг + GPU)</span><span class="t-en" hidden>Heavy (fine-tuning + GPU)</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong><span class="t-ru">~1 000+ $/мес</span><span class="t-uk" hidden>~1 000+ $/міс</span><span class="t-en" hidden>~$1,000+/mo</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Аренда GPU (A100/H100, ~$1–3/час) для финтюнинга, LoRA, RAG-векторки, инференса на своём железе. Нужен при собственной модели под нишу или обработке больших объёмов.</span><span class="t-uk" hidden>Оренда GPU (A100/H100, ~$1–3/год) для фінтюнінгу, LoRA, RAG-векторки, інференсу на власному залізі. Потрібен для власної моделі під нішу або великих обсягів обробки.</span><span class="t-en" hidden>GPU rentals (A100/H100, ~$1–3/hr) for fine-tuning, LoRA, RAG vector ingest, self-hosted inference. Needed for a niche proprietary model or high-volume processing.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="left"><strong class="kpi-val"><span class="t-ru">Мета-суперагент (ансамбль)</span><span class="t-uk" hidden>Мета-суперагент (ансамбль)</span><span class="t-en" hidden>Meta super-agent (ensemble)</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong><span class="t-ru">10 000+ $/мес</span><span class="t-uk" hidden>10 000+ $/міс</span><span class="t-en" hidden>$10k+/mo</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Ансамбль нескольких frontier-моделей + инфраструктура (кластеры, оркестрация, резервирование, SLA). Консилиум-подход EvaLine превращает 3–5+ LLM в непрерывный дебат высокого качества.</span><span class="t-uk" hidden>Ансамбль кількох frontier-моделей + інфраструктура (кластери, оркестрація, резервування, SLA). Консиліум-підхід EvaLine перетворює 3–5+ LLM на безперервний дебат високої якості.</span><span class="t-en" hidden>Ensemble of multiple frontier models + infrastructure (clusters, orchestration, redundancy, SLA). The EvaLine Consilium approach turns 3–5+ LLMs into a continuous high-quality debate.</span></small></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </details>
+
+          <details class="sub-accordion" id="sub-10-2">
+      <summary class="sub-summary">
+        <span class="sub-icon">💼</span> <span class="sub-title"><strong class="t-ru">10.2 Схемы максимального заработка на AI-агентствах: кейсы ARR</strong><strong class="t-uk" hidden>10.2 Схеми максимального заробітку на AI-агентствах: кейси ARR</strong><strong class="t-en" hidden>10.2 Maximum earnings schemes for AI agencies: ARR cases</strong></span> <span class="sub-badge">[<span class="t-ru">ARR $120k → $100M+</span><span class="t-uk" hidden>ARR $120k → $100M+</span><span class="t-en" hidden>ARR $120k → $100M+</span>]</span>
+      </summary>
+      <div class="sub-content">
+      <p class="lead-text"><span class="t-ru">Ключевые модели: токенизированные агенты/подписки (платите за «робота-сотрудника»), перевод бизнес-процессов на роботов (замена рутинных операций вручную → автономно) и монетизация данных (датасеты, телеметрия, логи консилиумов). Margins >70% почти на любой из них.</span><span class="t-uk" hidden>Ключові моделі: токенізовані агенти/підписки (платите за «робота-співробітника»), переведення бізнес-процесів на роботів (рутинні операції → автономно) та монетизація даних (датасети, телеметрія, логи консиліумів). Маржа >70% майже на будь-якій з них.</span><span class="t-en" hidden>Key models: tokenized agents/subscriptions (pay for an "AI employee"), moving business processes onto robots (routine ops → autonomous), and data monetization (datasets, telemetry, Consilium logs). Margins exceed 70% on nearly all of them.</span></p>
+      <table class="kpi-table" border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th width="26%" align="left"><span class="t-ru">Эшелон</span><span class="t-uk" hidden>Ешелон</span><span class="t-en" hidden>Stage</span></th>
+            <th width="26%" align="center"><span class="t-ru">Доход (ARR)</span><span class="t-uk" hidden>Дохід (ARR)</span><span class="t-en" hidden>Revenue (ARR)</span></th>
+            <th width="48%" align="left"><span class="t-ru">Как устроено</span><span class="t-uk" hidden>Як влаштовано</span><span class="t-en" hidden>How it works</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Агентство-фриланс</span><span class="t-uk" hidden>Агентство-фриланс</span><span class="t-en" hidden>Freelance agency</span></strong></td>
+            <td class="kpi-lbl-cell"><strong class="kpi-val"><span class="t-ru">$10–50 тыс/мес ($120–600k ARR)</span><span class="t-uk" hidden>$10–50 тис/міс ($120–600k ARR)</span><span class="t-en" hidden>$10–50k/mo ($120–600k ARR)</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Локальные внедрения: бот-поддержка, приём заявок, контент-конвейер. 5–20 клиентов × $500–2,500/мес. Маржа 70–85% — продаётся интеллект, а не железо.</span><span class="t-uk" hidden>Локальні впровадження: бот-підтримка, прийом заявок, контент-конвеєр. 5–20 клієнтів × $500–2,500/міс. Маржа 70–85% — продається інтелект, а не залізо.</span><span class="t-en" hidden>Local deployments: support bot, lead intake, content pipeline. 5–20 clients × $500–2,500/mo. 70–85% margin — you sell intellect, not hardware.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Продактизированное SaaS-агентство</span><span class="t-uk" hidden>Продактизоване SaaS-агентство</span><span class="t-en" hidden>Productized SaaS agency</span></strong></td>
+            <td class="kpi-lbl-cell"><strong class="kpi-val"><span class="t-ru">$50–200 тыс/мес ($0.6–2.4M ARR)</span><span class="t-uk" hidden>$50–200 тис/міс ($0.6–2.4M ARR)</span><span class="t-en" hidden>$50–200k/mo ($0.6–2.4M ARR)</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">One продукт-агент (например, токенизированный AI-консьерж) продаётся сотням клиентов по подписке. Токенизированные агенты: платёж за «робота-сотрудника», а не за часы.</span><span class="t-uk" hidden>Один продукт-агент (напр., токенізований ШІ-консьєрж) продається сотням клієнтів за підпискою. Токенізовані агенти: платіж за «робота-співробітника», а не за години.</span><span class="t-en" hidden>One product-agent (e.g., a tokenized AI concierge) sold to hundreds of clients on subscription. Tokenized agents: you charge for an "AI employee," not billable hours.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Продуктовая AI-компания</span><span class="t-uk" hidden>Продуктова AI-компанія</span><span class="t-en" hidden>Product AI company</span></strong></td>
+            <td class="kpi-lbl-cell"><strong class="kpi-val"><span class="t-ru">$1–10M ARR</span><span class="t-uk" hidden>$1–10M ARR</span><span class="t-en" hidden>$1–10M ARR</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Enterprise SaaS поверх агентов (CRM-агент, юрид-агент, консилиум-аудит). Платит рынок B2B: контракты $10k–500k/год.</span><span class="t-uk" hidden>Enterprise SaaS поверх агентів (CRM-агент, юрид-агент, консиліум-аудит). Платить ринок B2B: контракти $10k–500k/рік.</span><span class="t-en" hidden>Enterprise SaaS on top of agents (CRM-agent, legal agent, Consilium audits). B2B pays: contracts $10k–500k/yr.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Масштаб (Scale AI)</span><span class="t-uk" hidden>Масштаб (Scale AI)</span><span class="t-en" hidden>Scale (AI unicorn)</span></strong></td>
+            <td class="kpi-lbl-cell"><strong class="kpi-val"><span class="t-ru">$100M+ ARR</span><span class="t-uk" hidden>$100M+ ARR</span><span class="t-en" hidden>$100M+ ARR</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Платформа/рынок данных + агентов, лидер ниши. Примеры: от Cursor и Glean до глобальных data-labels. Здесь 1–2% рынка ИИ уже измеряются сотнями миллионов.</span><span class="t-uk" hidden>Платформа/ринок даних + агентів, лідер ніші. Приклади: від Cursor та Glean до глобальних data-labels. Тут 1–2% ринку ШІ вже вимірюються сотнями мільйонів.</span><span class="t-en" hidden>A platform/agent & data marketplace owning a niche. Examples: Cursor, Glean, global data labels. Here 1–2% of the AI market is measured in hundreds of millions.</span></small></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </details>
+
+          <details class="sub-accordion" id="sub-10-3">
+      <summary class="sub-summary">
+        <span class="sub-icon">🖥️</span> <span class="sub-title"><strong class="t-ru">10.3 Дата-центры и GPU-облака: капитал, маржинальность, заработок</strong><strong class="t-uk" hidden>10.3 Дата-центри та GPU-хмари: капітал, маржинальність, заробіток</strong><strong class="t-en" hidden>10.3 Data centers & GPU clouds: capex, margins, earnings</strong></span> <span class="sub-badge">[<span class="t-ru">$50k → $100M+</span><span class="t-uk" hidden>$50k → $100M+</span><span class="t-en" hidden>$50k → $100M+</span>]</span>
+      </summary>
+      <div class="sub-content">
+      <p class="lead-text"><span class="t-ru">Заработок на GPU-облаках идёт из трёх потоков: (1) продажа инференса/токенов, (2) аренда вычислительных единиц под финтюнинг, (3) рендер и специализированные нагрузки. Капитальные затраты масштабируются от $50k (домашняя edge-ферма) до $100M+ на гиперскейл-ЦОД. Валовая маржа GPU-провайдеров — 50–75%, но требует больших CAPEX и управления загрузкой.</span><span class="t-uk" hidden>Заробіток на GPU-хмарах іде з трьох потоків: (1) продаж інференсу/токенів, (2) оренда обчислювальних одиниць під фінтюнінг, (3) рендер і спеціалізовані навантаження. Капітальні витрати масштабуються від $50k (домашня edge-ферма) до $100M+ на гіперскейл-ЦОД. Валова маржа GPU-провайдерів — 50–75%, але потребує великих CAPEX та управління завантаженням.</span><span class="t-en" hidden>GPU-cloud earnings come from three streams: (1) selling inference/tokens, (2) renting compute for fine-tuning, (3) rendering and specialized workloads. Capex scales from $50k (home edge farm) to $100M+ per hyperscale DC. GPU-provider gross margins run 50–75%, yet require heavy CAPEX and load management.</span></p>
+      <table class="kpi-table" border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th width="24%" align="left"><span class="t-ru">Сегмент</span><span class="t-uk" hidden>Сегмент</span><span class="t-en" hidden>Segment</span></th>
+            <th width="16%" align="center"><span class="t-ru">CAPEX</span><span class="t-uk" hidden>CAPEX</span><span class="t-en" hidden>CAPEX</span></th>
+            <th width="14%" align="center"><span class="t-ru">Валовая маржа</span><span class="t-uk" hidden>Валова маржа</span><span class="t-en" hidden>Gross margin</span></th>
+            <th width="46%" align="left"><span class="t-ru">Источники дохода</span><span class="t-uk" hidden>Джерела доходу</span><span class="t-en" hidden>Revenue sources</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="kpi-row kpi-purple">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Малый GPU-cluster / edge-ферма</span><span class="t-uk" hidden>Малий GPU-кластер / edge-ферма</span><span class="t-en" hidden>Small GPU cluster / edge farm</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">$50 тыс</span><span class="t-uk" hidden>$50 тис</span><span class="t-en" hidden>$50k</span></strong></td>
+            <td class="kpi-sub-cell" align="center"><small>50–65%</small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">1–8 GPU (RTX/A10/L40). Продажа AI-инференса, рендера и дешёвых токенов на свой нонсенс-трафик. Окупаемость 1–2 года.</span><span class="t-uk" hidden>1–8 GPU (RTX/A10/L40). Продаж ШІ-інференсу, рендеру та дешевих токенів на власний трафік. Окупність 1–2 роки.</span><span class="t-en" hidden>1–8 GPUs (RTX/A10/L40). Selling AI inference, rendering, and cheap tokens on your own traffic. Payback 1–2 years.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-purple">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Региональный дата-центр</span><span class="t-uk" hidden>Регіональний дата-центр</span><span class="t-en" hidden>Regional data center</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">$1–20 млн</span><span class="t-uk" hidden>$1–20 млн</span><span class="t-en" hidden>$1–20M</span></strong></td>
+            <td class="kpi-sub-cell" align="center"><small>55–70%</small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Узлы с H100/H200, балансировка инференса, контракты на GPU-as-a-Service. Маржа выше у того, кто даёт «токены по себестоимости+наценка».</span><span class="t-uk" hidden>Вузли з H100/H200, балансування інференсу, контракти на GPU-as-a-Service. Маржа вища в того, хто дає «токени за собівартістю+націнка».</span><span class="t-en" hidden>Nodes with H100/H200, inference load-balancing, GPU-as-a-Service contracts. The provider offering "tokens at cost+margin" keeps the higher margin.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-purple">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Гиперскейл-дата-центр</span><span class="t-uk" hidden>Гіперскейл-дата-центр</span><span class="t-en" hidden>Hyperscale AI data center</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">$100 млн+ / ЦОД</span><span class="t-uk" hidden>$100 млн+ / ЦОД</span><span class="t-en" hidden>$100M+/DC</span></strong></td>
+            <td class="kpi-sub-cell" align="center"><small>60–75%</small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Десятки тысяч GPU, собственные ЧИПы (TPU), охлаждение, энергетика. Игра для государств и мега-корпораций; рынок инференса измеряется триллионами $ к концу 2020-х.</span><span class="t-uk" hidden>Десятки тисяч GPU, власні чіпи (TPU), охолодження, енергетика. Гра для держав і мега-корпорацій; ринок інференсу вимірюється трильйонами $ до кінця 2020-х.</span><span class="t-en" hidden>Tens of thousands of GPUs, custom silicon (TPU), cooling, power. A game for states and mega-corporations; the inference market runs into trillions of dollars by the late 2020s.</span></small></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </details>
+
+          <details class="sub-accordion" id="sub-10-4">
+      <summary class="sub-summary">
+        <span class="sub-icon">💰</span> <span class="sub-title"><strong class="t-ru">10.4 Все схемы доходов и реальные примеры роста компаний</strong><strong class="t-uk" hidden>10.4 Всі схеми доходів та реальні приклади зростання компаній</strong><strong class="t-en" hidden>10.4 All revenue schemes & real company growth examples</strong></span> <span class="sub-badge">[<span class="t-ru">7 моделей + кейсы</span><span class="t-uk" hidden>7 моделей + кейси</span><span class="t-en" hidden>7 models + cases</span>]</span>
+      </summary>
+      <div class="sub-content">
+      <table class="kpi-table" border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th width="28%" align="left"><span class="t-ru">Схема</span><span class="t-uk" hidden>Схема</span><span class="t-en" hidden>Scheme</span></th>
+            <th width="26%" align="center"><span class="t-ru">Ценник</span><span class="t-uk" hidden>Ціна</span><span class="t-en" hidden>Pricing</span></th>
+            <th width="46%" align="left"><span class="t-ru">Особенность</span><span class="t-uk" hidden>Особливість</span><span class="t-en" hidden>Notes</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Подписка (SaaS)</span><span class="t-uk" hidden>Підписка (SaaS)</span><span class="t-en" hidden>Subscription (SaaS)</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">$10–999/мес</span><span class="t-uk" hidden>$10–999/міс</span><span class="t-en" hidden>$10–999/mo</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Стабильный MRR; рост на конверсии free→paid.</span><span class="t-uk" hidden>Стабільний MRR; зростання на конверсії free→paid.</span><span class="t-en" hidden>Stable MRR; growth via free→paid conversion.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Микро-SaaS / одно-агентные инструменты</span><span class="t-uk" hidden>Мікро-SaaS / одно-агентні інструменти</span><span class="t-en" hidden>Micro-SaaS / single-agent tools</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">$5–49 разово или $10–99/мес</span><span class="t-uk" hidden>$5–49 разово або $10–99/міс</span><span class="t-en" hidden>$5–49 one-off or $10–99/mo</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Калькуляторы, ROI-стенды, планировщики; быстрый запуск.</span><span class="t-uk" hidden>Калькулятори, ROI-стенди, планувальники; швидкий запуск.</span><span class="t-en" hidden>Calculators, ROI stands, planners; fast to ship.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">AI-консьерж / цифровой офис</span><span class="t-uk" hidden>ШІ-консьєрж / цифровий офіс</span><span class="t-en" hidden>AI concierge / digital office</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">$99–1,500/мес</span><span class="t-uk" hidden>$99–1,500/міс</span><span class="t-en" hidden>$99–1,500/mo</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Агент-сотрудник: поддержка, заказы, документы 24/7.</span><span class="t-uk" hidden>Агент-співробітник: підтримка, замовлення, документи 24/7.</span><span class="t-en" hidden>Agent-employee: support, orders, documents 24/7.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">White-label агенты</span><span class="t-uk" hidden>White-label агенти</span><span class="t-en" hidden>White-label agents</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">$500–5,000 лицензия + роялти 10–20%</span><span class="t-uk" hidden>$500–5,000 ліцензія + роялті 10–20%</span><span class="t-en" hidden>$500–5,000 license + 10–20% royalty</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Франшиза «фабрики агентов» по регионам.</span><span class="t-uk" hidden>Франшиза «фабрики агентів» по регіонах.</span><span class="t-en" hidden>Regional "agent factory" franchise.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Marketplace агентов</span><span class="t-uk" hidden>Marketplace агентів</span><span class="t-en" hidden>Agent marketplace</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">Комиссия 10–30%</span><span class="t-uk" hidden>Комісія 10–30%</span><span class="t-en" hidden>10–30% take rate</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Площадка, где агенты продаются/сдаются в аренду друг другу.</span><span class="t-uk" hidden>Площадка, де агенти продаються/здаються в оренду один одному.</span><span class="t-en" hidden>A marketplace where agents are sold/rented to each other.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Данные / датасеты</span><span class="t-uk" hidden>Дані / датасети</span><span class="t-en" hidden>Data / datasets</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">$200–5,000 / датасет</span><span class="t-uk" hidden>$200–5,000 / датасет</span><span class="t-en" hidden>$200–5,000 / dataset</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Telemetry, логи консилиумов, размеченные данные для ML.</span><span class="t-uk" hidden>Telemetry, логи консиліумів, розмічені дані для ML.</span><span class="t-en" hidden>Telemetry, Consilium logs, labeled data for ML.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Инфраструктура (API/GPU)</span><span class="t-uk" hidden>Інфраструктура (API/GPU)</span><span class="t-en" hidden>Infrastructure (API/GPU)</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">$20–200/мес слот и выше</span><span class="t-uk" hidden>$20–200/міс слот і вище</span><span class="t-en" hidden>$20–200/mo slot and up</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">перепродажа токенов, аренда edge/GPU.</span><span class="t-uk" hidden>перепродаж токенів, оренда edge/GPU.</span><span class="t-en" hidden>token resale, edge/GPU rental.</span></small></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="lead-text" style="margin-top:16px;"><span class="t-ru">Реальные примеры роста (2024–2026):</span><span class="t-uk" hidden>Реальні приклади зростання (2024–2026):</span><span class="t-en" hidden>Real growth examples (2024–2026):</span></p>
+      <ul style="margin:8px 0 0 0;">
+          <li><strong><span class="t-ru">Cursor (Anysphere)</span><span class="t-uk" hidden>Cursor (Anysphere)</span><span class="t-en" hidden>Cursor (Anysphere)</span></strong> — <span style="color:var(--accent,#4de1ff);"><span class="t-ru">код-агенты</span><span class="t-uk" hidden>код-агенти</span><span class="t-en" hidden>code agents</span></span>: <span class="t-ru">Достигли восьмизначного ARR в $млн за месяцы после запуска — один продукт-агент, рекуррентная подписка $20–60/мес.</span><span class="t-uk" hidden>Досягли восьмизначного ARR у $млн за місяці після запуску — один продукт-агент, рекурентна підписка $20–60/міс.</span><span class="t-en" hidden>Reached eight-figure ARR within months of launch — one product-agent, $20–60/mo recurring subscription.</span></li>
+          <li><strong><span class="t-ru">Midjourney / Perplexity</span><span class="t-uk" hidden>Midjourney / Perplexity</span><span class="t-en" hidden>Midjourney / Perplexity</span></strong> — <span style="color:var(--accent,#4de1ff);"><span class="t-ru">генерация / поиск</span><span class="t-uk" hidden>генерація / пошук</span><span class="t-en" hidden>generation / search</span></span>: <span class="t-ru">Небольшие команды, высокая маржа: продукт, который миллионы людей платят $10–200/мес.</span><span class="t-uk" hidden>Невеликі команди, висока маржа: продукт, який мільйони людей платять $10–200/міс.</span><span class="t-en" hidden>Small teams, fat margins: a product millions pay $10–200/mo for.</span></li>
+          <li><strong><span class="t-ru">Glean / Enterprise RAG</span><span class="t-uk" hidden>Glean / Enterprise RAG</span><span class="t-en" hidden>Glean / Enterprise RAG</span></strong> — <span style="color:var(--accent,#4de1ff);"><span class="t-ru">корпоративный поиск</span><span class="t-uk" hidden>корпоративний пошук</span><span class="t-en" hidden>enterprise search</span></span>: <span class="t-ru">Enterprise-агенты с контрактами $100k+/год — подтверждают спрос на «агента, который знает ваши документы».</span><span class="t-uk" hidden>Enterprise-агенти з контрактами $100k+/рік — підтверджують попит на «агента, який знає ваші документи».</span><span class="t-en" hidden>Enterprise agents with $100k+/yr contracts — proof of demand for "the agent that knows your docs."</span></li>
+          <li><strong><span class="t-ru">OpenAI / Anthropic</span><span class="t-uk" hidden>OpenAI / Anthropic</span><span class="t-en" hidden>OpenAI / Anthropic</span></strong> — <span style="color:var(--accent,#4de1ff);"><span class="t-ru">фундаментальные модели</span><span class="t-uk" hidden>фундаментальні моделі</span><span class="t-en" hidden>frontier labs</span></span>: <span class="t-ru">Траектория: от API-платформы к агентам и агентным операционным системам; рынок смещается от токенов к автономным рабочим процессам.</span><span class="t-uk" hidden>Траєкторія: від API-платформи до агентів і агентних операційних систем; ринок зміщується від токенів до автономних робочих процесів.</span><span class="t-en" hidden>Trajectory: from API platform to agents and agentic OSes; the market shifts from tokens to autonomous workflows.</span></li>
+      </ul>
+      </div>
+    </details>
+
+          <details class="sub-accordion" id="sub-10-5">
+      <summary class="sub-summary">
+        <span class="sub-icon">🚀</span> <span class="sub-title"><strong class="t-ru">10.5 Путь системы EvaBot / Evaline / Consilium к $1 триллиону</strong><strong class="t-uk" hidden>10.5 Шлях системи EvaBot / Evaline / Consilium до $1 трильйона</strong><strong class="t-en" hidden>10.5 The EvaBot / Evaline / Consilium path to $1 trillion</strong></span> <span class="sub-badge">[<span class="t-ru">поэтапная модель снизу-вверх</span><span class="t-uk" hidden>поетапна модель знизу-вгору</span><span class="t-en" hidden>bottom-up staged model</span>]</span>
+      </summary>
+      <div class="sub-content">
+      <p class="lead-text"><span class="t-ru">Логика проста: не «вырасти на одном продукте», а выстроить многослойную воронку ценности снизу-вверх — от бесплатных инструментов (привлечение) к платформе и токенизированным услугам (MRR), затем к data/агентным рынкам (комиссии) и собственной GPU-инфраструктуре (инференс/аренда).</span><span class="t-uk" hidden>Логіка проста: не «вирости на одному продукті», а вибудувати багатошарову воронку цінності знизу-вгору — від безкоштовних інструментів (залучення) до платформи та токенізованих послуг (MRR), далі до data/агентних ринків (комісії) і власної GPU-інфраструктури (інференс/оренда).</span><span class="t-en" hidden>The logic is simple: instead of growing on a single product, build a layered bottom-up value funnel — from free tools (acquisition) to platform and tokenized services (MRR), then to data/agent marketplaces (take rates) and finally own GPU infrastructure (inference/rental).</span></p>
+      <table class="kpi-table" border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th width="44%" align="left"><span class="t-ru">Этап</span><span class="t-uk" hidden>Етап</span><span class="t-en" hidden>Stage</span></th>
+            <th width="18%" align="center"><span class="t-ru">Порядок величины</span><span class="t-uk" hidden>Порядок величини</span><span class="t-en" hidden>Magnitude</span></th>
+            <th width="38%" align="left"><span class="t-ru">Механика</span><span class="t-uk" hidden>Механіка</span><span class="t-en" hidden>Mechanism</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Этап 1 · Бесплатные инструменты</span><span class="t-uk" hidden>Етап 1 · Безкоштовні інструменти</span><span class="t-en" hidden>Stage 1 · Free tools</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">0</span><span class="t-uk" hidden>$0</span><span class="t-en" hidden>0</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">ROI-калькулятор, глоссарий, демо-консилиум, открытый манифест → трафик, доверие, органический рост ЛП.</span><span class="t-uk" hidden>ROI-калькулятор, глосарій, демо-консиліум, відкритий маніфест → трафік, довіра, органічне зростання ЛП.</span><span class="t-en" hidden>ROI calculator, glossary, Consilium demo, open manifesto → traffic, trust, organic lead growth.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Этап 2 · Платформа (токенизированные агенты)</span><span class="t-uk" hidden>Етап 2 · Платформа (токенізовані агенти)</span><span class="t-en" hidden>Stage 2 · Platform (tokenized agents)</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">10–100 тыс</span><span class="t-uk" hidden>10–100k</span><span class="t-en" hidden>10–100 тыс</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Подписки $10–100/мес за «агента-сотрудника»; микро-SaaS и AI-консьержи.</span><span class="t-uk" hidden>Підписки $10–100/міс за «агента-співробітника»; мікро-SaaS та ШІ-консьєржі.</span><span class="t-en" hidden>Subscriptions $10–100/mo per "agent-employee"; micro-SaaS and AI concierges.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Этап 3 · Enterprise Consilium & токенизированные услуги</span><span class="t-uk" hidden>Етап 3 · Enterprise Consilium та токенізовані послуги</span><span class="t-en" hidden>Stage 3 · Enterprise Consilium & tokenized services</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">100 тыс–10 млн</span><span class="t-uk" hidden>100k–10M</span><span class="t-en" hidden>100 тыс–10 млн</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Консилиум-аудиты $150–1,500, enterprise-SLA $10k–500k/год, white-label франшиза.</span><span class="t-uk" hidden>Консиліум-аудити $150–1,500, enterprise-SLA $10k–500k/рік, white-label франшиза.</span><span class="t-en" hidden>Consilium audits $150–1,500, enterprise SLA $10k–500k/yr, white-label franchise.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Этап 4 · Data / агентные рынки</span><span class="t-uk" hidden>Етап 4 · Data / агентні ринки</span><span class="t-en" hidden>Stage 4 · Data / agent marketplaces</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">10 млн–1 млрд</span><span class="t-uk" hidden>10M–1B</span><span class="t-en" hidden>10 млн–1 млрд</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Marketplace, где агенты торгуют услугами; комиссия 10–30%; датасеты и телеметрия.</span><span class="t-uk" hidden>Marketplace, де агенти торгують послугами; комісія 10–30%; датасети та телеметрія.</span><span class="t-en" hidden>A marketplace where agents trade services; 10–30% take; datasets and telemetry.</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="left"><strong><span class="t-ru">Этап 5 · Сеть дата-центров / GPU-инфраструктура</span><span class="t-uk" hidden>Етап 5 · Мережа дата-центрів / GPU-інфраструктура</span><span class="t-en" hidden>Stage 5 · Data-center network / GPU infrastructure</span></strong></td>
+            <td class="kpi-lbl-cell" align="center"><strong class="kpi-val"><span class="t-ru">1 млрд–1 трлн</span><span class="t-uk" hidden>1B–1T</span><span class="t-en" hidden>1 млрд–1 трлн</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Собственная генерация инференса, edge-кластеры, GPU-as-a-Service поверх 94-модельного шлюза.</span><span class="t-uk" hidden>Власна генерація інференсу, edge-кластери, GPU-as-a-Service поверх 94-модельного шлюзу.</span><span class="t-en" hidden>Own inference generation, edge clusters, GPU-as-a-Service above the 94-model gateway.</span></small></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="lead-text" style="margin-top:16px;"><span class="t-ru">Порядок величины (what it takes):</span><span class="t-uk" hidden>Порядок величини (what it takes):</span><span class="t-en" hidden>Order of magnitude (what it takes):</span></p>
+      <ul style="margin:8px 0 0 0;">
+        <li><span class="t-ru">1 млн подписчиков × $50/мес среднего чека = $600 млн/год ARR (этап 2).</span><span class="t-uk" hidden>1 млн підписників × $50/міс середнього чека = $600 млн/рік ARR (етап 2).</span><span class="t-en" hidden>1M subscribers × $50/mo average check = $600M/yr ARR (stage 2).</span></li>
+        <li><span class="t-ru">+ Enterprise & Consilium: 1 000 корп. контрактов × $100k/год = $100M ARR; + агентные комиссии на обороте рынка ×10–30%.</span><span class="t-uk" hidden>+ Enterprise & Consilium: 1 000 корп. контрактів × $100k/рік = $100M ARR; + агентні комісії з обороту ринку ×10–30%.</span><span class="t-en" hidden>+ Enterprise & Consilium: 1,000 corporate contracts × $100k/yr = $100M ARR; + agent market commissions at 10–30%.</span></li>
+        <li><span class="t-ru">+ Инфраструктура: доля в рынке инференса, который к концу 2020-х оценивается квадриллионными величинами (AI markets are estimated in the hundreds of trillions of dollars) — даже 0.1–1% такого TAM измеряется сотнями миллиардов.</span><span class="t-uk" hidden>+ Інфраструктура: частка в ринку інференсу, який до кінця 2020-х оцінюється квадрильйонними величинами (AI markets estimated in the hundreds of trillions of dollars) — навіть 0.1–1% такого TAM вимірюється сотнями мільярдів.</span><span class="t-en" hidden>+ Infrastructure: a share of the inference market, valued in the hundreds of trillions of dollars by the late 2020s — even 0.1–1% of such a TAM is hundreds of billions.</span></li>
+        <li><span class="t-ru">Итоговая диагностика: капитализация в $1T достижима при комбинации 5–10 млн платящих + 5–20 тыс enterprise + лидирующая доля в агентном рынке + собственная вычислительная инфраструктура. Это марафон на годы, но вектор верный: ценность смещается от «токенов» к «автономным рабочим процессам».</span><span class="t-uk" hidden>Підсумкова діагностика: капіталізація в $1T досяжна при комбінації 5–10 млн платників + 5–20 тис enterprise + лідируюча частка в агентному ринку + власна обчислювальна інфраструктура. Це марафон на роки, але вектор вірний: цінність зміщується від «токенів» до «автономних робочих процесів».</span><span class="t-en" hidden>Bottom line: $1T valuation is reachable with 5–10M paying users + 5–20K enterprise accounts + a leading share of the agent market + owned compute. It is a multi-year marathon, but the vector is right: value shifts from "tokens" to "autonomous workflows".</span></li>
+      </ul>
+      </div>
+    </details>
+
+    </div>
+  </details>
+  <hr class="section-divider">
+
+  <!-- =========================================================================
+       SECTION 00: MONETIZATION TOP — AUTONOMOUS EARNING STREAMS
+       ========================================================================= -->
+  <details class="accordion-section" open id="monetization-top">
+    <summary class="accordion-summary">
+      <span class="summary-num">[00]</span>
+      <span class="summary-title"><strong class="t-ru">Топ-20 вариантов автономного заработка на ферме: как инфраструктура окупает сама себя</strong><strong class="t-uk" hidden>Топ-20 варіантів автономного заробітку на фермі: як інфраструктура окупає сама себе</strong><strong class="t-en" hidden>Top-20 Autonomous Earning Streams for the Farm: How the Infrastructure Pays for Itself</strong></span>
+      <span class="summary-badge">[<span class="t-ru">Монетизация 24/7</span><span class="t-uk" hidden>Монетизація 24/7</span><span class="t-en" hidden>Monetization 24/7</span>]</span>
+    </summary>
+    <div class="accordion-content">
+      <p style="margin: 0 0 16px 0;">
+        <span class="t-ru">Помимо прямого решения бизнес- и производственных задач (Consilium, ЧПУ, аудит), ферма EvaLine — это круглосуточный генератор пассивных и полупассивных доходов. 8 vCPU / 32 ГБ RAM во Франкфурте, Edge-шлюз в Айове, шлюз 94 LLM-моделей, n8n-автоматизации, голосовой движок и docs-платформа могут продавать себя сами — через API, подписки, контент и white-label. Ниже — реестр из 20 потоков дохода, ранжированных от самых быстрых к запуску до самых масштабируемых.</span><span class="t-uk" hidden>Окрім прямого розв'язання бізнес- та виробничих задач (Consilium, ЧПК, аудит), ферма EvaLine — це цілодобовий генератор пасивних та напівпасивних доходів. 8 vCPU / 32 ГБ ОЗУ у Франкфурті, Edge-шлюз в Айові, шлюз 94 LLM-моделей, n8n-автоматизації, голосовий рушій і docs-платформа можуть продавати себе самі — через API, підписки, контент та white-label. Нижче — реєстр із 20 потоків доходу, ранжованих від найшвидших до запуску до найбільш масштабованих.</span><span class="t-en" hidden>Beyond directly solving business and production tasks (Consilium, CNC, audits), the EvaLine farm is a 24/7 generator of passive and semi-passive income. 8 vCPU / 32 GB RAM in Frankfurt, the Iowa edge gateway, a 94-model LLM gateway, n8n automations, the voice engine, and the docs platform can sell themselves — via API, subscriptions, content, and white-label deals. Below is a registry of 20 revenue streams, ranked from fastest to launch to most scalable.</span>
+      </p>
+
+      <!-- REVENUE SCENARIOS KPI -->
+      <table class="kpi-table" border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th width="20%" align="center"><span class="t-ru">Сценарий</span><span class="t-uk" hidden>Сценарій</span><span class="t-en" hidden>Scenario</span></th>
+            <th width="40%" align="left"><span class="t-ru">Состав дохода</span><span class="t-uk" hidden>Склад доходу</span><span class="t-en" hidden>Income Mix</span></th>
+            <th width="40%" align="left"><span class="t-ru">Потенциал против OpEx $257.54/мес</span><span class="t-uk" hidden>Потенціал проти OpEx $257.54/міс</span><span class="t-en" hidden>Potential vs OpEx $257.54/mo</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">~$500–1,000/мес</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Консервативный: 2–3 API-клиента + 1 бот-подписка</span><span class="t-uk" hidden>Консервативний: 2–3 API-клієнти + 1 бот-підписка</span><span class="t-en" hidden>Conservative: 2–3 API clients + 1 bot subscription</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Покрывает OpEx ×2–4, ферма выходит в плюс за 1–2 недели</span><span class="t-uk" hidden>Покриває OpEx ×2–4, ферма виходить у плюс за 1–2 тижні</span><span class="t-en" hidden>Covers OpEx ×2–4, farm breaks even within 1–2 weeks</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">~$2,500–5,000/мес</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Базовый: SaaS-подписки + консилиум-аудиты + контент</span><span class="t-uk" hidden>Базовий: SaaS-підписки + консиліум-аудити + контент</span><span class="t-en" hidden>Baseline: SaaS subscriptions + Consilium audits + content</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">OpEx покрывается на 10–20×, маржа &gt;85% на free-quota моделях</span><span class="t-uk" hidden>OpEx покривається на 10–20×, маржа &gt;85% на free-quota моделях</span><span class="t-en" hidden>OpEx covered 10–20×, &gt;85% margin on free-quota models</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-purple">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">~$10,000+/мес</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Амбициозный: white-label франшиза + корпоративные SaaS-контракты</span><span class="t-uk" hidden>Амбіційний: white-label франшиза + корпоративні SaaS-контракти</span><span class="t-en" hidden>Ambitious: white-label franchise + enterprise SaaS contracts</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Масштабируется без роста персонала — только клонирование пайплайнов</span><span class="t-uk" hidden>Масштабується без зростання персоналу — лише клонування пайплайнів</span><span class="t-en" hidden>Scales without headcount growth — only pipeline cloning</span></small></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- TOP-20 REGISTRY -->
+      <table class="kpi-table" border="1" cellpadding="8" cellspacing="0" width="100%" style="margin-top: 16px;">
+        <thead>
+          <tr>
+            <th width="4%" align="center">№</th>
+            <th width="24%" align="left"><span class="t-ru">Вариант заработка</span><span class="t-uk" hidden>Варіант заробітку</span><span class="t-en" hidden>Earning Stream</span></th>
+            <th width="46%" align="left"><span class="t-ru">Как ферма это делает автономно</span><span class="t-uk" hidden>Як ферма це робить автономно</span><span class="t-en" hidden>How the Farm Does It Autonomously</span></th>
+            <th width="26%" align="left"><span class="t-ru">Модель дохода</span><span class="t-uk" hidden>Модель доходу</span><span class="t-en" hidden>Revenue Model</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">01</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">EvaBot-as-a-Service: аренда ИИ-сотрудников</span><span class="t-uk" hidden>EvaBot-as-a-Service: оренда ШІ-співробітників</span><span class="t-en" hidden>EvaBot-as-a-Service: renting AI employees</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Клиент получает выделенного агента (чат + голос + мониторинг) на нашей ферме; квоты 62 бесплатных моделей делают себестоимость ≈ $0</span><span class="t-uk" hidden>Клієнт отримує виділеного агента (чат + голос + моніторинг) на нашій фермі; квоти 62 безкоштовних моделей роблять собівартість ≈ $0</span><span class="t-en" hidden>Client gets a dedicated agent (chat + voice + monitoring) on our farm; 62 free-model quotas make cost ≈ $0</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Подписка $99–$999/мес на сотрудника</span><span class="t-uk" hidden>Підписка $99–$999/міс на співробітника</span><span class="t-en" hidden>Subscription $99–$999/mo per employee</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">02</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Реселлинг API-доступа к шлюзу 94 LLM (OmniRoute)</span><span class="t-uk" hidden>Реселінг API-доступу до шлюзу 94 LLM (OmniRoute)</span><span class="t-en" hidden>Reselling API access to the 94-LLM gateway (OmniRoute)</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Единый OpenAI-совместимый эндпоинт с автороутингом между free-quota и платными моделями; наценка на токены при себестоимости free-tier ≈ $0</span><span class="t-uk" hidden>Єдиний OpenAI-сумісний ендпоінт з автороутингом між free-quota та платними моделями; націнка на токени при собівартості free-tier ≈ $0</span><span class="t-en" hidden>Single OpenAI-compatible endpoint with auto-routing between free-quota and paid models; token markup at ≈ $0 free-tier cost</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Наценка 30–100% на токены + тариф за запрос</span><span class="t-uk" hidden>Націнка 30–100% на токени + тариф за запит</span><span class="t-en" hidden>30–100% token markup + per-request pricing</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">03</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Консилиум-аудиты решений под ключ</span><span class="t-uk" hidden>Консиліум-аудити рішень під ключ</span><span class="t-en" hidden>Turnkey Consilium decision audits</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Состязательный дебат 94 моделей по вопросу клиента → протокол, риски, вердикт консенсуса; полностью агентный прогон</span><span class="t-uk" hidden>Змагальний дебат 94 моделей із питання клієнта → протокол, ризики, вердикт консенсусу; повністю агентний прогін</span><span class="t-en" hidden>Adversarial debate of 94 models on the client's question → protocol, risks, consensus verdict; fully agentic run</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Разовые аудиты $150–$1,500</span><span class="t-uk" hidden>Разові аудити $150–$1,500</span><span class="t-en" hidden>One-off audits $150–$1,500</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-green">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">04</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Агентные боты для мессенджеров под ключ</span><span class="t-uk" hidden>Агентні боти для месенджерів під ключ</span><span class="t-en" hidden>Turnkey agent bots for messengers</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Telegram / WhatsApp / Viber / Messenger: приём заказов, поддержка, CRM-интеграция через n8n-пайплайны фермы</span><span class="t-uk" hidden>Telegram / WhatsApp / Viber / Messenger: прийом замовлень, підтримка, CRM-інтеграція через n8n-пайплайни ферми</span><span class="t-en" hidden>Telegram / WhatsApp / Viber / Messenger: order intake, support, CRM integration via farm n8n pipelines</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">$49–$299/мес за бота + setup fee</span><span class="t-uk" hidden>$49–$299/міс за бота + setup fee</span><span class="t-en" hidden>$49–$299/mo per bot + setup fee</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">05</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">White-label франшиза «цифровых сотрудников»</span><span class="t-uk" hidden>White-label франшиза «цифрових співробітників»</span><span class="t-en" hidden>White-label franchise of "digital employees"</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Партнёр получает клон фабрики (скрипты, Caddy, консилиум, брендинг) и продаёт в своём регионе; мы — лицензия и поддержка</span><span class="t-uk" hidden>Партнер отримує клон фабрики (скрипти, Caddy, консиліум, брендінг) і продає у своєму регіоні; ми — ліцензія та підтримка</span><span class="t-en" hidden>Partner gets a farm clone (scripts, Caddy, Consilium, branding) and resells regionally; we provide license and support</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Лицензия $500–$5,000 + роялти 10–20%</span><span class="t-uk" hidden>Ліцензія $500–$5,000 + роялті 10–20%</span><span class="t-en" hidden>License $500–$5,000 + 10–20% royalty</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">06</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Автономный контент-конвейер (SEO, карточки, переводы)</span><span class="t-uk" hidden>Автономний контент-конвеєр (SEO, картки, переклади)</span><span class="t-en" hidden>Autonomous content pipeline (SEO, product cards, translations)</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Трёхъязычный штат агентов генерирует статьи, описания товаров, локализацию EN/UK/RU и публикует по расписанию через docs-платформу</span><span class="t-uk" hidden>Тримовний штат агентів генерує статті, описи товарів, локалізацію EN/UK/RU та публікує за розкладом через docs-платформу</span><span class="t-en" hidden>The trilingual agent fleet generates articles, product descriptions, EN/UK/RU localization, and publishes on schedule via the docs platform</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Оплата за статью / пакет / месячный SLA</span><span class="t-uk" hidden>Оплата за статтю / пакет / місячний SLA</span><span class="t-en" hidden>Per article / package / monthly SLA</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">07</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Автономные медиа-каналы (Telegram, YouTube, лонгриды)</span><span class="t-uk" hidden>Автономні медіа-канали (Telegram, YouTube, лонгріди)</span><span class="t-en" hidden>Autonomous media channels (Telegram, YouTube, longreads)</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Агенты ведут тематические каналы (ИИ-индустрия, автоматизация заводов): копирайтинг, монтаж текстов, аудит качества — без человека</span><span class="t-uk" hidden>Агенти ведуть тематичні канали (ШІ-індустрія, автоматизація заводів): копірайтинг, монтаж текстів, аудит якості — без людини</span><span class="t-en" hidden>Agents run niche channels (AI industry, plant automation): copywriting, text editing, QA — no human</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Реклама, донаты, платные подписки канала</span><span class="t-uk" hidden>Реклама, донати, платні підписки каналу</span><span class="t-en" hidden>Ads, donations, paid channel subscriptions</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">08</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Продажа промпт-библиотек и агентных шаблонов</span><span class="t-uk" hidden>Продаж промпт-бібліотек і агентних шаблонів</span><span class="t-en" hidden>Selling prompt libraries and agent templates</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Реестр боевых пайплайнов (консилиум, аудит, CNC-контур) упаковывается в шаблоны для n8n / LangChain / OpenRouter</span><span class="t-uk" hidden>Реєстр бойових пайплайнів (консиліум, аудит, CNC-контур) пакується в шаблони для n8n / LangChain / OpenRouter</span><span class="t-en" hidden>The battle-tested pipeline registry (Consilium, audit, CNC loop) packaged as templates for n8n / LangChain / OpenRouter</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Разовые продажи + маркетплейс-комиссии</span><span class="t-uk" hidden>Разові продажі + маркетплейс-комісії</span><span class="t-en" hidden>One-off sales + marketplace commissions</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">09</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Отраслевая разведка по подписке (дайджесты)</span><span class="t-uk" hidden>Галузева розвідка за підпискою (дайджести)</span><span class="t-en" hidden>Industry intelligence digests by subscription</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Ежедневный мониторинг цен, конкурентов, нормативов (CE, ISO, REACH) и новостей рынка EVA-полимеров с вердиктом консилиума</span><span class="t-uk" hidden>Щоденний моніторинг цін, конкурентів, нормативів (CE, ISO, REACH) та новин ринку EVA-полімерів із вердиктом консиліуму</span><span class="t-en" hidden>Daily monitoring of prices, competitors, standards (CE, ISO, REACH), and EVA polymer market news with a Consilium verdict</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">$29–$199/мес за подписчика</span><span class="t-uk" hidden>$29–$199/міс за підписника</span><span class="t-en" hidden>$29–$199/mo per subscriber</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-cyan">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">10</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Голосовые AI-ассистенты для приёмных и горячих линий</span><span class="t-uk" hidden>Голосові ШІ-асистенти для приймалень і гарячих ліній</span><span class="t-en" hidden>Voice AI assistants for front desks and hotlines</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Голосовой движок фермы (RU/UK/EN) отвечает на звонки 24/7, квалифицирует заявку, передаёт в CRM или на CNC-производство</span><span class="t-uk" hidden>Голосовий рушій ферми (RU/UK/EN) відповідає на дзвінки 24/7, кваліфікує заявку, передає в CRM або на CNC-виробництво</span><span class="t-en" hidden>The farm's voice engine (RU/UK/EN) answers calls 24/7, qualifies leads, and routes them to CRM or CNC production</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Аренда линии $99–$499/мес + минуты</span><span class="t-uk" hidden>Оренда лінії $99–$499/міс + хвилини</span><span class="t-en" hidden>Line rental $99–$499/mo + per-minute</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">11</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Микроуслуги автоматизации на фриланс-маркетплейсах</span><span class="t-uk" hidden>Мікросервіси автоматизації на фриланс-маркетплейсах</span><span class="t-en" hidden>Automation microservices on freelance marketplaces</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Парсинг, мониторинг цен, генерация отчётов, батч-обработка данных — выполняются агентами, продаются как gig-услуги</span><span class="t-uk" hidden>Парсинг, моніторинг цін, генерація звітів, батч-обробка даних — виконуються агентами, продаються як gig-послуги</span><span class="t-en" hidden>Scraping, price monitoring, report generation, batch data processing — executed by agents, sold as gig services</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Оплата за задачу, высокая маржа</span><span class="t-uk" hidden>Оплата за задачу, висока маржа</span><span class="t-en" hidden>Per-task pricing, high margin</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">12</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Приватные LLM-консилиумы on-premise для чувствительных данных</span><span class="t-uk" hidden>Приватні LLM-консиліуми on-premise для чутливих даних</span><span class="t-en" hidden>Private on-premise LLM consiliums for sensitive data</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Компаниям, которым нельзя отдавать данные в облако, — выделенный консилиум на нашей ноде с закрытым контуром и NDA</span><span class="t-uk" hidden>Компаніям, яким не можна віддавати дані в хмару, — виділений консиліум на нашій ноді із закритим контуром і NDA</span><span class="t-en" hidden>For companies that cannot send data to the cloud — a dedicated consilium on our node in a closed loop under NDA</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">$500–$3,000/мес за выделенную ноду</span><span class="t-uk" hidden>$500–$3,000/міс за виділену ноду</span><span class="t-en" hidden>$500–$3,000/mo per dedicated node</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">13</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">n8n-автоматизации под ключ</span><span class="t-uk" hidden>n8n-автоматизації під ключ</span><span class="t-en" hidden>Turnkey n8n automations</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Ферма проектирует и хостит workflow-автоматизации (почта → CRM → счёт → отчёт) на своём Docker-инстансе n8n</span><span class="t-uk" hidden>Ферма проєктує та хостить workflow-автоматизації (пошта → CRM → рахунок → звіт) на своєму Docker-інстансі n8n</span><span class="t-en" hidden>The farm designs and hosts workflow automations (email → CRM → invoice → report) on its Docker n8n instance</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">$100–$1,000 за workflow + хостинг</span><span class="t-uk" hidden>$100–$1,000 за workflow + хостинг</span><span class="t-en" hidden>$100–$1,000 per workflow + hosting</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">14</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Знаниевые базы и документация как продукт</span><span class="t-uk" hidden>Знанієві бази та документація як продукт</span><span class="t-en" hidden>Knowledge bases and documentation as a product</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Nginx docs-платформа и knowledge-base фермы превращаются в отраслевые вики/справочники по подписке (стандарты, ГОСТ/ISO/CE)</span><span class="t-uk" hidden>Nginx docs-платформа та knowledge-base ферми перетворюються на галузеві вікі/довідники за підпискою (стандарти, ДСТУ/ISO/CE)</span><span class="t-en" hidden>The Nginx docs platform and farm knowledge base become industry wikis/reference hubs by subscription (GOST/ISO/CE standards)</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Подписка $19–$99/мес + реклама</span><span class="t-uk" hidden>Підписка $19–$99/міс + реклама</span><span class="t-en" hidden>Subscription $19–$99/mo + ads</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">15</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Обучающие курсы и демо-стенд «агентные фабрики»</span><span class="t-uk" hidden>Навчальні курси та демо-стенд «агентні фабрики»</span><span class="t-en" hidden>Courses and demo stand on building "agent factories"</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Живой кластер — это учебник: курс по автономным агентам с лабораторными на реальной ферме (консилиум, роутинг, деплой)</span><span class="t-uk" hidden>Живий кластер — це підручник: курс з автономних агентів із лабораторними на реальній фермі (консиліум, роутинг, деплой)</span><span class="t-en" hidden>The live cluster is the textbook: a course on autonomous agents with labs on a real farm (consilium, routing, deploy)</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">$99–$499 за курс + корпоративные воркшопы</span><span class="t-uk" hidden>$99–$499 за курс + корпоративні воркшопи</span><span class="t-en" hidden>$99–$499 per course + corporate workshops</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">16</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Партнёрские (affiliate) воронки автономными агентами</span><span class="t-uk" hidden>Партнерські (affiliate) воронки автономними агентами</span><span class="t-en" hidden>Affiliate funnels run by autonomous agents</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Агенты пишут обзоры инструментов/API/железа с реальным опытом эксплуатации фермы и монетизируют партнёрские ссылки</span><span class="t-uk" hidden>Агенти пишуть огляди інструментів/API/заліза з реальним досвідом експлуатації ферми та монетизують партнерські посилання</span><span class="t-en" hidden>Agents write reviews of tools/APIs/hardware based on real farm operations experience and monetize affiliate links</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Комиссии 5–30% с рефералов</span><span class="t-uk" hidden>Комісії 5–30% з рефералів</span><span class="t-en" hidden>5–30% referral commissions</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">17</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Продажа датасетов и телеметрии эффективности агентов</span><span class="t-uk" hidden>Продаж датасетів і телеметрії ефективності агентів</span><span class="t-en" hidden>Selling datasets and agent-performance telemetry</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Анонимизированные логи консилиумов, роутинга и стоимости прогона — ценный датасет для ML-команд и research-групп</span><span class="t-uk" hidden>Анонімізовані логи консиліумів, роутингу та вартості прогону — цінний датасет для ML-команд і research-груп</span><span class="t-en" hidden>Anonymized consilium/routing/cost logs — a valuable dataset for ML teams and research groups</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Датасеты $200–$5,000 / research-партнёрства</span><span class="t-uk" hidden>Датасети $200–$5,000 / research-партнерства</span><span class="t-en" hidden>Datasets $200–$5,000 / research partnerships</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-amber">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">18</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Микро-SaaS: калькуляторы, планировщики, ROI-стенды</span><span class="t-uk" hidden>Мікро-SaaS: калькулятори, планувальники, ROI-стенди</span><span class="t-en" hidden>Micro-SaaS: calculators, planners, ROI stands</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Freemium-инструменты (как ROI-калькулятор манифеста): бесплатный расчёт → платный PDF-аудит и экспорт</span><span class="t-uk" hidden>Freemium-інструменти (як ROI-калькулятор маніфесту): безкоштовний розрахунок → платний PDF-аудит і експорт</span><span class="t-en" hidden>Freemium tools (like the manifesto ROI calculator): free calculation → paid PDF audit and export</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">$5–$49 разово / freemium-конверсия</span><span class="t-uk" hidden>$5–$49 разово / freemium-конверсія</span><span class="t-en" hidden>$5–$49 one-off / freemium conversion</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-purple">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">19</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">Аренда edge-мощностей и хостинг легальных сервисов</span><span class="t-uk" hidden>Оренда edge-потужностей і хостинг легальних сервісів</span><span class="t-en" hidden>Renting edge capacity and hosting legal services</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Свободные мощности dual-node меша (HTTP/3 Caddy, Tailscale) сдаются под статики, прокси легальных API и staging-окружения</span><span class="t-uk" hidden>Вільні потужності dual-node мешу (HTTP/3 Caddy, Tailscale) здаються під статики, проксі легальних API та staging-оточення</span><span class="t-en" hidden>Spare dual-node mesh capacity (HTTP/3 Caddy, Tailscale) rented for statics, legal API proxies, and staging environments</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">$20–$200/мес за хостинг-слот</span><span class="t-uk" hidden>$20–$200/міс за хостинг-слот</span><span class="t-en" hidden>$20–$200/mo per hosting slot</span></small></td>
+          </tr>
+          <tr class="kpi-row kpi-purple">
+            <td class="kpi-val-cell" align="center"><strong class="kpi-val">20</strong></td>
+            <td class="kpi-lbl-cell"><strong><span class="t-ru">AI-контроль качества чужого контента (верификация как услуга)</span><span class="t-uk" hidden>ШІ-контроль якості чужого контенту (верифікація як сервіс)</span><span class="t-en" hidden>AI quality control for third-party content (verification-as-a-service)</span></strong></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">Состязательный аудит (CISO/QA-агенты фермы) проверяет тексты, сметы, ТЗ и дипфейк-риски заказчика на галлюцинации и ошибки</span><span class="t-uk" hidden>Змагальний аудит (CISO/QA-агенти ферми) перевіряє тексти, кошториси, ТЗ і дипфейк-ризики замовника на галюцинації та помилки</span><span class="t-en" hidden>Adversarial audit (farm CISO/QA agents) checks client texts, quotes, specs, and deepfake risks for hallucinations and errors</span></small></td>
+            <td class="kpi-sub-cell"><small><span class="t-ru">$50–$500 за верификацию / месячный SLA</span><span class="t-uk" hidden>$50–$500 за верифікацію / місячний SLA</span><span class="t-en" hidden>$50–$500 per verification / monthly SLA</span></small></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style="margin: 16px 0 0 0;" class="dim-note">
+        <small><span class="t-ru">Ключевой принцип: себестоимость большинства потоков ≈ $0 благодаря 62 бесплатным моделям (free-quota) — маржа практически полностью идёт в покрытие OpEx $257.54/мес и рост фермы. Каждый поток запускается существующими агентами без найма персонала.</span><span class="t-uk" hidden>Ключовий принцип: собівартість більшості потоків ≈ $0 завдяки 62 безкоштовним моделям (free-quota) — маржа практично повністю йде на покриття OpEx $257.54/міс та зростання ферми. Кожен поток запускається наявними агентами без найму персоналу.</span><span class="t-en" hidden>Key principle: the cost basis of most streams is ≈ $0 thanks to 62 free-quota models — margin goes almost entirely to covering the $257.54/mo OpEx and farm growth. Every stream is launched by existing agents with zero hiring.</span></small>
+      </p>
+    </div>
+  </details>
+  <hr class="section-divider">
+  <!-- =========================================================================
        SECTION 09: GLOSSARY
        ========================================================================= -->
+  <fieldset class="module-box" data-section="glossary">
+    <legend class="module-title">09. Глоссарий терминов: Простыми словами о высоких технологиях EvaLine</legend>
   <details class="accordion-section" id="glossary">
     <summary class="accordion-summary">
       <span class="summary-num">[09]</span>
@@ -7501,22 +7190,16 @@ details.sub-accordion[open] > summary.sub-summary {
     <p style="margin-top: 8px; color: var(--fg-subtle);">
       <span class="t-ru">Кластер: Франкфурт (8 vCPU Dedicated Core) ⟷ Айова (Edge HTTP/3) ⟷ Защищённый WireGuard Mesh-контур.</span><span class="t-uk" hidden>Кластер: Франкфурт (8 vCPU Dedicated Core) ⟷ Айова (Edge HTTP/3) ⟷ Захищений WireGuard Mesh-контур.</span><span class="t-en" hidden>Cluster: Frankfurt (8 vCPU Dedicated Core) ⟷ Iowa (Edge HTTP/3) ⟷ Encrypted WireGuard Mesh Tunnel.</span>
     </p>
-    <div style="margin-top: 16px; display: flex; gap: 14px; justify-content: center; align-items: center; flex-wrap: wrap;">
-      <a href="https://evabot.online" target="_blank" rel="noopener">evabot.online ↗</a>
-      <a href="https://evaline.network" target="_blank" rel="noopener">evaline.network ↗</a>
-      <a href="https://evaline.online" style="color: var(--accent-green); font-weight: 700;">evaline.online ●</a>
-      <a href="https://evaline.website" target="_blank" rel="noopener">evaline.website ↗</a>
-      <span style="color: var(--border);">│</span>
-      <a href="https://github.com/evaline-online" target="_blank" rel="noopener" style="color: var(--accent-amber); font-weight: 700;">GitHub @evaline-online ↗</a>
-    </div>
   </footer>
 
 </div> <!-- End .container -->
 
 <!-- MERMAID.JS CDN ENGINE & INITIALIZATION -->
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-<!-- MARKMAP.JS (zoomable mindmaps, mobile-first) + d3 dependency -->
+
+<!-- MARKMAP.JS CDN (Markdown Mind Map) -->
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.18.12/dist/browser/index.iife.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script>
 
 <!-- EMBEDDED MODELS REGISTRY DATA & INTERACTIVE CLIENT ENGINE -->
@@ -7540,176 +7223,80 @@ details.sub-accordion[open] > summary.sub-summary {
         lineColor: '#38bdf8',
         secondaryColor: '#161f30',
         tertiaryColor: '#111722',
-        fontFamily: 'Roboto, sans-serif',
-        fontSize: '13px'
+        fontFamily: 'Roboto, sans-serif'
       },
-      securityLevel: 'loose',
-      flowchart: { useMaxWidth: true, htmlLabels: true, wrappingWidth: 140 },
-      mindmap:   { useMaxWidth: true },
-      sequence:  { useMaxWidth: true, mirrorActors: false },
-      gantt:     { useMaxWidth: true }
+      securityLevel: 'loose'
     });
   }
 
-  // Mobile portrait: flip horizontal flowchart LR -> vertical TD for readability.
-  // This runs once before mermaid parses the text; it mutates the source but the
-  // diagram semantics stay identical because LR/D are only layout hints.
-  function flipHorizontalFlowcharts() {
-    if (window.innerWidth > 768) return;
-    document.querySelectorAll('.mermaid').forEach(el => {
-      const src = el.textContent.trim();
-      if (src.startsWith('mindmap')) return; // markmap handles those
-      if (/\b(flowchart|graph)\s+LR\b/i.test(src)) {
-        el.textContent = src.replace(/\b(flowchart|graph)\s+LR\b/i, '$1 TD');
-      }
-    });
-  }
+  // Markmap Engine Initialization & Render
+  let markmapInstances = new Map();
 
-  window.__mermaidErrors = [];
-  let mermaidSeq = 0;
+  async function renderVisibleMarkmap() {
+    if (typeof window.markmap === 'undefined' || !window.markmap.Transformer || !window.markmap.Markmap) {
+      return;
+    }
+    const elements = Array.from(document.querySelectorAll('.diagram-canvas .markmap'));
+    for (const el of elements) {
+      if (el.offsetParent !== null && !el.getAttribute('data-processed')) {
+        try {
+          const lang = el.getAttribute('data-lang') || currentLang;
+          const markdown = el.getAttribute(`data-md-${lang}`) || el.getAttribute('data-md-ru') || '';
+          if (!markdown) continue;
 
-  // Minimal viewBox-preserving pan/zoom for mermaid diagrams (svg-pan-zoom
-  // drops the viewBox and breaks the responsive CSS sizing, so we roll our own):
-  //   drag = pan · pinch = zoom · dbl-click = zoom-in/reset · wheel = page scroll
-  function initMermaidPanZoom(svg) {
-    if (!svg || svg.dataset.pz) return;
-    svg.dataset.pz = '1';
-    svg.style.touchAction = 'none';
-    svg.style.cursor = 'grab';
+          const { Transformer, Markmap } = window.markmap;
+          const transformer = new Transformer();
+          const { root } = transformer.transform(markdown);
 
-    // wrap diagram content into a transformable viewport group
-    const vp = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    vp.setAttribute('class', 'mz-viewport');
-    Array.from(svg.children).forEach(k => {
-      const tag = (k.tagName || '').toLowerCase();
-      if (tag !== 'style' && tag !== 'defs') vp.appendChild(k);
-    });
-    svg.appendChild(vp);
+          const svgEl = el.querySelector('svg') || document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          if (!el.querySelector('svg')) {
+            el.innerHTML = '';
+            el.appendChild(svgEl);
+          }
+          svgEl.style.maxWidth = '100%';
+          svgEl.style.width = '100%';
+          svgEl.style.height = 'auto';
+          svgEl.style.maxHeight = '70vh';
 
-    let scale = 1, tx = 0, ty = 0;
-    const apply = () => vp.setAttribute('transform', 'translate(' + tx + ' ' + ty + ') scale(' + scale + ')');
-    const reset = () => { scale = 1; tx = 0; ty = 0; apply(); };
-    const localPoint = (e) => {
-      const r = svg.getBoundingClientRect();
-      return { x: e.clientX - r.left, y: e.clientY - r.top };
-    };
-    const zoomAt = (p, factor) => {
-      const ns = Math.min(12, Math.max(1, scale * factor));
-      if (ns === scale) return;
-      const k = ns / scale;
-      tx = p.x - k * (p.x - tx);
-      ty = p.y - k * (p.y - ty);
-      scale = ns;
-      if (scale <= 1.001) { reset(); return; }
-      apply();
-    };
+          Markmap.create(svgEl, {
+            autoFit: true,
+            duration: 300,
+            initialExpandDepth: 3,
+            color: (d) => {
+              const depth = d.depth || 0;
+              const colors = ['#ffd600', '#38bdf8', '#00e5ff', '#00e676', '#b388ff', '#f87171'];
+              return colors[depth % colors.length];
+            }
+          }, root);
 
-    svg.addEventListener('dblclick', e => {
-      e.preventDefault();
-      if (scale > 1.01) reset();
-      else zoomAt(localPoint(e), 3);
-    });
-
-    const pts = new Map();
-    let lx = 0, ly = 0, dragging = false, pinchD = 0;
-    const dist = () => {
-      const v = Array.from(pts.values());
-      return Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y);
-    };
-    const mid = () => {
-      const v = Array.from(pts.values());
-      return { x: (v[0].x + v[1].x) / 2, y: (v[0].y + v[1].y) / 2 };
-    };
-    svg.addEventListener('pointerdown', e => {
-      e.preventDefault();
-      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
-      if (pts.size === 1) {
-        dragging = true; lx = e.clientX; ly = e.clientY; pinchD = 0;
-      } else {
-        dragging = false; pinchD = dist();
-      }
-      try { svg.setPointerCapture(e.pointerId); } catch (err) {}
-    });
-    svg.addEventListener('pointermove', e => {
-      if (!pts.has(e.pointerId)) return;
-      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
-      if (pts.size === 2) {
-        const d = dist();
-        if (pinchD > 0 && d > 0) zoomAt(mid(), d / pinchD);
-        pinchD = d;
-      } else if (dragging) {
-        tx += e.clientX - lx; ty += e.clientY - ly;
-        lx = e.clientX; ly = e.clientY;
-        if (scale > 1) apply();
-      }
-    });
-    const endPointer = e => {
-      pts.delete(e.pointerId);
-      if (pts.size === 1) {
-        const p = Array.from(pts.values())[0];
-        lx = p.x; ly = p.y; dragging = true; pinchD = 0;
-      } else {
-        dragging = false; pinchD = 0;
-      }
-    };
-    svg.addEventListener('pointerup', endPointer);
-    svg.addEventListener('pointercancel', endPointer);
-    apply();
-  }
-
-  // Sequential rendering with explicit unique ids: mermaid's concurrent
-  // Date.now()-based ids collide, which drops the viewBox and crops diagrams.
-  async function renderVisibleMermaid() {
-    if (typeof mermaid === 'undefined') return;
-    flipHorizontalFlowcharts();
-    const pending = Array.from(document.querySelectorAll('.mermaid')).filter(el =>
-      el.offsetParent !== null && !el.getAttribute('data-processed'));
-    for (const el of pending) {
-      try {
-        const src = el.textContent.trim();
-        const id = 'mmd-' + (++mermaidSeq) + '-' + Date.now();
-        const result = await mermaid.render(id, src);
-        el.innerHTML = result.svg;
-        if (result.bindFunctions) result.bindFunctions(el);
-        el.setAttribute('data-processed', 'true');
-        initMermaidPanZoom(el.querySelector('svg'));
-      } catch (err) {
-        window.__mermaidErrors.push(String((err && err.message) || err).slice(0, 160));
-        console.warn('Mermaid render error:', err);
+          el.setAttribute('data-processed', 'true');
+          markmapInstances.set(el, { root, svg: svgEl });
+        } catch (err) {
+          console.warn('Markmap render error:', err);
+        }
       }
     }
   }
 
-  // Markmap zoomable mindmaps (portal-friendly pan/zoom, fits portrait screens)
-  function renderMarkmaps() {
-    if (typeof markmap === 'undefined' || !markmap.Markmap) return;
-    document.querySelectorAll('.markmap').forEach(el => {
-      if (el.dataset.rendered) return;
-      if (el.offsetParent === null) return; // hidden language variant — render on switch
-      let raw = el.getAttribute('data-tree');
-      if (!raw) { raw = el.textContent.trim(); }
-      if (!raw) return;
-      let root;
-      try { root = JSON.parse(raw); } catch (e) { return; }
-      el.innerHTML = '';
-      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      svg.setAttribute('width', '100%');
-      svg.setAttribute('height', '100%');
-      el.appendChild(svg);
-      try {
-        markmap.Markmap.create(svg, { autoFit: true, duration: 200, maxWidth: 220 }, root);
-      } catch (err) {
-        console.warn('Markmap render error:', err);
-        el.textContent = '⚠ Mindmap could not be rendered';
+  async function renderVisibleMermaid() {
+    if (typeof mermaid === 'undefined') return;
+    const elements = Array.from(document.querySelectorAll('.mermaid'));
+    for (const el of elements) {
+      if (el.offsetParent !== null && !el.getAttribute('data-processed')) {
+        try {
+          await mermaid.run({ nodes: [el] });
+          const svg = el.querySelector('svg');
+          if (svg) {
+            svg.style.maxWidth = '100%';
+            svg.style.width = '100%';
+            svg.style.height = 'auto';
+            svg.removeAttribute('height');
+          }
+        } catch (err) {
+          console.warn('Mermaid render error:', err);
+        }
       }
-      el.dataset.rendered = '1';
-    });
-  }
-
-  // Combined entry point: renders mermaid diagrams + markmap mindmaps
-  function renderVisibleDiagrams() {
-    renderVisibleMermaid();
-    renderMarkmaps();
+    }
   }
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -7721,13 +7308,11 @@ details.sub-accordion[open] > summary.sub-summary {
   let currentGlossaryFilter = 'all';
   let glossarySearchQuery = '';
 
-  // Master Theme Controller: 'web' (full web over terminal style), 'terminal', 'raw'
-  let currentTheme = urlParams.get('theme') || localStorage.getItem('evaline_theme') || 'web';
-  // map legacy stored theme values to the new set
-  if (!['web', 'terminal', 'raw'].includes(currentTheme)) currentTheme = 'web';
+  // Master Theme Controller: 'cyber', 'raw', 'paper', 'terminal'
+  let currentTheme = urlParams.get('theme') || localStorage.getItem('evaline_theme') || 'cyber';
 
   function setTheme(theme) {
-    if (!['web', 'terminal', 'raw'].includes(theme)) theme = 'web';
+    if (!['cyber', 'raw', 'paper', 'terminal'].includes(theme)) theme = 'cyber';
     currentTheme = theme;
     localStorage.setItem('evaline_theme', theme);
     const styleEl = document.getElementById('main-manifesto-styles');
@@ -7749,46 +7334,39 @@ details.sub-accordion[open] > summary.sub-summary {
     } else {
       if (styleEl) styleEl.disabled = false;
       document.documentElement.setAttribute('data-theme', theme);
-      // Re-apply diagram visibility: ASCII art only in terminal/raw, web is vector-only
-      const asciiOk = currentTheme === 'terminal' || currentTheme === 'raw';
+      // Restore diagram visibility based on active diagram mode
       if (currentDiagramMode !== 'ascii') {
         document.querySelectorAll('.diagram-canvas').forEach(el => el.style.display = 'block');
+        document.querySelectorAll('.diagram-canvas .markmap').forEach(el => el.style.display = 'block');
       }
-      document.querySelectorAll('.ascii-toggle').forEach(el => {
-        if (!asciiOk) { el.style.display = 'none'; el.open = false; }
-        else if (currentDiagramMode === 'vector') { el.style.display = 'none'; el.open = false; }
-        else { el.style.display = 'block'; }
-      });
-      setTimeout(renderVisibleDiagrams, 50);
+      if (currentDiagramMode === 'vector') {
+        document.querySelectorAll('.ascii-toggle').forEach(el => el.style.display = 'none');
+      }
+      setTimeout(renderVisibleMermaid, 50);
+      setTimeout(renderVisibleMarkmap, 50);
     }
   }
 
   function toggleStyles() {
-    setTheme(currentTheme === 'raw' ? 'web' : 'raw');
+    setTheme(currentTheme === 'raw' ? 'cyber' : 'raw');
   }
 
-  // Diagram Display Controller: 'all', 'vector', 'ascii' (ASCII art only in terminal/raw)
+  // Diagram Display Controller: 'all', 'vector', 'ascii'
   let currentDiagramMode = urlParams.get('diag') || 'all';
-  function isAsciiAllowed() {
-    // ASCII diagrams are reserved for the terminal & raw experience; web stays vector-only
-    return currentTheme === 'terminal' || currentTheme === 'raw';
-  }
   function toggleDiagramMode(mode) {
     if (!['all', 'vector', 'ascii'].includes(mode)) mode = 'all';
     currentDiagramMode = mode;
     document.querySelectorAll('.diagram-btn').forEach(btn => {
       btn.classList.toggle('active', btn.getAttribute('data-diag-mode') === mode);
     });
-    const asciiOk = isAsciiAllowed();
     document.querySelectorAll('.diagram-canvas').forEach(el => {
-      el.style.display = (mode === 'ascii' || currentTheme === 'raw' || (mode === 'vector')) ? 'none' : 'block';
+      el.style.display = (mode === 'ascii' || currentTheme === 'raw') ? 'none' : 'block';
+    });
+    document.querySelectorAll('.diagram-canvas .markmap').forEach(el => {
+      el.style.display = (mode === 'ascii' || currentTheme === 'raw') ? 'none' : 'block';
     });
     document.querySelectorAll('.ascii-toggle').forEach(el => {
-      if (!asciiOk) {
-        // Web theme: no ASCII art at all — keep diagrams as vector only
-        el.style.display = 'none';
-        el.open = false;
-      } else if (mode === 'vector') {
+      if (mode === 'vector') {
         el.style.display = 'none';
         el.open = false;
       } else if (mode === 'ascii') {
@@ -7799,7 +7377,8 @@ details.sub-accordion[open] > summary.sub-summary {
       }
     });
     if (mode !== 'ascii') {
-      setTimeout(renderVisibleDiagrams, 50);
+      setTimeout(renderVisibleMermaid, 50);
+      setTimeout(renderVisibleMarkmap, 50);
     }
   }
 
@@ -7807,11 +7386,12 @@ details.sub-accordion[open] > summary.sub-summary {
   function setLanguage(lang) {
     if (!['ru', 'uk', 'en'].includes(lang)) lang = 'ru';
     currentLang = lang;
+    document.documentElement.setAttribute('lang', lang);
     document.documentElement.setAttribute('data-lang', lang);
     localStorage.setItem('evaline_lang', lang);
 
     document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      btn.classList.toggle('active', btn.getAttribute('data-value') === lang);
     });
 
     // Native attribute manipulation for pure HTML / CSS-off mode
@@ -7828,10 +7408,16 @@ details.sub-accordion[open] > summary.sub-summary {
       else el.setAttribute('hidden', '');
     });
 
+    // Update markmap content for new language
+    document.querySelectorAll('.diagram-canvas .markmap').forEach(el => {
+      el.removeAttribute('data-processed');
+    });
+
     renderModels();
     renderGlossary();
     updateRoiCalc();
-    setTimeout(renderVisibleDiagrams, 60);
+    setTimeout(renderVisibleMermaid, 60);
+    setTimeout(renderVisibleMarkmap, 60);
   }
 
   // Global Accordion Controller
@@ -7840,7 +7426,8 @@ details.sub-accordion[open] > summary.sub-summary {
       d.open = isOpen;
     });
     if (isOpen) {
-      setTimeout(renderVisibleDiagrams, 80);
+      setTimeout(renderVisibleMermaid, 80);
+      setTimeout(renderVisibleMarkmap, 80);
     }
   }
 
@@ -7945,16 +7532,6 @@ details.sub-accordion[open] > summary.sub-summary {
       const roleLabel = currentLang === 'en' ? 'Role in Consilium:' : (currentLang === 'uk' ? 'Роль у Консиліумі:' : 'Роль в Консилиуме:');
       const roleText = (m.roleHints && m.roleHints[currentLang]) ? m.roleHints[currentLang] : (m.roleHint || '');
 
-      let datesHtml = '';
-      if (m.releaseDate || m.lastUpdate) {
-        const relLbl = currentLang === 'en' ? 'Released:' : (currentLang === 'uk' ? 'Реліз:' : 'Релиз:');
-        const updLbl = currentLang === 'en' ? 'Updated:' : (currentLang === 'uk' ? 'Оновлення:' : 'Обновление:');
-        datesHtml = '<div class="model-dates">' +
-                    '<span>🗓 ' + relLbl + ' <strong>' + (m.releaseDate || '—') + '</strong></span>' +
-                    '<span>🔄 ' + updLbl + ' <strong>' + (m.lastUpdate || '—') + '</strong></span>' +
-                    '</div>';
-      }
-
       return '<div class="model-card">' +
              '<div class="model-card-header">' +
              '<div class="model-name">' + m.name + '</div>' +
@@ -7962,7 +7539,6 @@ details.sub-accordion[open] > summary.sub-summary {
              '</div>' +
              '<div class="model-metrics">' + iqBadge + tierBadge + recBadge + ctxBadge + '</div>' +
              '<p class="model-desc">' + (m.desc || '') + '</p>' +
-             datesHtml +
              '<div class="model-role"><strong>' + roleLabel + '</strong> ' + roleText + '</div>' +
              priceHtml +
              '</div>';
@@ -8056,6 +7632,11 @@ details.sub-accordion[open] > summary.sub-summary {
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    // All content accordions start closed (no open attribute, and force-close here too)
+    document.querySelectorAll('details.accordion-section, details.sub-accordion').forEach(d => {
+      d.open = false;
+    });
+
     // Initial theme, language, and diagram mode apply
     setTheme(currentTheme);
     setLanguage(currentLang);
@@ -8111,18 +7692,124 @@ details.sub-accordion[open] > summary.sub-summary {
     checkCluster();
     setInterval(checkCluster, 15000);
 
-    // Dynamic Mermaid rendering on details toggle
-    document.querySelectorAll('details').forEach(det => {
+    // Event Delegation for Toolbar Actions (data-action buttons)
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+
+      const action = btn.getAttribute('data-action');
+      const value = btn.getAttribute('data-value');
+
+      switch (action) {
+        case 'set-language':
+          setLanguage(value);
+          break;
+        case 'set-theme':
+          setTheme(value);
+          break;
+        case 'set-diagram-mode':
+          toggleDiagramMode(value);
+          break;
+        case 'toggle-all-accordions':
+          toggleAllAccordions(value === 'true');
+          break;
+      }
+    });
+
+    // Dynamic Mermaid/Markmap rendering on details toggle
+    document.querySelectorAll('details.accordion-section, details.sub-accordion').forEach(det => {
       det.addEventListener('toggle', () => {
         if (det.open) {
-          setTimeout(renderVisibleDiagrams, 50);
+          setTimeout(renderVisibleMermaid, 50);
+          setTimeout(renderVisibleMarkmap, 50);
+          det.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
     });
 
     // Initial render of visible diagrams
-    setTimeout(renderVisibleDiagrams, 150);
+    setTimeout(renderVisibleMermaid, 150);
+    setTimeout(renderVisibleMarkmap, 150);
   });
+
+    // ===== Mindmap TOC builder =====
+    function tocActiveLang() {
+      return document.documentElement.getAttribute('data-lang') || 'ru';
+    }
+    function tocText(el) {
+      if (!el) return '';
+      var lang = tocActiveLang();
+      var span = el.querySelector('.t-'+lang);
+      if (span && span.textContent.trim()) return span.textContent.trim();
+      var any = el.querySelector('.t-ru');
+      return (any ? any.textContent : el.textContent) || '';
+    }
+    function buildTocMindmap() {
+      var root = document.getElementById('toc-tree');
+      if (!root) return;
+      var sections = document.querySelectorAll('details.accordion-section');
+      var ul = document.createElement('ul');
+      ul.className = 'toc-mindmap-tree';
+      sections.forEach(function(sec) {
+        if (!sec.id || sec.id === 'manifesto-toc') return;
+        var num = sec.querySelector('.summary-num');
+        var title = sec.querySelector('.summary-title');
+        var item = document.createElement('li');
+        var a = document.createElement('a');
+        a.href = '#' + sec.id;
+        var numTxt = document.createElement('span');
+        numTxt.className = 'toc-node-num';
+        numTxt.textContent = (num ? num.textContent : '');
+        a.appendChild(numTxt);
+        var label = document.createElement('span');
+        label.textContent = tocText(title) || sec.id;
+        a.appendChild(label);
+        a.addEventListener('click', function(e) {
+          e.preventDefault();
+          sec.setAttribute('open','');
+          var y = sec.getBoundingClientRect().top + window.scrollY - 20;
+          window.scrollTo({top:y, behavior:'smooth'});
+          setTimeout(renderVisibleMermaid, 80);
+          setTimeout(renderVisibleMarkmap, 80);
+        });
+        item.appendChild(a);
+        var subs = sec.querySelectorAll('details.sub-accordion');
+        if (subs.length) {
+          var subUl = document.createElement('ul');
+          subs.forEach(function(sub) {
+            var sTitle = sub.querySelector('.sub-title');
+            var li = document.createElement('li');
+            li.className = 'toc-sub-item';
+            var sa = document.createElement('a');
+            sa.href = '#' + sub.id;
+            var sLabel = document.createElement('span');
+            sLabel.textContent = tocText(sTitle) || sub.id;
+            sa.appendChild(sLabel);
+            sa.addEventListener('click', function(e) {
+              e.preventDefault();
+              sub.setAttribute('open','');
+              var pdet = sub.closest('details.accordion-section');
+              if (pdet) pdet.setAttribute('open','');
+              var y = sub.getBoundingClientRect().top + window.scrollY - 20;
+              window.scrollTo({top:y, behavior:'smooth'});
+              setTimeout(renderVisibleMermaid, 80);
+              setTimeout(renderVisibleMarkmap, 80);
+            });
+            li.appendChild(sa);
+            subUl.appendChild(li);
+          });
+          item.appendChild(subUl);
+        }
+        ul.appendChild(item);
+      });
+      root.innerHTML = '';
+      root.appendChild(ul);
+    }
+    setTimeout(buildTocMindmap, 260);
+    document.querySelectorAll('[data-action="set-language"]').forEach(function(b){
+      b.addEventListener('click', function(){ setTimeout(buildTocMindmap, 90); });
+    });
+
 </script>
 
 </body>

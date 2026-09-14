@@ -131,7 +131,7 @@ export class ReportCommand {
     } catch { /* best effort */ }
 
     if (collected.length === 0) {
-      return '✅ No system errors. All clear.';
+      return '[OK] No system errors. All clear.';
     }
 
     const lines = collected

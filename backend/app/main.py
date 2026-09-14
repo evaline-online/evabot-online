@@ -130,10 +130,12 @@ async def api_config() -> JSONResponse:
             },
             "commands": [
                 {"cmd": "/help", "desc": "Terminal command reference"},
+                {"cmd": "/about", "desc": "About EvaBot Online, EvaLine corp & GCP cluster"},
                 {"cmd": "/models [filter]", "desc": "Model catalog with USD/EUR pricing"},
                 {"cmd": "/compare", "desc": "Top-10 coding models comparison"},
                 {"cmd": "/model <id>", "desc": "Switch active model"},
                 {"cmd": "/mode <chat|dialog|interview|consilium>", "desc": "Switch operational mode"},
+                {"cmd": "/consilium <topic>", "desc": "Run multi-agent AI consilium deliberation"},
                 {"cmd": "/persona <eva|adam|dual>", "desc": "Switch co-pilot persona"},
                 {"cmd": "/db <hybrid|postgres|qdrant|ephemeral>", "desc": "Route knowledge base"},
                 {"cmd": "/preset <top10_paid|top10_free>", "desc": "Consilium preset"},
@@ -266,7 +268,7 @@ async def api_persona() -> JSONResponse:
                     "role": "Lead Frontend Architect & UX Director",
                     "focus": "Frontend, UI/UX, Design Systems, Typography, Web Speech, Client Architecture",
                     "voiceType": "Neural Female Voice",
-                    "preferredModel": "gemini-2.5-flash",
+                    "preferredModel": "gemini-3.8-flash",
                 },
                 {
                     "id": "adam",
@@ -275,7 +277,7 @@ async def api_persona() -> JSONResponse:
                     "role": "Chief Backend Architect & Cloud Systems Lead",
                     "focus": "Backend, Distributed Systems, Cloud Clusters, PostgreSQL, Microservices, Security",
                     "voiceType": "Deep Neural Male Voice",
-                    "preferredModel": "gemini-2.5-pro",
+                    "preferredModel": "gemini-3.1-pro",
                 },
                 {
                     "id": "dual",
@@ -284,7 +286,7 @@ async def api_persona() -> JSONResponse:
                     "role": "Full-Stack Synergistic Co-Pilots",
                     "focus": "Frontend Strategy (Eva) + Backend Rigor (Adam) Operating in Tandem",
                     "voiceType": "Dual Alternating Voice",
-                    "preferredModel": "gemini-2.5-pro",
+                    "preferredModel": "gemini-3.1-pro",
                 },
             ],
         }

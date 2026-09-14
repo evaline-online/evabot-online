@@ -6,65 +6,65 @@
       <description>Last 10 notes on EvaBot Docs</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
-    <title>dev</title>
-    <link>https://evabot.online/docs/dev/</link>
-    <guid>https://evabot.online/docs/dev/</guid>
+    <title>agents</title>
+    <link>https://evabot.online/docs/agents/</link>
+    <guid>https://evabot.online/docs/agents/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Tue, 08 Sep 2026 18:27:03 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 11:12:31 GMT</pubDate>
   </item><item>
-    <title>journal</title>
-    <link>https://evabot.online/docs/journal/</link>
-    <guid>https://evabot.online/docs/journal/</guid>
+    <title>deployment</title>
+    <link>https://evabot.online/docs/deployment/</link>
+    <guid>https://evabot.online/docs/deployment/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Tue, 08 Sep 2026 18:27:03 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 11:12:31 GMT</pubDate>
+  </item><item>
+    <title>development</title>
+    <link>https://evabot.online/docs/development/</link>
+    <guid>https://evabot.online/docs/development/</guid>
+    <description><![CDATA[  ]]></description>
+    <pubDate>Mon, 14 Sep 2026 11:12:31 GMT</pubDate>
+  </item><item>
+    <title>domains</title>
+    <link>https://evabot.online/docs/domains/</link>
+    <guid>https://evabot.online/docs/domains/</guid>
+    <description><![CDATA[  ]]></description>
+    <pubDate>Mon, 14 Sep 2026 11:12:31 GMT</pubDate>
   </item><item>
     <title>models</title>
     <link>https://evabot.online/docs/models/</link>
     <guid>https://evabot.online/docs/models/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Tue, 08 Sep 2026 18:27:03 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 11:12:31 GMT</pubDate>
   </item><item>
     <title>ops</title>
     <link>https://evabot.online/docs/ops/</link>
     <guid>https://evabot.online/docs/ops/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Tue, 08 Sep 2026 18:27:03 GMT</pubDate>
-  </item><item>
-    <title>deployment</title>
-    <link>https://evabot.online/docs/ops/deployment/</link>
-    <guid>https://evabot.online/docs/ops/deployment/</guid>
-    <description><![CDATA[  ]]></description>
-    <pubDate>Tue, 08 Sep 2026 18:27:03 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 11:12:31 GMT</pubDate>
   </item><item>
     <title>security</title>
-    <link>https://evabot.online/docs/ops/security/</link>
-    <guid>https://evabot.online/docs/ops/security/</guid>
+    <link>https://evabot.online/docs/security/</link>
+    <guid>https://evabot.online/docs/security/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Tue, 08 Sep 2026 18:27:03 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 11:12:31 GMT</pubDate>
   </item><item>
-    <title>ssh-bridge</title>
-    <link>https://evabot.online/docs/ops/ssh-bridge/</link>
-    <guid>https://evabot.online/docs/ops/ssh-bridge/</guid>
+    <title>1</title>
+    <link>https://evabot.online/docs/tags/1</link>
+    <guid>https://evabot.online/docs/tags/1</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Tue, 08 Sep 2026 18:27:03 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 11:12:31 GMT</pubDate>
   </item><item>
-    <title>overview</title>
-    <link>https://evabot.online/docs/overview/</link>
-    <guid>https://evabot.online/docs/overview/</guid>
+    <title>commands</title>
+    <link>https://evabot.online/docs/tags/commands</link>
+    <guid>https://evabot.online/docs/tags/commands</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Tue, 08 Sep 2026 18:27:03 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 11:12:31 GMT</pubDate>
   </item><item>
-    <title>reports</title>
-    <link>https://evabot.online/docs/reports/</link>
-    <guid>https://evabot.online/docs/reports/</guid>
+    <title>reference</title>
+    <link>https://evabot.online/docs/tags/reference</link>
+    <guid>https://evabot.online/docs/tags/reference</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Tue, 08 Sep 2026 18:27:03 GMT</pubDate>
-  </item><item>
-    <title>architecture</title>
-    <link>https://evabot.online/docs/tags/architecture</link>
-    <guid>https://evabot.online/docs/tags/architecture</guid>
-    <description><![CDATA[  ]]></description>
-    <pubDate>Tue, 08 Sep 2026 18:27:03 GMT</pubDate>
+    <pubDate>Mon, 14 Sep 2026 11:12:31 GMT</pubDate>
   </item>
     </channel>
   </rss>

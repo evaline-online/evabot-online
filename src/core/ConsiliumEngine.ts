@@ -325,7 +325,7 @@ export class ConsiliumEngine {
     if (persona === 'eva') {
       interviewer = {
         id: 'eva-interviewer',
-        model: interviewer?.model || 'gemini-2.5-flash',
+        model: interviewer?.model || 'gemini-3.8-flash',
         name: 'Eva (Frontend, Brand Face & Strategic Interviewer)',
         title: 'Lead Frontend Architect, Face of the Company & UX Director',
         systemPrompt: applyLocalePolicy(
@@ -525,7 +525,7 @@ export class ConsiliumEngine {
 
     const p2 = participants[1] || {
       id: 'agent-2',
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.8-flash',
       name: 'Lead Challenger',
       title: 'Principal Security & Risk Auditor',
       systemPrompt: CORPORATE_ROLES.security_auditor.systemPrompt,

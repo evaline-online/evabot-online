@@ -1,0 +1,47 @@
+{
+  "name": "EvaLine Network — Фабрика автономных ИИ-агентов",
+  "short_name": "EvaLine",
+  "description": "Суверенная фабрика автономных ИИ-агентов, система Консилиум, матрица 94 LLM-моделей, Тетраксис ролей и реальное производство полимеров EVA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07090e",
+  "theme_color": "#00e676",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "ru",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%2307090e' width='512' height='512' rx='64'/><text x='256' y='340' font-family='system-ui, sans-serif' font-size='280' font-weight='700' fill='%2300e676' text-anchor='middle' dominant-baseline='middle'>◆</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%2307090e' width='512' height='512' rx='64'/><text x='256' y='340' font-family='system-ui, sans-serif' font-size='280' font-weight='700' fill='%2300e676' text-anchor='middle' dominant-baseline='middle'>◆</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "developer", "business"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Манифест",
+      "short_name": "Манифест",
+      "description": "Открыть полный манифест EvaLine",
+      "url": "/",
+      "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%2307090e' width='512' height='512' rx='64'/><text x='256' y='340' font-family='system-ui, sans-serif' font-size='280' font-weight='700' fill='%2300e676' text-anchor='middle' dominant-baseline='middle'>◆</text></svg>", "sizes": "192x192" }]
+    },
+    {
+      "name": "ROI Калькулятор",
+      "short_name": "ROI",
+      "description": "Рассчитать окупаемость автономной фермы",
+      "url": "/#roi-calculator",
+      "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%2307090e' width='512' height='512' rx='64'/><text x='256' y='340' font-family='system-ui, sans-serif' font-size='280' font-weight='700' fill='%23ffd600' text-anchor='middle' dominant-baseline='middle'>💰</text></svg>", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

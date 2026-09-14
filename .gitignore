@@ -50,5 +50,8 @@ knowledge-base/evaline-knowledge-base/fts_index.db
 data/
 
 # Release backups (binaries)
-backups/releases/
-backups/*.tar.gz
+backups/
+*.bak
+*.bak-*
+*.backup*
+

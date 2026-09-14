@@ -25,6 +25,11 @@ npm run build
 echo -e "${GREEN}  ✓ Build complete${NC}"
 echo ""
 
+echo -e "${YELLOW}[0.1/5] Validating HTML/CSS/JS integrity in public/index.html...${NC}"
+node scripts/verify-ui-syntax.js
+echo -e "${GREEN}  ✓ UI integrity check passed${NC}"
+echo ""
+
 echo -e "${YELLOW}[1/5] Verifying server health...${NC}"
 if curl -s http://localhost:3000/api/health > /dev/null 2>&1; then
   echo -e "${GREEN}  ✓ Local server is healthy${NC}"

@@ -90,7 +90,7 @@ export class AgentBuilder {
         title: 'Security Auditor & RedTeam Lead',
         department: 'Quality & Security' as const,
         mission: 'Аудит безопасности, OOM-защита, анализ утечек токенов и соответствие стандартам.',
-        modelId: 'gemini-2.5-pro',
+        modelId: 'gemini-3.1-pro',
         tools: ['firebase', 'filesystem', 'markdownlint'],
       },
       {
@@ -98,7 +98,7 @@ export class AgentBuilder {
         title: 'DevOps & SRE Engineer',
         department: 'Quality & Security' as const,
         mission: 'Мониторинг кластера Франкфурт ↔ Айова, systemd сервисы, логирование и развертывание.',
-        modelId: 'gemini-2.5-flash',
+        modelId: 'gemini-3.8-flash',
         tools: ['docker', 'google-cloud', 'filesystem'],
       },
       {
@@ -272,7 +272,7 @@ export class AgentBuilder {
         title: 'EvaQuality (ISO/CE Standards, ТУ & Sanitary Certs)',
         department: 'Quality & Security' as const,
         mission: 'Аудит соответствия ТУ, санитарно-гигиенических заключений МОЗ Украины (СЭС), сертификатов CE для ЕС, членство UNIC, паспорта качества партий завода в Черноморске (водопоглощение <0.1%).',
-        modelId: 'gemini-2.5-pro',
+        modelId: 'gemini-3.1-pro',
         tools: ['knowledge-base', 'markdownlint'],
       },
       {
@@ -280,7 +280,7 @@ export class AgentBuilder {
         title: 'EvaPartner (B2B Regional Dealer & Dropshipping Hub)',
         department: 'Sales & CRM' as const,
         mission: 'Онбординг региональных дилеров, дропшиппинг автоковриков, прямые поставки с завода в Черноморске (вул. Промислова, 1) и склада в Братиславе (Obchodna 37), оптовые скидки.',
-        modelId: 'gemini-2.5-flash',
+        modelId: 'gemini-3.8-flash',
         tools: ['sqlite', 'memory'],
       },
       {

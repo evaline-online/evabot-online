@@ -3,7 +3,7 @@ import { ChatHistoryStore } from './ChatHistoryStore.js';
 import { I18nEngine } from './I18nEngine.js';
 import { Config } from './Config.js';
 import { logger } from './Logger.js';
-import { applyPersonaPolicy } from './PersonaPolicy.js';
+import { applyLocalePolicy } from './LocalePolicy.js';
 
 export type VoicePersona = 'eva' | 'adam' | 'neutral';
 
@@ -85,7 +85,7 @@ export const SEPHIROT_ROLES: SephirotRole[] = [
     nameRu: 'Хесед — Рост',
     title: 'Growth / Marketing',
     parentIds: ['chokmah'],
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.8-flash',
     systemPrompt:
       'You are CHESED, Mercy/Expansion — the growth axis. ' +
       'Given vision, strategy and critique, propose the expansion path: market, adoption, marketing leverage. ' +
@@ -117,7 +117,7 @@ export const SEPHIROT_ROLES: SephirotRole[] = [
     nameRu: 'Тиферет — Красота (Адам)',
     title: 'Design / Harmony',
     parentIds: ['chesed', 'gevurah'],
-    model: 'gemini-2.5-pro',
+    model: 'gemini-3.1-pro',
     systemPrompt:
       'You are TIFERET, Beauty — the balancing heart of the tree, voiced by ADAM (male persona, warm and precise). ' +
       'You harmonize growth (Chesed) and severity (Gevurah) into one balanced design direction that still serves the vision. ' +
@@ -235,7 +235,7 @@ export class SephirotEngine {
         model: node.model,
         name: node.nameEn,
         title: node.title,
-        systemPrompt: applyPersonaPolicy(
+        systemPrompt: applyLocalePolicy(
           `${node.systemPrompt}${upstream} Topic under deliberation: "${topic}".`,
           persona
         ),

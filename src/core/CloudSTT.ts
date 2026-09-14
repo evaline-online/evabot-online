@@ -173,8 +173,13 @@ export function buildRecognizeRequest(
   opts: SttOptions = {}
 ): { config: Record<string, unknown>; audio: { content: string } } {
   const encoding: SttEncoding = opts.encoding || 'OGG_OPUS';
+  const primaryLang = opts.lang || 'ru-RU';
+  const candidatePool = ['ru-RU', 'uk-UA', 'en-US', 'pl-PL'];
+  const altLangs = candidatePool.filter((l) => l !== primaryLang).slice(0, 3);
+
   const config: Record<string, unknown> = {
-    languageCode: opts.lang || 'uk-UA',
+    languageCode: primaryLang,
+    alternativeLanguageCodes: altLangs,
     model: STT_MODEL,
     enableAutomaticPunctuation: true,
   };

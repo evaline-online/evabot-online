@@ -1,0 +1,79 @@
+{
+    admin off
+    auto_https disable_redirects
+}
+
+# Health check
+:80, :443 {
+    @health path /health /healthz /ping
+    respond @health "OK" 200
+    handle_path /api/* {
+        reverse_proxy http://100.66.98.4:3000
+    }
+}
+
+# EvaFace — AI портал
+evabot.online, www.evabot.online {
+    root * /var/www/evabot.online
+    file_server
+    handle /api/* {
+        reverse_proxy http://100.66.98.4:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+        }
+    }
+}
+
+# Evaline Network — архитектурная консоль + конвертеры
+evaline.network, www.evaline.network {
+    root * /var/www/evaline.network
+    file_server
+    handle /api/* {
+        reverse_proxy http://100.66.98.4:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+        }
+    }
+}
+
+# Evaline Online — identity & services
+evaline.online, www.evaline.online {
+    root * /var/www/evaline.online
+    file_server
+    handle /api/* {
+        reverse_proxy http://100.66.98.4:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+        }
+    }
+}
+
+# Business Tier — monetized AI (Cloud Run)
+business.evaline.online, www.business.evaline.online {
+    root * /var/www/business.evaline.online
+    file_server
+    handle /api/* {
+        reverse_proxy https://business-tier-api-873069440066.us-central1.run.app {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Tenant-ID {header.X-API-Key}
+        }
+    }
+    handle /ws/* {
+        reverse_proxy http://100.66.98.4:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up Upgrade {>Upgrade}
+            header_up Connection {>Connection}
+        }
+    }
+    handle /admin/* {
+        reverse_proxy https://business-tier-api-873069440066.us-central1.run.app {
+            header_up Host {host}
+            header_up X-Admin "true"
+        }
+    }
+    handle /metrics {
+        reverse_proxy http://100.66.98.4:9090
+    }
+}

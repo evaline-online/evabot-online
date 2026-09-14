@@ -1,0 +1,133 @@
+# EvaFace Caddyfile - Zero-load Edge Ingress with Business Tier
+# FIXED: Removed rate_limit directive (requires external module not in standard Caddy 2.11.4)
+
+# Global options
+{
+    admin off
+    auto_https off
+    servers {
+        protocol {
+            experimental_http3
+        }
+    }
+}
+
+# Auth validation snippets
+(validate_api_key) {
+    @has_api_key header X-API-Key *
+    @missing_api_key not header X-API-Key
+    respond @missing_api_key 401 '{"error": "API key required", "code": "MISSING_API_KEY"}'
+}
+
+(validate_jwt) {
+    @has_auth header Authorization *
+    @bearer header_regexp Authorization ^Bearer\s
+    @valid_jwt @has_auth @bearer
+    respond @valid_jwt 200 {
+        header_down X-User-ID "extracted-from-jwt"
+        header_down X-Tier "enterprise"
+    }
+    respond @has_auth 401 '{"error": "Invalid auth format", "code": "INVALID_AUTH"}'
+}
+
+# Health endpoint (no auth)
+health-check {
+    respond "OK" 200
+}
+
+# Main domains (existing)
+evabot.online, www.evabot.online {
+    root * /var/www/evabot.online
+    file_server
+
+    handle /api/* {
+        reverse_proxy http://100.66.98.4:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+}
+
+evaline.network, www.evaline.network {
+    root * /var/www/evaline.network
+    file_server
+
+    handle /api/* {
+        reverse_proxy http://100.66.98.4:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+}
+
+evaline.online, www.evaline.online {
+    root * /var/www/evaline.online
+    file_server
+
+    handle /api/* {
+        reverse_proxy http://100.66.98.4:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+}
+
+# BUSINESS TIER - Monetized AI Services
+business.evaline.online, www.business.evaline.online {
+    root * /var/www/business.evaline.online
+    file_server
+
+    # API endpoints - route to Cloud Run Business Tier API
+    handle /api/* {
+        # Validate authentication
+        import validate_api_key
+        import validate_jwt
+
+        # Add metering headers for billing
+        header_up X-Metered-Request "true"
+        header_up X-Request-ID {uuid}
+        header_up X-Timestamp {time}
+
+        # Route to Cloud Run Business Tier API
+        reverse_proxy https://business-tier-api-873069440066.us-central1.run.app {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            header_up X-Tenant-ID {header.X-API-Key}
+            header_up X-Request-ID {uuid}
+            header_up X-Metered "true"
+        }
+    }
+
+    # WebSocket support for streaming (route to compute node)
+    handle /ws/* {
+        import validate_api_key
+        reverse_proxy http://100.66.98.4:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            header_up Upgrade {>Upgrade}
+            header_up Connection {>Connection}
+        }
+    }
+
+    # Admin/management endpoints
+    handle /admin/* {
+        import validate_jwt
+        reverse_proxy https://business-tier-api-873069440066.us-central1.run.app {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Admin "true"
+        }
+    }
+}
+
+# Metrics endpoint for Prometheus/Grafana
+business.evaline.online, www.business.evaline.online {
+    handle /metrics {
+        reverse_proxy http://100.66.98.4:9090
+    }
+}

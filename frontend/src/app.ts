@@ -20,6 +20,7 @@ import {
   renderModelsTable,
   renderCompareTable,
   renderHelp,
+  renderAbout,
   renderChatBoxContent,
   renderChatBoxWithCost,
   renderCostLine,
@@ -1029,9 +1030,12 @@ export class EvaBotWebApp {
       return this.handleSlashCommand(candidate);
     }
     const voiceWords: Record<string, string> = {
-      'очистить': '/clear', 'очисти': '/clear', 'очистити': '/clear', 'clear': '/clear',
+      'очистить': '/clear', 'очисти': '/clear', 'очистити': '/clear', 'clear': '/clear', 'cls': '/clear',
       'помощь': '/help', 'справка': '/help', 'довідка': '/help', 'help': '/help',
       'модели': '/models', 'моделі': '/models', 'models': '/models',
+      'о проекте': '/about', 'про проект': '/about', 'про нас': '/about', 'о нас': '/about', 'about': '/about',
+      'режим': '/mode', 'mode': '/mode',
+      'консилиум': '/consilium', 'консиліум': '/consilium', 'consilium': '/consilium',
     };
     const direct = voiceWords[rest];
     if (direct) return this.handleSlashCommand(direct);
@@ -1500,10 +1504,20 @@ export class EvaBotWebApp {
     const [cmd, ...args] = trimmed.split(/\s+/);
     const argStr = args.join(' ').toLowerCase();
 
-if (cmd === '/help') {
+    if (cmd === '/help') {
       this.appendMessage({
         role: 'system',
         text: renderHelp(),
+        timestamp: new Date().toLocaleTimeString(),
+        ansi: true,
+      });
+      return true;
+    }
+
+    if (cmd === '/about') {
+      this.appendMessage({
+        role: 'system',
+        text: renderAbout(),
         timestamp: new Date().toLocaleTimeString(),
         ansi: true,
       });
@@ -1520,10 +1534,29 @@ if (cmd === '/help') {
     }
 
     if (cmd === '/mode') {
-      if (argStr === 'chat' || argStr === 'dialog' || argStr === 'interview' || argStr === 'consilium') {
-        this.setMode(argStr as ModeId);
+      if (argStr === 'chat' || argStr === 'dialog' || argStr === 'interview' || argStr === 'consilium' || argStr === 'solo' || argStr === 'dialogue') {
+        const mappedMode: ModeId = argStr === 'solo' ? 'chat' : argStr === 'dialogue' ? 'dialog' : (argStr as ModeId);
+        this.setMode(mappedMode);
+        this.addSystemNotification(`Operational mode switched to: ${mappedMode.toUpperCase()}`);
       } else {
-        this.addSystemNotification('Usage: `/mode <chat | dialog | interview | consilium>`');
+        this.addSystemNotification(`Active mode: ${this.currentMode}. Usage: \`/mode <chat | dialog | interview | consilium>\``);
+      }
+      return true;
+    }
+
+    if (cmd === '/consilium') {
+      const topic = args.join(' ').trim();
+      this.setMode('consilium');
+      if (topic) {
+        const inputElem = document.getElementById('user-input') as HTMLTextAreaElement;
+        if (inputElem) {
+          inputElem.value = topic;
+          void this.handleSend();
+        } else {
+          this.addSystemNotification(`Switched to CONSILIUM mode. Topic: "${topic}"`);
+        }
+      } else {
+        this.addSystemNotification('Switched to CONSILIUM mode (multi-agent deliberation). Enter your topic or question below.');
       }
       return true;
     }
@@ -1584,7 +1617,7 @@ if (cmd === '/help') {
       return true;
     }
 
-    if (cmd === '/clear') {
+    if (cmd === '/clear' || cmd === '/cls') {
       this.clearTerminal();
       return true;
     }

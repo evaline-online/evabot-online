@@ -1,0 +1,121 @@
+# EvaFace Caddyfile - Zero-load Edge Ingress (Strict Zero-Cache & Dynamic TUI Proxy)
+
+{
+    default_sni evabot.online
+}
+
+(zero_cache) {
+    header {
+        Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+        Pragma "no-cache"
+        Expires "0"
+        Surrogate-Control "no-store"
+        -ETag
+        -Last-Modified
+    }
+}
+
+evabot.online, www.evabot.online {
+    log {
+        output file /var/log/caddy/access.log {
+            roll_size 10mb
+            roll_keep 3
+        }
+    }
+
+    # Docs (Quartz) -> EvaBrain nginx :80
+    handle /docs* {
+        reverse_proxy http://100.66.98.4:80
+    }
+
+    # Voice FastAPI -> EvaBrain nginx
+    handle /voice* {
+        reverse_proxy http://100.66.98.4:80
+    }
+
+    # 3D Matrix Face -> EvaBrain nginx :80
+    handle /face* {
+        reverse_proxy http://100.66.98.4:80
+    }
+
+    # Everything else -> EvaBrain backend
+    handle {
+        import zero_cache
+        reverse_proxy http://100.66.98.4:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+        }
+    }
+}
+
+evaline.network, www.evaline.network {
+    import zero_cache
+    log {
+        output file /var/log/caddy/access.log {
+            roll_size 10mb
+            roll_keep 3
+        }
+    }
+    reverse_proxy http://100.66.98.4:3000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+    }
+}
+
+evaline.online, www.evaline.online {
+    import zero_cache
+    log {
+        output file /var/log/caddy/access.log {
+            roll_size 10mb
+            roll_keep 3
+        }
+    }
+    reverse_proxy http://100.66.98.4:3000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+    }
+}
+
+evaline.website, www.evaline.website {
+    import zero_cache
+    log {
+        output file /var/log/caddy/access.log {
+            roll_size 10mb
+            roll_keep 3
+        }
+    }
+    reverse_proxy http://100.66.98.4:3000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+    }
+}
+
+# NOTE: evaline.com.ua DNS currently points to Ukrainian hosting (185.68.16.78).
+# Uncomment once DNS A/AAAA records point to 136.114.26.252.
+# evaline.com.ua, www.evaline.com.ua {
+#     import zero_cache
+#     log {
+#         output file /var/log/caddy/access.log {
+#             roll_size 10mb
+#             roll_keep 3
+#         }
+#     }
+#     reverse_proxy http://100.66.98.4:3000 {
+#         header_up Host {host}
+#         header_up X-Real-IP {remote_host}
+#     }
+# }
+
+http://136.114.26.252, http://100.125.200.49, http://localhost, http://127.0.0.1 {
+    import zero_cache
+    log {
+        output file /var/log/caddy/access.log {
+            roll_size 10mb
+            roll_keep 3
+        }
+    }
+    reverse_proxy http://100.66.98.4:3000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+    }
+}

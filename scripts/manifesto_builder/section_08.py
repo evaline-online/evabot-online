@@ -1,8 +1,27 @@
 # -*- coding: utf-8 -*-
 from helpers import t, accordion_section, sub_accordion
+import infographics_builder
+
+def make_role_card(num, icon, title_ru, title_uk, title_en, sephira_ru, sephira_uk, sephira_en, desc_ru, desc_uk, desc_en, stack):
+    node_lbl = t(f"Узел {num}", f"Вузол {num}", f"Node {num}")
+    seph_lbl = t(sephira_ru, sephira_uk, sephira_en)
+    title_html = t(title_ru, title_uk, title_en)
+    desc_html = t(desc_ru, desc_uk, desc_en)
+    stack_lbl = t("Стек:", "Стек:", "Stack:")
+    return f'''          <div class="sephira-card">
+            <div class="sephira-tag">
+              <span class="sephira-level">{node_lbl} &bull; {seph_lbl}</span>
+              <span>{icon}</span>
+            </div>
+            <div class="sephira-title">{title_html}</div>
+            <div class="sephira-desc">{desc_html}</div>
+            <div class="sephira-model"><strong>{stack_lbl}</strong> {stack}</div>
+          </div>'''
 
 def get_section_08():
+    # =========================================================================
     # 8.1 Physical Manufacturing & Solving Business Pains
+    # =========================================================================
     sub1_content = f'''
       <div class="factory-overview-card">
         <div class="factory-header-row">
@@ -47,9 +66,9 @@ def get_section_08():
           </div>
           <div class="biz-solution-box">
             <strong>{t("Решение EvaBot:", "Рішення EvaBot:", "EvaBot Solution:")}</strong> {t(
-              "Ролевые агенты Адам (инженер/B2B) и Ева (продажи/забота на 6 языках). Время первого квалифицированного ответа — 1.2 секунды в режиме 24/7/365 с проверкой реальных складских остатков.",
-              "Рольові агенти Адам (інженер/B2B) та Єва (продажі/турбота 6 мовами). Час першої кваліфікованої відповіді — 1.2 секунди в режимі 24/7/365 з перевіркою реальних залишків на складі.",
-              "Role-based agents Adam (engineering/B2B) and Eva (omnichannel sales in 6 languages). First qualified response in 1.2 seconds, 24/7/365, with live inventory verification."
+              "Ролевые агенты Адам (бэкенд, производство, безопасность) и Ева (фронтенд — лицо компании, 6 языков). Время первого квалифицированного ответа — 1.2 секунды в режиме 24/7/365 с проверкой реальных складских остатков.",
+              "Рольові агенти Адам (бекенд, виробництво, безпека) та Єва (фронтенд — обличчя компанії, 6 мовами). Час першої кваліфікованої відповіді — 1.2 секунди в режимі 24/7/365 з перевіркою реальних залишків на складі.",
+              "Role-based agents Adam (backend, production, security) and Eva (frontend — the face of the company, 6 languages). First qualified response in 1.2 seconds, 24/7/365, with live inventory verification."
             )}
           </div>
         </div>
@@ -68,51 +87,30 @@ def get_section_08():
           </div>
           <div class="biz-solution-box">
             <strong>{t("Решение EvaBot:", "Рішення EvaBot:", "EvaBot Solution:")}</strong> {t(
-              "Встроенный математический калькулятор раскроя листа ЭВА (2000×1250 мм, ячейки Ромб/Соты). Автоматическая генерация файлов для плоттеров ЧПУ с браком менее 0.01%.",
-              "Вбудований математичний калькулятор розкрою листа ЕВА (2000×1250 мм, комірки Ромб/Стільники). Автоматична генерація файлів для плотерів ЧПК із браком менше 0.01%.",
-              "Embedded algorithmic nesting calculator for EVA sheets (2000×1250mm, Shore 30-75A). Direct CNC G-code path generation with scrap rate under 0.01%."
+              "Автоматическая генерация векторных карт раскроя (DXF/G-код) и строгая геометрическая оптимизация nesting. Снижение отходов до минимума (< 0.01% брака).",
+              "Автоматична генерація векторних карт розкрою (DXF/G-код) та сувора геометрична оптимізація nesting. Зниження відходів до мінімуму (< 0.01% браку).",
+              "Automated CAD vector cutting generation (DXF/G-code) with algorithmic nesting. Cuts scrap waste to an absolute minimum (< 0.01% defects)."
             )}
           </div>
         </div>
 
         <div class="biz-card">
           <div class="biz-card-header">
-            <div class="biz-card-icon">🧠</div>
-            <div class="biz-card-title">{t("Галлюцинации и ненадежность одиночного ИИ", "Галюцинації та ненадійність одиночного ШІ", "Hallucinations of Standalone AI")}</div>
+            <div class="biz-card-icon">💸</div>
+            <div class="biz-card-title">{t("Неконтролируемые расходы на облачный ИИ", "Неконтрольовані витрати на хмарний ШІ", "Runaway Cloud AI Token Costs")}</div>
           </div>
           <div class="biz-pain-box">
-            <strong>{t("Боль бизнеса:", "Біль бізнесу:", "Pain:")}</strong> {t(
-              "Обычный бот уверенно выдумывает несуществующие статьи законов, занижает цены или обещает невыполнимые сроки, подставляя бизнес под иски.",
-              "Звичайний бот упевнено вигадує неіснуючі статті законів, занижує ціни або обіцяє нездійсненні терміни, підставляючи бізнес під позови.",
-              "Generic chatbots hallucinate non-existent statutes, misquote prices, or promise impossible fulfillment dates, creating legal liabilities."
+            <strong>{t("Боль финансов:", "Біль фінансів:", "Financial Pain:")}</strong> {t(
+              "Подключение сырых API OpenAI или Claude приводит к счетам в тысячи долларов за рутинные запросы, которые могла решить бесплатная модель.",
+              "Підключення сирих API OpenAI або Claude призводить до рахунків у тисячі доларів за рутинні запити, які могла вирішити безкоштовна модель.",
+              "Unmanaged API tokens produce massive invoices for trivial questions that free models handle effortlessly."
             )}
           </div>
           <div class="biz-solution-box">
             <strong>{t("Решение EvaBot:", "Рішення EvaBot:", "EvaBot Solution:")}</strong> {t(
-              "Евалайн Консилиум. Ни один важный документ не отдается одной модели. Решение вырабатывается состязательным спором 4–6 разнородных LLM с финальным аудитом CISO.",
-              "Євалайн Консиліум. Жоден важливий документ не довіряється одній моделі. Рішення виробляється змагальним спором 4–6 різнорідних LLM з фінальним аудитом CISO.",
-              "The EvaLine Consilium. No mission-critical document is left to a single model. Consensus is reached through adversarial debate of 4–6 heterogeneous LLMs plus CISO audit."
-            )}
-          </div>
-        </div>
-
-        <div class="biz-card">
-          <div class="biz-card-header">
-            <div class="biz-card-icon">🔌</div>
-            <div class="biz-card-title">{t("Разрозненность софта («Зоопарк систем»)", "Розрізненість софту («Зоопарк систем»)", "Software Fragmentation ('Tool Zoo')")}</div>
-          </div>
-          <div class="biz-pain-box">
-            <strong>{t("Боль бизнеса:", "Біль бізнесу:", "Pain:")}</strong> {t(
-              "1С, CRM Битрикс, Telegram-каналы, складской софт и Excel живут изолированно. Менеджеры вручную копируют строки, порождая хаос и недостачи.",
-              "1С, CRM Бітрікс, Telegram-канали, складський софт та Excel живуть ізольовано. Менеджери вручну копіюють рядки, породжуючи хаос і нестачі.",
-              "1C:Enterprise, Bitrix24 CRM, Telegram groups, and spreadsheets operate in silos. Manual copy-pasting creates missing orders and inventory discrepancies."
-            )}
-          </div>
-          <div class="biz-solution-box">
-            <strong>{t("Решение EvaBot:", "Рішення EvaBot:", "EvaBot Solution:")}</strong> {t(
-              "Единая шина из 21 MCP-сервера и модульных API. Агенты нативно обращаются к базам SQLite, PostgreSQL, ERP, складским таблицам и мессенджерам без посредников.",
-              "Єдина шина з 21 MCP-сервера та модульних API. Агенти нативно звертаються до баз SQLite, PostgreSQL, ERP, складських таблиць і месенджерів без посередників.",
-              "Unified bus of 21 Model Context Protocol servers and modular REST endpoints. Agents natively query databases, ERPs, inventory tables, and messengers without intermediaries."
+              "Двухуровневый маршрутизатор OmniRoute. 90% трафика направляется на авторизованный бесплатный пул Google AI Studio ($0.00), экономя до 85% бюджета.",
+              "Дворівневий маршрутизатор OmniRoute. 90% трафіку спрямовується на авторизований безкоштовний пул Google AI Studio ($0.00), заощаджуючи до 85% бюджету.",
+              "OmniRoute 2-tier classifier routes 90% of routine traffic to verified Google AI Studio zero-cost quotas ($0.00), reducing token OpEx by 85%."
             )}
           </div>
         </div>
@@ -120,20 +118,41 @@ def get_section_08():
         <div class="biz-card">
           <div class="biz-card-header">
             <div class="biz-card-icon">⚖️</div>
-            <div class="biz-card-title">{t("Юридические риски экспорта в ЕС", "Юридичні ризики експорту в ЄС", "EU Export Compliance & Customs Risks")}</div>
+            <div class="biz-card-title">{t("Сложности с экспортом и стандартами ЕС", "Складнощі з експортом та стандартами ЄС", "Export Friction & EU Compliance")}</div>
           </div>
           <div class="biz-pain-box">
-            <strong>{t("Боль бизнеса:", "Біль бізнесу:", "Pain:")}</strong> {t(
-              "Подготовка внешнеэкономических контрактов (ВЭД), проверка регламентов ЕС, кодов УКТВЭД, стандартов ISO 9001, CE и норм UNIC отнимает дни юристов.",
-              "Підготовка зовнішньоекономічних контрактів (ЗЕД), перевірка регламентів ЄС, кодів УКТЗЕД, стандартів ISO 9001, CE та норм UNIC забирає дні юристів.",
-              "Export documentation, customs codes (HS codes), CE directives, ISO 9001 certifications, and UNIC anti-corruption audits demand days of legal counsel review."
+            <strong>{t("Боль юристов и ВЭД:", "Біль юристів та ЗЕД:", "Legal/Export Pain:")}</strong> {t(
+              "Ошибки в классификации кодов УКТВЭД, антикоррупционных требованиях UNIC и декларациях соответствия CE задерживают грузы на таможне.",
+              "Помилки в класифікації кодів УКТЗЕД, антикорупційних вимогах UNIC та деклараціях відповідності CE затримують вантажі на митниці.",
+              "Misclassified HS/customs codes, UNIC anti-corruption audits, and CE paperwork cause prolonged customs inspections and fines."
             )}
           </div>
           <div class="biz-solution-box">
             <strong>{t("Решение EvaBot:", "Рішення EvaBot:", "EvaBot Solution:")}</strong> {t(
-              "Агент Legal Compliance. Проверяет контрактные спецификации за 40 секунд по обновляемой базе европейских нормативов логистического хаба в Братиславе.",
-              "Агент Legal Compliance. Перевіряє контрактні специфікації за 40 секунд за оновлюваною базою європейських нормативів логістичного хабу в Братиславі.",
-              "Legal Compliance Agent. Audits trade contracts and dispatch declarations in 40 seconds against live EU regulatory databases at our Bratislava hub."
+              "Юрист-агент по ВЭД проверяет спецификации по базе регламентов ЕС за 40 секунд. Логистический хаб в Братиславе обеспечивает бесшовный транзит.",
+              "Юрист-агент із ЗЕД перевіряє специфікації за базою регламентів ЄС за 40 секунд. Логістичний хаб у Братиславі забезпечує безшовний транзит.",
+              "Specialized Legal agent audits export documentation in 40 seconds against EU directives. The Bratislava warehouse guarantees frictionless transit."
+            )}
+          </div>
+        </div>
+
+        <div class="biz-card">
+          <div class="biz-card-header">
+            <div class="biz-card-icon">🧠</div>
+            <div class="biz-card-title">{t("Утечка знаний при уходе ключевых мастеров", "Витік знань при звільненні ключових майстрів", "Loss of Proprietary Factory Know-How")}</div>
+          </div>
+          <div class="biz-pain-box">
+            <strong>{t("Боль руководства:", "Біль керівництва:", "Leadership Pain:")}</strong> {t(
+              "Специфика рецептур, свойства пластификаторов ЭВА и нюансы настроек станков хранятся только в головах ветеранов завода.",
+              "Специфіка рецептур, властивості пластифікаторів ЕВА та нюанси налаштувань верстатів зберігаються лише в головах ветеранів заводу.",
+              "Decades of compounding chemistry, EVA polymer formulation, and foaming machine tweaks remain trapped in individuals minds."
+            )}
+          </div>
+          <div class="biz-solution-box">
+            <strong>{t("Решение EvaBot:", "Рішення EvaBot:", "EvaBot Solution:")}</strong> {t(
+              "Оцифровка 100% корпоративной памяти в ChromaDB и SQLite FTS5. Знания принадлежат заводу, а агенты обучают новых операторов за часы.",
+              "Оцифрування 100% корпоративної пам'яті в ChromaDB та SQLite FTS5. Знання належать заводу, а агенти навчають нових операторів за години.",
+              "100% of corporate manufacturing know-how indexed into ChromaDB and SQLite FTS5. Knowledge stays company-owned, onboarding operators in hours."
             )}
           </div>
         </div>
@@ -141,12 +160,12 @@ def get_section_08():
         <div class="biz-card">
           <div class="biz-card-header">
             <div class="biz-card-icon">🛡️</div>
-            <div class="biz-card-title">{t("Уязвимость перед блэкаутами", "Вразливість перед блекаутами", "Grid Vulnerability & Blackouts")}</div>
+            <div class="biz-card-title">{t("Риск блэкаутов и потери заказов", "Ризик блекаутів та втрати замовлень", "Blackout Vulnerability & Outages")}</div>
           </div>
           <div class="biz-pain-box">
-            <strong>{t("Боль производства:", "Біль виробництва:", "Manufacturing Pain:")}</strong> {t(
-              "Военные риски, аварии энергосетей и обрывы связи замораживают работу предприятия, приводя к штрафам за срыв поставок.",
-              "Військові ризики, аварії енергомереж та обриви зв'язку заморожують роботу підприємства, призводячи до штрафів за зрив поставок.",
+            <strong>{t("Боль инфраструктуры:", "Біль інфраструктури:", "Infrastructure Pain:")}</strong> {t(
+              "Перебои с электричеством или связью парализуют прием заказов и отгрузку, приводя к штрафам по контрактам.",
+              "Перебої з електрикою або зв'язком паралізують прийом замовлень та відвантаження, призводячи до штрафів за контрактами.",
               "Grid outages, infrastructure disruptions, and telecom drops freeze sales and manufacturing, risking severe delivery breach penalties."
             )}
           </div>
@@ -162,15 +181,186 @@ def get_section_08():
     '''
     sub1 = sub_accordion(
         "sub-8-1", "🏭",
-        "Суверенное производство полимеров EvaLine и решение 6 болей бизнеса",
-        "Суверенне виробництво полімерів EvaLine та вирішення 6 болей бізнесу",
-        "Physical Polymer Production at EvaLine Plant & Solving 6 Core Pains",
+        "Вопрос 8.1: Каковы физические мощности завода EvaLine и склада в ЕС?",
+        "Питання 8.1: Які фізичні потужності заводу EvaLine та складу в ЄС?",
+        "Question 8.1: What are EvaLine's physical factory assets, capacity, and EU hub?",
         "Завод 2.8 га", "Завод 2.8 га", "2.8 Ha Plant",
         sub1_content
     )
 
-    # 8.2 End-to-End Autonomous Dataflow Pipeline
+    # =========================================================================
+    # 8.2 Tetraktys 10 Roles & Sephirot Parallel
+    # =========================================================================
+    c1 = make_role_card(
+        "01", "👑",
+        "Архитектор (Chief Architect)", "Архітектор (Chief Architect)", "Chief Architect",
+        "Кетер (Kether) // Высший замысел", "Кетер (Kether) // Вищий задум", "Kether (Crown) // Sovereign Vision",
+        "Определение глобального видения, системных аксиом, декомпозиция задач верхнего уровня и стратегическое целеполагание.",
+        "Визначення глобального бачення, системних аксіом, декомпозиція завдань верхнього рівня та стратегічне цілепокладання.",
+        "Definition of global vision, system axioms, high-level task decomposition, and sovereign architectural roadmaps.",
+        "Gemini 3.1 Pro (2M Context) • Claude 3.7"
+    )
+
+    c2 = make_role_card(
+        "02", "🛡️",
+        "Адам (Бэкенд / Производство / CISO)", "Адам (Бекенд / Виробництво / CISO)", "Adam (Backend / Production / CISO)",
+        "Бина / Гевура // Форма & Строгость", "Біна / Гевура // Форма & Суворість", "Gevurah & Binah // Severity & Discipline",
+        "Шеф бэкенда, разработки, безопасности, производства и бизнес-процессов. Формальная верификация, аудит кода, сметные лимиты, контроль раскроя на ЧПУ и соблюдение ГОСТ/ISO.",
+        "Шеф бекенду, розробки, безпеки, виробництва та бізнес-процесів. Формальна верифікація, аудит коду, кошторисні ліміти, контроль розкрою на ЧПК та дотримання ДСТУ/ISO.",
+        "Chief of backend, development, security, manufacturing, and business processes. Formal verification, code audit, budget limits, CNC nest QA, and ISO compliance.",
+        "Claude 3.7 Sonnet • DeepSeek R1 • Linux MCP"
+    )
+
+    c3 = make_role_card(
+        "03", "🤝",
+        "Ева (Фронтенд / Лицо компании / CXO)", "Єва (Фронтенд / Обличчя компанії / CXO)", "Eva (Frontend / Company Face / CXO)",
+        "Хокма / Хесед // Мудрость & Экспансия", "Хокма / Хесед // Мудрість & Експансія", "Chesed & Chokmah // Mercy & Growth",
+        "Фронтенд-директор и лицо компании: клиентский опыт, сервис и продажи. Мультиязычная живая коммуникация на 6 языках (UK, EN, DE, PL, RO, RU), эмпатия, омничейн-поддержка, B2B-сделки.",
+        "Фронтенд-директор та обличчя компанії: клієнтський досвід, сервіс і продажі. Багатомовна жива комунікація 6 мовами (UK, EN, DE, PL, RO, RU), емпатія, B2B-угоди.",
+        "Frontend director and the face of the company: CX, service & sales. Live empathetic dialogue in 6 languages (UK, EN, DE, PL, RO, RU) with live stock checks.",
+        "Gemini 3.8 Flash • OmniRoute • Voice Engine"
+    )
+
+    c4 = make_role_card(
+        "04", "⚖️",
+        "Арбитр Консилиума (Consilium Arbiter)", "Арбітр Консиліуму (Consilium Arbiter)", "Consilium Arbiter",
+        "Тиферет (Tifereth) // Гармония & Синтез", "Тіферет (Tifereth) // Гармонія & Синтез", "Tifereth (Beauty) // Synthesis & Consensus",
+        "Главный арбитр Консилиума. Алгоритмическое разрешение споров между Адамом (бэкенд и безопасность) и Евой (фронтенд и продажи), состязательный синтез с точностью 99.4%.",
+        "Головний арбітр Консиліуму. Алгоритмічне вирішення суперечок між Адамом (бекенд і безпека) та Євою (фронтенд і продажі), змагальний синтез з точністю 99.4%.",
+        "Supreme dispute resolver. Mathematical adversarial synthesis between Adam (backend & security) and Eva (frontend & sales), guaranteeing 99.4% precision.",
+        "Consilium Consensus Engine • Multi-LLM Judge"
+    )
+
+    c5 = make_role_card(
+        "05", "⚡",
+        "Разработчик (Lead Developer / Coder)", "Розробник (Lead Developer / Coder)", "Lead Developer / Coder",
+        "Нецах (Netzach) // Победа & Энергия", "Нецах (Netzach) // Перемога & Енергія", "Netzach (Victory) // Dynamic Execution",
+        "Ведущий инженер разработки и кодинга. Написание чистого кода, сборка микросервисов, рефакторинг, тесты, линтинг, Docker, Git и скрипты.",
+        "Провідний інженер розробки та кодингу. Написання чистого коду, збірка мікросервісів, рефакторинг, тести, лінтинг, Docker, Git та скрипти.",
+        "Lead software engineer. Writes clean code, refactors microservices, builds Docker containers, Git commits, and manages unit tests.",
+        "Claude 3.7 Sonnet • DeepSeek R1 • LSP Servers"
+    )
+
+    c6 = make_role_card(
+        "06", "🎙️",
+        "Коммуникатор (Voice & Speech Specialist)", "Комунікатор (Voice & Speech Specialist)", "Voice & Speech Specialist",
+        "Ход (Hod) // Речь & Форма выражения", "Ход (Hod) // Мова & Форма вираження", "Hod (Splendor) // Speech & Expression",
+        "Специалист по речевому взаимодействию. Потоковый синтез и распознавание речи в реальном времени (EvaVoice FastAPI :8000), SIP/VoIP звонки.",
+        "Спеціаліст з мовної взаємодії. Потоковий синтез та розпізнавання мови в реальному часі (EvaVoice FastAPI :8000), дзвінки SIP/VoIP.",
+        "Speech and voice specialist. Real-time neural audio streaming (EvaVoice FastAPI :8000), SIP/VoIP PBX routing, and interactive dialogues.",
+        "EvaVoice Engine • WebSpeech • WebSocket"
+    )
+
+    c7 = make_role_card(
+        "07", "💾",
+        "Хранитель Памяти (Data & RAG Specialist)", "Охоронець Пам'яті (Data & RAG Specialist)", "Data & RAG Specialist",
+        "Йесод (Yesod) // Основание & Память", "Йесод (Yesod) // Основа & Пам'ять", "Yesod (Foundation) // Grounded Knowledge",
+        "Архивариус и хранитель знаний. Векторные базы ChromaDB, таблицы SQLite FTS5, семантическая память Memory Graph, прайс-листы и регламенты ТУ.",
+        "Архіваріус та охоронець знань. Векторні бази ChromaDB, таблиці SQLite FTS5, семантична пам'ять Memory Graph, прайс-листи та регламенти ТУ.",
+        "Corporate memory librarian. High-density ChromaDB vector collections, SQLite FTS5 index, Memory Graph MCP, and technical specs.",
+        "ChromaDB • SQLite FTS5 • Memory Graph MCP"
+    )
+
+    c8 = make_role_card(
+        "08", "🔧",
+        "Системный Администратор (SRE / DevOps)", "Системний Адміністратор (SRE / DevOps)", "SRE / DevOps Engineer",
+        "Оболочка Йесод // Защитный каркас", "Оболонка Йесод // Захисний каркас", "Yesod Shell // Infrastructure Backbone",
+        "Дежурный системный инженер. Мониторинг задержек 94 моделей, шифрованная магистраль WireGuard Mesh, EarlyOOM, Caddy HTTP/3 и аптайм 99.9%.",
+        "Черговий системний інженер. Моніторинг затримок 94 моделей, шифрована магістраль WireGuard Mesh, EarlyOOM, Caddy HTTP/3 та аптайм 99.9%.",
+        "Site reliability engineer. 94-model latency monitoring, WireGuard Mesh dual-node backbone, EarlyOOM daemon, and 99.9% cluster uptime.",
+        "WireGuard Mesh • Caddy v2 • Watchdog Daemons"
+    )
+
+    c9 = make_role_card(
+        "09", "📜",
+        "Юрист-Логист (Legal & EU Compliance)", "Юрист-Логіст (Legal & EU Compliance)", "Legal & EU Compliance Counsel",
+        "Врата Малхут // Таможня & Законы", "Брама Малхут // Митниця & Закони", "Gates of Malkuth // Regulatory Boundary",
+        "Юрист по ВЭД и координатор европейской логистики. Проверка контрактов, кодов УКТВЭД, антикоррупционных норм UNIC, логистика хаба в Братиславе.",
+        "Юрист із ЗЕД та координатор європейської логістики. Перевірка контрактів, кодів УКТЗЕД, антикорупційних норм UNIC, логістика хабу в Братиславі.",
+        "Cross-border legal and EU logistics counsel. Audits foreign trade contracts, HS/customs codes, UNIC regulations, and Bratislava hub dispatches.",
+        "Legal Compliance RAG • EU Trade Directives"
+    )
+
+    c10 = make_role_card(
+        "10", "🏭",
+        "Мастер Завода (CNC & Production Master)", "Майстер Заводу (CNC & Production Master)", "CNC & Plant Production Master",
+        "Малхут (Malkuth) // Физический Мир", "Малхут (Malkuth) // Фізичний Світ", "Malkuth (Kingdom) // Physical Matter",
+        "Шеф производственного цеха и ЧПУ. Реальное физическое производство на заводе в Черноморске (2.8 га, 550+ т/мес), раскрой на плоттерах, коврики, маты, татами.",
+        "Шеф виробничого цеху та ЧПК. Реальне фізичне виробництво на заводі в Чорноморську (2.8 га, 550+ т/міс), розкрій на плотерах, килимки, мати, татамі.",
+        "Shopfloor and CNC production master. Physical execution at Chornomorsk plant (2.8 ha, 550+ t/mo), automated nesting, auto mats, and tatami.",
+        "CAM DXF/G-Code • Foaming Presses • ISO 9001"
+    )
+
     sub2_content = f'''
+      <div class="sephirot-box">
+        <div class="sephirot-header">
+          <div class="hero-eyebrow">{t("ТЕТРАКСИС ПИФАГОРА // 1 + 2 + 3 + 4 = 10 РОЛЕЙ", "ТЕТРАКСИС ПІФАГОРА // 1 + 2 + 3 + 4 = 10 РОЛЕЙ", "PYTHAGOREAN TETRAKTYS // 1 + 2 + 3 + 4 = 10 ROLES")}</div>
+          <h4 style="font-family: var(--font-display); font-size: 1.3rem; color: #fff; margin: 4px 0 8px;">
+            {t("Гармоничная иерархия 10 универсальных должностей цифрового штата",
+               "Гармонійна ієрархія 10 універсальних посад цифрового штату",
+               "Harmonious Hierarchy of 10 Universal Roles in Sovereign Fleet")}
+          </h4>
+          <p style="max-width: 860px; margin: 0 auto; color: var(--fg-muted);">
+            {t("В фабрике EvaLine устранена путаница хаотичных микроботов. 10 ролей структурированы по закону сакрального Тетраксиса Пифагора (1+2+3+4 = 10 узлов) в строгом соответствии с 10 ступенями Сфирот — от высшего замысла владельца до физического станка ЧПУ:",
+               "У фабриці EvaLine усунуто плутанину хаотичних мікроботів. 10 ролей структуровано за законом сакрального Тетраксису Піфагора (1+2+3+4 = 10 вузлів) у суворій відповідності з 10 ступенями Сфірот — від вищого задуму власника до фізичного верстата ЧПК:",
+               "EvaLine eliminates chaotic ad-hoc bots by structuring exactly 10 universal positions under the sacred Pythagorean Tetraktys (1+2+3+4 = 10 nodes) in direct parallel with the 10 Sephirot — from sovereign visionary intent down to physical CNC execution:")}
+          </p>
+        </div>
+
+        <div class="tetraktys-container">
+          <!-- TIER 1: MONAD -->
+          <div class="tetraktys-tier-block">
+            <div class="tier-heading">▲ {t("РЯД I // МОНАДА (1 УЗЕЛ): ВЫСШИЙ ЗАМЫСЕЛ ⟷ КЕТЕР", "РЯД I // МОНАДА (1 ВУЗОЛ): ВИЩИЙ ЗАДУМ ⟷ КЕТЕР", "TIER I // MONAD (1 NODE): SOVEREIGN INTENT ⟷ KETHER")}</div>
+            <div class="sephirot-grid" style="grid-template-columns: 1fr;">
+{c1}
+            </div>
+          </div>
+
+          <!-- TIER 2: DYAD -->
+          <div class="tetraktys-tier-block">
+            <div class="tier-heading">▲▲ {t("РЯД II // ДИАДА (2 УЗЛА): БИНАРНЫЙ КОНТУР СИЛ ⟷ БИНА / ГЕВУРА & ХОКМА / ХЕСЕД", "РЯД II // ДІАДА (2 ВУЗЛИ): БІНАРНИЙ КОНТУР СИЛ ⟷ БІНА / ГЕВУРА & ХОКМА / ХЕСЕД", "TIER II // DYAD (2 NODES): BINARY FORCE POLARITY ⟷ GEVURAH & CHESED")}</div>
+            <div class="sephirot-grid">
+{c2}
+{c3}
+            </div>
+          </div>
+
+          <!-- TIER 3: TRIAD -->
+          <div class="tetraktys-tier-block">
+            <div class="tier-heading">▲▲▲ {t("РЯД III // ТРИАДА (3 УЗЛА): ДИНАМИЧЕСКИЙ БАЛАНС ⟷ ТИФЕРЕТ, НЕЦАХ, ХОД", "РЯД III // ТРІАДА (3 ВУЗЛИ): ДИНАМІЧНИЙ БАЛАНС ⟷ ТІФЕРЕТ, НЕЦАХ, ХОД", "TIER III // TRIAD (3 NODES): DYNAMIC HARMONY ⟷ TIFERETH, NETZACH, HOD")}</div>
+            <div class="sephirot-grid">
+{c4}
+{c5}
+{c6}
+            </div>
+          </div>
+
+          <!-- TIER 4: TETRAD -->
+          <div class="tetraktys-tier-block">
+            <div class="tier-heading">▲▲▲▲ {t("РЯД IV // ТЕТРАДА (4 УЗЛА): МАТЕРИАЛИЗАЦИЯ (1 + 2 + 3 + 4 = 10) ⟷ ЙЕСОД, МАЛХУТ", "РЯД IV // ТЕТРАДА (4 ВУЗЛИ): МАТЕРІАЛІЗАЦІЯ (1 + 2 + 3 + 4 = 10) ⟷ ЙЕСОД, МАЛХУТ", "TIER IV // TETRAD (4 NODES): PHYSICAL EMBODIMENT (1+2+3+4=10) ⟷ YESOD, MALKUTH")}</div>
+            <div class="sephirot-grid">
+{c7}
+{c8}
+{c9}
+{c10}
+            </div>
+          </div>
+        </div>
+      </div>
+    '''
+    sub2 = sub_accordion(
+        "sub-8-2", "📐",
+        "Вопрос 8.2: Как устроен Тетраксис Пифагора (1+2+3+4=10), Сфирот и 10 универсальных должностей?",
+        "Питання 8.2: Як влаштований Тетраксис Піфагора (1+2+3+4=10), Сфірот та 10 універсальних посад?",
+        "Question 8.2: How does the Pythagorean Tetraktys (1+2+3+4=10) map to Sephirot and 10 universal roles?",
+        "10 ролей Тетраксиса", "10 ролей Тетраксиса", "10 Tetraktys Roles",
+        sub2_content
+    )
+
+    # =========================================================================
+    # 8.3 End-to-End Autonomous Dataflow Pipeline (7 Steps)
+    # =========================================================================
+    sub3_content = f'''
       <p style="color: var(--fg-muted); margin-bottom: 20px;">
         {t("Каждая транзакция, входящий звонок или чертеж детали проходит 7-ступенчатую защищенную магистраль обработки в реальном времени:",
            "Кожна транзакція, вхідний дзвінок або креслення деталі проходить 7-ступеневу захищену магістраль обробки в реальному часі:",
@@ -248,161 +438,27 @@ def get_section_08():
           <span class="pipe-badge">{t("Шаг 07 // Исполнение", "Крок 07 // Виконання", "Step 07 // Action")}</span>
           <div class="pipe-name">{t("Физическое действие", "Фізична дія", "Physical Execution")}</div>
           <div class="pipe-desc">{t(
-            "Запись накладной в 1С, отправка файла раскроя на плоттер ЧПУ и голосовой ответ клиенту.",
-            "Запис накладної в 1С, відправка файлу розкрою на плотер ЧПК та голосова відповідь клієнту.",
-            "Records invoice in 1C/ERP, dispatches cutting files to CNC, and speaks back to customer."
+            "Формирование счетов в 1С, выгрузка G-кода на раскройные плоттеры ЧПУ в Черноморске.",
+            "Формування рахунків в 1С, вивантаження G-коду на розкрійні плотери ЧПК у Чорноморську.",
+            "Generates invoices in 1C/ERP and dispatches G-code nesting to CNC cutting flatbeds."
           )}</div>
-          <div class="pipe-tech">21 MCP Servers • ЧПУ Плоттер • ERP/1C</div>
-        </div>
-      </div>
-    '''
-    sub2 = sub_accordion(
-        "sub-8-2", "🔄",
-        "Сквозной автономный конвейер данных: от звонка до станка ЧПУ и отгрузки",
-        "Наскрізний автономний конвеєр даних: від дзвінка до верстата ЧПК та відвантаження",
-        "End-to-End Autonomous Dataflow: From Omnichannel Lead to CNC & Shipping",
-        "7 ступеней конвейера", "7 ступенів конвеєра", "7-Step Pipeline",
-        sub2_content
-    )
-
-    # 8.3 Enterprise Integration Architecture
-    sub3_content = f'''
-      <div class="cards-grid">
-        <div class="card">
-          <div class="card-icon">💼</div>
-          <h4 class="card-title">{t("1С:Предприятие & МойСклад", "1С:Підприємство та МійСклад", "1C:Enterprise & MoySklad ERP")}</h4>
-          <p class="card-text">{t(
-            "Двусторонний обмен через OData / REST API. Агенты считывают складские остатки листов ЭВА, формируют счета, регистрируют оплаты и списывают сырье без участия бухгалтера.",
-            "Двосторонній обмін через OData / REST API. Агенти зчитують залишки листів ЕВА, формують рахунки, реєструють оплати та списують сировину без участі бухгалтера.",
-            "Bi-directional sync via OData/REST. Agents query EVA sheet inventory, generate invoices, register payments, and debit raw materials automatically."
-          )}</p>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">👥</div>
-          <h4 class="card-title">{t("CRM Битрикс24 / amoCRM / HubSpot", "CRM Бітрікс24 / amoCRM / HubSpot", "Bitrix24 / amoCRM / HubSpot")}</h4>
-          <p class="card-text">{t(
-            "Автоматическое ведение лидов, парсинг входящих сообщений, продвижение сделок по воронке, генерация коммерческих предложений и контроль SLA ответов менеджеров.",
-            "Автоматичне ведення лідів, парсинг вхідних повідомлень, пересування угод за воронкою, генерація комерційних пропозицій та контроль SLA менеджерів.",
-            "Automated lead creation, omnichannel message ingestion, pipeline progression, PDF quotation generation, and SLA response time enforcement."
-          )}</p>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">💬</div>
-          <h4 class="card-title">{t("Мессенджеры Telegram & WhatsApp", "Месенджери Telegram та WhatsApp", "Telegram & WhatsApp Gateways")}</h4>
-          <p class="card-text">{t(
-            "Прямая поддержка клиентов и дилеров: боты принимают размеры салонов авто, отправляют фото образцов ячеек Ромб/Соты и принимают оплату по QR-кодам.",
-            "Пряма підтримка клієнтів та дилерів: боти приймають розміри салонів авто, надсилають фото зразків комірок Ромб/Стільники та приймають оплату за QR-кодом.",
-            "Direct dealer and customer support: accepts vehicle dimensions, shares high-res swatch photos of diamond/cell textures, and processes QR payments."
-          )}</p>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">🏭</div>
-          <h4 class="card-title">{t("Промышленный контур ЧПУ & CAM", "Промисловий контур ЧПК та CAM", "Industrial CNC & CAM Machine Bus")}</h4>
-          <p class="card-text">{t(
-            "Генерация DXF/G-кода для цифровых раскройных комплексов (плоттеров). Оптимизация схемы раскладки (раскроя) листа минимизирует краевые отходы.",
-            "Генерація DXF/G-коду для цифрових розкрійних комплексів (плотерів). Оптимізація схеми розкладки листа мінімізує відходи сировини.",
-            "Automated DXF/G-code vector generation for digital flatbed CNC cutting systems. Optimal nesting geometry minimizes edge trim waste."
-          )}</p>
+          <div class="pipe-tech">MCP 1C • CNC G-Code • Bitrix24 Hook</div>
         </div>
       </div>
     '''
     sub3 = sub_accordion(
-        "sub-8-3", "🔌",
-        "Архитектура универсальной интеграции в IT-ландшафт предприятия",
-        "Архітектура універсальної інтеграції в IT-ландшафт підприємства",
-        "Universal Enterprise Integration Architecture (ERP, CRM, CNC, Meshes)",
-        "21 MCP Коннектор", "21 MCP Конектор", "21 MCP Adapters",
+        "sub-8-3", "⚡",
+        "Вопрос 8.3: Как выглядит сквозной конвейер: от звонка до станка ЧПУ и отгрузки (7 шагов)?",
+        "Питання 8.3: Як виглядає наскрізний конвеєр: від дзвінка до верстата ЧПК та відвантаження (7 кроків)?",
+        "Question 8.3: What does the end-to-end autonomous pipeline look like: call to CNC (7 steps)?",
+        "Сквозной конвейер", "Наскрізний конвеєр", "7-Step Pipeline",
         sub3_content
     )
 
-    # 8.4 Interactive ROI Calculator
+    # =========================================================================
+    # 8.4 Transformation Metrics Before vs After
+    # =========================================================================
     sub4_content = f'''
-      <div class="roi-calc-box" id="roi-calculator">
-        <div class="roi-calc-header">
-          <div>
-            <h3 style="color:#fff; margin: 0 0 4px 0;">
-              {t("Интерактивный калькулятор окупаемости внедрения EvaBot",
-                 "Інтерактивний калькулятор окупності впровадження EvaBot",
-                 "Interactive EvaBot Investment & ROI Payback Calculator")}
-            </h3>
-            <p style="color: var(--fg-muted); margin: 0; font-size: 0.92rem;">
-              {t("Передвигайте ползунки под реальные параметры вашей компании:",
-                 "Пересувайте повзунки під реальні параметри вашої компанії:",
-                 "Adjust sliders to reflect your organization's real parameters:")}
-            </p>
-          </div>
-          <div class="roi-badge">⚡ Real-time OpEx Engine</div>
-        </div>
-
-        <div class="roi-layout">
-          <div class="roi-sliders">
-            <div class="roi-field">
-              <div class="roi-field-header">
-                <span>{t("Сотрудников в отделе (продажи, саппорт, сметчики):", "Співробітників у відділі (продажі, саппорт, кошторис):", "Department Staff (Sales, Support, Estimators):")}</span>
-                <span class="roi-field-val" id="val-staff">5 человек</span>
-              </div>
-              <input type="range" id="slider-staff" class="roi-slider" min="1" max="50" value="5" oninput="updateRoiCalc()">
-            </div>
-
-            <div class="roi-field">
-              <div class="roi-field-header">
-                <span>{t("Обращений и заказов в месяц:", "Звернень та замовлень на місяць:", "Monthly Inquiries & Orders:")}</span>
-                <span class="roi-field-val" id="val-tickets">3 500 заявок</span>
-              </div>
-              <input type="range" id="slider-tickets" class="roi-slider" min="200" max="30000" step="100" value="3500" oninput="updateRoiCalc()">
-            </div>
-
-            <div class="roi-field">
-              <div class="roi-field-header">
-                <span>{t("Средняя стоимость часа специалиста:", "Середня вартість години фахівця:", "Average Hourly Wage of Specialist:")}</span>
-                <span class="roi-field-val" id="val-wage">$15 / час</span>
-              </div>
-              <input type="range" id="slider-wage" class="roi-slider" min="5" max="60" step="1" value="15" oninput="updateRoiCalc()">
-            </div>
-          </div>
-
-          <div class="roi-results">
-            <div class="roi-result-card">
-              <span class="roi-result-label">{t("Чистая экономия бюджета в месяц:", "Чиста економія бюджету на місяць:", "Net Monthly Cost Savings:")}</span>
-              <span class="roi-result-val green" id="res-savings">$7,625</span>
-              <span style="font-size: 0.74rem; color: var(--fg-subtle);">{t("С учетом снижения OpEx на 80%+", "З урахуванням зниження OpEx на 80%+", "Reflects an 80%+ OpEx reduction")}</span>
-            </div>
-
-            <div class="roi-result-card">
-              <span class="roi-result-label">{t("Высвобождено рабочих часов:", "Вивільнено робочих годин:", "Work Hours Liberated:")}</span>
-              <span class="roi-result-val cyan" id="res-hours">525 ч/мес</span>
-              <span style="font-size: 0.74rem; color: var(--fg-subtle);">{t("Направлено на развитие и сделки", "Спрямовано на розвиток та угоди", "Reinvested into growth & closures")}</span>
-            </div>
-
-            <div class="roi-result-card">
-              <span class="roi-result-label">{t("Прогнозируемый ROI платформы:", "Прогнозований ROI платформи:", "Projected Platform ROI:")}</span>
-              <span class="roi-result-val amber" id="res-roi">420%</span>
-              <span style="font-size: 0.74rem; color: var(--fg-subtle);">{t("Возврат инвестиций в первый же месяц", "Повернення інвестицій у перший же місяць", "Capital return within the first 30 days")}</span>
-            </div>
-
-            <div class="roi-result-card">
-              <span class="roi-result-label">{t("Срок полной окупаемости:", "Термін повної окупності:", "Full Payback Horizon:")}</span>
-              <span class="roi-result-val" id="res-payback" style="color: #a78bfa;">18 дней</span>
-              <span style="font-size: 0.74rem; color: var(--fg-subtle);">{t("За счет гибридных бесплатных квот", "Завдяки гібридним безкоштовним квотам", "Enabled by zero-cost hybrid quotas")}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    '''
-    sub4 = sub_accordion(
-        "sub-8-4", "💰",
-        "Интерактивный калькулятор экономической окупаемости внедрения (ROI)",
-        "Інтерактивний калькулятор економічної окупності впровадження (ROI)",
-        "Interactive ROI & Financial Payback Calculator",
-        "Экономия OpEx", "Економія OpEx", "OpEx Savings",
-        sub4_content
-    )
-
-    # 8.5 Transformation Metrics
-    sub5_content = f'''
       <div class="compare-grid">
         <div class="compare-card">
           <div class="compare-metric-title">
@@ -513,17 +569,19 @@ def get_section_08():
         </div>
       </div>
     '''
-    sub5 = sub_accordion(
-        "sub-8-5", "📈",
-        "Измеримые метрики бизнес-трансформации: «До» и «После» внедрения",
-        "Вимірювані метрики бізнес-трансформації: «До» та «Після» впровадження",
-        "Measurable Transformation Metrics: Before vs. After Implementation",
-        "99.4% точность", "99.4% точність", "99.4% Precision",
-        sub5_content
+    sub4 = sub_accordion(
+        "sub-8-4", "📈",
+        "Вопрос 8.4: Каковы подтвержденные метрики бизнес-трансформации («До» и «После»)?",
+        "Питання 8.4: Які підтверджені метрики бізнес-трансформації («До» та «Після»)?",
+        "Question 8.4: What are the verified transformation benchmarks: Before vs. After?",
+        "Метрики До/После", "Метрики До/Після", "Before/After Metrics",
+        sub4_content
     )
 
-    # 8.6 5-Phase Onboarding Protocol
-    sub6_content = f'''
+    # =========================================================================
+    # 8.5 5-Phase Onboarding Protocol
+    # =========================================================================
+    sub5_content = f'''
       <p style="color: var(--fg-muted); margin-bottom: 20px;">
         {t("Внедрение EvaBot не требует остановки производства или переписывания софта. Процесс разбит на 5 четких фаз (2–4 недели):",
            "Впровадження EvaBot не потребує зупинки виробництва або переписування софту. Процес розбитий на 5 чітких фаз (2–4 тижні):",
@@ -641,112 +699,144 @@ def get_section_08():
           </div>
         </div>
       </div>
+      {infographics_builder.get_onboarding_gantt()}
+    '''
+    sub5 = sub_accordion(
+        "sub-8-5", "📋",
+        "Вопрос 8.5: Как выглядит пошаговый протокол интеграции на предприятие (5 фаз за 2–4 недели)?",
+        "Питання 8.5: Як виглядає покроковий протокол інтеграції на підприємство (5 фаз за 2–4 тижні)?",
+        "Question 8.5: What is the phased onboarding methodology for enterprise (5 phases in 2-4 weeks)?",
+        "5 фаз внедрения", "5 фаз впровадження", "5-Phase Protocol",
+        sub5_content
+    )
+
+    # =========================================================================
+    # 8.6 Interactive ROI Calculator
+    # =========================================================================
+    sub6_content = f'''
+      <div class="roi-calc-box" id="roi-calculator">
+        <div class="roi-calc-header">
+          <div>
+            <h3 style="color:#fff; margin: 0 0 4px 0;">
+              {t("Интерактивный калькулятор окупаемости внедрения EvaBot",
+                 "Інтерактивний калькулятор окупності впровадження EvaBot",
+                 "Interactive EvaBot Investment & ROI Payback Calculator")}
+            </h3>
+            <p style="color: var(--fg-muted); margin: 0; font-size: 0.92rem;">
+              {t("Передвигайте ползунки под реальные параметры вашей компании:",
+                 "Пересувайте повзунки під реальні параметри вашої компанії:",
+                 "Adjust sliders to reflect your organization's real parameters:")}
+            </p>
+          </div>
+          <div class="roi-badge">⚡ Real-time OpEx Engine</div>
+        </div>
+
+        <div class="roi-layout">
+          <div class="roi-sliders">
+            <div class="roi-field">
+              <div class="roi-field-header">
+                <span>{t("Сотрудников в отделе (продажи, саппорт, сметчики):", "Співробітників у відділі (продажі, саппорт, кошторис):", "Department Staff (Sales, Support, Estimators):")}</span>
+                <span class="roi-field-val" id="val-staff">5 человек</span>
+              </div>
+              <input type="range" id="slider-staff" class="roi-slider" min="1" max="50" value="5" oninput="updateRoiCalc()">
+            </div>
+
+            <div class="roi-field">
+              <div class="roi-field-header">
+                <span>{t("Обращений и заказов в месяц:", "Звернень та замовлень на місяць:", "Monthly Inquiries & Orders:")}</span>
+                <span class="roi-field-val" id="val-tickets">3 500 заявок</span>
+              </div>
+              <input type="range" id="slider-tickets" class="roi-slider" min="200" max="30000" step="100" value="3500" oninput="updateRoiCalc()">
+            </div>
+
+            <div class="roi-field">
+              <div class="roi-field-header">
+                <span>{t("Средняя стоимость часа специалиста:", "Середня вартість години фахівця:", "Average Hourly Wage of Specialist:")}</span>
+                <span class="roi-field-val" id="val-wage">$15 / час</span>
+              </div>
+              <input type="range" id="slider-wage" class="roi-slider" min="5" max="60" step="1" value="15" oninput="updateRoiCalc()">
+            </div>
+          </div>
+
+          <div class="roi-results">
+            <div class="roi-result-card">
+              <span class="roi-result-label">{t("Чистая экономия бюджета в месяц:", "Чиста економія бюджету на місяць:", "Net Monthly Cost Savings:")}</span>
+              <span class="roi-result-val green" id="res-savings">$7,625</span>
+              <span style="font-size: 0.74rem; color: var(--fg-subtle);">{t("С учетом снижения OpEx на 80%+", "З урахуванням зниження OpEx на 80%+", "Reflects an 80%+ OpEx reduction")}</span>
+            </div>
+
+            <div class="roi-result-card">
+              <span class="roi-result-label">{t("Высвобождено рабочих часов:", "Вивільнено робочих годин:", "Work Hours Liberated:")}</span>
+              <span class="roi-result-val cyan" id="res-hours">525 ч/мес</span>
+              <span style="font-size: 0.74rem; color: var(--fg-subtle);">{t("Направлено на развитие и сделки", "Спрямовано на розвиток та угоди", "Reinvested into growth & closures")}</span>
+            </div>
+
+            <div class="roi-result-card">
+              <span class="roi-result-label">{t("Прогнозируемый ROI платформы:", "Прогнозований ROI платформи:", "Projected Platform ROI:")}</span>
+              <span class="roi-result-val amber" id="res-roi">420%</span>
+              <span style="font-size: 0.74rem; color: var(--fg-subtle);">{t("Возврат инвестиций в первый же месяц", "Повернення інвестицій у перший же місяць", "Capital return within the first 30 days")}</span>
+            </div>
+
+            <div class="roi-result-card">
+              <span class="roi-result-label">{t("Срок полной окупаемости:", "Термін повної окупності:", "Full Payback Horizon:")}</span>
+              <span class="roi-result-val" id="res-payback" style="color: #a78bfa;">18 дней</span>
+              <span style="font-size: 0.74rem; color: var(--fg-subtle);">{t("За счет гибридных бесплатных квот", "Завдяки гібридним безкоштовним квотам", "Enabled by zero-cost hybrid quotas")}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     '''
     sub6 = sub_accordion(
-        "sub-8-6", "📋",
-        "5-фазный регламентированный протокол интеграции на предприятие (от 2 до 4 недель)",
-        "5-фазний регламентований протокол інтеграції на підприємство (від 2 до 4 тижнів)",
-        "5-Phase Enterprise Onboarding & Integration Protocol (2 to 4 Weeks)",
-        "Методология внедрения", "Методологія впровадження", "Onboarding Roadmap",
+        "sub-8-6", "💰",
+        "Вопрос 8.6: Как устроен интерактивный калькулятор экономической окупаемости внедрения (ROI)?",
+        "Питання 8.6: Як влаштований інтерактивний калькулятор економічної окупності впровадження (ROI)?",
+        "Question 8.6: How does the real-time financial ROI calculator compute cost savings?",
+        "Калькулятор ROI", "Калькулятор ROI", "Interactive ROI",
         sub6_content
     )
 
-    # 8.7 Sephirot 10-Tier Decision Tree
-    sephirot_items = [
-        ("01", "👑", "Кетер (Kether) — Высший замысел", "Кетер (Kether) — Вищий задум", "Kether (Crown) — Sovereign Vision",
-         "Высший замысел собственника, стратегические цели компании и корпоративные аксиомы.",
-         "Вищий задум власника, стратегічні цілі компанії та корпоративні аксіоми.",
-         "The founder's sovereign vision, macro corporate objectives, and immutable principles.",
-         "Gemini 3.1 Pro (2M Context)"),
-        ("02", "💡", "Хокма (Chokmah) — Стратегия", "Хокма (Chokmah) — Стратегія", "Chokmah (Wisdom) — Strategy",
-         "Трансформация видения в 2–3 смелые стратегические гипотезы с оценкой рисков.",
-         "Трансформація задуму в 2–3 сміливі стратегічні гіпотези з оцінкою ризиків.",
-         "Synthesizing visionary intent into actionable hypotheses with risk/reward models.",
-         "Gemini 3.8 Flash • Speed"),
-        ("03", "📐", "Бина (Binah) — Архитектура", "Бина (Binah) — Архітектура", "Binah (Understanding) — Architecture",
-         "Строгая декомпозиция, формальные спецификации, схемы БД и технологические ограничения.",
-         "Сувора декомпозиція, формальні специфікації, схеми БД та технологічні обмеження.",
-         "Formal architectural decomposition, relational DB schemas, and technical bounds.",
-         "Claude 3.7 Sonnet • Refactoring"),
-        ("04", "🤝", "Хесед (Chesed) — Экспансия", "Хесед (Chesed) — Експансія", "Chesed (Mercy) — Expansion",
-         "Продажи, мультиязычный маркетинг, забота о клиентах и партнерские программы B2B.",
-         "Продажі, багатомовний маркетинг, турбота про клієнтів та партнерські програми B2B.",
-         "Omnichannel sales, multilingual marketing, customer success, and partner relations.",
-         "Agent Eva • 6 Languages"),
-        ("05", "🛡️", "Гевура (Gevurah) — CISO & Аудит", "Гевура (Gevurah) — CISO та Аудит", "Gevurah (Severity) — CISO & Audit",
-         "Бескомпромиссный контроль безопасности, лимитов смет, комплаенса UNIC/ISO.",
-         "Безкомпромісний контроль безпеки, лімітів кошторису, комплаєнсу UNIC/ISO.",
-         "Zero-trust security enforcement, budget guardrails, UNIC compliance, and PII shields.",
-         "Agent Adam • CISO & Rules"),
-        ("06", "⚖️", "Тиферет (Tifereth) — Синтез", "Тиферет (Tifereth) — Синтез", "Tifereth (Beauty) — Consensus",
-         "Гармонизация компромиссов: сведение аргументов Хесед (продажи) и Гевура (CISO) в консенсус.",
-         "Гармонізація компромісів: зведення аргументів Хесед (продажі) та Гевура (CISO) в консенсус.",
-         "Harmonizing trade-offs: balancing aggressive growth (Chesed) with security (Gevurah).",
-         "Consilium Arbiter Engine"),
-        ("07", "⚡", "Нецах (Netzach) — DevOps & CI/CD", "Нецах (Netzach) — DevOps та CI/CD", "Netzach (Victory) — DevOps & SRE",
-         "Непрерывная интеграция, мониторинг контейнеров, деплой без простоев.",
-         "Безперервна інтеграція, моніторинг контейнерів, деплой без простоїв.",
-         "Continuous integration, container orchestration, zero-downtime rolling deploys.",
-         "SRE Daemon • Mesh Watchdog"),
-        ("08", "🎙️", "Ход (Hod) — Коммуникация", "Ход (Hod) — Комунікація", "Hod (Splendor) — Speech & UI",
-         "Голосовой движок EvaVoice, интерактивные веб-интерфейсы, документация API.",
-         "Голосовий рушій EvaVoice, інтерактивні веб-інтерфейси, документація API.",
-         "EvaVoice speech synthesis, responsive cybernetic interfaces, and API docs.",
-         "EvaVoice FastAPI :8000"),
-        ("09", "💾", "Йесод (Yesod) — Память & RAG", "Йесод (Yesod) — Пам'ять та RAG", "Yesod (Foundation) — Grounded Memory",
-         "Векторный фундамент ChromaDB, таблицы SQLite, сессионная память и архив знаний.",
-         "Векторний фундамент ChromaDB, таблиці SQLite, сесійна пам'ять та архів знань.",
-         "High-density ChromaDB vector collections, SQLite FTS5 index, and episodic graphs.",
-         "ChromaDB + SQLite FTS5"),
-        ("10", "🏭", "Малхут (Malkuth) — Завод & Материя", "Малхут (Malkuth) — Завод та Матерія", "Malkuth (Kingdom) — Physical World",
-         "Реальное воплощение: раскрой на ЧПУ, пресс-формы в Черноморске, хаб в Братиславе.",
-         "Реальне втілення: розкрій на ЧПК, прес-форми в Чорноморську, хаб у Братиславі.",
-         "Physical materialization: CNC flatbed cutting, foaming presses, and EU deliveries.",
-         "EvaLine Chornomorsk Plant")
-    ]
-
-    sephirot_cards = []
-    for num, icon, title_ru, title_uk, title_en, desc_ru, desc_uk, desc_en, model in sephirot_items:
-        c = f'''        <div class="sephira-card">
-          <div class="sephira-tag">
-            <span class="sephira-level">{t(f"Ступень {num}", f"Ступінь {num}", f"Tier {num}")}</span>
-            <span>{icon}</span>
-          </div>
-          <div class="sephira-title">{t(title_ru, title_uk, title_en)}</div>
-          <div class="sephira-desc">{t(desc_ru, desc_uk, desc_en)}</div>
-          <div class="sephira-model">{model}</div>
-        </div>'''
-        sephirot_cards.append(c)
-
-    sephirot_html = "\n".join(sephirot_cards)
-
+    # =========================================================================
+    # 8.7 Enterprise Integration & 21 MCP Architecture
+    # =========================================================================
     sub7_content = f'''
-      <div class="sephirot-box">
-        <div class="sephirot-header">
-          <div class="hero-eyebrow">{t("АРХИТЕКТУРА SEPHIROT ENGINE // 10 УРОВНЕЙ ИНТЕЛЛЕКТА", "АРХІТЕКТУРА SEPHIROT ENGINE // 10 РІВНІВ ІНТЕЛЕКТУ", "SEPHIROT ENGINE ARCHITECTURE // 10 TIERS OF INTELLIGENCE")}</div>
-          <h4 style="font-family: var(--font-display); font-size: 1.3rem; color: #fff; margin: 4px 0 8px;">
-            {t("10 ступеней принятия решений: От высшего замысла до станка ЧПУ",
-               "10 ступенів прийняття рішень: Від вищого задуму до верстата ЧПК",
-               "10 Spheres of Corporate Intelligence: From Sovereign Vision to CNC Fabric")}
-          </h4>
-          <p style="max-width: 800px; margin: 0 auto; color: var(--fg-muted);">
-            {t("В ядре EvaBot реализована классическая 10-уровневая структура каскадного делегирования решений:",
-               "У ядрі EvaBot реалізована класична 10-рівнева структура каскадного делегування рішень:",
-               "At the core of EvaBot lies a formal 10-tier cascading delegation hierarchy:")}
-          </p>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">🔌</div>
+          <h4 class="card-title">{t("Протокол Model Context Protocol (MCP)", "Протокол Model Context Protocol (MCP)", "Model Context Protocol (MCP) Core")}</h4>
+          <p class="card-text">{t(
+            "21 специализированный сервер стандартизирует доступ агентов к данным: файловые системы, репозитории Git, СУБД SQLite/PostgreSQL, SSH-консоли и веб-браузер.",
+            "21 спеціалізований сервер стандартизує доступ агентів до даних: файлові системи, репозиторії Git, СУБД SQLite/PostgreSQL, SSH-консолі та веб-браузер.",
+            "21 specialized MCP servers standardize agent access to file trees, Git commits, SQL databases, remote SSH bash shells, and live Chrome DevTools."
+          )}</p>
         </div>
 
-        <div class="sephirot-grid">
-{sephirot_html}
+        <div class="card">
+          <div class="card-icon">🔄</div>
+          <h4 class="card-title">{t("Бесшовная интеграция с 1С:Предприятие", "Безшовна інтеграція з 1С:Підприємство", "Seamless 1C:Enterprise Integration")}</h4>
+          <p class="card-text">{t(
+            "Двусторонний обмен через OData / REST API: чтение номенклатуры, проверка реальных остатков полимеров на складах и автоматическое выставление счетов.",
+            "Двосторонній обмін через OData / REST API: читання номенклатури, перевірка реальних залишків полімерів на складах та автоматичне виставлення рахунків.",
+            "Bidirectional OData/REST sync: real-time inventory queries, warehouse polymer stock reconciliation, and automated invoicing."
+          )}</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🏭</div>
+          <h4 class="card-title">{t("Промышленный контур ЧПУ & CAM", "Промисловий контур ЧПК та CAM", "Industrial CNC & CAM Machine Bus")}</h4>
+          <p class="card-text">{t(
+            "Генерация DXF/G-кода для цифровых раскройных комплексов (плоттеров). Оптимизация схемы раскладки (раскроя) листа минимизирует краевые отходы.",
+            "Генерація DXF/G-коду для цифрових розкрійних комплексів (плотерів). Оптимізація схеми розкладки листа мінімізує відходи сировини.",
+            "Automated DXF/G-code vector generation for digital flatbed CNC cutting systems. Optimal nesting geometry minimizes edge trim waste."
+          )}</p>
         </div>
       </div>
     '''
     sub7 = sub_accordion(
-        "sub-8-7", "✡️",
-        "Анатомия системы: Древо корпоративного интеллекта Sephirot (10 ступеней)",
-        "Анатомія системи: Древо корпоративного інтелекту Sephirot (10 ступенів)",
-        "EvaBot System Anatomy: The 10-Tier Sephirot Decision Tree",
-        "10 ступеней разума", "10 ступенів розуму", "10 Decision Tiers",
+        "sub-8-7", "🔌",
+        "Вопрос 8.7: Как архитектура 21 MCP-коннектора интегрирует фабрику агентов в IT-ландшафт предприятия?",
+        "Питання 8.7: Як архітектура 21 MCP-конектора інтегрує фабрику агентів в IT-ландшафт підприємства?",
+        "Question 8.7: How does the 21 MCP adapter suite integrate agents into enterprise IT systems?",
+        "21 MCP Коннектор", "21 MCP Конектор", "21 MCP Adapters",
         sub7_content
     )
 
@@ -756,7 +846,10 @@ def get_section_08():
         "<strong>EvaLine</strong> uniquely fuses physical industrial polymer manufacturing with an autonomous distributed agent factory:"
     )
 
-    content = f'''      <p class="lead-text">{lead}</p>
+    info_panel = infographics_builder.get_infographic_08()
+
+    content = f'''      {info_panel}
+      <p class="lead-text">{lead}</p>
       {sub1}
       {sub2}
       {sub3}
@@ -771,5 +864,5 @@ def get_section_08():
         "Рішення для бізнесу, інтеграція виробництва та анатомія EvaBot",
         "Business Solutions, Manufacturing Integration & EvaBot Anatomy",
         "Практическое внедрение", "Практичне впровадження", "Production Reality",
-        content, open=True
+        content, open=False
     )

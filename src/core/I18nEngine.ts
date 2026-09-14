@@ -47,6 +47,7 @@ const DICTIONARY: Record<SupportedLocale, LocaleDefinition> = {
     placeholder: 'Type a message or command (/help)...',
     helpTitle: 'SYSTEM COMMANDS:',
     helpCommands: [
+      { cmd: '/about', desc: 'About EvaBot Online, EvaLine manufacturing & GCP cluster architecture' },
       { cmd: '/top [free|paid|speed]', desc: 'Top models leaderboard by quality and recency' },
       { cmd: '/models', desc: 'Full interactive model catalog' },
       { cmd: '/info <model>', desc: 'Technical passport, context limits & token pricing' },
@@ -111,6 +112,7 @@ const DICTIONARY: Record<SupportedLocale, LocaleDefinition> = {
     placeholder: 'Введіть повідомлення або команду (/help)...',
     helpTitle: 'СИСТЕМНІ КОМАНДИ:',
     helpCommands: [
+      { cmd: '/about', desc: 'Про проект EvaBot Online, виробництво EvaLine та архітектуру GCP кластера' },
       { cmd: '/top [free|paid|speed]', desc: 'Рейтинг моделей за якістю та новизною' },
       { cmd: '/models', desc: 'Повний інтерактивний каталог моделей' },
       { cmd: '/info <model>', desc: 'Технічний паспорт, контекстне вікно та тарифи' },
@@ -175,6 +177,7 @@ const DICTIONARY: Record<SupportedLocale, LocaleDefinition> = {
     placeholder: 'Введите сообщение или команду (/help)...',
     helpTitle: 'СИСТЕМНЫЕ КОМАНДЫ:',
     helpCommands: [
+      { cmd: '/about', desc: 'О проекте EvaBot Online, производстве EvaLine и архитектуре GCP кластера' },
       { cmd: '/top [free|paid|speed]', desc: 'Топ моделей по качеству и новизне' },
       { cmd: '/models', desc: 'Полный интерактивный каталог моделей' },
       { cmd: '/info <model>', desc: 'Паспорт, контекстное окно и квоты модели' },
