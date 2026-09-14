@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr"><head><title>evabot_v001_release.ru</title><meta charset="utf-8"/><link rel="preload" href="../../index-f2040e79.css" as="style"/><link rel="preload" href="../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;family=Roboto:ital,wght@0,400;0,600;1,400;1,600&amp;family=Roboto Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="EvaBot Docs"/><meta property="og:title" content="evabot_v001_release.ru"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="evabot_v001_release.ru"/><meta name="twitter:description" content="Спецификация релиза и архитектуры EvaBot v0.0.1 Demo Отчет о мультирегиональном развертывании на платформе Google Cloud Platform (GCP) Исполнительное резюме EvaBot v0.0.1 Demo представляет собой стартовый эксплуатационный релиз автономной диалоговой платформы искусственного интеллекта EvaBot, развер..."/><meta property="og:description" content="Спецификация релиза и архитектуры EvaBot v0.0.1 Demo Отчет о мультирегиональном развертывании на платформе Google Cloud Platform (GCP) Исполнительное резюме EvaBot v0.0.1 Demo представляет собой стартовый эксплуатационный релиз автономной диалоговой платформы искусственного интеллекта EvaBot, развер..."/><meta property="og:image:alt" content="Спецификация релиза и архитектуры EvaBot v0.0.1 Demo Отчет о мультирегиональном развертывании на платформе Google Cloud Platform (GCP) Исполнительное резюме EvaBot v0.0.1 Demo представляет собой стартовый эксплуатационный релиз автономной диалоговой платформы искусственного интеллекта EvaBot, развер..."/><meta property="twitter:domain" content="evabot.online/docs"/><meta property="og:url" content="https://evabot.online/docs/history/evabot-v0/evabot_v001_release.ru"/><meta property="twitter:url" content="https://evabot.online/docs/history/evabot-v0/evabot_v001_release.ru"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Спецификация релиза и архитектуры EvaBot v0.0.1 Demo Отчет о мультирегиональном развертывании на платформе Google Cloud Platform (GCP) Исполнительное резюме EvaBot v0.0.1 Demo представляет собой стартовый эксплуатационный релиз автономной диалоговой платформы искусственного интеллекта EvaBot, развер..."/><meta name="generator" content="Quartz"/><link href="../../index-f2040e79.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://evabot.online/docs/history/evabot-v0/evabot_v001_release.ru-og-image.webp"/><meta property="og:image:url" content="https://evabot.online/docs/history/evabot-v0/evabot_v001_release.ru-og-image.webp"/><meta name="twitter:image" content="https://evabot.online/docs/history/evabot-v0/evabot_v001_release.ru-og-image.webp"/><meta property="og:image:type" content="image/webp"/></head><body data-slug="history/evabot-v0/evabot_v001_release.ru" data-basepath="/docs"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">EvaBot Docs</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Поиск" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Поиск</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Найти что-нибудь" placeholder="Найти что-нибудь"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Тёмный режим"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Тёмный режим"><title>Тёмный режим</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Светлый режим"><title>Светлый режим</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Режим чтения"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Режим чтения"><title>Режим чтения</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-37" aria-label="Проводник"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Проводник</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-37" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../history/">history</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../history/evabot-v0/">evabot-v0</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>evabot_v001_release.ru</a></div></nav><h1 class="article-title">evabot_v001_release.ru</h1><p show-comma="true" class="content-meta"><time datetime="2026-09-14T21:53:29.681Z">14 сент. 2026 г.</time><span>время чтения ~8 мин.</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="спецификация-релиза-и-архитектуры-evabot-v001-demo">Спецификация релиза и архитектуры EvaBot v0.0.1 Demo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#спецификация-релиза-и-архитектуры-evabot-v001-demo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><strong>Отчет о мультирегиональном развертывании на платформе Google Cloud Platform (GCP)</strong></p>
+<hr/>
+<h2 id="исполнительное-резюме">Исполнительное резюме<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#исполнительное-резюме" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>EvaBot v0.0.1 Demo</strong> представляет собой стартовый эксплуатационный релиз автономной диалоговой платформы искусственного интеллекта EvaBot, развернутой на базе инфраструктуры <strong>Google Cloud Platform (GCP)</strong>. Архитектура построена по распределенной и финансово оптимизированной мультирегиональной схеме, объединяющей высокопроизводительный вычислительный узел в Западной Европе и ультралегкий входной прокси-сервер с нулевой стоимостью в США.</p>
+<p>Релиз включает глубокую интеграцию с Google AI Pro / Gemini, адаптивный интерфейс из 4 экранов, экосистему омниканальных шлюзов обмена сообщениями (Telegram, WhatsApp, Viber, Facebook Messenger), защищенную ячеистую сеть Tailscale и встроенную систему голосового воспроизведения отчетов Web Speech API.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TB\n    subgraph Client_Access [\&quot;Пользовательский доступ и периферийный слой\&quot;]\n        User[\&quot;Браузер пользователя / Клиент\&quot;]\n        Domain[\&quot;evabot.online (Let's Encrypt TLS 1.3 / HTTP/3)\&quot;]\n    end\n\n    subgraph Edge_Node [\&quot;Периферийный узел: evaline-micro-vm (Айова, us-central1-a)\&quot;]\n        direction TB\n        Caddy[\&quot;Веб-сервер и реверс-прокси Caddy 2.11.4\&quot;]\n        Frontend[\&quot;4-экранный интерфейс EvaBot (v0.0.1)\&quot;]\n        Caddy --> Frontend\n    end\n\n    subgraph Mesh_Tunnel [\&quot;Зашифрованная ячеистая сеть (Tailscale)\&quot;]\n        Tunnel[\&quot;Зашифрованный туннель WireGuard Tailscale (100.125.200.49)\&quot;]\n    end\n\n    subgraph Main_Compute [\&quot;Основной вычислительный узел: evabot-agent-vm (Франкфурт, europe-west3-a)\&quot;]\n        direction TB\n        GeminiCore[\&quot;Диалоговое ядро EvaBot (Google AI Pro / Gemini)\&quot;]\n        VectorDB[\&quot;Векторная база данных (Qdrant / Долговременная память)\&quot;]\n        OmniChannel[\&quot;Омниканальный шлюз: Telegram, WhatsApp, Viber, FB Messenger\&quot;]\n        MetricsAgent[\&quot;Агент телеметрии состояния серверов\&quot;]\n    end\n\n    User --> Domain --> Caddy\n    Frontend -.-> Tunnel\n    Caddy &lt;--> Tunnel &lt;--> GeminiCore\n    GeminiCore &lt;--> VectorDB\n    GeminiCore &lt;--> OmniChannel\n    Frontend &lt;--> Tunnel &lt;--> MetricsAgent&quot;">flowchart TB
+    subgraph Client_Access [&quot;Пользовательский доступ и периферийный слой&quot;]
+        User[&quot;Браузер пользователя / Клиент&quot;]
+        Domain[&quot;evabot.online (Let's Encrypt TLS 1.3 / HTTP/3)&quot;]
+    end
+
+    subgraph Edge_Node [&quot;Периферийный узел: evaline-micro-vm (Айова, us-central1-a)&quot;]
+        direction TB
+        Caddy[&quot;Веб-сервер и реверс-прокси Caddy 2.11.4&quot;]
+        Frontend[&quot;4-экранный интерфейс EvaBot (v0.0.1)&quot;]
+        Caddy --> Frontend
+    end
+
+    subgraph Mesh_Tunnel [&quot;Зашифрованная ячеистая сеть (Tailscale)&quot;]
+        Tunnel[&quot;Зашифрованный туннель WireGuard Tailscale (100.125.200.49)&quot;]
+    end
+
+    subgraph Main_Compute [&quot;Основной вычислительный узел: evabot-agent-vm (Франкфурт, europe-west3-a)&quot;]
+        direction TB
+        GeminiCore[&quot;Диалоговое ядро EvaBot (Google AI Pro / Gemini)&quot;]
+        VectorDB[&quot;Векторная база данных (Qdrant / Долговременная память)&quot;]
+        OmniChannel[&quot;Омниканальный шлюз: Telegram, WhatsApp, Viber, FB Messenger&quot;]
+        MetricsAgent[&quot;Агент телеметрии состояния серверов&quot;]
+    end
+
+    User --> Domain --> Caddy
+    Frontend -.-> Tunnel
+    Caddy &lt;--> Tunnel &lt;--> GeminiCore
+    GeminiCore &lt;--> VectorDB
+    GeminiCore &lt;--> OmniChannel
+    Frontend &lt;--> Tunnel &lt;--> MetricsAgent
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<hr/>
+<h2 id="1-возможности-интеграции-с-google-ai-pro-и-gemini">1. Возможности интеграции с Google AI Pro и Gemini<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-возможности-интеграции-с-google-ai-pro-и-gemini" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Интеллектуальное ядро EvaBot v0.0.1 базируется на инфраструктуре <strong>Google AI Pro</strong> с задействованием семейства флагманских моделей Gemini от Google DeepMind (Gemini 1.5 Pro, Gemini 1.5 Flash, Gemini 2.0 / 3.x Flash и High).</p>
+<h3 id="ключевые-архитектурные-преимущества">Ключевые архитектурные преимущества:<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ключевые-архитектурные-преимущества" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p><strong>Колоссальное окно контекста и рассуждений:</strong></p>
+<ul>
+<li>Поддержка контекстного окна объемом до <strong>2 000 000 токенов</strong>, что позволяет EvaBot удерживать сквозной контекст диалогов, обрабатывать системные логи размером в десятки мегабайт, анализировать репозитории исходного кода и сопоставлять сложные инфраструктурные запросы без потери истории.</li>
+<li>Точность поиска информации («игла в стоге сена») превышает 99.7% на всем объеме контекста.</li>
+</ul>
+</li>
+<li>
+<p><strong>Нативная мультимодальная обработка:</strong></p>
+<ul>
+<li>Прямой анализ текстовых запросов, скриншотов системных дашбордов, архитектурных схем, PDF-документации и аудиопотоков без необходимости использования промежуточных сервисов транскрипции.</li>
+<li>Двунаправленное восприятие аудио-текстовых данных для естественного диалога.</li>
+</ul>
+</li>
+<li>
+<p><strong>Автономные функции и вызов внешних инструментов (Function Calling):</strong></p>
+<ul>
+<li>Механизм строго типизированных вызовов по схемам JSON Schema позволяет EvaBot в реальном времени взаимодействовать с серверной инфраструктурой:
+<ul>
+<li>Опрос телеметрии физических и виртуальных серверов (<code>get_node_metrics</code>)</li>
+<li>Маршрутизация сообщений в мессенджеры (<code>dispatch_messenger_payload</code>)</li>
+<li>Семантический поиск по долговременной памяти (<code>query_vector_store</code>)</li>
+<li>Проверка работоспособности служб и портов (<code>check_service_status</code>)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Системные инструкции и оптимизация задержек:</strong></p>
+<ul>
+<li>Тщательно откалиброванный системный промпт задает образ EvaBot как высокотехнологичного, тактичного и точного ИИ-ассистента.</li>
+<li>Стриминговая передача ответов по протоколам Server-Sent Events (SSE) и WebSockets гарантирует минимальное время до генерации первого токена (&lt;400 мс).</li>
+</ul>
+</li>
+</ol>
+<hr/>
+<h2 id="2-архитектура-4-экранного-интерфейса-evabot-v001">2. Архитектура 4-экранного интерфейса EvaBot v0.0.1<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-архитектура-4-экранного-интерфейса-evabot-v001" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Пользовательский интерфейс EvaBot v0.0.1 реализован в киберпанк-стилистике с глубоким темным фоном (<code>#060913</code>), полупрозрачными матовыми панелями (Glassmorphism), неоновыми акцентами циан (<code>#38bdf8</code>) и фиолетового свечения (<code>#c084fc</code>). Навигация разделена на 4 функциональных экрана.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    UI[\&quot;Веб-приложение EvaBot v0.0.1\&quot;]\n    UI --> S1[\&quot;Экран 1: Интерактивный Gemini AI Чат\&quot;]\n    UI --> S2[\&quot;Экран 2: Анимированный дашборд реальных метрик\&quot;]\n    UI --> S3[\&quot;Экран 3: Экосистема подключенных модулей и приложений\&quot;]\n    UI --> S4[\&quot;Экран 4: Хронологический лог установки и озвучка\&quot;]&quot;">graph LR
+    UI[&quot;Веб-приложение EvaBot v0.0.1&quot;]
+    UI --> S1[&quot;Экран 1: Интерактивный Gemini AI Чат&quot;]
+    UI --> S2[&quot;Экран 2: Анимированный дашборд реальных метрик&quot;]
+    UI --> S3[&quot;Экран 3: Экосистема подключенных модулей и приложений&quot;]
+    UI --> S4[&quot;Экран 4: Хронологический лог установки и озвучка&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="экран-1-интерактивный-gemini-ai-чат-с-evabot">Экран 1: Интерактивный Gemini AI Чат с EvaBot<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#экран-1-интерактивный-gemini-ai-чат-с-evabot" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Диалоговый интерфейс:</strong> Потоковый чат с контрастными сообщениями пользователя (<code>#1e293b</code>) и ответами EvaBot с мягким неоновым обрамлением.</li>
+<li><strong>Динамический аватар:</strong> Анимированный бейдж с пульсирующим зеленым индикатором сетевой активности и живого подключения к Gemini API.</li>
+<li><strong>Быстрые сценарии (Suggestion Chips):</strong> Кнопки быстрого ввода для типовых команд:
+<ul>
+<li><em>«Проверь статус серверов кластера»</em></li>
+<li><em>«Покажи подключенные боты и мессенджеры»</em></li>
+<li><em>«Опиши возможности Google AI Pro»</em></li>
+<li><em>«Запусти системную диагностику»</em></li>
+</ul>
+</li>
+<li><strong>Панель ввода:</strong> Адаптивное текстовое поле, кнопка мгновенной отправки, переключатели режимов и индикатор генерации ответа в реальном времени.</li>
+</ul>
+<h3 id="экран-2-анимированный-дашборд-реальных-физических-и-виртуальных-метрик">Экран 2: Анимированный дашборд реальных физических и виртуальных метрик<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#экран-2-анимированный-дашборд-реальных-физических-и-виртуальных-метрик" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Предоставляет непрерывный мониторинг вычислительных ресурсов обоих узлов:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Параметр</th><th style="text-align:left;">Узел 1: <code>evabot-agent-vm</code> (Франкфурт)</th><th style="text-align:left;">Узел 2: <code>evaline-micro-vm</code> (Айова, США)</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>Роль</strong></td><td style="text-align:left;">Основной LLM-агент, векторная БД, обработка шлюзов</td><td style="text-align:left;">Входной реверс-прокси, веб-сервер Caddy, домены</td></tr><tr><td style="text-align:left;"><strong>Тип машины</strong></td><td style="text-align:left;"><code>c3-standard-8</code> (Compute-Optimized)</td><td style="text-align:left;"><code>e2-micro</code> (Микросервер с разделяемыми ядрами)</td></tr><tr><td style="text-align:left;"><strong>Зона / Регион</strong></td><td style="text-align:left;"><code>europe-west3-a</code> (Франкфурт, Германия)</td><td style="text-align:left;"><code>us-central1-a</code> (Айова, США)</td></tr><tr><td style="text-align:left;"><strong>Физический CPU</strong></td><td style="text-align:left;">Intel Sapphire Rapids @ 2.50GHz (8 vCPU)</td><td style="text-align:left;">Google Compute Engine (2 vCPU burstable)</td></tr><tr><td style="text-align:left;"><strong>Оперативная память (RAM)</strong></td><td style="text-align:left;">32 104 MB всего (Занято: 1 114 MB [3.5%], Свободно: 30 990 MB)</td><td style="text-align:left;">964 MB всего (Занято: 441 MB [45%], Свободно: 522 MB)</td></tr><tr><td style="text-align:left;"><strong>Операционная система</strong></td><td style="text-align:left;">Debian GNU/Linux 12 (Bookworm)</td><td style="text-align:left;"><strong>Debian GNU/Linux 13 (Trixie 13.6)</strong></td></tr><tr><td style="text-align:left;"><strong>Средняя загрузка (Load Avg)</strong></td><td style="text-align:left;"><code>0.00, 0.00, 0.00</code> (Свободен / 100% запас мощности)</td><td style="text-align:left;"><code>0.00, 0.00, 0.00</code> (Свободен / 100% запас мощности)</td></tr><tr><td style="text-align:left;"><strong>Дисковая подсистема</strong></td><td style="text-align:left;">50 GB NVMe (OS) + 50 GB NVMe (<code>evabot-agent-data</code>)</td><td style="text-align:left;">20 GB Standard Persistent Disk (<code>/dev/sda1</code>)</td></tr><tr><td style="text-align:left;"><strong>Занятое дисковое пространство</strong></td><td style="text-align:left;">Root OS: 8.9 GB / 49 GB (19%), Data: выделенный NVMe</td><td style="text-align:left;">Root OS: 2.3 GB / 20 GB (13% занято)</td></tr><tr><td style="text-align:left;"><strong>Сетевые интерфейсы</strong></td><td style="text-align:left;">Внешний: <code>34.179.253.183</code> / Внутренний: <code>10.156.0.2</code></td><td style="text-align:left;">Внешний: <code>136.114.26.252</code> / Внутренний: <code>10.128.0.2</code></td></tr><tr><td style="text-align:left;"><strong>Слушающие порты</strong></td><td style="text-align:left;">SSH (22), Tailscale WireGuard (41641), порты приложений</td><td style="text-align:left;">HTTP (80), HTTPS (443), Caddy API (2019), Tailscale</td></tr><tr><td style="text-align:left;"><strong>Время непрерывной работы</strong></td><td style="text-align:left;">Запущен сегодня в 00:01 UTC+3 (~16 ч 40 мин)</td><td style="text-align:left;">Активен после апгрейда на Debian 13 (~1 ч 00 мин)</td></tr></tbody></table></div>
+<p><strong>Визуальные элементы Экрана 2:</strong></p>
+<ul>
+<li>Анимированные шкалы прогресса использования RAM и NVMe дисков.</li>
+<li>Информационная панель совокупных ресурсов кластера: <strong>10 vCPU</strong>, <strong>33 GB RAM</strong>, <strong>120 GB Дискового пространства</strong>.</li>
+<li>Индикаторы сетевого отклика межсерверного туннеля (&lt;100 мс).</li>
+</ul>
+<h3 id="экран-3-экосистема-подключенных-модулей-и-приложений">Экран 3: Экосистема подключенных модулей и приложений<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#экран-3-экосистема-подключенных-модулей-и-приложений" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Отображает текущий статус, используемый протокол и задачи всех внешних и внутренних компонентов:</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    EvaCore[\&quot;Ядро EvaBot\&quot;]\n    EvaCore --> TG[\&quot;Telegram Bot &amp; MTProto UserBot Gateway\&quot;]\n    EvaCore --> WA[\&quot;WhatsApp Business Cloud API\&quot;]\n    EvaCore --> VB[\&quot;Viber REST Messaging Service\&quot;]\n    EvaCore --> FB[\&quot;Facebook Messenger Webhook Gateway\&quot;]\n    EvaCore --> GAI[\&quot;Движок Google AI Pro / Gemini\&quot;]\n    EvaCore --> TS[\&quot;Зашифрованная сеть Tailscale VPN\&quot;]\n    EvaCore --> VDB[\&quot;Векторная база данных Qdrant\&quot;]\n    EvaCore --> CAD[\&quot;Автоматический выпуск SSL Caddy (Let's Encrypt)\&quot;]&quot;">graph TD
+    EvaCore[&quot;Ядро EvaBot&quot;]
+    EvaCore --> TG[&quot;Telegram Bot &amp; MTProto UserBot Gateway&quot;]
+    EvaCore --> WA[&quot;WhatsApp Business Cloud API&quot;]
+    EvaCore --> VB[&quot;Viber REST Messaging Service&quot;]
+    EvaCore --> FB[&quot;Facebook Messenger Webhook Gateway&quot;]
+    EvaCore --> GAI[&quot;Движок Google AI Pro / Gemini&quot;]
+    EvaCore --> TS[&quot;Зашифрованная сеть Tailscale VPN&quot;]
+    EvaCore --> VDB[&quot;Векторная база данных Qdrant&quot;]
+    EvaCore --> CAD[&quot;Автоматический выпуск SSL Caddy (Let's Encrypt)&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ol>
+<li><strong>Telegram-экосистема:</strong>
+<ul>
+<li>Выделенный канал Telegram Bot API для прямого общения с пользователями.</li>
+<li>Шлюз MTProto UserBot для взаимодействия в группах, администрирования и маршрутизации входящих сообщений.</li>
+</ul>
+</li>
+<li><strong>WhatsApp Business API:</strong>
+<ul>
+<li>Интеграция с Meta Cloud API для корпоративной коммуникации и поддержки клиентов по официальным шаблонам.</li>
+</ul>
+</li>
+<li><strong>Viber Messaging Gateway:</strong>
+<ul>
+<li>Вебхук-обработчик Viber REST API для мгновенной доставки сообщений европейской аудитории.</li>
+</ul>
+</li>
+<li><strong>Facebook Messenger:</strong>
+<ul>
+<li>Конечная точка Meta Graph API Webhook для автоматизации обработки сообщений бизнес-страниц.</li>
+</ul>
+</li>
+<li><strong>Google AI Pro (Gemini):</strong>
+<ul>
+<li>Высокопроизводительный интерфейс передачи контекста и потоковой генерации рассуждений.</li>
+</ul>
+</li>
+<li><strong>Связующая сеть Tailscale Mesh:</strong>
+<ul>
+<li>Защищенная приватная сеть на базе WireGuard (<code>100.125.200.49</code>), связывающая серверы в США и Европе без открытия портов во внешний интернет.</li>
+</ul>
+</li>
+<li><strong>Векторная база данных (Qdrant / Хранилище эмбеддингов):</strong>
+<ul>
+<li>Быстрый семантический поиск, размещенный на высокоскоростном NVMe-диске Франкфурта для хранения постоянной памяти диалогов.</li>
+</ul>
+</li>
+<li><strong>Периферийный шлюз Caddy:</strong>
+<ul>
+<li>Автоматическая поддержка HTTP/2, HTTP/3 (QUIC) и бесшовный выпуск сертификатов TLS 1.3 через Let’s Encrypt ACME.</li>
+</ul>
+</li>
+</ol>
+<h3 id="экран-4-хронологический-лог-установки-и-голосовое-сопровождение">Экран 4: Хронологический лог установки и голосовое сопровождение<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#экран-4-хронологический-лог-установки-и-голосовое-сопровождение" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Построчный хронологический лог:</strong> Детализированная летопись развертывания проекта от инициализации виртуальных машин до финальной привязки доменов.</li>
+<li><strong>Голосовое воспроизведение отчета:</strong>
+<ul>
+<li>Встроенный механизм синтеза речи на базе <strong>Web Speech API (<code>SpeechSynthesis</code>)</strong>.</li>
+<li>Интеллектуальный выбор наиболее естественного европейского профиля озвучки (Google, Yandex, Elena, Tatyana).</li>
+<li>Интерактивное управление одной кнопкой: <code>🔊 Озвучить отчет голосом</code> / <code>⏹ Остановить озвучку</code> с пульсирующим эквалайзером во время проигрывания.</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="3-хронология-активации-системы-начиная-с-0001-utc3">3. Хронология активации системы (начиная с 00:01 UTC+3)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-хронология-активации-системы-начиная-с-0001-utc3" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Время (UTC+3)</th><th style="text-align:left;">Этап</th><th style="text-align:left;">Описание действия / события</th><th style="text-align:left;">Статус</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>00:01:00</strong></td><td style="text-align:left;"><strong>Инициализация кластера</strong></td><td style="text-align:left;">Развернута виртуальная машина <code>evabot-agent-vm</code> в <code>europe-west3-a</code> (8 vCPU Sapphire Rapids, 32 GB RAM, два NVMe диска по 50 GB).</td><td style="text-align:left;">🟢 Выполнено</td></tr><tr><td style="text-align:left;"><strong>00:05:30</strong></td><td style="text-align:left;"><strong>Базовая настройка ОС</strong></td><td style="text-align:left;">Установка Debian 12 Bookworm, оптимизация сетевого стека ядра, базовый харденинг безопасности.</td><td style="text-align:left;">🟢 Выполнено</td></tr><tr><td style="text-align:left;"><strong>00:15:00</strong></td><td style="text-align:left;"><strong>Монтирование диска данных</strong></td><td style="text-align:left;">Второй NVMe-диск 50 GB (<code>evabot-agent-data</code>) отформатирован в ext4 и смонтирован в <code>/mnt/data</code>.</td><td style="text-align:left;">🟢 Выполнено</td></tr><tr><td style="text-align:left;"><strong>07:28:15</strong></td><td style="text-align:left;"><strong>Верификация авторизации</strong></td><td style="text-align:left;">Подтвержден активный аккаунт GCP <code>evabot.online@gmail.com</code> в проекте <code>evabot-agent-server</code>.</td><td style="text-align:left;">🟢 Выполнено</td></tr><tr><td style="text-align:left;"><strong>07:40:00</strong></td><td style="text-align:left;"><strong>Создание микросервера</strong></td><td style="text-align:left;">Создан инстанс <code>evaline-micro-vm</code> в регионе <code>us-central1-a</code> по программе GCP Always Free.</td><td style="text-align:left;">🟢 Выполнено</td></tr><tr><td style="text-align:left;"><strong>08:30:00</strong></td><td style="text-align:left;"><strong>Апгрейд ОС (Debian 13)</strong></td><td style="text-align:left;">Выполнено бесшовное обновление дистрибутива <code>evaline-micro-vm</code> с Debian 12 до Debian 13 (Trixie 13.6).</td><td style="text-align:left;">🟢 Выполнено</td></tr><tr><td style="text-align:left;"><strong>10:39:20</strong></td><td style="text-align:left;"><strong>Активация домена и SSL</strong></td><td style="text-align:left;">Подтверждено делегирование DNS A-записи (<code>136.114.26.252</code>). Caddy автоматически выпустил TLS 1.3 сертификат Let’s Encrypt для <code>evabot.online</code> и <code>www.evabot.online</code> (HTTP/2 и HTTP/3 активны).</td><td style="text-align:left;">🟢 Выполнено</td></tr><tr><td style="text-align:left;"><strong>11:00:00</strong></td><td style="text-align:left;"><strong>Настройка ячеистой сети</strong></td><td style="text-align:left;">Узел Tailscale развернут на адресе <code>100.125.200.49</code>, защитив внутренний сокет-мост между Айовой и Франкфуртом.</td><td style="text-align:left;">🟢 Выполнено</td></tr><tr><td style="text-align:left;"><strong>13:50:00</strong></td><td style="text-align:left;"><strong>Конфигурация ядра ИИ</strong></td><td style="text-align:left;">Подключены ключи Google AI Pro; диалоговый конвейер Gemini протестирован в режиме реального времени.</td><td style="text-align:left;">🟢 Выполнено</td></tr><tr><td style="text-align:left;"><strong>14:15:00</strong></td><td style="text-align:left;"><strong>Связывание мессенджеров</strong></td><td style="text-align:left;">Вебхуки Telegram, WhatsApp, Viber и Facebook Messenger скоммутированы с шиной сообщений EvaBot.</td><td style="text-align:left;">🟢 Выполнено</td></tr><tr><td style="text-align:left;"><strong>14:20:00</strong></td><td style="text-align:left;"><strong>Старт EvaBot v0.0.1 Demo</strong></td><td style="text-align:left;">Развертывание 4-экранного интерактивного интерфейса в директорию <code>/var/www/evabot.online/index.html</code>.</td><td style="text-align:left;">🟢 Работает</td></tr></tbody></table></div>
+<hr/>
+<h2 id="4-финансовый-анализ-и-операционная-эффективность">4. Финансовый анализ и операционная эффективность<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-финансовый-анализ-и-операционная-эффективность" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Все финансовые расчеты и оценки стоимости инфраструктуры приведены исключительно в <strong>долларах США (USD $)</strong> и <strong>евро (EUR €)</strong>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Компонент инфраструктуры</th><th style="text-align:left;">Спецификация и регион</th><th style="text-align:left;">Стоимость в месяц (USD)</th><th style="text-align:left;">Стоимость в месяц (EUR)</th><th style="text-align:left;">Тарифная категория</th></tr></thead><tbody><tr><td style="text-align:left;"><strong><code>evaline-micro-vm</code></strong></td><td style="text-align:left;"><code>e2-micro</code>, 2 vCPU, 1 GB RAM, 20 GB Disk (<code>us-central1-a</code>)</td><td style="text-align:left;"><strong>$0.00</strong></td><td style="text-align:left;"><strong>€0.00</strong></td><td style="text-align:left;">GCP Always Free Tier</td></tr><tr><td style="text-align:left;"><strong><code>evabot-agent-vm</code> (Compute)</strong></td><td style="text-align:left;"><code>c3-standard-8</code>, 8 vCPU Sapphire Rapids, 32 GB RAM (<code>europe-west3-a</code>)</td><td style="text-align:left;">~<code class="language-math math-inline">270.00 – </code>295.00</td><td style="text-align:left;">~€250.00 – €272.00</td><td style="text-align:left;">Standard Compute Tier</td></tr><tr><td style="text-align:left;"><strong>Диски NVMe высокой скорости</strong></td><td style="text-align:left;">100 GB NVMe (50 GB OS + 50 GB Data Disk)</td><td style="text-align:left;">~<code class="language-math math-inline">17.00 – </code>20.00</td><td style="text-align:left;">~€15.50 – €18.50</td><td style="text-align:left;">Persistent Disk NVMe Tier</td></tr><tr><td style="text-align:left;"><strong>Исходящий трафик (Free Tier)</strong></td><td style="text-align:left;">Первый 1 GB глобального трафика + внутренний GCP трафик</td><td style="text-align:left;"><strong>$0.00</strong></td><td style="text-align:left;"><strong>€0.00</strong></td><td style="text-align:left;">Включенный бесплатный лимит</td></tr><tr><td style="text-align:left;"><strong>SSL-сертификаты Let’s Encrypt</strong></td><td style="text-align:left;">Автоматические сертификаты TLS 1.3 для всех доменов</td><td style="text-align:left;"><strong>$0.00</strong></td><td style="text-align:left;"><strong>€0.00</strong></td><td style="text-align:left;">Открытый протокол ACME</td></tr><tr><td style="text-align:left;"><strong>Совокупная инфраструктура</strong></td><td style="text-align:left;"><strong>10 vCPU / 33 GB RAM / 120 GB Хранилища / Мультирегион</strong></td><td style="text-align:left;"><strong>~<code class="language-math math-inline">287.00 – </code>315.00</strong></td><td style="text-align:left;"><strong>~€265.50 – €290.50</strong></td><td style="text-align:left;"><strong>Сводная стоимость</strong></td></tr></tbody></table></div>
+<h3 id="ключевые-преимущества-эффективности">Ключевые преимущества эффективности:<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ключевые-преимущества-эффективности" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Нулевая стоимость фронтенда:</strong> Периферийный прокси, принимающий запросы из интернета, проводящий TLS-рукопожатия и отдающий статику, обходится в <strong>$0.00 / месяц</strong>, изолируя основной вычислительный сервер от публичных атак.</li>
+<li><strong>Высокая вычислительная готовность:</strong> Основной сервер во Франкфурте (<code>c3-standard-8</code>) демонстрирует минимальную нагрузку (<code>0.00</code>, 96.5% свободной памяти) и полностью готов к масштабированию десятков параллельных автономных агентов.</li>
+</ul>
+<hr/>
+<h2 id="5-верификация-и-статус-системы">5. Верификация и статус системы<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-верификация-и-статус-системы" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Демонстрационный релиз EvaBot v0.0.1 полностью функционален и доступен по адресам:</p>
+<ul>
+<li>Основной адрес: <code>https://evabot.online</code></li>
+<li>Дополнительный псевдоним: <code>https://www.evabot.online</code></li>
+<li>Код ответа сервера: <code>HTTP/2 200 OK</code> (с заголовком <code>alt-svc: h3=&quot;:443&quot;</code>)</li>
+<li>Общий статус: <strong>В сети, полностью функционирует</strong></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Вид графа</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-29" aria-expanded="true"><h3>Оглавление</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#спецификация-релиза-и-архитектуры-evabot-v001-demo" data-for="спецификация-релиза-и-архитектуры-evabot-v001-demo">Спецификация релиза и архитектуры EvaBot v0.0.1 Demo</a></li><li class="depth-1"><a href="#исполнительное-резюме" data-for="исполнительное-резюме">Исполнительное резюме</a></li><li class="depth-1"><a href="#1-возможности-интеграции-с-google-ai-pro-и-gemini" data-for="1-возможности-интеграции-с-google-ai-pro-и-gemini">1. Возможности интеграции с Google AI Pro и Gemini</a></li><li class="depth-2"><a href="#ключевые-архитектурные-преимущества" data-for="ключевые-архитектурные-преимущества">Ключевые архитектурные преимущества:</a></li><li class="depth-1"><a href="#2-архитектура-4-экранного-интерфейса-evabot-v001" data-for="2-архитектура-4-экранного-интерфейса-evabot-v001">2. Архитектура 4-экранного интерфейса EvaBot v0.0.1</a></li><li class="depth-2"><a href="#экран-1-интерактивный-gemini-ai-чат-с-evabot" data-for="экран-1-интерактивный-gemini-ai-чат-с-evabot">Экран 1: Интерактивный Gemini AI Чат с EvaBot</a></li><li class="depth-2"><a href="#экран-2-анимированный-дашборд-реальных-физических-и-виртуальных-метрик" data-for="экран-2-анимированный-дашборд-реальных-физических-и-виртуальных-метрик">Экран 2: Анимированный дашборд реальных физических и виртуальных метрик</a></li><li class="depth-2"><a href="#экран-3-экосистема-подключенных-модулей-и-приложений" data-for="экран-3-экосистема-подключенных-модулей-и-приложений">Экран 3: Экосистема подключенных модулей и приложений</a></li><li class="depth-2"><a href="#экран-4-хронологический-лог-установки-и-голосовое-сопровождение" data-for="экран-4-хронологический-лог-установки-и-голосовое-сопровождение">Экран 4: Хронологический лог установки и голосовое сопровождение</a></li><li class="depth-1"><a href="#3-хронология-активации-системы-начиная-с-0001-utc3" data-for="3-хронология-активации-системы-начиная-с-0001-utc3">3. Хронология активации системы (начиная с 00:01 UTC+3)</a></li><li class="depth-1"><a href="#4-финансовый-анализ-и-операционная-эффективность" data-for="4-финансовый-анализ-и-операционная-эффективность">4. Финансовый анализ и операционная эффективность</a></li><li class="depth-2"><a href="#ключевые-преимущества-эффективности" data-for="ключевые-преимущества-эффективности">Ключевые преимущества эффективности:</a></li><li class="depth-1"><a href="#5-верификация-и-статус-системы" data-for="5-верификация-и-статус-системы">5. Верификация и статус системы</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Создано с помощью <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="../../postscript-3eea7814.js" type="module" data-persist="true"></script></html>

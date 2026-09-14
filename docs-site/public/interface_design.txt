@@ -1,0 +1,32 @@
+========================================
+[ EvaBot Online ]               [≡] Menu
+========================================
+Model: GPT-4o | Tokens: 1.2k | Cost: $0.02
+----------------------------------------
+> User:
+How can I optimize my workflow?
+
+> EvaBot:
+I recommend evaluating your daily 
+tasks and utilizing automation scripts.
+----------------------------------------
+[ Type your message here...            ]
+[ Send ]                       [ + Add ]
+========================================
+
+--- Screen 2: Settings / Menu ---
+
+========================================
+[ < Back ]                     Settings
+========================================
+[ Model Selection ▼ ]
+  * GPT-4o ($0.01/1k)
+  * Claude 3.5 Sonnet ($0.015/1k)
+
+[ System Prompt ▼ ]
+[ Temperature: 0.7 ──────────○── ]
+
+Session Statistics:
+- Tokens Used: 1,250
+- Total Session Cost: $0.02
+========================================

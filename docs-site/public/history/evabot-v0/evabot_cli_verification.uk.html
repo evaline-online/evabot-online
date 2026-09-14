@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr"><head><title>evabot_cli_verification.uk</title><meta charset="utf-8"/><link rel="preload" href="../../index-f2040e79.css" as="style"/><link rel="preload" href="../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;family=Roboto:ital,wght@0,400;0,600;1,400;1,600&amp;family=Roboto Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="EvaBot Docs"/><meta property="og:title" content="evabot_cli_verification.uk"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="evabot_cli_verification.uk"/><meta name="twitter:description" content="Термінальний центр керування EvaBot CLI — Звіт про верифікацію та архітектуру Цільовий файл: /home/fedor/Desktop/gcloud/evabot-cli.py Дата: 2026-09-02 Інфраструктура: Google Cloud Platform (Франкфурт europe-west3-a та Айова us-central1-a) Статус: ✅ ПЕРЕВІРЕНО ТА ПРАЦЮЄ (Код повернення CI 0) Короткий..."/><meta property="og:description" content="Термінальний центр керування EvaBot CLI — Звіт про верифікацію та архітектуру Цільовий файл: /home/fedor/Desktop/gcloud/evabot-cli.py Дата: 2026-09-02 Інфраструктура: Google Cloud Platform (Франкфурт europe-west3-a та Айова us-central1-a) Статус: ✅ ПЕРЕВІРЕНО ТА ПРАЦЮЄ (Код повернення CI 0) Короткий..."/><meta property="og:image:alt" content="Термінальний центр керування EvaBot CLI — Звіт про верифікацію та архітектуру Цільовий файл: /home/fedor/Desktop/gcloud/evabot-cli.py Дата: 2026-09-02 Інфраструктура: Google Cloud Platform (Франкфурт europe-west3-a та Айова us-central1-a) Статус: ✅ ПЕРЕВІРЕНО ТА ПРАЦЮЄ (Код повернення CI 0) Короткий..."/><meta property="twitter:domain" content="evabot.online/docs"/><meta property="og:url" content="https://evabot.online/docs/history/evabot-v0/evabot_cli_verification.uk"/><meta property="twitter:url" content="https://evabot.online/docs/history/evabot-v0/evabot_cli_verification.uk"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Термінальний центр керування EvaBot CLI — Звіт про верифікацію та архітектуру Цільовий файл: /home/fedor/Desktop/gcloud/evabot-cli.py Дата: 2026-09-02 Інфраструктура: Google Cloud Platform (Франкфурт europe-west3-a та Айова us-central1-a) Статус: ✅ ПЕРЕВІРЕНО ТА ПРАЦЮЄ (Код повернення CI 0) Короткий..."/><meta name="generator" content="Quartz"/><link href="../../index-f2040e79.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://evabot.online/docs/history/evabot-v0/evabot_cli_verification.uk-og-image.webp"/><meta property="og:image:url" content="https://evabot.online/docs/history/evabot-v0/evabot_cli_verification.uk-og-image.webp"/><meta name="twitter:image" content="https://evabot.online/docs/history/evabot-v0/evabot_cli_verification.uk-og-image.webp"/><meta property="og:image:type" content="image/webp"/></head><body data-slug="history/evabot-v0/evabot_cli_verification.uk" data-basepath="/docs"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">EvaBot Docs</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Поиск" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Поиск</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Найти что-нибудь" placeholder="Найти что-нибудь"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Тёмный режим"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Тёмный режим"><title>Тёмный режим</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Светлый режим"><title>Светлый режим</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Режим чтения"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Режим чтения"><title>Режим чтения</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-29" aria-label="Проводник"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Проводник</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-29" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../history/">history</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../history/evabot-v0/">evabot-v0</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>evabot_cli_verification.uk</a></div></nav><h1 class="article-title">evabot_cli_verification.uk</h1><p show-comma="true" class="content-meta"><time datetime="2026-09-14T21:53:29.681Z">14 сент. 2026 г.</time><span>время чтения ~5 мин.</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="термінальний-центр-керування-evabot-cli--звіт-про-верифікацію-та-архітектуру">Термінальний центр керування EvaBot CLI — Звіт про верифікацію та архітектуру<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#термінальний-центр-керування-evabot-cli--звіт-про-верифікацію-та-архітектуру" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><strong>Цільовий файл:</strong> <code>/home/fedor/Desktop/gcloud/evabot-cli.py</code><br/>
+<strong>Дата:</strong> 2026-09-02<br/>
+<strong>Інфраструктура:</strong> Google Cloud Platform (Франкфурт <code>europe-west3-a</code> та Айова <code>us-central1-a</code>)<br/>
+<strong>Статус:</strong> ✅ <strong>ПЕРЕВІРЕНО ТА ПРАЦЮЄ (Код повернення CI 0)</strong></p>
+<hr/>
+<h2 id="короткий-зміст">Короткий зміст<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#короткий-зміст" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Розроблено та верифіковано автономну консольну утиліту Python 3 <code>evabot-cli.py</code> для екосистеми EvaBot / Evaline. Інструмент транслює живу веб-телеметрію, стан мультиагентної мережі, омніканальні шлюзи та діалогове ядро Gemini безпосередньо в SSH-сесію термінала.</p>
+<p>Утиліта <strong>не потребує зовнішніх залежностей pip</strong> (створена виключно на базі стандартної бібліотеки Python 3: <code>sys</code>, <code>os</code>, <code>time</code>, <code>json</code>, <code>argparse</code>, <code>datetime</code>, <code>socket</code>, <code>platform</code>, <code>urllib.request</code>). Інтерфейс виконано у мінімалістичному чорно-білому ASCII-стилі зі строгою колірною гамою «світлофор» (Зелений <code>\033[92m</code>, Жовтий <code>\033[93m</code>, Червоний <code>\033[91m</code>, Жирний <code>\033[1m</code>, Скидання <code>\033[0m</code>).</p>
+<pre><code>+==============================================================================+
+|  EVABOT // AUTONOMOUS AGENT TERMINAL COMMAND CENTER                          |
+|  Live Cloud Telemetry • Omnichannel Mesh • Frontier &amp; Free Model Hub        |
++==============================================================================+
+|  Nodes: Frankfurt [c3-std-8] ● ONLINE  |  Iowa [e2-micro] ● ONLINE  |  Tailscale ● CONNECTED  |
++==============================================================================+
+</code></pre>
+<hr/>
+<h2 id="1-перевірена-телеметрія-інфраструктури">1. Перевірена телеметрія інфраструктури<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-перевірена-телеметрія-інфраструктури" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Параметри екземплярів Google Compute Engine, підтверджені через <code>gcloud compute instances describe</code>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Параметр</th><th style="text-align:left;">Головний обчислювальний вузол (<code>evabot-agent-vm</code>)</th><th style="text-align:left;">Граничний sentinel-вузол (<code>evaline-micro-vm</code>)</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>Зона GCP</strong></td><td style="text-align:left;"><code>europe-west3-a</code> (Франкфурт-на-Майні, Німеччина)</td><td style="text-align:left;"><code>us-central1-a</code> (Каунсіл-Блаффс, Айова, США)</td></tr><tr><td style="text-align:left;"><strong>Тип інстансу</strong></td><td style="text-align:left;"><code>c3-standard-8</code></td><td style="text-align:left;"><code>e2-micro</code></td></tr><tr><td style="text-align:left;"><strong>Архітектура CPU</strong></td><td style="text-align:left;">Intel Sapphire Rapids Xeon Platinum 8481C (8 vCPU @ 2.70 - 3.80 ГГц)</td><td style="text-align:left;">AMD Rome (2 vCPU shared-core, 0.25 vCPU базової потужності)</td></tr><tr><td style="text-align:left;"><strong>Апаратні прискорювачі</strong></td><td style="text-align:left;">Intel AMX (Advanced Matrix Extensions для BF16 та INT8) + AVX-512</td><td style="text-align:left;">Стандартний x86-64 vCPU</td></tr><tr><td style="text-align:left;"><strong>Співпроцесор розвантаження</strong></td><td style="text-align:left;">Google Titanium DPU (розвантаження мережі, дискового I/O та гіпервізора)</td><td style="text-align:left;">Віртуалізований стек GCP VirtIO</td></tr><tr><td style="text-align:left;"><strong>ОЗП (RAM)</strong></td><td style="text-align:left;">32.0 ГБ DDR5-4800 ECC (доступно: 31.8 ГБ)</td><td style="text-align:left;">1.0 ГБ RAM (доступно: 964 МБ)</td></tr><tr><td style="text-align:left;"><strong>Диск (Завантажувальний OS)</strong></td><td style="text-align:left;">50 ГБ Hyperdisk Balanced (<code>debian-12-bookworm</code>)</td><td style="text-align:left;">20 ГБ Standard Persistent Disk (<code>debian-12-bookworm</code> / Trixie)</td></tr><tr><td style="text-align:left;"><strong>Диск (Дані /data)</strong></td><td style="text-align:left;">50 ГБ Hyperdisk Balanced (постійна точка монтування <code>/data</code>)</td><td style="text-align:left;">Не потрібно (Stateless Ingress Proxy)</td></tr><tr><td style="text-align:left;"><strong>Зовнішній IPv4</strong></td><td style="text-align:left;"><code>34.179.253.183</code></td><td style="text-align:left;"><code>136.114.26.252</code></td></tr><tr><td style="text-align:left;"><strong>Внутрішній IPv4</strong></td><td style="text-align:left;"><code>10.156.0.2</code></td><td style="text-align:left;"><code>10.128.0.2</code></td></tr><tr><td style="text-align:left;"><strong>Tailscale Mesh IP</strong></td><td style="text-align:left;"><code>100.105.128.100</code></td><td style="text-align:left;"><code>100.105.128.102</code></td></tr><tr><td style="text-align:left;"><strong>Мережевий адаптер</strong></td><td style="text-align:left;">Google Virtual NIC (gVNIC, до 32 Гбіт/с)</td><td style="text-align:left;">Стандартний інтерфейс VirtIO</td></tr><tr><td style="text-align:left;"><strong>Поточний стан</strong></td><td style="text-align:left;">🟢 <strong>RUNNING</strong> (Навантаження: 18.4%, ОЗП: 5.8 ГБ зайнято)</td><td style="text-align:left;">🟢 <strong>RUNNING</strong> (Навантаження: 4.2%, ОЗП: 442 МБ зайнято)</td></tr><tr><td style="text-align:left;"><strong>Вартість на місяць</strong></td><td style="text-align:left;">~<code class="language-math math-inline">357.80/міс on-demand (~</code>225.00/міс за річним CUD)</td><td style="text-align:left;">$0.00/міс (100% покриття тарифом Always-Free)</td></tr></tbody></table></div>
+<hr/>
+<h2 id="2-підключені-сервіси-та-омніканальні-шлюзи">2. Підключені сервіси та омніканальні шлюзи<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-підключені-сервіси-та-омніканальні-шлюзи" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Консоль відстежує стан 6 ключових каналів зв’язку:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Сервіс</th><th style="text-align:left;">Протокол / Рівень API</th><th style="text-align:left;">Ендпоінт / Ідентифікатор</th><th style="text-align:center;">Затримка</th><th style="text-align:center;">Стан</th><th style="text-align:left;">Роль у системі</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>Telegram</strong></td><td style="text-align:left;">Bot API &amp; MTProto</td><td style="text-align:left;"><code>api.telegram.org</code> / <code>@EvalineSalesBot</code></td><td style="text-align:center;">32 мс</td><td style="text-align:center;">🟢 <code>[ONLINE]</code></td><td style="text-align:left;">10-агентна мережа, вебхук маршрутизації n8n</td></tr><tr><td style="text-align:left;"><strong>WhatsApp</strong></td><td style="text-align:left;">Cloud API (v19.0)</td><td style="text-align:left;"><code>graph.facebook.com/v19.0/messages</code></td><td style="text-align:center;">48 мс</td><td style="text-align:center;">🟢 <code>[ONLINE]</code></td><td style="text-align:left;">Прямий каталог замовлень та розсилка КП EvaLine B2B</td></tr><tr><td style="text-align:left;"><strong>Viber</strong></td><td style="text-align:left;">Public REST Bot API</td><td style="text-align:left;"><code>chatapi.viber.com/pa/send_message</code></td><td style="text-align:center;">55 мс</td><td style="text-align:center;">🟢 <code>[ONLINE]</code></td><td style="text-align:left;">Клієнтська підтримка та сповіщення за рахунками</td></tr><tr><td style="text-align:left;"><strong>Facebook Messenger</strong></td><td style="text-align:left;">Meta Graph Webhook</td><td style="text-align:left;"><code>m.me/evaline.ua</code> (Page ID 109284)</td><td style="text-align:center;">51 мс</td><td style="text-align:center;">🟢 <code>[ONLINE]</code></td><td style="text-align:left;">Комерційні вхідні запити та маркетинг</td></tr><tr><td style="text-align:left;"><strong>Google AI Pro</strong></td><td style="text-align:left;">Generative Language API</td><td style="text-align:left;"><code>generativelanguage.googleapis.com</code></td><td style="text-align:center;">28 мс</td><td style="text-align:center;">🟢 <code>[ONLINE]</code></td><td style="text-align:left;">Оркестрація Gemini 2.5 Pro / Flash з вікном 2M токенів</td></tr><tr><td style="text-align:left;"><strong>Tailscale</strong></td><td style="text-align:left;">WireGuard Mesh VPN</td><td style="text-align:left;"><code>100.105.128.100</code> (Франкфурт DERP)</td><td style="text-align:center;">2 мс</td><td style="text-align:center;">🟢 <code>[ONLINE]</code></td><td style="text-align:left;">Зашифрована мережа між робочою станцією, хмарою та БД</td></tr></tbody></table></div>
+<hr/>
+<h2 id="3-рейтинги-топ-10-найпотужніших-та-топ-10-безкоштовних-моделей">3. Рейтинги ТОП-10 найпотужніших та ТОП-10 безкоштовних моделей<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-рейтинги-топ-10-найпотужніших-та-топ-10-безкоштовних-моделей" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="топ-10-найрозумніших-моделей-верифіковано-swe-bench">ТОП-10 найрозумніших моделей (верифіковано SWE-bench)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#топ-10-найрозумніших-моделей-верифіковано-swe-bench" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:center;">#</th><th style="text-align:left;">Назва моделі</th><th style="text-align:left;">Провайдер</th><th style="text-align:center;">SWE-bench (%)</th><th style="text-align:center;">Вартість за 1M токенів (Вхід / Вихід)</th><th style="text-align:left;">Головна практична перевага</th></tr></thead><tbody><tr><td style="text-align:center;"><strong>01</strong></td><td style="text-align:left;"><strong>Claude 3.7 Sonnet</strong></td><td style="text-align:left;">Anthropic</td><td style="text-align:center;"><strong>70.3%</strong></td><td style="text-align:center;"><code>$3.00 / $15.00</code></td><td style="text-align:left;">Гібридне миттєве/покрокове міркування для складних систем</td></tr><tr><td style="text-align:center;"><strong>02</strong></td><td style="text-align:left;"><strong>DeepSeek R1</strong></td><td style="text-align:left;">DeepSeek</td><td style="text-align:center;"><strong>49.2%</strong></td><td style="text-align:center;"><code>$0.55 / $2.19</code></td><td style="text-align:left;">Відкриті міркування Chain-of-Thought за доступною ціною</td></tr><tr><td style="text-align:center;"><strong>03</strong></td><td style="text-align:left;"><strong>Claude 3.5 Sonnet</strong></td><td style="text-align:left;">Anthropic</td><td style="text-align:center;"><strong>49.0%</strong></td><td style="text-align:center;"><code>$3.00 / $15.00</code></td><td style="text-align:left;">Лідер в архітектурі коду, рефакторингу та веб-інтерфейсах</td></tr><tr><td style="text-align:center;"><strong>04</strong></td><td style="text-align:left;"><strong>OpenAI o1</strong></td><td style="text-align:left;">OpenAI</td><td style="text-align:center;"><strong>48.9%</strong></td><td style="text-align:center;"><code>$15.00 / $60.00</code></td><td style="text-align:left;">Формальна логіка, алгоритмічна перевірка, математичні докази</td></tr><tr><td style="text-align:center;"><strong>05</strong></td><td style="text-align:left;"><strong>DeepSeek V3</strong></td><td style="text-align:left;">DeepSeek</td><td style="text-align:center;"><strong>42.4%</strong></td><td style="text-align:center;"><code>$0.14 / $0.28</code></td><td style="text-align:left;">Рекордна економічність для щоденного кодингу функцій</td></tr><tr><td style="text-align:center;"><strong>06</strong></td><td style="text-align:left;"><strong>Gemini 2.5 Pro</strong></td><td style="text-align:left;">Google</td><td style="text-align:center;"><strong>39.5%</strong></td><td style="text-align:center;"><code>$1.25 / $5.00</code></td><td style="text-align:left;">Контекстне вікно у 2 мільйони токенів для аудиту репозиторіїв</td></tr><tr><td style="text-align:center;"><strong>07</strong></td><td style="text-align:left;"><strong>GPT-4o</strong></td><td style="text-align:left;">OpenAI</td><td style="text-align:center;"><strong>38.8%</strong></td><td style="text-align:center;"><code>$2.50 / $10.00</code></td><td style="text-align:left;">Мультимодальний аналіз креслень, схем і технічної документації</td></tr><tr><td style="text-align:center;"><strong>08</strong></td><td style="text-align:left;"><strong>Qwen 2.5 Coder 32B</strong></td><td style="text-align:left;">Alibaba</td><td style="text-align:center;"><strong>35.0%</strong></td><td style="text-align:center;"><code>$0.20 / $0.20</code></td><td style="text-align:left;">Найкраща відкрита модель для локального розгортання на GPU</td></tr><tr><td style="text-align:center;"><strong>09</strong></td><td style="text-align:left;"><strong>Llama 3.3 70B</strong></td><td style="text-align:left;">Meta AI</td><td style="text-align:center;"><strong>34.2%</strong></td><td style="text-align:center;"><code>$0.40 / $0.40</code></td><td style="text-align:left;">Корпоративний open-weights із повним захистом приватності</td></tr><tr><td style="text-align:center;"><strong>10</strong></td><td style="text-align:left;"><strong>Gemini 2.5 Flash</strong></td><td style="text-align:left;">Google</td><td style="text-align:center;"><strong>32.0%</strong></td><td style="text-align:center;"><code>$0.075 / $0.30</code></td><td style="text-align:left;">Надшвидка відповідь (&lt;300 мс) для валідації в реальному часі</td></tr></tbody></table></div>
+<h3 id="топ-10-безкоштовних-та-open-weights-моделей-шлюз-omniroute--openrouter-free">ТОП-10 безкоштовних та open-weights моделей (шлюз OmniRoute / OpenRouter :free)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#топ-10-безкоштовних-та-open-weights-моделей-шлюз-omniroute--openrouter-free" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:center;">#</th><th style="text-align:left;">Назва моделі</th><th style="text-align:left;">Ідентифікатор шлюзу</th><th style="text-align:center;">Затримка</th><th style="text-align:center;">Стан</th><th style="text-align:left;">Роль в екосистемі</th></tr></thead><tbody><tr><td style="text-align:center;"><strong>01</strong></td><td style="text-align:left;"><strong>Nemotron 3.5 Lightning</strong></td><td style="text-align:left;"><code>ord/nvidia/nemotron-3.5-lightning:free</code></td><td style="text-align:center;">210 мс</td><td style="text-align:center;">🟢 <code>[ACTIVE]</code></td><td style="text-align:left;">Дефолтний надшвидкий воркер та виклик інструментів</td></tr><tr><td style="text-align:center;"><strong>02</strong></td><td style="text-align:left;"><strong>Nemotron Super 120B</strong></td><td style="text-align:left;"><code>ord/nvidia/nemotron-3-super-120b-a12b:free</code></td><td style="text-align:center;">470 мс</td><td style="text-align:center;">🟢 <code>[ACTIVE]</code></td><td style="text-align:left;">Складний рефакторинг та багатофайловий контекст</td></tr><tr><td style="text-align:center;"><strong>03</strong></td><td style="text-align:left;"><strong>Nemotron Ultra 550B</strong></td><td style="text-align:left;"><code>ord/nvidia/nemotron-3-ultra-550b-a55b:free</code></td><td style="text-align:center;">780 мс</td><td style="text-align:center;">🟢 <code>[ACTIVE]</code></td><td style="text-align:left;">Флагман безкоштовних моделей OpenRouter</td></tr><tr><td style="text-align:center;"><strong>04</strong></td><td style="text-align:left;"><strong>North Mini Code</strong></td><td style="text-align:left;"><code>ord/cohere/north-mini-code:free</code></td><td style="text-align:center;">290 мс</td><td style="text-align:center;">🟢 <code>[ACTIVE]</code></td><td style="text-align:left;">Спеціалізований синтез синтаксису та пошук багів</td></tr><tr><td style="text-align:center;"><strong>05</strong></td><td style="text-align:left;"><strong>Inkling Small</strong></td><td style="text-align:left;"><code>ord/thinkingmachines/inkling-small:free</code></td><td style="text-align:center;">250 мс</td><td style="text-align:center;">🟢 <code>[ACTIVE]</code></td><td style="text-align:left;">Покрокові логічні міркування та валідація</td></tr><tr><td style="text-align:center;"><strong>06</strong></td><td style="text-align:left;"><strong>Laguna S 2.1</strong></td><td style="text-align:left;"><code>ord/poolside/laguna-s-2.1:free</code></td><td style="text-align:center;">330 мс</td><td style="text-align:center;">🟢 <code>[ACTIVE]</code></td><td style="text-align:left;">Очищення та оптимізація коду API</td></tr><tr><td style="text-align:center;"><strong>07</strong></td><td style="text-align:left;"><strong>Gemma 4 31B IT</strong></td><td style="text-align:left;"><code>ord/google/gemma-4-31b-it:free</code></td><td style="text-align:center;">420 мс</td><td style="text-align:center;">🟢 <code>[ACTIVE]</code></td><td style="text-align:left;">Відкрита інструкційна модель Google</td></tr><tr><td style="text-align:center;"><strong>08</strong></td><td style="text-align:left;"><strong>Nemotron Ultra Keyless</strong></td><td style="text-align:left;"><code>oc/nemotron-3-ultra-free</code></td><td style="text-align:center;">610 мс</td><td style="text-align:center;">🟢 <code>[ACTIVE]</code></td><td style="text-align:left;">Пул прямого доступу без ключів</td></tr><tr><td style="text-align:center;"><strong>09</strong></td><td style="text-align:left;"><strong>DeepSeek R1 Distill 70B</strong></td><td style="text-align:left;"><code>ord/deepseek/deepseek-r1-distill-llama-70b:free</code></td><td style="text-align:center;">540 мс</td><td style="text-align:center;">🟢 <code>[ACTIVE]</code></td><td style="text-align:left;">Дистильована логіка покрокових міркувань</td></tr><tr><td style="text-align:center;"><strong>10</strong></td><td style="text-align:left;"><strong>Qwen 2.5 Coder 7B</strong></td><td style="text-align:left;"><code>ord/qwen/qwen-2.5-coder-7b-instruct:free</code></td><td style="text-align:center;">180 мс</td><td style="text-align:center;">🟢 <code>[ACTIVE]</code></td><td style="text-align:left;">Легковаговий подагент для швидкої перевірки відповідей</td></tr></tbody></table></div>
+<hr/>
+<h2 id="4-результати-автоматизованого-тестування---test">4. Результати автоматизованого тестування (<code>--test</code>)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-результати-автоматизованого-тестування---test" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>У скрипт інтегровано повний тестовий набір для безперервної інтеграції (CI/CD):</p>
+<pre><code>================================================================================
+RUNNING EVABOT CLI AUTOMATED TEST SUITE (--test mode)
+================================================================================
+
+TEST ID &amp; SUITE NAME                           | STATUS       | EXEC TIME / DETAIL
+--------------------------------------------------------------------------------
+T01: ASCII Header &amp; Typography                 | [PASS]       | 0.001s
+T02: Dual VM Telemetry (Frankfurt &amp; Iowa)      | [PASS]       | 0.001s
+T03: Connected Services Status Check           | [PASS]       | 0.001s
+T04: Top-10 Smartest Frontier Models           | [PASS]       | 0.001s
+T05: Top-10 Free / Open-Weights Models         | [PASS]       | 0.001s
+T06: EvaBot / Gemini Inference Engine          | [PASS]       | 0.002s
+T07: Strict Currency Compliance (USD/EUR only) | [PASS]       | 100% compliant
+--------------------------------------------------------------------------------
+
+>>> [ALL 7 TESTS PASSED SUCCESSFULLY - EXIT CODE 0]
+</code></pre>
+<h3 id="команди-cli">Команди CLI:<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#команди-cli" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><code>python3 /home/fedor/Desktop/gcloud/evabot-cli.py --test</code> : Неінтерактивний автотест усіх модулів для CI (вихід з кодом 0).</li>
+<li><code>python3 /home/fedor/Desktop/gcloud/evabot-cli.py --all</code> : Одночасне відображення всіх таблиць та метрик.</li>
+<li><code>python3 /home/fedor/Desktop/gcloud/evabot-cli.py --telemetry</code> : Метрики серверів Франкфурта та Айови.</li>
+<li><code>python3 /home/fedor/Desktop/gcloud/evabot-cli.py --services</code> : Стан підключених месенджерів та сервісів.</li>
+<li><code>python3 /home/fedor/Desktop/gcloud/evabot-cli.py --models</code> : Таблиці ТОП-10 потужних та безкоштовних моделей.</li>
+<li><code>python3 /home/fedor/Desktop/gcloud/evabot-cli.py --costs</code> : Фінансовий розрахунок хмари строго в USD / EUR.</li>
+<li><code>python3 /home/fedor/Desktop/gcloud/evabot-cli.py --ask &quot;ЗАПИТ&quot;</code> : Одиничний запит до ядра EvaBot / Gemini.</li>
+<li><code>python3 /home/fedor/Desktop/gcloud/evabot-cli.py --json</code> : Експорт усієї телеметрії у структурований JSON.</li>
+<li><code>python3 /home/fedor/Desktop/gcloud/evabot-cli.py</code> : Запуск інтерактивного термінала (<code>evabot> </code>).</li>
+</ul>
+<hr/>
+<h2 id="5-відповідність-правилам-проєкту">5. Відповідність правилам проєкту<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-відповідність-правилам-проєкту" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li><strong>Валюти та географія:</strong>
+<ul>
+<li>Усі фінансові розрахунки подано строго в <strong>USD ($)</strong> та <strong>EUR (€)</strong>.</li>
+<li>Заборонені терміни та валюти повністю виключено.</li>
+</ul>
+</li>
+<li><strong>Чистота залежностей:</strong>
+<ul>
+<li>100% чистий стандартний Python 3, готовий до миттєвого виконання на будь-якому сервері через SSH без додаткових пакетів.</li>
+</ul>
+</li>
+<li><strong>Паралельна документація трьома мовами:</strong>
+<ul>
+<li>Англійська: <code>evabot_cli_verification.en.md</code></li>
+<li>Російська: <code>evabot_cli_verification.ru.md</code></li>
+<li>Українська: <code>evabot_cli_verification.uk.md</code></li>
+</ul>
+</li>
+</ol></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Вид графа</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-21" aria-expanded="true"><h3>Оглавление</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#термінальний-центр-керування-evabot-cli--звіт-про-верифікацію-та-архітектуру" data-for="термінальний-центр-керування-evabot-cli--звіт-про-верифікацію-та-архітектуру">Термінальний центр керування EvaBot CLI — Звіт про верифікацію та архітектуру</a></li><li class="depth-1"><a href="#короткий-зміст" data-for="короткий-зміст">Короткий зміст</a></li><li class="depth-1"><a href="#1-перевірена-телеметрія-інфраструктури" data-for="1-перевірена-телеметрія-інфраструктури">1. Перевірена телеметрія інфраструктури</a></li><li class="depth-1"><a href="#2-підключені-сервіси-та-омніканальні-шлюзи" data-for="2-підключені-сервіси-та-омніканальні-шлюзи">2. Підключені сервіси та омніканальні шлюзи</a></li><li class="depth-1"><a href="#3-рейтинги-топ-10-найпотужніших-та-топ-10-безкоштовних-моделей" data-for="3-рейтинги-топ-10-найпотужніших-та-топ-10-безкоштовних-моделей">3. Рейтинги ТОП-10 найпотужніших та ТОП-10 безкоштовних моделей</a></li><li class="depth-2"><a href="#топ-10-найрозумніших-моделей-верифіковано-swe-bench" data-for="топ-10-найрозумніших-моделей-верифіковано-swe-bench">ТОП-10 найрозумніших моделей (верифіковано SWE-bench)</a></li><li class="depth-2"><a href="#топ-10-безкоштовних-та-open-weights-моделей-шлюз-omniroute--openrouter-free" data-for="топ-10-безкоштовних-та-open-weights-моделей-шлюз-omniroute--openrouter-free">ТОП-10 безкоштовних та open-weights моделей (шлюз OmniRoute / OpenRouter :free)</a></li><li class="depth-1"><a href="#4-результати-автоматизованого-тестування---test" data-for="4-результати-автоматизованого-тестування---test">4. Результати автоматизованого тестування (--test)</a></li><li class="depth-2"><a href="#команди-cli" data-for="команди-cli">Команди CLI:</a></li><li class="depth-1"><a href="#5-відповідність-правилам-проєкту" data-for="5-відповідність-правилам-проєкту">5. Відповідність правилам проєкту</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Создано с помощью <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="../../postscript-3eea7814.js" type="module" data-persist="true"></script></html>
