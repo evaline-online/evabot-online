@@ -6,6 +6,29 @@ import { AddCommand } from '../../core/AddCommand.js';
 export function createKbRouter(): Router {
   const router = new Router();
 
+  const handleKbRoot = withErrorHandling(async (ctx) => {
+    const stats = knowledgeBase.getStats();
+    ctx.sendJson(200, {
+      name: 'EvaBot Knowledge Base API',
+      version: '1.0.0',
+      stats,
+      endpoints: {
+        'GET /api/kb': 'This endpoint',
+        'GET /api/kb/status': 'Backend status & stats',
+        'GET /api/kb/search?q=<query>&limit=<n>&language=<lang>&category=<cat>': 'Search documents',
+        'GET /api/kb/list?language=<lang>&category=<cat>': 'List all documents',
+        'POST /api/kb/backend {backend}': 'Switch backend (memory|json|sqlite|vector)',
+        'POST /api/kb/command {command}': 'Execute KB command',
+        'POST /api/kb/documents {title, content, source?, tags?}': 'Add document',
+        'POST /api/kb/link {url}': 'Fetch URL & add to KB',
+      },
+    });
+  });
+
+  // Handle both /api/kb and /api/kb/ (trailing slash)
+  router.get('/api/kb', handleKbRoot);
+  router.get('/api/kb/', handleKbRoot);
+
   router.get('/api/kb/status', withErrorHandling(async (ctx) => {
     const stats = knowledgeBase.getStats();
     const backends = knowledgeBase.getAvailableBackends();
@@ -67,8 +90,6 @@ export function createKbRouter(): Router {
     ctx.sendJson(200, { result });
   }));
 
-  // POST /api/kb/documents {title, content, source?, tags?}
-  //   → {ok, id} — adds a user document to KB (memory + SQLite FTS5 persist).
   router.post('/api/kb/documents', withErrorHandling(async (ctx) => {
     const body = await ctx.parseJsonBody();
     const title = typeof body.title === 'string' ? body.title : '';
@@ -83,8 +104,6 @@ export function createKbRouter(): Router {
     ctx.sendJson(200, result);
   }));
 
-  // POST /api/kb/link {url}
-  //   → {ok, id, chars} — fetch URL, strip HTML tags, add extracted text to KB.
   router.post('/api/kb/link', withErrorHandling(async (ctx) => {
     const body = await ctx.parseJsonBody();
     const url = typeof body.url === 'string' ? body.url : '';

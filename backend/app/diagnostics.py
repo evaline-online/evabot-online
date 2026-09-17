@@ -97,9 +97,7 @@ async def run_diagnostics(active_model_id: str = "gemini-3.8-flash") -> dict[str
             "server-side. Catalog, costs, voice config and diagnostics remain fully functional."
         )
     else:
-        auth_details = (
-            f"Resolved via {auth_source}. Service Account tokens active with zero manual key requirement."
-        )
+        auth_details = f"Resolved via {auth_source}. Service Account tokens active with zero manual key requirement."
     steps.append(
         {
             "id": "step-auth",

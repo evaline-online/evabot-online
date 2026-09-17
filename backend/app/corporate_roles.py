@@ -396,7 +396,9 @@ class KnowledgeBaseConnector:
         },
     ]
 
-    async def search(self, query: str, options: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    async def search(
+        self, query: str, options: dict[str, Any] | None = None
+    ) -> list[dict[str, Any]]:
         options = options or {}
         limit = int(options.get("limit", 5))
         min_score = float(options.get("minScore", 0.6))

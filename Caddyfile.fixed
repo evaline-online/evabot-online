@@ -1,3 +1,4 @@
+# DEPRECATED 2026-09-17 — актуальный конфиг: /etc/caddy/Caddyfile (micro) и ~/Desktop/gcloud/Caddyfile
 # EvaFace Caddyfile - Zero-load Edge Ingress with Business Tier
 # FIXED: Removed rate_limit directive (requires external module not in standard Caddy 2.11.4)
 

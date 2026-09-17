@@ -12,6 +12,7 @@ import { isDebugOn, startSpan, renderDebugFooter } from '../../core/OpLog.js';
 import { SystemContext, recordLastUsedModel } from '../../core/SystemContext.js';
 import { DeveloperMode } from '../../core/DeveloperMode.js';
 import { AutoModelRouter } from '../../core/AutoModelRouter.js';
+import { LiveRouter } from './LiveRouter.js';
 
 /**
  * Fire-and-forget chat persistence: a DB failure must never break the chat flow.
@@ -111,78 +112,89 @@ export class ChatRouter extends Router {
     }));
 
     this.post('/api/chat/stream', withErrorHandling(async (ctx) => {
-      const body = await ctx.parseJsonBody();
-      const { message, model, history = [], apiKey, systemInstruction, provider, roleId, useKnowledgeBase = true } = body;
-      if (!message || typeof message !== 'string') {
-        ctx.sendJson(400, { error: 'Missing or invalid "message" parameter' });
-        return;
+  const t0 = Date.now();
+  const body = await ctx.parseJsonBody();
+  const { message, model, history = [], apiKey, systemInstruction, provider, roleId, useKnowledgeBase = true } = body;
+  if (!message || typeof message !== 'string') {
+    ctx.sendJson(400, { error: 'Missing or invalid "message" parameter' });
+    return;
+  }
+
+  ctx.res.writeHead(200, {
+    'Content-Type': 'text/event-stream; charset=utf-8',
+    'Cache-Control': 'no-cache, no-transform',
+    'Connection': 'keep-alive',
+    'X-Accel-Buffering': 'no',
+    'Access-Control-Allow-Origin': '*',
+  });
+  const sse = (obj: object) => { try { ctx.res.write(`data: ${JSON.stringify(obj)}\n\n`); } catch {} };
+  sse({ sys: { stage: 'parse', text: 'запрос принят', level: 'ok' } });
+
+  const chatSessionId = typeof body.sessionId === 'string' && body.sessionId ? body.sessionId : 'web-default';
+  const client = new UniversalLlmClient(apiKey || (Config.vertexEnabled ? undefined : Config.geminiApiKey) || undefined);
+  const requestedModel = model && model !== 'auto' && model !== 'default' ? model : undefined;
+  let targetModel = requestedModel || Config.defaultModel;
+  if (!requestedModel && AutoModelRouter.isActive(chatSessionId)) {
+    targetModel = AutoModelRouter.pick({ message, history }, chatSessionId).modelId;
+  }
+  const usedProvider = client.resolveProvider(targetModel, provider as LlmProvider | undefined);
+  sse({ sys: { stage: 'model', text: `модель ${targetModel} · ${usedProvider}`, level: 'info' } });
+
+  const detectedLang = detectMessageLanguage(message);
+  let { instruction: effectiveInstruction, persona: resolvedPersona } = this.resolveSystemInstruction(roleId, systemInstruction);
+
+  const kbT0 = Date.now();
+  if (useKnowledgeBase) {
+    try {
+      const docs = await this.kbConnector.search(message, { limit: 6, language: detectedLang });
+      if (docs.length > 0) {
+        effectiveInstruction += `\n${this.kbConnector.formatContextForPrompt(docs)}`;
       }
-      const chatSessionId = typeof body.sessionId === 'string' && body.sessionId ? body.sessionId : 'web-default';
-      const client = new UniversalLlmClient(apiKey || (Config.vertexEnabled ? undefined : Config.geminiApiKey) || undefined);
-      // TASK-320: /auto mode — dynamic FREE model per message when opted in.
-      const requestedModel = model && model !== 'auto' && model !== 'default' ? model : undefined;
-      let targetModel = requestedModel || Config.defaultModel;
-      if (!requestedModel && AutoModelRouter.isActive(chatSessionId)) {
-        targetModel = AutoModelRouter.pick({ message, history }, chatSessionId).modelId;
-      }
-      const usedProvider = client.resolveProvider(targetModel, provider as LlmProvider | undefined);
+      sse({ sys: { stage: 'kb', text: `KB: ${docs.length} фрагм.`, level: docs.length ? 'ok' : 'warn', ms: Date.now() - kbT0 } });
+    } catch (e: any) {
+      logger.warn('ChatRouter', `KB retrieval stream skipped: ${e.message}`);
+      sse({ sys: { stage: 'kb', text: 'KB недоступна', level: 'warn', ms: Date.now() - kbT0 } });
+    }
+  } else {
+    sse({ sys: { stage: 'kb', text: 'KB выключена', level: 'dim', ms: 0 } });
+  }
 
-      const detectedLang = detectMessageLanguage(message);
-      let { instruction: effectiveInstruction, persona: resolvedPersona } = this.resolveSystemInstruction(roleId, systemInstruction);
+  effectiveInstruction = `${languageLockInstruction(message)}\n${effectiveInstruction}`;
+  effectiveInstruction += `\n${SystemContext.build(detectedLang)}`;
+  effectiveInstruction += `\n${languageLockInstruction(message)}`;
+  if (DeveloperMode.isUnlocked(chatSessionId)) {
+    effectiveInstruction += `\n${SystemContext.DEVELOPER_BLOCK}\n${SystemContext.developerBlock(detectedLang)}`;
+  }
 
-      if (useKnowledgeBase) {
-        try {
-          const docs = await this.kbConnector.search(message, { limit: 6, language: detectedLang });
-          if (docs.length > 0) {
-            effectiveInstruction += `\n${this.kbConnector.formatContextForPrompt(docs)}`;
-          }
-        } catch (e: any) {
-          logger.warn('ChatRouter', `KB retrieval stream skipped: ${e.message}`);
-        }
-      }
+  const messages = [...history, { role: 'user', content: message.trim() }];
+  recordLastUsedModel(targetModel, usedProvider);
+  const span = startSpan(targetModel, usedProvider);
+  persistChatMessage(chatSessionId, 'user', message.trim(), targetModel);
 
-      // System-awareness (FEATURE 1) + developer block (FEATURE 2).
-      effectiveInstruction = `${languageLockInstruction(message)}\n${effectiveInstruction}`;
-      effectiveInstruction += `\n${SystemContext.build(detectedLang)}`;
-      // Also append lock as a safeguard.
-      effectiveInstruction += `\n${languageLockInstruction(message)}`;
-      if (DeveloperMode.isUnlocked(chatSessionId)) {
-        effectiveInstruction += `\n${SystemContext.DEVELOPER_BLOCK}\n${SystemContext.developerBlock(detectedLang)}`;
-      }
+  sse({ sys: { stage: 'llm', text: 'генерация…', level: 'info' } });
+  LiveRouter.publish({ text: `> ${message.slice(0, 200)}`, cls: 'cmd', agent: 'eva' });
 
-      const messages = [...history, { role: 'user', content: message.trim() }];
-      recordLastUsedModel(targetModel, usedProvider);
-      const span = startSpan(targetModel, usedProvider);
+  const fullText = await client.streamContent(
+    targetModel,
+    messages,
+    (chunk) => { sse({ chunk }); },
+    { systemInstruction: effectiveInstruction, provider: provider as LlmProvider | undefined, apiKey }
+  );
+  span.end();
 
-      persistChatMessage(chatSessionId, 'user', message.trim(), targetModel);
+  const elapsedMs = Date.now() - t0;
+  const promptTokens = Math.max(1, Math.ceil((JSON.stringify(messages).length + effectiveInstruction.length) / 4));
+  const completionTokens = Math.max(1, Math.ceil(fullText.length / 4));
+  const totalTokens = promptTokens + completionTokens;
+  const tps = elapsedMs > 0 ? Math.round((totalTokens / elapsedMs) * 1000) : 0;
 
-      ctx.res.writeHead(200, {
-        'Content-Type': 'text/event-stream; charset=utf-8',
-        'Cache-Control': 'no-cache, no-transform',
-        'Connection': 'keep-alive',
-        'Access-Control-Allow-Origin': '*',
-      });
+  const fullTextOut = isDebugOn() ? `${fullText}\n${renderDebugFooter(span)}` : fullText;
+  persistChatMessage(chatSessionId, 'assistant', fullText, targetModel);
 
-      const fullText = await client.streamContent(
-        targetModel,
-        messages,
-        (chunk) => {
-          ctx.res.write(`data: ${JSON.stringify({ chunk })}\n\n`);
-        },
-        {
-          systemInstruction: effectiveInstruction,
-          provider: provider as LlmProvider | undefined,
-          apiKey,
-        }
-      );
-      span.end();
-      const fullTextOut = isDebugOn() ? `${fullText}\n${renderDebugFooter(span)}` : fullText;
-
-      persistChatMessage(chatSessionId, 'assistant', fullText, targetModel);
-
-      ctx.res.write(`data: ${JSON.stringify({ done: true, fullText: fullTextOut, persona: resolvedPersona || 'eva' })}\n\n`);
-      ctx.res.end();
-    }));
+  sse({ done: true, fullText: fullTextOut, persona: resolvedPersona || 'eva', model: targetModel, provider: usedProvider, elapsedMs, usage: { promptTokens, completionTokens, totalTokens, estimated: true }, tps });
+  LiveRouter.publish({ text: `✓ ${fullText.slice(0, 260)}`, cls: 'ok', agent: 'eva' });
+  ctx.res.end();
+}));
 
     this.post('/api/consilium', withErrorHandling(async (ctx) => {
       const body = await ctx.parseJsonBody();

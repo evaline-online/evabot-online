@@ -4,14 +4,31 @@ import { Config } from '../core/Config.js';
 import { logger, LogCategory } from '../core/Logger.js';
 import { I18nEngine, SupportedLocale } from '../core/I18nEngine.js';
 import { transcribeVoiceWithFallback, type SttLanguage, type SttResult } from '../core/CloudSTT.js';
+import { edgeTts } from '../core/EdgeTTS.js';
+import { detectMessageLanguage } from '../core/LocalePolicy.js';
+import { stripEmoji } from '../core/I18nEngine.js';
 import { DeveloperMode } from '../core/DeveloperMode.js';
+import { LearnedLessons } from '../core/LearnedLessons.js';
 import { ChatEngine } from './ChatEngine.js';
 
 export const TELEGRAM_MESSAGE_LIMIT = 4096;
 const TELEGRAM_API_BASE = 'https://api.telegram.org';
 const RATE_LIMIT_INTERVAL_MS = 1000;
 const VOICE_PLACEHOLDER = '[WRN] Не вдалося завантажити голосове повідомлення. Спробуйте ще раз.';
-const VOICE_PREFIX = ' Розпізнано:';
+const VOICE_PREFIX = 'Розпізнано:';
+
+export function stripMarkdownForVoice(text: string): string {
+  return text
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+    .replace(/<[^>]+>/g, ' ')          // strip HTML tags (<i>, <b>, etc.)
+    .replace(/[*_~#>|•]/g, '')
+    .replace(/\n{2,}/g, '. ')
+    .replace(/\n/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
 
 /** Async transcriber injected for tests; production default = Google CloudSTT with FLAC fallback. */
 export type VoiceTranscriber = (audio: Buffer, lang: SttLanguage) => Promise<SttResult>;
@@ -50,6 +67,55 @@ export function splitTelegramMessage(text: string, limit: number = TELEGRAM_MESS
   return chunks;
 }
 
+export function markdownToTelegramHtml(markdown: string): string {
+  if (!markdown) return '';
+  let text = markdown;
+
+  // 1. Preserve code blocks
+  const codeBlocks: string[] = [];
+  text = text.replace(/```([a-zA-Z0-9_-]*)\n?([\s\S]*?)```/g, (_match, _lang, code) => {
+    const placeholder = `___CB_${codeBlocks.length}___`;
+    const escaped = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    codeBlocks.push(`<pre><code>${escaped.trim()}</code></pre>`);
+    return placeholder;
+  });
+
+  // 2. Preserve inline code
+  const inlineCodes: string[] = [];
+  text = text.replace(/`([^`]+)`/g, (_match, code) => {
+    const placeholder = `___IC_${inlineCodes.length}___`;
+    const escaped = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    inlineCodes.push(`<code>${escaped}</code>`);
+    return placeholder;
+  });
+
+  // 3. Escape HTML special characters in outer text
+  text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  // 4. Headers: convert # Header to <b>Header</b>
+  text = text.replace(/^#{1,6}\s+(.+)$/gm, '<b>$1</b>');
+
+  // 5. Bold: **text** or __text__
+  text = text.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  text = text.replace(/__(.+?)__/g, '<b>$1</b>');
+
+  // 6. Italic: *text*
+  text = text.replace(/(^|\s)\*([^\s*][^*]*[^\s*])\*(\s|$|[.,!?])/g, '$1<i>$2</i>$3');
+
+  // 7. Links: [text](url)
+  text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
+
+  // 8. Restore code blocks and inline code
+  inlineCodes.forEach((code, idx) => {
+    text = text.replace(`___IC_${idx}___`, code);
+  });
+  codeBlocks.forEach((block, idx) => {
+    text = text.replace(`___CB_${idx}___`, block);
+  });
+
+  return text;
+}
+
 interface TelegramUser {
   id: number;
   is_bot?: boolean;
@@ -72,12 +138,17 @@ interface TelegramMessage {
   date: number;
   chat: { id: number; type: string; title?: string; username?: string };
   text?: string;
+  caption?: string;
   voice?: TelegramVoice;
+  audio?: TelegramVoice;
+  video_note?: TelegramVoice;
+  document?: { file_id: string; file_name?: string; mime_type?: string; file_size?: number };
 }
 
-interface TelegramUpdate {
+export interface TelegramUpdate {
   update_id: number;
   message?: TelegramMessage;
+  edited_message?: TelegramMessage;
 }
 
 interface TelegramApiResponse<T> {
@@ -95,15 +166,18 @@ export class TelegramBot {
   private chatLocales: Map<number, SupportedLocale> = new Map();
   private chatQueues: Map<number, Promise<void>> = new Map();
   private chatLastRun: Map<number, number> = new Map();
+  private voiceModeChats: Set<number> = new Set();
   private offset: number = 0;
   private running: boolean = false;
+  private webhookUrl: string | null = null;
 
-  constructor(options: { token?: string; apiBase?: string; execute?: TelegramCommandExecutor; transcriber?: VoiceTranscriber } = {}) {
+  constructor(options: { token?: string; apiBase?: string; execute?: TelegramCommandExecutor; transcriber?: VoiceTranscriber; webhookUrl?: string } = {}) {
     this.token = options.token || Config.telegramBotToken;
     this.apiBase = options.apiBase || TELEGRAM_API_BASE;
     this.execute = options.execute || ((command) => ModelCommand.execute(command));
     this.transcriber = options.transcriber || ((audio, lang) => transcribeVoiceWithFallback(audio, { lang }));
     this.chatEngine = new ChatEngine();
+    this.webhookUrl = options.webhookUrl ?? null;
   }
 
   public static isEnabled(): boolean {
@@ -118,8 +192,35 @@ export class TelegramBot {
     if (this.running) return;
 
     this.running = true;
-    logger.info(LogCategory.SYSTEM, 'TelegramBot', 'Starting Telegram long-polling loop...');
-    void this.pollLoop();
+
+    if (this.webhookUrl) {
+      logger.info(LogCategory.SYSTEM, 'TelegramBot', `Setting webhook to ${this.webhookUrl}...`);
+      try {
+        await this.setWebhook(this.webhookUrl);
+        logger.info(LogCategory.SYSTEM, 'TelegramBot', 'Webhook set successfully');
+      } catch (err: any) {
+        logger.error(LogCategory.SYSTEM, 'TelegramBot', `Failed to set webhook: ${err.message}`);
+        throw err;
+      }
+    } else {
+      logger.info(LogCategory.SYSTEM, 'TelegramBot', 'Starting Telegram long-polling loop...');
+      void this.pollLoop();
+    }
+  }
+
+  private async setWebhook(url: string): Promise<void> {
+    const result = await this.api<{ url: string; has_custom_certificate: boolean; pending_update_count: number; max_connections: number; ip_address?: string }>('setWebhook', {
+      url,
+      drop_pending_updates: true,
+    });
+    logger.info(LogCategory.SYSTEM, 'TelegramBot', `Webhook info: ${JSON.stringify(result)}`);
+  }
+
+  public async handleWebhookUpdate(update: TelegramUpdate): Promise<void> {
+    const msg = update.message || update.edited_message;
+    if (!msg) return;
+    logger.info(LogCategory.SYSTEM, 'TelegramBot', `Webhook update ${update.update_id}: msg from chatId=${msg.chat.id}, text="${msg.text || ''}"`);
+    await this.handleMessage(msg);
   }
 
   public stop(): void {
@@ -145,12 +246,17 @@ export class TelegramBot {
         const updates = await this.api<TelegramUpdate[]>('getUpdates', {
           offset: this.offset,
           timeout: 25,
-          allowed_updates: ['message'],
+          allowed_updates: ['message', 'edited_message'],
         });
-        for (const update of updates || []) {
-          this.offset = update.update_id + 1;
-          if (update.message) {
-            void this.handleMessage(update.message);
+        if (updates && updates.length > 0) {
+          logger.info(LogCategory.SYSTEM, 'TelegramBot', `Fetched ${updates.length} updates`);
+          for (const update of updates) {
+            this.offset = update.update_id + 1;
+            const msg = update.message || update.edited_message;
+            if (msg) {
+              logger.info(LogCategory.SYSTEM, 'TelegramBot', `Update ${update.update_id}: msg from chatId=${msg.chat.id}, text="${msg.text || ''}"`);
+              void this.handleMessage(msg);
+            }
           }
         }
       } catch (err: any) {
@@ -194,16 +300,38 @@ export class TelegramBot {
 
   private async processMessage(message: TelegramMessage): Promise<void> {
     const chatId = message.chat.id;
-    const from = message.from;
+    const from = message.from || { id: chatId, first_name: 'User' };
 
-    if (message.voice) {
-      await this.handleVoiceMessage(message);
+    const isAudioDoc = Boolean(
+      message.document && (
+        message.document.mime_type?.startsWith('audio/') ||
+        /\.(ogg|oga|mp3|wav|m4a|aac|flac|opus)$/i.test(message.document.file_name || '')
+      )
+    );
+    const audioPayload = message.voice || message.audio || message.video_note || (isAudioDoc ? message.document : undefined);
+
+    logger.info(
+      LogCategory.SYSTEM,
+      'TelegramBot',
+      `Message received chatId=${chatId} (id=${message.message_id}): type=${audioPayload ? 'audio/voice' : 'text'}, text="${(message.text || message.caption || '').slice(0, 50)}"`
+    );
+
+    if (audioPayload) {
+      await this.handleVoiceMessage(message, audioPayload);
       return;
     }
 
-    const text = (message.text || '').trim();
+    const text = (message.text || message.caption || '').trim();
     if (!text) return;
 
+    if (from.language_code && !this.chatLocales.has(chatId)) {
+      const code = from.language_code.toLowerCase().slice(0, 2);
+      if (code === 'uk' || code === 'ua') this.chatLocales.set(chatId, 'uk');
+      else if (code === 'ru') this.chatLocales.set(chatId, 'ru');
+      else if (code === 'en') this.chatLocales.set(chatId, 'en');
+    }
+
+    // Registration check: users without username or first_name must register first
     if (!from || (!from.username && !from.first_name)) {
       await this.sendMessage(chatId, '[WRN] Please register a Telegram account (set a username or name) to chat with EvaBot.');
       return;
@@ -217,12 +345,22 @@ export class TelegramBot {
     await this.handleChatMessage(chatId, text);
   }
 
+private getWelcomeMessage(locale: SupportedLocale): string {
+    const strings = I18nEngine.getStrings(locale);
+    const help = I18nEngine.formatHelp(locale);
+    const intro = locale === 'uk'
+      ? 'Вітаю! Я — Єва, AI EvaLine (EVA, Чорноморськ/Братислава).'
+      : locale === 'ru'
+      ? 'Здравствуйте! Я — Ева, AI EvaLine (EVA, Черноморск/Братислава).'
+      : 'Hello! I am Eva, AI EvaLine (EVA, Chornomorsk/Bratislava).';
+    return `✨ EvaLine | EvaBot 001 MVP\n\n${intro}\n\n${strings.greeting}\n\n${help}`;
+  }
+
   private async handleCommand(chatId: number, raw: string): Promise<void> {
     const locale = this.getChatLocale(chatId);
 
     if (raw.startsWith('/start')) {
-      const strings = I18nEngine.getStrings(locale);
-      await this.sendMessage(chatId, `[BOT] ${strings.greeting}\n\n${I18nEngine.formatHelp(locale)}`);
+      await this.sendPlainMessage(chatId, `[BOT] ${this.getWelcomeMessage(locale)}`);
       return;
     }
 
@@ -235,6 +373,55 @@ export class TelegramBot {
       this.chatLocales.set(chatId, resolved);
       const strings = I18nEngine.getStrings(resolved);
       await this.sendMessage(chatId, strings.langSwitched);
+      return;
+    }
+
+    if (canonicalHead === '/voice') {
+      const isVoice = this.voiceModeChats.has(chatId);
+      if (isVoice) {
+        this.voiceModeChats.delete(chatId);
+        await this.sendMessage(chatId, '🔇 Голосовой режим выключен. Ответы будут текстовыми.');
+      } else {
+        this.voiceModeChats.add(chatId);
+        await this.sendMessage(chatId, '🔊 Голосовой режим включен! Ева будет озвучивать свои ответы голосом.');
+      }
+      return;
+    }
+
+    if (canonicalHead === '/learn') {
+      const lessonText = raw.replace(/^\/learn\s*/i, '').trim();
+      if (!lessonText) {
+        await this.sendMessage(chatId, '📝 Использование: <code>/learn &lt;правило или опыт&gt;</code>\nПример: <code>/learn отвечай кратко и конкретно</code>');
+        return;
+      }
+      LearnedLessons.addLesson(lessonText, 'user_command', `telegram_${chatId}`);
+      await this.sendMessage(chatId, `✨ <b>Урок усвоен и сохранен в память Евы:</b>\n"<i>${lessonText}</i>"`);
+      return;
+    }
+
+    if (canonicalHead === '/lessons') {
+      const lessons = LearnedLessons.getTopLessons(10);
+      if (lessons.length === 0) {
+        await this.sendMessage(chatId, '📚 База выученных уроков пуста.');
+        return;
+      }
+      const list = lessons.map((l, i) => `${i + 1}. [${l.category}] ${l.lesson}`).join('\n');
+      await this.sendMessage(chatId, `📚 <b>Выученные уроки Евы (${lessons.length}):</b>\n\n${list}`);
+      return;
+    }
+
+    if (canonicalHead === '/secretary') {
+      await this.sendMessage(
+        chatId,
+        '👩‍💼 <b>Режим секретаря Евы</b>\n\n' +
+        '• <b>Статус:</b> Активен через MTProto Userbot (+380968720693)\n' +
+        '• <b>Функции:</b>\n' +
+        '  - Прямой контакт с контактами (@username / телефон)\n' +
+        '  - Прием аудио и голосовых сообщений с мгновенной расшифровкой (faster-whisper)\n' +
+        '  - Озвучка ответов голосом Светланы (Edge-TTS)\n' +
+        '• <b>Отправка через секретаря:</b>\n' +
+        '  <code>Ева, напиши @username сообщение ...</code>'
+      );
       return;
     }
 
@@ -267,15 +454,85 @@ export class TelegramBot {
     await this.sendMessage(chatId, output);
   }
 
+  public async sendTyping(chatId: number): Promise<void> {
+    try {
+      await this.api('sendChatAction', { chat_id: chatId, action: 'typing' });
+    } catch {
+      // Non-fatal if chat is blocked or temporary network blip
+    }
+  }
+
   private async handleChatMessage(chatId: number, text: string): Promise<void> {
     const sessionId = `${HISTORY_SESSION_PREFIX}${chatId}`;
     const locale = this.getChatLocale(chatId);
+    logger.info(LogCategory.SYSTEM, 'TelegramBot', `Generating response for chatId=${chatId} (${locale}): "${text.slice(0, 60)}"`);
+
+    // Auto-capture lessons from conversational instructions
+    if (/^(запомни|запам'ятай|remember)[:,\s]+/i.test(text.trim())) {
+      const lesson = text.trim().replace(/^(запомни|запам'ятай|remember)[:,\s]+/i, '').trim();
+      if (lesson.length >= 6) {
+        LearnedLessons.addLesson(lesson, 'conversational_memory', `telegram_${chatId}`);
+      }
+    }
+
+    void this.sendTyping(chatId);
+    const typingTimer = setInterval(() => void this.sendTyping(chatId), 4000);
+
     try {
       const response = await this.chatEngine.respond({ message: text, sessionId, locale });
+      logger.info(LogCategory.SYSTEM, 'TelegramBot', `Response ready for chatId=${chatId} (${response.text.length} chars)`);
+
+      // Sync chat locale with the actual language of the response so TTS
+      // always uses the correct voice (uk/ru/en) — never falls back to default.
+      const responseLang = detectMessageLanguage(response.text);
+      if (responseLang === 'uk' || responseLang === 'ru' || responseLang === 'en') {
+        this.chatLocales.set(chatId, responseLang);
+      }
+
+      // 1. Send full formatted text response first
       await this.sendMessage(chatId, response.text);
+
+      // 2. If voice mode is active, synthesize natural speech and send voice message
+      const shouldVoice = this.voiceModeChats.has(chatId);
+      if (shouldVoice) {
+        let cleanForVoice = stripEmoji(stripMarkdownForVoice(response.text));
+        if (cleanForVoice.length > 500) {
+          const match = cleanForVoice.slice(0, 500).match(/^(.*?[.!?])(?:\s|$)/s);
+          cleanForVoice = match && match[1] && match[1].length > 30 ? match[1] : cleanForVoice.slice(0, 450) + '...';
+        }
+        if (cleanForVoice.length > 0) {
+          try {
+            const synthLang = responseLang === 'uk' || responseLang === 'ru' || responseLang === 'en' ? responseLang : locale;
+            logger.info(LogCategory.SYSTEM, 'TelegramBot', `TTS voice mode for chatId=${chatId}: lang=${synthLang}`);
+            const synth = await edgeTts.synthesize(cleanForVoice, { persona: 'eva', lang: synthLang });
+            await this.sendVoice(chatId, synth.audioBuffer);
+          } catch (voiceErr: any) {
+            logger.warn(LogCategory.SYSTEM, 'TelegramBot', `Voice synth failed: ${voiceErr.message}`);
+          }
+        }
+      }
     } catch (err: any) {
       logger.error(LogCategory.SYSTEM, 'TelegramBot', `Chat error for ${sessionId}: ${err.message}`);
       await this.sendMessage(chatId, `[WRN] Chat engine error: ${err.message}`);
+    } finally {
+      clearInterval(typingTimer);
+    }
+  }
+
+  public async sendVoice(chatId: number, audio: Buffer, caption?: string): Promise<void> {
+    const formData = new FormData();
+    formData.append('chat_id', String(chatId));
+    formData.append('voice', new Blob([new Uint8Array(audio)], { type: 'audio/mpeg' }), 'voice.mp3');
+    if (caption) {
+      formData.append('caption', caption.slice(0, 1024));
+    }
+    const res = await fetch(`${this.apiBase}/bot${this.token}/sendVoice`, {
+      method: 'POST',
+      body: formData,
+    });
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(`sendVoice failed (${res.status}): ${err}`);
     }
   }
 
@@ -285,19 +542,22 @@ export class TelegramBot {
    * as reply, then treat the transcript like typed text: '/…' runs as a
    * command, otherwise it flows into the normal chat engine.
    */
-  private async handleVoiceMessage(message: TelegramMessage): Promise<void> {
+  private async handleVoiceMessage(message: TelegramMessage, voicePayload?: { file_id: string }): Promise<void> {
     const chatId = message.chat.id;
     const from = message.from;
-    const voice = message.voice;
-    if (!voice) return;
+    const payload = voicePayload || message.voice || message.audio;
+    if (!payload) return;
     if (!from || (!from.username && !from.first_name)) {
       await this.sendMessage(chatId, '[WRN] Please register a Telegram account to send voice messages.');
       return;
     }
 
+    logger.info(LogCategory.SYSTEM, 'TelegramBot', `Voice handler started chatId=${chatId}, fileId=${payload.file_id}`);
+    void this.sendTyping(chatId);
+
     let audio: Buffer | null = null;
     try {
-      audio = await this.downloadVoiceFile(voice.file_id);
+      audio = await this.downloadVoiceFile(payload.file_id);
     } catch (err: any) {
       logger.warn(LogCategory.SYSTEM, 'TelegramBot', `Voice download failed: ${err.message}`);
     }
@@ -307,6 +567,7 @@ export class TelegramBot {
     }
 
     const lang = localeToSttLang(this.getChatLocale(chatId));
+    logger.info(LogCategory.SYSTEM, 'TelegramBot', `Transcribing voice (${audio.length} bytes, lang=${lang})...`);
     const result = await this.transcriber(audio, lang);
     if (!result.ok || !result.transcript) {
       logger.warn(LogCategory.SYSTEM, 'TelegramBot', `Voice transcription failed: ${result.error}`);
@@ -314,7 +575,19 @@ export class TelegramBot {
       return;
     }
 
+    logger.info(LogCategory.SYSTEM, 'TelegramBot', `Voice transcribed successfully: "${result.transcript}"`);
     await this.sendMessage(chatId, `${VOICE_PREFIX} ${result.transcript}`);
+
+    // Update chat locale based on detected language of the transcript
+    // so subsequent TTS uses the correct voice (uk/ru/en)
+    const detectedLang = detectMessageLanguage(result.transcript);
+    if (detectedLang === 'uk' || detectedLang === 'ru' || detectedLang === 'en') {
+      this.chatLocales.set(chatId, detectedLang);
+    }
+
+    // DO NOT auto-enable voice mode here — only user's explicit /voice command should enable it
+    // this.voiceModeChats.add(chatId);  // REMOVED: caused infinite loop
+
     if (result.transcript.startsWith('/')) {
       await this.handleCommand(chatId, result.transcript);
     } else {
@@ -350,34 +623,82 @@ export class TelegramBot {
   }
 
   public async sendMessage(chatId: number, text: string): Promise<void> {
+    const htmlText = markdownToTelegramHtml(text);
+    const chunks = splitTelegramMessage(htmlText, TELEGRAM_MESSAGE_LIMIT);
+    if (chunks.length === 0) return;
+    for (const chunk of chunks) {
+      try {
+        await this.api('sendMessage', {
+          chat_id: chatId,
+          text: chunk,
+          parse_mode: 'HTML',
+          disable_web_page_preview: true,
+        });
+      } catch (err: any) {
+        logger.warn(LogCategory.SYSTEM, 'TelegramBot', `HTML send failed (${err.message}), falling back to plain text`);
+        const rawChunks = splitTelegramMessage(text, TELEGRAM_MESSAGE_LIMIT);
+        for (const rawChunk of rawChunks) {
+          await this.api('sendMessage', {
+            chat_id: chatId,
+            text: rawChunk,
+            disable_web_page_preview: true,
+          });
+        }
+      }
+    }
+  }
+
+  public async sendPlainMessage(chatId: number, text: string): Promise<void> {
     const chunks = splitTelegramMessage(text, TELEGRAM_MESSAGE_LIMIT);
     if (chunks.length === 0) return;
     for (const chunk of chunks) {
-      await this.api('sendMessage', { chat_id: chatId, text: chunk, disable_web_page_preview: true });
+      await this.api('sendMessage', {
+        chat_id: chatId,
+        text: chunk,
+        disable_web_page_preview: true,
+      });
     }
   }
 
   private sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
+
+  /** Process incoming update from webhook */
+  public async processUpdate(update: any): Promise<void> {
+    if (update.message) {
+      await this.handleMessage(update.message);
+    } else if (update.edited_message) {
+      await this.handleMessage(update.edited_message);
+    } else if (update.callback_query) {
+      // Handle callback queries if needed
+      logger.info(LogCategory.SYSTEM, 'TelegramBot', `Callback query from ${update.callback_query.from.id}`);
+    }
+  }
 }
 
 let singleton: TelegramBot | null = null;
+
+export function getTelegramBotSingleton(): TelegramBot | null {
+  return singleton;
+}
 
 /** Maps a chat locale to a Google STT language code. */
 export function localeToSttLang(locale: SupportedLocale): SttLanguage {
   return locale === 'uk' ? 'uk-UA' : locale === 'ru' ? 'ru-RU' : 'en-US';
 }
 
-export function startTelegramBot(): void {
+export function startTelegramBot(webhookUrl?: string): void {
   if (!TelegramBot.isEnabled()) {
     logger.warn(LogCategory.SYSTEM, 'TelegramBot', 'Telegram bot disabled (no token)');
     return;
   }
   try {
-    if (!singleton) singleton = new TelegramBot();
+    if (!singleton) singleton = new TelegramBot({ webhookUrl });
     void singleton.start();
-    logger.info(LogCategory.SYSTEM, 'TelegramBot', 'Telegram bot started (long-polling)');
+    logger.info(LogCategory.SYSTEM, 'TelegramBot', webhookUrl
+      ? `Telegram bot started (webhook mode: ${webhookUrl})`
+      : 'Telegram bot started (long-polling)');
   } catch (err: any) {
     logger.error(LogCategory.SYSTEM, 'TelegramBot', `Failed to start Telegram bot: ${err.message}`);
   }

@@ -17,7 +17,9 @@ def _load_dotenv(env_path: Path | None = None) -> None:
         # Fall back to <repo_root>/backend/.env and <repo_root>/.env
         candidates = [
             Path(__file__).resolve().parent.parent / ".env",
+            Path(__file__).resolve().parent.parent.parent / ".env",
             Path(os.getcwd()) / "backend" / ".env",
+            Path(os.getcwd()) / ".env",
             target,
         ]
         for cand in candidates:

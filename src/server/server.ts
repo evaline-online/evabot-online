@@ -12,6 +12,10 @@ import { TuiRenderer } from '../core/TuiRenderer.js';
 import { consiliumPlugin } from '../plugins/consilium/index.js';
 import { knowledgeBasePlugin } from '../plugins/knowledge-base/index.js';
 import { knowledgeBase } from '../core/KnowledgeBase.js';
+import { evaVoicePlugin } from '../plugins/eva-voice/index.js';
+import { evaAccountingPlugin } from '../plugins/eva-accounting/index.js';
+import { evalineConsiliumPlugin } from '../plugins/evaline-consilium/index.js';
+import { evaMemoryPlugin } from '../plugins/eva-memory/index.js';
 import { llmProvidersPlugin } from '../plugins/llm-providers/index.js';
 import { createModelsRouter } from './routes/ModelsRouter.js';
 import { createLogsRouter } from './routes/LogsRouter.js';
@@ -24,7 +28,10 @@ import { createServicesRouter } from './routes/ServicesRouter.js';
 import { createUploadRouter } from './routes/UploadRouter.js';
 import { Router, createRouteContext } from './routes/Router.js';
 import { ChatRouter } from './routes/ChatRouter.js';
-import { startTelegramBot } from '../telegram/TelegramBot.js';
+import { LiveRouter } from './routes/LiveRouter.js';
+import { startTelegramBot, getTelegramBotSingleton, TelegramUpdate } from '../telegram/TelegramBot.js';
+import { createTelegramWebhookRouter } from './routes/TelegramWebhookRouter.js';
+import { createSearchRouter } from './routes/SearchRouter.js';
 import { AccountingEngine, CapitalExpenses } from '../core/AccountingEngine.js';
 
 const MIME_TYPES: Record<string, string> = {
@@ -41,6 +48,10 @@ const MIME_TYPES: Record<string, string> = {
   '.woff2': 'font/woff2',
   '.md': 'text/markdown; charset=utf-8',
 };
+
+// Minimal EvaBot terminal frame. Kept verbatim in sync with public/home.html
+// so the plain-text (curl/lynx) view and the browser view stay identical.
+const HOME_TEXT = 'EvaBot v0.0.1 MVP\n> ';
 
 function sendJson(res: http.ServerResponse, statusCode: number, data: unknown, origin: string = '*'): void {
   if (res.headersSent) return;
@@ -140,6 +151,10 @@ async function initializePlugins(): Promise<void> {
   await pluginManager.register(llmProvidersPlugin);
   await pluginManager.register(consiliumPlugin);
   await pluginManager.register(knowledgeBasePlugin);
+  await pluginManager.register(evaVoicePlugin);
+  await pluginManager.register(evaAccountingPlugin);
+  await pluginManager.register(evalineConsiliumPlugin);
+  await pluginManager.register(evaMemoryPlugin);
   // Core KB (SQLite FTS5 + memory docs) must be initialized at boot so
   // /api/health reports LIVE database stats and search is warm from req #1.
   await knowledgeBase.initialize();
@@ -150,6 +165,11 @@ async function initializePlugins(): Promise<void> {
 
 export function buildRouter(): Router {
   const router = new Router();
+
+  // Simple healthz for uptime monitoring (UptimeRobot, etc.)
+  router.get('/healthz', async (ctx) => {
+    ctx.sendJson(200, { status: 'ok', timestamp: Date.now() });
+  });
 
   router.get('/api/health', async (ctx) => {
     const creds = await GoogleAuthProvider.getCredentials();
@@ -212,6 +232,24 @@ export function buildRouter(): Router {
     });
   });
 
+  router.post('/api/telegram/webhook', async (ctx) => {
+    const body = await ctx.parseJsonBody().catch(() => ({}));
+    const bot = getTelegramBotSingleton();
+    if (!bot) {
+      logger.warn(LogCategory.SYSTEM, 'TELEGRAM_WEBHOOK', 'Telegram bot not initialized');
+      ctx.sendJson(500, { error: 'Telegram bot not initialized' });
+      return;
+    }
+
+    try {
+      await bot.handleWebhookUpdate(body as TelegramUpdate);
+      ctx.sendJson(200, { status: 'ok', update_id: body.update_id });
+    } catch (err: any) {
+      logger.error(LogCategory.SYSTEM, 'TELEGRAM_WEBHOOK', `Webhook handling failed: ${err.message}`);
+      ctx.sendJson(500, { error: err.message });
+    }
+  });
+
   router.get('/api/billing', async (ctx) => {
     const summary = AccountingEngine.getUsageSummary();
     const infraInventory = AccountingEngine.getInfraInventory();
@@ -265,6 +303,8 @@ export function buildRouter(): Router {
     createPluginsRouter(),
     createVoiceRouter(),
     createKbRouter(),
+    createTelegramWebhookRouter(),
+    createSearchRouter(),
     createServicesRouter(),
     createUploadRouter(),
   ];
@@ -292,6 +332,11 @@ export function buildRouter(): Router {
 
   const chatRouter = new ChatRouter();
   for (const route of (chatRouter as unknown as { routes: Array<{ method: string; pattern: string | RegExp; handler: (ctx: unknown) => Promise<void> }> }).routes) {
+    router.add(route.method, route.pattern as string, route.handler as (ctx: import('./routes/Router.js').RouteContext) => Promise<void>);
+  }
+
+  const liveRouter = new LiveRouter();
+  for (const route of (liveRouter as unknown as { routes: Array<{ method: string; pattern: string | RegExp; handler: (ctx: unknown) => Promise<void> }> }).routes) {
     router.add(route.method, route.pattern as string, route.handler as (ctx: import('./routes/Router.js').RouteContext) => Promise<void>);
   }
 
@@ -394,13 +439,21 @@ export function createServer(): http.Server {
       '/manifest.webmanifest', '/manifest.json',
       '/offline.html',
       '/tui', '/tui.html',
+      '/chat', '/chat.html',
+      '/home', '/home.html',
+      '/live', '/live.html',
+      '/live/',
+      '/excalidraw', '/excalidraw.html',
     ];
 
-    if (pathname.startsWith('/dist/') || pathname.startsWith('/fonts/') || pathname.startsWith('/assets/') || staticRoutes.includes(pathname)) {
+    if (pathname.startsWith('/dist/') || pathname.startsWith('/fonts/') || pathname.startsWith('/assets/') || (pathname.startsWith('/lexicon-') && pathname.endsWith('.json')) || staticRoutes.includes(pathname)) {
       let filePath = '';
       const host = (req.headers.host || 'localhost').toLowerCase().replace(/^www\./, '');
 
-      if (pathname.startsWith('/assets/')) {
+      if (pathname.startsWith('/lexicon-') && pathname.endsWith('.json')) {
+        const rel = pathname.replace(/\\/g, '/').replace(/\.\./g, '');
+        filePath = path.resolve(process.cwd(), 'public', path.basename(rel));
+      } else if (pathname.startsWith('/assets/')) {
         // Self-hosted static assets (public/assets) — path-sanitized, no traversal
         const rel = pathname.slice('/assets/'.length).replace(/\\/g, '/').replace(/\.\./g, '');
         filePath = path.resolve(process.cwd(), 'public', 'assets', rel);
@@ -468,12 +521,36 @@ export function createServer(): http.Server {
         filePath = path.resolve(process.cwd(), 'public', 'stack.html');
       } else if (pathname === '/pitch' || pathname === '/pitch.html') {
         filePath = path.resolve(process.cwd(), 'public', 'pitch.html');
+      } else if (pathname === '/chat' || pathname === '/chat.html') {
+        filePath = path.resolve(process.cwd(), 'public', 'chat.html');
+      } else if (pathname === '/home' || pathname === '/home.html') {
+        filePath = path.resolve(process.cwd(), 'public', 'home.html');
+      } else if (pathname === '/live' || pathname === '/live.html' || pathname === '/live/') {
+        const ua = (req.headers['user-agent'] || '').toLowerCase();
+        if (ua.includes('curl') || ua.includes('wget') || ua.includes('httpie')) {
+          sendText(res, 200, 'EvaBot LIVE — realtime activity stream\n-> curl -N /api/live/stream (text/event-stream)\n-> GET  /api/live/state\n', 'text/plain; charset=utf-8', req.headers.origin || '*');
+          return;
+        }
+        filePath = path.resolve(process.cwd(), 'public', 'live.html');
+      } else if (pathname === '/excalidraw' || pathname === '/excalidraw.html') {
+        filePath = path.resolve(process.cwd(), 'public', 'excalidraw.html');
       } else if (pathname === '/' || pathname === '/index.html') {
+        // Канонический root по хосту (см. SITE_REFACTORING.md): один роутер,
+        // без дублей TUI-копий. Host = bare apex без www/порта.
         const ua = (req.headers['user-agent'] || '').toLowerCase();
         const isCurl = ua.includes('curl') || ua.includes('wget') || ua.includes('httpie');
         const isTextBrowser = ua.includes('lynx') || ua.includes('w3m') || ua.includes('elinks');
+        let rootPage = 'index.html';
 
-        if (host.includes('evaline.online')) {
+        if (host === 'evabot.online') {
+          if (isCurl || isTextBrowser) {
+            sendText(res, 200, HOME_TEXT, 'text/plain; charset=utf-8', req.headers.origin || '*');
+            return;
+          }
+          rootPage = 'home.html';
+        } else if (host === 'live.evabot.online') {
+          rootPage = 'live.html';
+        } else if (host === 'evaline.online') {
           if (isCurl) {
             const txtPath = path.resolve(process.cwd(), 'public', 'manifesto.txt');
             if (fs.existsSync(txtPath)) {
@@ -483,22 +560,13 @@ export function createServer(): http.Server {
           }
           if (isTextBrowser) {
             const lang = parsedUrl.searchParams.get('lang');
-            const file = lang === 'uk' ? 'manifesto-uk.html' : lang === 'en' ? 'manifesto-en.html' : 'manifesto-ru.html';
-            filePath = path.resolve(process.cwd(), 'public', file);
+            rootPage = lang === 'uk' ? 'manifesto-uk.html' : lang === 'en' ? 'manifesto-en.html' : 'manifesto-ru.html';
           } else {
-            const evaTuiPath = path.resolve(process.cwd(), 'public', 'eva-tui-evaline-online.html');
-            filePath = fs.existsSync(evaTuiPath) ? evaTuiPath : path.resolve(process.cwd(), 'public', 'manifesto.html');
+            rootPage = 'manifesto.html';
           }
-        } else if (isCurl || isTextBrowser) {
-          const text = TuiRenderer.renderText(host);
-          sendText(res, 200, text, 'text/plain; charset=utf-8', req.headers.origin || '*');
-          return;
-        } else if (host === 'evabot.online' || host.startsWith('evabot.online:')) {
-          filePath = path.resolve(process.cwd(), 'public', 'index.html');
-        } else if (host.includes('evaline.website')) {
-          const evaTuiPath = path.resolve(process.cwd(), 'public', 'eva-tui-evaline-website.html');
-          filePath = fs.existsSync(evaTuiPath) ? evaTuiPath : path.resolve(process.cwd(), 'public', 'hub.html');
-        } else if (host.includes('evaline.network')) {
+        } else if (host === 'evaline.website') {
+          rootPage = 'hub.html';
+        } else if (host === 'evaline.network') {
           if (isCurl) {
             const text = TuiRenderer.renderText(host);
             sendText(res, 200, text, 'text/plain; charset=utf-8', req.headers.origin || '*');
@@ -509,11 +577,15 @@ export function createServer(): http.Server {
             sendText(res, 200, text, 'text/html; charset=utf-8', req.headers.origin || '*');
             return;
           }
-          filePath = path.resolve(process.cwd(), 'public', 'eva-tui-evaline-network.html');
-          if (!fs.existsSync(filePath)) filePath = path.resolve(process.cwd(), 'public', 'network.html');
-        } else {
-          filePath = path.resolve(process.cwd(), 'public', 'index.html');
+          rootPage = 'eva-tui-evaline-network.html';
+        } else if (isCurl || isTextBrowser) {
+          const text = TuiRenderer.renderText(host);
+          sendText(res, 200, text, 'text/plain; charset=utf-8', req.headers.origin || '*');
+          return;
         }
+
+        filePath = path.resolve(process.cwd(), 'public', rootPage);
+        if (!fs.existsSync(filePath)) filePath = path.resolve(process.cwd(), 'public', 'index.html');
       } else if (pathname === '/terminal' || pathname === '/terminal.txt' || pathname === '/plain') {
         const isCurl = (req.headers['user-agent'] || '').toLowerCase().includes('curl');
         const text = isCurl ? TuiRenderer.renderText(host) : TuiRenderer.renderHtml(host);
@@ -552,7 +624,7 @@ export async function startServerAsync(port: number = Config.serverPort, host: s
   });
 
   try {
-    startTelegramBot();
+    startTelegramBot('https://evabot.online/api/telegram/webhook');
   } catch (err: unknown) {
     logger.warn(LogCategory.SYSTEM, 'Server', `Telegram bot init failed: ${err instanceof Error ? err.message : String(err)}`);
   }

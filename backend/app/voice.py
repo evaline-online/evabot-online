@@ -35,10 +35,10 @@ VOICE_PERSONAS: dict[str, dict[str, Any]] = {
             "Language Fluency: You are natively fluent in Russian, Ukrainian, English, Polish, and Romanian. "
             "Always reply naturally in whichever language the user speaks to you. DO NOT mix languages: when user speaks Russian, "
             "reply in 100% pure Russian without inserting Ukrainian ('піна', 'зараз', 'це') or Polish ('jest', 'bardzo') words.\n"
-            "Dynamic Persona Switch: If the user specifically addresses Adam (\"Адам\", "
-            "\"эй Адам\", \"Adam\") or requests backend/cloud deep dive, "
-            "politely hand over the turn to Adam (\"Передаю слово "
-            "Адаму\"). Otherwise, you handle the conversation with elegance."
+            'Dynamic Persona Switch: If the user specifically addresses Adam ("Адам", '
+            '"эй Адам", "Adam") or requests backend/cloud deep dive, '
+            'politely hand over the turn to Adam ("Передаю слово '
+            'Адаму"). Otherwise, you handle the conversation with elegance.'
         ),
     },
     "adam": {

@@ -1,4 +1,4 @@
-import { splitTelegramMessage, TelegramBot } from '../src/telegram/TelegramBot.js';
+import { splitTelegramMessage, stripMarkdownForVoice, TelegramBot } from '../src/telegram/TelegramBot.js';
 import { normalizeCommand, ModelCommand } from '../src/models/ModelRatings.js';
 import { Config } from '../src/core/Config.js';
 
@@ -77,6 +77,18 @@ async function runTelegramTests(): Promise<boolean> {
 
   // --- 10. Config exposes telegram token field ---
   test('Config.telegramBotToken field exists', typeof Config.telegramBotToken === 'string');
+
+  // --- 11. stripMarkdownForVoice strips HTML tags for TTS ---
+  test('stripMarkdownForVoice removes <i> tags', stripMarkdownForVoice('Привет <i>мир</i>').includes('Привет') && !stripMarkdownForVoice('Привет <i>мир</i>').includes('<i>') && !stripMarkdownForVoice('Привет <i>мир</i>').includes('</i>'));
+  test('stripMarkdownForVoice removes <b> tags', stripMarkdownForVoice('<b>bold</b> text').includes('bold') && !stripMarkdownForVoice('<b>bold</b> text').includes('<b>') && !stripMarkdownForVoice('<b>bold</b> text').includes('</b>'));
+  test('stripMarkdownForVoice removes all HTML tags', !stripMarkdownForVoice('Hello <b>world</b> <i>test</i>!').match(/<\/?[a-z]+>/i));
+
+  // --- 12. stripMarkdownForVoice strips markdown ---
+  test('stripMarkdownForVoice removes **bold**', stripMarkdownForVoice('**bold** text') === 'bold text');
+  test('stripMarkdownForVoice removes *italic*', stripMarkdownForVoice('*italic* text') === 'italic text');
+
+  // --- 13. stripMarkdownForVoice handles mixed content ---
+  test('stripMarkdownForVoice handles code + emoji', stripMarkdownForVoice('Hello `code` 🎤 world').includes('code'));
 
   console.log('\n----------------------------------------------------------------');
   console.log(`Telegram tests: ${passed} passed, ${failed} failed`);

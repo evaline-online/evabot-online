@@ -19,7 +19,9 @@ from .locale_policy import apply_locale_policy
 from .logger import logger
 from .model_registry import ModelRegistry
 
-CONSILIUM_MODES = frozenset({"chat", "dialog", "interview", "consilium", "solo", "broadcast", "dialogue"})
+CONSILIUM_MODES = frozenset(
+    {"chat", "dialog", "interview", "consilium", "solo", "broadcast", "dialogue"}
+)
 PERSONA_IDS = frozenset({"eva", "adam", "dual"})
 
 
@@ -77,7 +79,10 @@ class ConsiliumEngine:
                 if docs:
                     kb_context = self.kb_connector.format_context_for_prompt(docs)
                     kb_included = True
-                    logger.info("ConsiliumEngine", f"Injected {len(docs)} hybrid DB knowledge documents into context")
+                    logger.info(
+                        "ConsiliumEngine",
+                        f"Injected {len(docs)} hybrid DB knowledge documents into context",
+                    )
             except Exception as exc:  # noqa: BLE001
                 logger.warn("ConsiliumEngine", f"Failed retrieving knowledge base: {exc}")
 
@@ -86,15 +91,25 @@ class ConsiliumEngine:
         on_progress = options.get("onProgress")
 
         if mode in ("chat", "solo"):
-            result = await self.run_solo(options, participants, kb_context, start_time, kb_included, on_progress)
+            result = await self.run_solo(
+                options, participants, kb_context, start_time, kb_included, on_progress
+            )
         elif mode == "broadcast":
-            result = await self.run_broadcast(options, participants, kb_context, start_time, kb_included, on_progress)
+            result = await self.run_broadcast(
+                options, participants, kb_context, start_time, kb_included, on_progress
+            )
         elif mode in ("dialog", "dialogue"):
-            result = await self.run_dialogue(options, participants, kb_context, start_time, kb_included, on_progress)
+            result = await self.run_dialogue(
+                options, participants, kb_context, start_time, kb_included, on_progress
+            )
         elif mode == "interview":
-            result = await self.run_interview(options, participants, kb_context, start_time, kb_included, on_progress)
+            result = await self.run_interview(
+                options, participants, kb_context, start_time, kb_included, on_progress
+            )
         elif mode == "consilium":
-            result = await self.run_consilium(options, participants, kb_context, start_time, kb_included, on_progress)
+            result = await self.run_consilium(
+                options, participants, kb_context, start_time, kb_included, on_progress
+            )
         else:
             raise ValueError(f"Unsupported Consilium mode: {mode}")
 
@@ -111,20 +126,28 @@ class ConsiliumEngine:
                 role_id = p.get("roleId")
                 role = CORPORATE_ROLES.get(role_id) if role_id else None
                 c_role: CorporateRole | None = role
-                system_prompt = p.get("systemPrompt") or (
-                    c_role.system_prompt if c_role else None
-                ) or settings.default_system_instruction
+                system_prompt = (
+                    p.get("systemPrompt")
+                    or (c_role.system_prompt if c_role else None)
+                    or settings.default_system_instruction
+                )
                 enriched.append(
                     {
                         "id": p.get("id") or f"participant-{idx + 1}",
                         "model": p.get("model") or settings.default_model,
                         "roleId": role_id,
-                        "name": p.get("name") or (c_role.name if c_role else None) or f"Agent {idx + 1}",
-                        "title": p.get("title") or (c_role.title if c_role else None) or "Specialist",
+                        "name": p.get("name")
+                        or (c_role.name if c_role else None)
+                        or f"Agent {idx + 1}",
+                        "title": p.get("title")
+                        or (c_role.title if c_role else None)
+                        or "Specialist",
                         "systemPrompt": apply_locale_policy(system_prompt),
-                        "temperature": float(p.get("temperature") if p.get("temperature") is not None else (
-                            c_role.suggested_temperature if c_role else None
-                        ) or 0.5),
+                        "temperature": float(
+                            p.get("temperature")
+                            if p.get("temperature") is not None
+                            else (c_role.suggested_temperature if c_role else None) or 0.5
+                        ),
                         "provider": p.get("provider"),
                     }
                 )
@@ -159,7 +182,9 @@ class ConsiliumEngine:
             )
         return resolved
 
-    def validate_consilium_participants(self, participants: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def validate_consilium_participants(
+        self, participants: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
         active = list(participants)
         if len(active) < 3:
             extra_roles = ["architect", "devops", "security_auditor"]
@@ -204,23 +229,38 @@ class ConsiliumEngine:
                 "temperature": 0.7,
             }
 
-        self._emit(on_progress, {
-            "type": "turn_start",
-            "round": 1,
-            "participantId": participant["id"],
-            "message": f"{participant['name']} is formulating response...",
-        })
-
-        turn_start = time.monotonic()
-        effective_prompt = f"{kb_context}\n\nUser Request: {options['prompt']}" if kb_context else options["prompt"]
-
-        response = await self._safe_generate(
-            participant, [{"role": "user", "content": effective_prompt}], options, participant_key="solo"
+        self._emit(
+            on_progress,
+            {
+                "type": "turn_start",
+                "round": 1,
+                "participantId": participant["id"],
+                "message": f"{participant['name']} is formulating response...",
+            },
         )
 
-        turn = self.create_turn(1, participant, effective_prompt, response, (time.monotonic() - turn_start) * 1000)
+        turn_start = time.monotonic()
+        effective_prompt = (
+            f"{kb_context}\n\nUser Request: {options['prompt']}"
+            if kb_context
+            else options["prompt"]
+        )
 
-        self._emit(on_progress, {"type": "turn_complete", "round": 1, "participantId": participant["id"], "turn": turn})
+        response = await self._safe_generate(
+            participant,
+            [{"role": "user", "content": effective_prompt}],
+            options,
+            participant_key="solo",
+        )
+
+        turn = self.create_turn(
+            1, participant, effective_prompt, response, (time.monotonic() - turn_start) * 1000
+        )
+
+        self._emit(
+            on_progress,
+            {"type": "turn_complete", "round": 1, "participantId": participant["id"], "turn": turn},
+        )
 
         summary = self.calculate_cost_summary([turn])
         return {
@@ -307,20 +347,31 @@ class ConsiliumEngine:
             else f"Candidate Input / Topic: {options['prompt']}"
         )
 
-        self._emit(on_progress, {
-            "type": "turn_start",
-            "round": 1,
-            "participantId": interviewer["id"],
-            "message": f"{interviewer['name']} is evaluating response and drafting next question...",
-        })
+        self._emit(
+            on_progress,
+            {
+                "type": "turn_start",
+                "round": 1,
+                "participantId": interviewer["id"],
+                "message": f"{interviewer['name']} is evaluating response and drafting next question...",
+            },
+        )
 
         turn_start = time.monotonic()
         response = await self._safe_generate(
-            interviewer, [{"role": "user", "content": effective_prompt}], options, participant_key="interview"
+            interviewer,
+            [{"role": "user", "content": effective_prompt}],
+            options,
+            participant_key="interview",
         )
-        turn = self.create_turn(1, interviewer, effective_prompt, response, (time.monotonic() - turn_start) * 1000)
+        turn = self.create_turn(
+            1, interviewer, effective_prompt, response, (time.monotonic() - turn_start) * 1000
+        )
 
-        self._emit(on_progress, {"type": "turn_complete", "round": 1, "participantId": interviewer["id"], "turn": turn})
+        self._emit(
+            on_progress,
+            {"type": "turn_complete", "round": 1, "participantId": interviewer["id"], "turn": turn},
+        )
 
         summary = self.calculate_cost_summary([turn])
         return {
@@ -346,28 +397,46 @@ class ConsiliumEngine:
         kb_included: bool,
         on_progress: Callable[[dict[str, Any]], None] | None = None,
     ) -> dict[str, Any]:
-        effective_prompt = f"{kb_context}\n\nUser Request: {options['prompt']}" if kb_context else options["prompt"]
+        effective_prompt = (
+            f"{kb_context}\n\nUser Request: {options['prompt']}"
+            if kb_context
+            else options["prompt"]
+        )
 
-        self._emit(on_progress, {
-            "type": "round_complete",
-            "round": 1,
-            "message": f"Broadcasting prompt concurrently to {len(participants)} models...",
-        })
+        self._emit(
+            on_progress,
+            {
+                "type": "round_complete",
+                "round": 1,
+                "message": f"Broadcasting prompt concurrently to {len(participants)} models...",
+            },
+        )
 
         turns: list[dict[str, Any]] = []
         for p in participants:
             turn_start = time.monotonic()
-            self._emit(on_progress, {
-                "type": "turn_start",
-                "round": 1,
-                "participantId": p["id"],
-                "message": f"{p['name']} ({p['model']}) is processing broadcast request...",
-            })
-            content = await self._safe_generate(
-                p, [{"role": "user", "content": effective_prompt}], options, participant_key=f"broadcast-{p['id']}"
+            self._emit(
+                on_progress,
+                {
+                    "type": "turn_start",
+                    "round": 1,
+                    "participantId": p["id"],
+                    "message": f"{p['name']} ({p['model']}) is processing broadcast request...",
+                },
             )
-            turn = self.create_turn(1, p, effective_prompt, content, (time.monotonic() - turn_start) * 1000)
-            self._emit(on_progress, {"type": "turn_complete", "round": 1, "participantId": p["id"], "turn": turn})
+            content = await self._safe_generate(
+                p,
+                [{"role": "user", "content": effective_prompt}],
+                options,
+                participant_key=f"broadcast-{p['id']}",
+            )
+            turn = self.create_turn(
+                1, p, effective_prompt, content, (time.monotonic() - turn_start) * 1000
+            )
+            self._emit(
+                on_progress,
+                {"type": "turn_complete", "round": 1, "participantId": p["id"], "turn": turn},
+            )
             turns.append(turn)
 
         summary = self.calculate_cost_summary(turns)
@@ -396,41 +465,54 @@ class ConsiliumEngine:
     ) -> dict[str, Any]:
         arch = CORPORATE_ROLES["architect"]
         sec = CORPORATE_ROLES["security_auditor"]
-        p1 = participants[0] if participants else {
-            "id": "agent-1",
-            "model": "gemini-3.1-pro",
-            "name": "Lead Proponent",
-            "title": "Lead Architect",
-            "systemPrompt": apply_locale_policy(arch.system_prompt),
-            "temperature": 0.4,
-        }
-        p2 = participants[1] if len(participants) > 1 else {
-            "id": "agent-2",
-            "model": "gemini-3.8-flash",
-            "name": "Lead Challenger",
-            "title": "Principal Security & Risk Auditor",
-            "systemPrompt": apply_locale_policy(sec.system_prompt),
-            "temperature": 0.4,
-        }
+        p1 = (
+            participants[0]
+            if participants
+            else {
+                "id": "agent-1",
+                "model": "gemini-3.1-pro",
+                "name": "Lead Proponent",
+                "title": "Lead Architect",
+                "systemPrompt": apply_locale_policy(arch.system_prompt),
+                "temperature": 0.4,
+            }
+        )
+        p2 = (
+            participants[1]
+            if len(participants) > 1
+            else {
+                "id": "agent-2",
+                "model": "gemini-3.8-flash",
+                "name": "Lead Challenger",
+                "title": "Principal Security & Risk Auditor",
+                "systemPrompt": apply_locale_policy(sec.system_prompt),
+                "temperature": 0.4,
+            }
+        )
 
         total_rounds = max(1, min(int(options.get("rounds") or 2), 5))
         turns: list[dict[str, Any]] = []
         dialogue_history: list[dict[str, str]] = []
 
         effective_prompt = (
-            f"{kb_context}\n\nTopic for Technical Deliberation: {options['prompt']}" if kb_context else options["prompt"]
+            f"{kb_context}\n\nTopic for Technical Deliberation: {options['prompt']}"
+            if kb_context
+            else options["prompt"]
         )
         dialogue_history.append({"role": "user", "content": effective_prompt})
 
         for rnd in range(1, total_rounds + 1):
             # Participant 1 (Proponent)
             t1_start = time.monotonic()
-            self._emit(on_progress, {
-                "type": "turn_start",
-                "round": rnd,
-                "participantId": p1["id"],
-                "message": f"Round {rnd}/{total_rounds}: {p1['name']} is presenting arguments...",
-            })
+            self._emit(
+                on_progress,
+                {
+                    "type": "turn_start",
+                    "round": rnd,
+                    "participantId": p1["id"],
+                    "message": f"Round {rnd}/{total_rounds}: {p1['name']} is presenting arguments...",
+                },
+            )
             p1_prompt = (
                 effective_prompt
                 if rnd == 1
@@ -444,22 +526,35 @@ class ConsiliumEngine:
                 f"Maintain intellectual rigor, focus on concrete trade-offs, and defend your positions with evidence."
             )
             p1_response = await self._safe_generate(
-                p1, [*dialogue_history, {"role": "user", "content": p1_prompt}], options,
-                participant_key=f"dialogue-{p1['id']}", system_extra=p1_extra,
+                p1,
+                [*dialogue_history, {"role": "user", "content": p1_prompt}],
+                options,
+                participant_key=f"dialogue-{p1['id']}",
+                system_extra=p1_extra,
             )
-            turn1 = self.create_turn(rnd, p1, p1_prompt, p1_response, (time.monotonic() - t1_start) * 1000)
+            turn1 = self.create_turn(
+                rnd, p1, p1_prompt, p1_response, (time.monotonic() - t1_start) * 1000
+            )
             turns.append(turn1)
-            dialogue_history.append({"role": "assistant", "content": f"[{p1['name']}]: {p1_response}"})
-            self._emit(on_progress, {"type": "turn_complete", "round": rnd, "participantId": p1["id"], "turn": turn1})
+            dialogue_history.append(
+                {"role": "assistant", "content": f"[{p1['name']}]: {p1_response}"}
+            )
+            self._emit(
+                on_progress,
+                {"type": "turn_complete", "round": rnd, "participantId": p1["id"], "turn": turn1},
+            )
 
             # Participant 2 (Challenger)
             t2_start = time.monotonic()
-            self._emit(on_progress, {
-                "type": "turn_start",
-                "round": rnd,
-                "participantId": p2["id"],
-                "message": f"Round {rnd}/{total_rounds}: {p2['name']} is responding and critiquing...",
-            })
+            self._emit(
+                on_progress,
+                {
+                    "type": "turn_start",
+                    "round": rnd,
+                    "participantId": p2["id"],
+                    "message": f"Round {rnd}/{total_rounds}: {p2['name']} is responding and critiquing...",
+                },
+            )
             p2_prompt = (
                 f"Round {rnd} Critique: Directly address the arguments posed by {p1['name']} above. "
                 f"Point out vulnerabilities, edge cases, cost implications in USD/EUR, and suggest counter-proposals:\n\n{p1_response}"
@@ -469,23 +564,40 @@ class ConsiliumEngine:
                 f"Critically analyze their statements, probe for weak spots, and propose resilient solutions."
             )
             p2_response = await self._safe_generate(
-                p2, [*dialogue_history, {"role": "user", "content": p2_prompt}], options,
-                participant_key=f"dialogue-{p2['id']}", system_extra=p2_extra,
+                p2,
+                [*dialogue_history, {"role": "user", "content": p2_prompt}],
+                options,
+                participant_key=f"dialogue-{p2['id']}",
+                system_extra=p2_extra,
             )
-            turn2 = self.create_turn(rnd, p2, p2_prompt, p2_response, (time.monotonic() - t2_start) * 1000)
+            turn2 = self.create_turn(
+                rnd, p2, p2_prompt, p2_response, (time.monotonic() - t2_start) * 1000
+            )
             turns.append(turn2)
-            dialogue_history.append({"role": "assistant", "content": f"[{p2['name']}]: {p2_response}"})
-            self._emit(on_progress, {"type": "turn_complete", "round": rnd, "participantId": p2["id"], "turn": turn2})
+            dialogue_history.append(
+                {"role": "assistant", "content": f"[{p2['name']}]: {p2_response}"}
+            )
+            self._emit(
+                on_progress,
+                {"type": "turn_complete", "round": rnd, "participantId": p2["id"], "turn": turn2},
+            )
 
         # Synthesis
         synth_model = options.get("synthesizerModel") or "gemini-3.8-flash"
-        self._emit(on_progress, {"type": "synthesis_start", "message": f"Synthesizing final dialogue conclusion with {synth_model}..."})
+        self._emit(
+            on_progress,
+            {
+                "type": "synthesis_start",
+                "message": f"Synthesizing final dialogue conclusion with {synth_model}...",
+            },
+        )
 
         synth_prompt = (
             f"You are the Senior Technical Arbiter. Synthesize the debate between {p1['name']} and {p2['name']} "
             f'on the topic:\n"{options["prompt"]}"\n\nDeliberation Transcript:\n'
             + "\n\n".join(
-                f"### Round {t['round']} - {t['name']} ({t['role']}):\n{t['content']}" for t in turns
+                f"### Round {t['round']} - {t['name']} ({t['role']}):\n{t['content']}"
+                for t in turns
             )
             + "\n\nProduce an authoritative Executive Synthesis with:\n"
             + "1. Core Points of Consensus\n"
@@ -494,12 +606,18 @@ class ConsiliumEngine:
         )
 
         synthesis = await self._safe_generate(
-            {"model": synth_model, "temperature": 0.2, "systemPrompt": settings.default_system_instruction},
+            {
+                "model": synth_model,
+                "temperature": 0.2,
+                "systemPrompt": settings.default_system_instruction,
+            },
             [{"role": "user", "content": synth_prompt}],
             options,
             participant_key="dialogue-synthesis",
         )
-        self._emit(on_progress, {"type": "synthesis_complete", "message": "Dialogue synthesis completed."})
+        self._emit(
+            on_progress, {"type": "synthesis_complete", "message": "Dialogue synthesis completed."}
+        )
 
         summary = self.calculate_cost_summary(turns, synthesis, synth_model, synth_prompt)
         return {
@@ -530,57 +648,87 @@ class ConsiliumEngine:
         total_rounds = max(1, min(int(options.get("rounds") or 2), 4))
         turns: list[dict[str, Any]] = []
         effective_prompt = (
-            f"{kb_context}\n\nConsilium Mandate / Technical Challenge: {options['prompt']}" if kb_context else options["prompt"]
+            f"{kb_context}\n\nConsilium Mandate / Technical Challenge: {options['prompt']}"
+            if kb_context
+            else options["prompt"]
         )
 
         # Round 1: concurrent independent evaluations
-        logger.info("ConsiliumEngine", f"Consilium Round 1: {len(active_participants)} agents evaluating concurrently")
-        self._emit(on_progress, {
-            "type": "round_complete",
-            "round": 1,
-            "message": f"Consilium Round 1: {len(active_participants)} agents providing independent expert perspectives...",
-        })
+        logger.info(
+            "ConsiliumEngine",
+            f"Consilium Round 1: {len(active_participants)} agents evaluating concurrently",
+        )
+        self._emit(
+            on_progress,
+            {
+                "type": "round_complete",
+                "round": 1,
+                "message": f"Consilium Round 1: {len(active_participants)} agents providing independent expert perspectives...",
+            },
+        )
 
         round1_turns: list[dict[str, Any]] = []
         for p in active_participants:
             turn_start = time.monotonic()
-            self._emit(on_progress, {
-                "type": "turn_start",
-                "round": 1,
-                "participantId": p["id"],
-                "message": f"{p['name']} ({p['title']}) is drafting Round 1 stance...",
-            })
+            self._emit(
+                on_progress,
+                {
+                    "type": "turn_start",
+                    "round": 1,
+                    "participantId": p["id"],
+                    "message": f"{p['name']} ({p['title']}) is drafting Round 1 stance...",
+                },
+            )
             user_msg = (
-                f'Please analyze the following challenge from your specific professional perspective as {p["title"]}:\n\n'
+                f"Please analyze the following challenge from your specific professional perspective as {p['title']}:\n\n"
                 f'"{effective_prompt}"\n\nState your primary recommendations, essential prerequisites, and critical risks.'
             )
             content = await self._safe_generate(
-                p, [{"role": "user", "content": user_msg}], options, participant_key=f"consilium-r1-{p['id']}"
+                p,
+                [{"role": "user", "content": user_msg}],
+                options,
+                participant_key=f"consilium-r1-{p['id']}",
             )
-            turn = self.create_turn(1, p, options["prompt"], content, (time.monotonic() - turn_start) * 1000)
-            self._emit(on_progress, {"type": "turn_complete", "round": 1, "participantId": p["id"], "turn": turn})
+            turn = self.create_turn(
+                1, p, options["prompt"], content, (time.monotonic() - turn_start) * 1000
+            )
+            self._emit(
+                on_progress,
+                {"type": "turn_complete", "round": 1, "participantId": p["id"], "turn": turn},
+            )
             round1_turns.append(turn)
         turns.extend(round1_turns)
 
         # Rounds 2..K: cross-deliberation
         for rnd in range(2, total_rounds + 1):
-            logger.info("ConsiliumEngine", f"Consilium Round {rnd}: Cross-evaluation across {len(active_participants)} agents")
-            self._emit(on_progress, {
-                "type": "round_complete",
-                "round": rnd,
-                "message": f"Consilium Round {rnd}: Deliberating on peers' statements and refining alignment...",
-            })
+            logger.info(
+                "ConsiliumEngine",
+                f"Consilium Round {rnd}: Cross-evaluation across {len(active_participants)} agents",
+            )
+            self._emit(
+                on_progress,
+                {
+                    "type": "round_complete",
+                    "round": rnd,
+                    "message": f"Consilium Round {rnd}: Deliberating on peers' statements and refining alignment...",
+                },
+            )
             peer_summary = "\n\n---\n\n".join(
-                f"[{t['name']} - {t['role']}]:\n{t['content']}" for t in turns if t["round"] == rnd - 1
+                f"[{t['name']} - {t['role']}]:\n{t['content']}"
+                for t in turns
+                if t["round"] == rnd - 1
             )
             for p in active_participants:
                 turn_start = time.monotonic()
-                self._emit(on_progress, {
-                    "type": "turn_start",
-                    "round": rnd,
-                    "participantId": p["id"],
-                    "message": f"{p['name']} is evaluating peers' input in Round {rnd}...",
-                })
+                self._emit(
+                    on_progress,
+                    {
+                        "type": "turn_start",
+                        "round": rnd,
+                        "participantId": p["id"],
+                        "message": f"{p['name']} is evaluating peers' input in Round {rnd}...",
+                    },
+                )
                 prompt_text = (
                     f"You are participating in Round {rnd} of the EvaLine Technical Consilium.\n"
                     f'Original Mandate: "{options["prompt"]}"\n\n'
@@ -589,22 +737,34 @@ class ConsiliumEngine:
                     f"Highlight consensus or irreconcilable trade-offs."
                 )
                 content = await self._safe_generate(
-                    p, [{"role": "user", "content": prompt_text}], options, participant_key=f"consilium-r{rnd}-{p['id']}"
+                    p,
+                    [{"role": "user", "content": prompt_text}],
+                    options,
+                    participant_key=f"consilium-r{rnd}-{p['id']}",
                 )
-                turn = self.create_turn(rnd, p, prompt_text, content, (time.monotonic() - turn_start) * 1000)
-                self._emit(on_progress, {"type": "turn_complete", "round": rnd, "participantId": p["id"], "turn": turn})
+                turn = self.create_turn(
+                    rnd, p, prompt_text, content, (time.monotonic() - turn_start) * 1000
+                )
+                self._emit(
+                    on_progress,
+                    {"type": "turn_complete", "round": rnd, "participantId": p["id"], "turn": turn},
+                )
                 turns.append(turn)
 
         # Final synthesis
         synth_model = options.get("synthesizerModel") or "gemini-3.8-flash"
         logger.info("ConsiliumEngine", f"Synthesizing final consensus with {synth_model}")
-        self._emit(on_progress, {
-            "type": "synthesis_start",
-            "message": f"Consilium deliberation concluded. Synthesizing consensus document with {synth_model}...",
-        })
+        self._emit(
+            on_progress,
+            {
+                "type": "synthesis_start",
+                "message": f"Consilium deliberation concluded. Synthesizing consensus document with {synth_model}...",
+            },
+        )
 
         full_transcript = "\n\n".join(
-            f"### Round {t['round']} \u2014 {t['name']} ({t['role']} / {t['model']}):\n{t['content']}" for t in turns
+            f"### Round {t['round']} \u2014 {t['name']} ({t['role']} / {t['model']}):\n{t['content']}"
+            for t in turns
         )
         synthesis_prompt = (
             f"You are the EvaLine Supreme Technical Council Synthesizer.\n"
@@ -619,12 +779,22 @@ class ConsiliumEngine:
             f"## 5. Budgetary & Infrastructure Impact (strictly in USD ($) and EUR (\u20ac))\n"
         )
         synthesis = await self._safe_generate(
-            {"model": synth_model, "temperature": 0.2, "systemPrompt": settings.default_system_instruction},
+            {
+                "model": synth_model,
+                "temperature": 0.2,
+                "systemPrompt": settings.default_system_instruction,
+            },
             [{"role": "user", "content": synthesis_prompt}],
             options,
             participant_key="consilium-synthesis",
         )
-        self._emit(on_progress, {"type": "synthesis_complete", "message": "Consilium Consensus Report successfully generated."})
+        self._emit(
+            on_progress,
+            {
+                "type": "synthesis_complete",
+                "message": "Consilium Consensus Report successfully generated.",
+            },
+        )
 
         summary = self.calculate_cost_summary(turns, synthesis, synth_model, synthesis_prompt)
         return {
@@ -671,7 +841,9 @@ class ConsiliumEngine:
             )
         except Exception as exc:  # noqa: BLE001
             enc = participant_key or participant.get("id", "unknown")
-            logger.error("ConsiliumEngine", f"Error querying model {participant['model']} ({enc}): {exc}")
+            logger.error(
+                "ConsiliumEngine", f"Error querying model {participant['model']} ({enc}): {exc}"
+            )
             return f"[Error querying model {participant['model']}: {exc}]"
 
     def create_turn(
@@ -736,7 +908,9 @@ class ConsiliumEngine:
             total_completion_tokens += sc
             total_cost_usd += s_cost["costUSD"]
             total_cost_eur += s_cost["costEUR"]
-            stat = model_stats.setdefault(synth_model, {"tokens": 0.0, "costUSD": 0.0, "costEUR": 0.0})
+            stat = model_stats.setdefault(
+                synth_model, {"tokens": 0.0, "costUSD": 0.0, "costEUR": 0.0}
+            )
             stat["tokens"] += sp + sc
             stat["costUSD"] += s_cost["costUSD"]
             stat["costEUR"] += s_cost["costEUR"]

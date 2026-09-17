@@ -1,7 +1,6 @@
-import os
-import sys
-import json
 import asyncio
+import os
+
 from aiohttp import web
 
 HTML_CONTENT = """
@@ -55,7 +54,7 @@ HTML_CONTENT = """
         const micBtn = document.getElementById('micBtn');
         const voiceSelect = document.getElementById('voiceSelect');
         const audioPlayer = document.getElementById('audioPlayer');
-        
+
         function log(msg) {
             logEl.innerHTML += `<div>> ${msg}</div>`;
             logEl.scrollTop = logEl.scrollHeight;
@@ -78,19 +77,19 @@ HTML_CONTENT = """
         // Распознавание речи
         let recognition = null;
         let isListening = false;
-        
+
         if (window.SpeechRecognition || window.webkitSpeechRecognition) {
             recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.continuous = false; // Режим рации: слушаем до паузы и отвечаем
             recognition.interimResults = false;
             recognition.lang = 'ru-RU'; // По умолчанию слушаем русскую речь
-            
+
             recognition.onstart = () => {
                 isListening = true;
                 micBtn.classList.add('active');
                 statusEl.innerText = "Слушаю вас... Говорите.";
             };
-            
+
             recognition.onend = () => {
                 isListening = false;
                 micBtn.classList.remove('active');
@@ -111,7 +110,7 @@ HTML_CONTENT = """
         micBtn.onclick = () => {
             if (synth.speaking) synth.cancel();
             audioPlayer.pause();
-            
+
             if (isListening) {
                 recognition.stop();
             } else {
@@ -157,38 +156,43 @@ HTML_CONTENT = """
 </html>
 """
 
+
 async def handle_index(request):
-    return web.Response(text=HTML_CONTENT, content_type='text/html')
+    return web.Response(text=HTML_CONTENT, content_type="text/html")
+
 
 async def handle_tts(request):
     try:
         data = await request.json()
-        text = data.get('text', 'Hello')
-        voice = data.get('voice', 'ru-RU-DmitryNeural')
-        
+        text = data.get("text", "Hello")
+        voice = data.get("voice", "ru-RU-DmitryNeural")
+
         output_file = "/tmp/output.mp3"
         if os.path.exists(output_file):
             os.remove(output_file)
 
-        cmd = f'edge-tts --voice "{voice}" --text "{text}" --write-media "{output_file}"'
+        cmd = (
+            f'edge-tts --voice "{voice}" --text "{text}" --write-media "{output_file}"'
+        )
         process = await asyncio.create_subprocess_shell(cmd)
         await process.communicate()
-        
+
         if os.path.exists(output_file):
             return web.FileResponse(output_file)
         else:
             return web.Response(status=500, text="Failed to generate audio")
-            
+
     except Exception as e:
         return web.Response(status=500, text=str(e))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app = web.Application()
-    app.router.add_get('/', handle_index)
-    app.router.add_post('/tts', handle_tts)
-    
+    app.router.add_get("/", handle_index)
+    app.router.add_post("/tts", handle_tts)
+
     print("========================================")
     print(" Voice Sync Server v2 (Centered Button)")
     print(" Откройте в браузере: http://localhost:8085")
     print("========================================")
-    web.run_app(app, host='0.0.0.0', port=8085)
+    web.run_app(app, host="0.0.0.0", port=8085)

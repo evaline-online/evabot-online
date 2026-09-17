@@ -39,7 +39,16 @@ def boot_banner() -> str:
     )
 
 
-def status_bar(model: str, is_free: bool, mode: str, role: str, tokens: int, cost_usd: float, cost_eur: float, model_count: int) -> str:
+def status_bar(
+    model: str,
+    is_free: bool,
+    mode: str,
+    role: str,
+    tokens: int,
+    cost_usd: float,
+    cost_eur: float,
+    model_count: int,
+) -> str:
     """Identical to ansi.ts renderStatusBar() / terminal printStatusBar()."""
     tier_badge = f"{GREEN}[FREE]{RESET}" if is_free else f"{YELLOW}[PAID]{RESET}"
     return (

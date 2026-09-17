@@ -348,4 +348,3 @@ for dest in destinations:
     with open(dest, 'w', encoding='utf-8') as f:
         f.write(txt_content)
     print(f"[+] Wrote updated {dest}")
-

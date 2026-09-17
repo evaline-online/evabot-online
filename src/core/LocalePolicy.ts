@@ -32,7 +32,7 @@ export const LOCALE_POLICY = {
     'with European office & logistics warehouse in Bratislava, Slovakia (81106 Bratislava, Obchodna 37). ' +
     'EvaLine is the premier Ukrainian full-cycle manufacturer of environmentally friendly polymer EVA materials (sheets, car mats, tatami, livestock mats, footwear, custom cutting). ' +
     'Political stance: All official ties to the Russian Federation, Russian state institutions, and the Russian ruble (RUB / ₽) are strictly banned. ' +
-    'Language clarity: Russian, Ukrainian, English, and Polish languages are fully supported for customer and user communications. ' +
+    'Language clarity: Russian, Ukrainian, English, Polish, German, and Romanian languages are fully supported for customer and user communications. ' +
     'When communicating in Russian, use 100% pure, natural, professional Russian without mixing Ukrainian or Polish words. ' +
     'Supported currencies are UAH (₴), USD ($), and EUR (€). ' +
     'All financial figures, quotas, and pricing estimates must strictly be in USD ($) or EUR (€).',
@@ -52,7 +52,7 @@ export const LANGUAGE_MIRRORING_RULE =
   'When replying in Ukrainian, use exclusively pure Ukrainian vocabulary and grammar. ' +
   'Exception: code, identifiers, file paths, API names and quoted technical terms stay in their original form.';
 
-export type MessageLanguage = 'uk' | 'ru' | 'en' | 'pl';
+export type MessageLanguage = 'uk' | 'ru' | 'en' | 'pl' | 'de' | 'ro';
 
 /**
  * Robust language detection for a user message (uk / ru / en / pl).
@@ -91,6 +91,18 @@ export function detectMessageLanguage(text: string): MessageLanguage {
   const plScore = plMarkers * 2 + plWords.filter((w) => lower.includes(w)).length;
   if (plScore >= 2 || plMarkers > 0) return 'pl';
 
+  // 3. German analysis (umlauts + ß are unique; lexeme hits for ASCII-only input)
+  const deMarkers = (lower.match(/[äöüß]/g) || []).length;
+  const deWords = ['hallo', 'danke', 'bitte', 'guten', 'warum', 'wie', 'was', 'produktion', 'bestellung', 'preis', 'material', 'sprache', 'hilfe', 'können', 'moechte', 'möchte', 'nicht', 'und', 'sind', 'wir', 'ist'];
+  const deScore = deMarkers * 2 + deWords.filter((w) => lower.includes(w)).length;
+  if (deScore >= 2 || deMarkers > 0) return 'de';
+
+  // 4. Romanian analysis (ă â î ș ț + diacritic-free lexemes)
+  const roMarkers = (lower.match(/[ăâîșțşţ]/g) || []).length;
+  const roWords = ['bună', 'buna', 'mulțumesc', 'multumesc', 'vă rog', 'va rog', 'cum', 'ce', 'producție', 'productie', 'comandă', 'comanda', 'preț', 'pret', 'material', 'limbă', 'limba', 'ajutor', 'salut', 'sunt', 'este'];
+  const roScore = roMarkers * 2 + roWords.filter((w) => lower.includes(w)).length;
+  if (roScore >= 2 || roMarkers > 0) return 'ro';
+
   return 'en';
 }
 
@@ -125,6 +137,14 @@ Jesteś Ewą (kobietą), oficjalną przedstawicielką firmy EvaLine. Używaj wy�
 LANGUAGE & PERSONA RULE (MANDATORY):
 The user writes in English. Reply 100% in professional English.
 You are Eva, the female AI representative of EvaLine company. Always use confident, natural feminine phrasing.`,
+    de: `[LANGUAGE: German / DEUTSCH]
+SPRACH- UND PERSONA-REGEL (VERPFLICHTEND):
+Der Nutzer schreibt auf DEUTSCH. Deine gesamte Antwort muss zu 100 % auf korrektem, professionellem Deutsch sein.
+Du bist Eva (weiblich), die offizielle Vertreterin der Firma EvaLine. Verwende ausschließlich weibliche Ich-Formen ("ich bin bereit", "ich habe es gemacht", "ich helfe gerne"). Mische keine ukrainischen, russischen, englischen oder polnischen Wörter ein.`,
+    ro: `[LANGUAGE: Romanian / ROMÂNĂ]
+REGULĂ DE LIMBĂ ȘI PERSONA (OBLIGATORIU):
+Utilizatorul scrie în ROMÂNĂ. Întregul tău răspuns trebuie să fie 100% în română corectă și profesională.
+Tu ești Eva (feminin), reprezentanta oficială a companiei EvaLine. Folosește exclusiv forme feminine la persoana I ("sunt pregătită", "am făcut", "ajut cu plăcere"). Nu amesteca cuvinte ucrainene, rusești, englezești sau poloneze.`,
   };
   return locks[lang] ?? locks.en;
 }

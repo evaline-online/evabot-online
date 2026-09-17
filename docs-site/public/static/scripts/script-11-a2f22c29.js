@@ -12,4 +12,3 @@
       };
 
       document.head.appendChild(plausibleScript);
-    

@@ -3,6 +3,7 @@ import { Config } from './Config.js';
 import { BREAKER_PROVIDER_NAMES, getBreaker, providerOfModel } from './Resilience.js';
 import { ProductCatalog } from './ProductCatalog.js';
 import { knowledgeBase } from './KnowledgeBase.js';
+import { LearnedLessons } from './LearnedLessons.js';
 
 export interface LastUsedModelInfo {
   model: string;
@@ -63,7 +64,7 @@ export class SystemContext {
   }
 
   public static build(lang?: string): string {
-    const l = lang === 'ru' || lang === 'uk' || lang === 'en' ? lang : 'uk';
+    const l = lang === 'ru' || lang === 'uk' || lang === 'en' ? lang : lang === 'de' || lang === 'ro' ? 'en' : 'uk';
     const cached = this.cache[l];
     if (cached && Date.now() - cached.ts < this.CACHE_TTL_MS) {
       return cached.text;
@@ -172,6 +173,17 @@ export class SystemContext {
           kbLine,
         ];
     let text = lines.join('\n');
+    try {
+      const lessonsBlock = LearnedLessons.formatForPrompt(lang, 3);
+      if (lessonsBlock) {
+        const budget = this.MAX_CHARS - text.length - 2;
+        if (budget > 100) {
+          text += `\n\n${lessonsBlock.substring(0, budget)}`;
+        }
+      }
+    } catch {
+      /* best-effort */
+    }
     if (text.length > this.MAX_CHARS) text = `${text.substring(0, this.MAX_CHARS - 1)}…`;
     return text;
   }

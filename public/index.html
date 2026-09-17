@@ -3167,6 +3167,9 @@ Examples:
             }
             userInput.value = (userInput.value ? userInput.value.replace(/\s+$/, '') + ' ' : '') + data.transcript;
             userInput.focus();
+            if (this.autosend) {
+              setTimeout(() => sendMessage(), 250);
+            }
           } catch (err) {
             showToast(d.voiceSttErr + (err && err.message ? err.message : 'network'));
           }

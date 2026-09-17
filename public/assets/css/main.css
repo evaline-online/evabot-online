@@ -846,7 +846,7 @@
       font-size: 0.74rem;
       white-space: nowrap;
     }
-    
+
 
 /* ==========================================================================
    FIT-TO-SCREEN FOR ALL DIAGRAMS (mermaid + markmap)
@@ -1031,7 +1031,7 @@
       color: var(--accent-green);
     }
 
-    
+
     /* Glossary Section */
     .glossary-controls {
       display: flex;
@@ -1155,7 +1155,7 @@
       line-height: 1.55;
     }
 
-    
+
     /* ==========================================================================
        SECTION 08: BUSINESS SOLUTIONS, PIPELINE & ROI CALCULATOR STYLES
        ========================================================================== */
@@ -1667,7 +1667,7 @@
     @media (max-width: 768px) {
       .matrix-search-box input { width: 100%; }
     }
-  
+
 
 /* Zero-latency language visibility rules */
 .t-ru, .t-uk, .t-en {
@@ -2968,5 +2968,3 @@ details.sub-accordion[open] > summary.sub-summary {
     color: #000 !important;
   }
 }
-
-

@@ -66,15 +66,25 @@ class ModelRegistry:
 
     @staticmethod
     def get_free_models() -> list[dict[str, Any]]:
-        return [dict(m) for m in COMPLETE_GOOGLE_MODEL_CATALOG if m["pricing"]["freeTierStatus"] == _FREE_STATUS]
+        return [
+            dict(m)
+            for m in COMPLETE_GOOGLE_MODEL_CATALOG
+            if m["pricing"]["freeTierStatus"] == _FREE_STATUS
+        ]
 
     @staticmethod
     def get_paid_only_models() -> list[dict[str, Any]]:
-        return [dict(m) for m in COMPLETE_GOOGLE_MODEL_CATALOG if m["pricing"]["freeTierStatus"] == _PAID_STATUS]
+        return [
+            dict(m)
+            for m in COMPLETE_GOOGLE_MODEL_CATALOG
+            if m["pricing"]["freeTierStatus"] == _PAID_STATUS
+        ]
 
     @staticmethod
     def get_google_models() -> list[dict[str, Any]]:
-        return [dict(m) for m in COMPLETE_GOOGLE_MODEL_CATALOG if m["provider"] == "Google DeepMind"]
+        return [
+            dict(m) for m in COMPLETE_GOOGLE_MODEL_CATALOG if m["provider"] == "Google DeepMind"
+        ]
 
     @staticmethod
     def get_openrouter_models() -> list[dict[str, Any]]:

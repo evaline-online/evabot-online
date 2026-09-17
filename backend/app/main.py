@@ -21,6 +21,7 @@ from .config import settings
 from .consilium import CONSILIUM_MODES, PERSONA_IDS, ConsiliumEngine
 from .corporate_roles import CORPORATE_ROLES, list_corporate_roles
 from .diagnostics import run_diagnostics
+from .dispatcher import delegate_task
 from .llm_client import UniversalLlmClient
 from .logger import logger
 from .model_registry import ModelRegistry
@@ -519,6 +520,25 @@ async def api_consilium(payload: dict[str, Any]) -> JSONResponse:
     return JSONResponse({"success": True, "result": result})
 
 
+@app.post("/api/task/delegate")
+async def api_task_delegate(payload: dict[str, Any]) -> JSONResponse:
+    """Single entry point for external agents (Telegram, OpenClaw, Hermes, n8n,
+    voice). Dispatches by intent to chat / consilium / OpenHands / status."""
+    task = payload.get("task") or payload.get("message")
+    if not isinstance(task, str) or not task:
+        raise HTTPException(status_code=400, detail='Missing or invalid "task" parameter')
+
+    try:
+        result = await delegate_task(task, payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except Exception as exc:  # noqa: BLE001
+        logger.error("Server", f"Delegate error: {exc}")
+        return JSONResponse({"error": str(exc) or "Delegation error"}, status_code=500)
+
+    return JSONResponse({"success": True, **result})
+
+
 # ---------------------------------------------------------------------------
 # Static frontend hosting (dev convenience; frontend is a separate Vite app)
 # ---------------------------------------------------------------------------
@@ -543,6 +563,7 @@ async def api_root() -> JSONResponse:
                 "/api/chat",
                 "/api/chat/stream",
                 "/api/consilium",
+                "/api/task/delegate",
                 "/api/voice/status",
                 "/api/voice/config",
                 "/api/voice/toggle",

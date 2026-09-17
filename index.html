@@ -16,9 +16,9 @@
       --dark-gray: #1a1a1a;
       --border: #333;
     }
-    
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
+
     body {
       background: var(--bg);
       color: var(--fg);
@@ -27,8 +27,12 @@
       display: flex;
       flex-direction: column;
     }
-    
+
     .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
       background: var(--bg);
       border-bottom: 1px solid var(--border);
       padding: 10px 20px;
@@ -37,15 +41,16 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 10px;
+      z-index: 100;
     }
-    
+
     .logo {
       display: flex;
       align-items: center;
       gap: 10px;
       font-weight: bold;
     }
-    
+
     .status-light {
       width: 10px;
       height: 10px;
@@ -53,7 +58,7 @@
       background: var(--green);
       box-shadow: 0 0 8px var(--green);
     }
-    
+
     .model-pill {
       background: var(--dark-gray);
       border: 1px solid var(--border);
@@ -61,12 +66,13 @@
       cursor: pointer;
       font-family: inherit;
       font-size: 12px;
+      touch-action: manipulation;
     }
-    
+
     .model-pill:hover {
       border-color: var(--green);
     }
-    
+
     .menu-btn {
       background: var(--bg);
       color: var(--fg);
@@ -75,13 +81,14 @@
       cursor: pointer;
       font-family: inherit;
       font-size: 12px;
+      touch-action: manipulation;
     }
-    
+
     .menu-btn:hover {
       border-color: var(--green);
       background: var(--dark-gray);
     }
-    
+
     .chat-container {
       flex: 1;
       overflow-y: auto;
@@ -89,8 +96,10 @@
       display: flex;
       flex-direction: column;
       gap: 15px;
+      padding-top: 60px; /* header height */
+      padding-bottom: 80px; /* input area height */
     }
-    
+
     .message {
       padding: 12px 16px;
       border-radius: 4px;
@@ -98,19 +107,19 @@
       line-height: 1.5;
       word-wrap: break-word;
     }
-    
+
     .message.user {
       background: #1a1a2e;
       align-self: flex-end;
       border-left: 3px solid var(--green);
     }
-    
+
     .message.bot {
       background: #0a0a1a;
       align-self: flex-start;
       border-left: 3px solid var(--cyan);
     }
-    
+
     .message.system {
       background: #2a1a1a;
       border-left: 3px solid var(--yellow);
@@ -120,7 +129,7 @@
       white-space: pre-wrap;
       font-family: 'Courier New', monospace;
     }
-    
+
     .message.welcome {
       background: #000;
       border: 1px solid var(--green);
@@ -128,19 +137,24 @@
       max-width: 100%;
       font-size: 13px;
     }
-    
+
     .input-area {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
       background: var(--bg);
       border-top: 1px solid var(--border);
-      padding: 15px 20px;
+      padding: 10px;
+      z-index: 100;
     }
-    
+
     .input-container {
       display: flex;
       gap: 10px;
     }
-    
-    textarea {
+
+textarea {
       flex: 1;
       background: #0a0a0a;
       color: var(--fg);
@@ -149,14 +163,17 @@
       font-family: inherit;
       font-size: 14px;
       resize: none;
-      min-height: 60px;
+      min-height: 44px;
+      line-height: 1.4;
+      box-sizing: border-box;
+      touch-action: manipulation;
     }
-    
+
     textarea:focus {
       outline: none;
       border-color: var(--green);
     }
-    
+
     .send-btn {
       background: var(--green);
       color: #000;
@@ -166,19 +183,20 @@
       font-family: inherit;
       cursor: pointer;
       font-size: 14px;
+      touch-action: manipulation;
     }
-    
+
     .send-btn:hover {
       background: #0c0;
       box-shadow: 0 0 10px var(--green);
     }
-    
+
     .send-btn:disabled {
       background: var(--gray);
       cursor: not-allowed;
       box-shadow: none;
     }
-    
+
     .modal {
       display: none;
       position: fixed;
@@ -190,7 +208,7 @@
       z-index: 100;
       overflow-y: auto;
     }
-    
+
     .modal-content {
       max-width: 800px;
       margin: 50px auto;
@@ -199,7 +217,7 @@
       padding: 30px;
       position: relative;
     }
-    
+
     .modal-close {
       position: absolute;
       top: 10px;
@@ -209,21 +227,22 @@
       color: var(--fg);
       font-size: 24px;
       cursor: pointer;
+      touch-action: manipulation;
     }
-    
+
     .modal h2 {
       margin-bottom: 20px;
       color: var(--green);
       border-bottom: 1px solid var(--border);
       padding-bottom: 10px;
     }
-    
+
     .model-list {
       max-height: 60vh;
       overflow-y: auto;
       border: 1px solid var(--border);
     }
-    
+
     .model-item {
       padding: 12px 16px;
       border-bottom: 1px solid var(--border);
@@ -231,56 +250,57 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      touch-action: manipulation;
     }
-    
+
     .model-item:hover {
       background: #0a1a0a;
     }
-    
+
     .model-item.active {
       background: #0a2a0a;
       border-left: 3px solid var(--green);
     }
-    
+
     .model-info {
       flex: 1;
     }
-    
+
     .model-name {
       font-weight: bold;
       margin-bottom: 4px;
     }
-    
+
     .model-meta {
       font-size: 11px;
       color: var(--gray);
     }
-    
+
     .model-badge {
       font-size: 11px;
       padding: 2px 8px;
       border-radius: 2px;
       font-weight: bold;
     }
-    
+
     .badge-free {
       background: #0a2a0a;
       color: var(--green);
       border: 1px solid var(--green);
     }
-    
+
     .badge-paid {
       background: #2a1a0a;
       color: var(--yellow);
       border: 1px solid var(--yellow);
     }
-    
+
     .filter-bar {
       display: flex;
       gap: 10px;
       margin-bottom: 15px;
     }
-    
+
     .filter-btn {
       background: var(--bg);
       color: var(--fg);
@@ -289,20 +309,43 @@
       cursor: pointer;
       font-family: inherit;
       font-size: 12px;
+      touch-action: manipulation;
     }
-    
+
     .filter-btn:hover {
       border-color: var(--green);
     }
-    
+
     .filter-btn.active {
       background: var(--green);
       color: #000;
     }
-    
+
     pre {
       font-family: 'Courier New', monospace;
       white-space: pre-wrap;
+    }
+
+    @media (max-width: 600px) {
+      .header {
+        padding: 8px 12px;
+        gap: 6px;
+      }
+      .logo span { font-size: 13px; }
+      #model-counter { display: none; }
+      .model-pill { padding: 4px 8px; font-size: 11px; }
+      .menu-btn { padding: 4px 8px; font-size: 11px; }
+      .chat-container { padding: 12px; padding-top: 56px; padding-bottom: 72px; gap: 10px; }
+      .message { max-width: 95%; font-size: 14px; }
+      .message.system { font-size: 12px; }
+      .input-container { gap: 6px; }
+      textarea { padding: 10px; font-size: 13px; min-height: 40px; -webkit-text-size-adjust: 100%; }
+      .send-btn { padding: 0 16px; font-size: 13px; min-height: 44px; }
+    }
+
+    @supports (padding: max(0px)) {
+      .input-area { padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+      body { padding-bottom: env(safe-area-inset-bottom); }
     }
   </style>
 </head>
@@ -318,7 +361,7 @@
       <button class="menu-btn" id="menu-btn">☰ МЕНЮ</button>
     </div>
   </div>
-  
+
   <div class="chat-container" id="chat-container">
     <div class="message welcome">
       <pre>+==============================================================================+
@@ -344,10 +387,10 @@
   /clear       - Очистить экран</pre>
     </div>
   </div>
-  
+
   <div class="input-area">
     <div class="input-container">
-      <textarea id="user-input" placeholder="Введите сообщение или команду (Enter для отправки, Shift+Enter для новой строки)..."></textarea>
+      <textarea id="user-input" inputmode="text" autocomplete="on" autocapitalize="sentences" autocorrect="on" placeholder="Введите сообщение или команду (Enter для отправки, Shift+Enter для новой строки)..."></textarea>
       <button class="send-btn" id="send-btn">➤ ОТПРАВИТЬ</button>
     </div>
   </div>
@@ -398,7 +441,7 @@
     function addMessage(role, text, isPreformatted = false) {
       const msgDiv = document.createElement('div');
       msgDiv.className = `message ${role}`;
-      
+
       if (isPreformatted) {
         const pre = document.createElement('pre');
         pre.textContent = text;
@@ -406,7 +449,7 @@
       } else {
         msgDiv.innerHTML = text;
       }
-      
+
       chatContainer.appendChild(msgDiv);
       chatContainer.scrollTop = chatContainer.scrollHeight;
       return msgDiv;
@@ -431,7 +474,7 @@
 
     function setModel(model) {
       state.currentModel = model.id;
-      state.currentProvider = model.id.startsWith('omniroute/') ? 'omniroute' : 
+      state.currentProvider = model.id.startsWith('omniroute/') ? 'omniroute' :
                               model.id.startsWith('openai/') || model.id.startsWith('anthropic/') || model.id.startsWith('meta-') || model.id.startsWith('google/') || model.id.startsWith('deepseek/') || model.id.startsWith('x-ai/') || model.id.startsWith('mistralai/') || model.id.startsWith('qwen/') || model.id.startsWith('perplexity/') || model.id.startsWith('cognitivecomputations/') ? 'openrouter' :
                               'google';
       const isFree = model.pricing && model.pricing.freeTierStatus === '100% Free Quota Available';
@@ -444,12 +487,12 @@
       if (!text || state.isGenerating) return;
 
       userInput.value = '';
-      
+
       if (text.startsWith('/')) {
         await handleCommand(text);
         return;
       }
-      
+
       addMessage('user', text);
       const botMsg = addMessage('bot', '...');
       setStatus(true, true);
@@ -512,13 +555,13 @@
 
     async function handleCommand(cmd) {
       const lowerCmd = cmd.toLowerCase();
-      
+
       if (lowerCmd === '/clear' || lowerCmd === '/cls') {
         chatContainer.innerHTML = '';
         addMessage('welcome', '✓ Экран очищен. Можете продолжить общение с ИИ.');
         return;
       }
-      
+
       if (lowerCmd === '/help' || lowerCmd === '/?') {
         addSystemMessage(`ДОСТУПНЫЕ КОМАНДЫ:
 /about            - О проекте EvaBot, EvaLine и архитектуре кластера
@@ -539,7 +582,7 @@
   /clear           - Очистить консоль`);
         return;
       }
-      
+
       if (lowerCmd.startsWith('/')) {
         try {
           const response = await fetch('/api/models/command', {
@@ -573,7 +616,7 @@
         modelList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--gray);">Нет моделей в этой категории</div>';
         return;
       }
-      
+
       let html = '';
       for (const m of state.filteredModels) {
         const isFree = m.pricing && m.pricing.freeTierStatus === '100% Free Quota Available';
@@ -582,7 +625,7 @@
         const badgeText = isFree ? 'FREE' : 'PAID';
         const rating = m.rating ? `Score: ${m.rating.composite}/100` : '';
         const contextStr = m.contextWindow ? `${m.contextWindow.toLocaleString()} ctx` : '';
-        
+
         html += `
           <div class="model-item ${isActive ? 'active' : ''}" onclick="selectModel('${m.id}')">
             <div class="model-info">
@@ -603,7 +646,7 @@
       state.currentFilter = filter;
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
-      
+
       if (filter === 'all') {
         state.filteredModels = state.models;
       } else if (filter === 'free') {

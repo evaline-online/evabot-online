@@ -2,7 +2,7 @@
 /**
  * terminal-chat.ts
  * EvaBot Online v0.0.1 MVP — Cyber-Terminal TUI
- * 
+ *
  * Features:
  * - Boot Sequence & Live Diagnostics across Web Server & Agent Server
  * - Full Model Garden support (Gemini 2.5 Flash/Pro, 2.0, Claude, DeepSeek)
@@ -29,6 +29,7 @@ import { I18nEngine, stripEmoji } from '../core/I18nEngine.js';
 import { isDebugOn, startSpan, renderDebugFooter } from '../core/OpLog.js';
 import { CloudTTS } from '../core/CloudTTS.js';
 import { DeveloperMode } from '../core/DeveloperMode.js';
+import { LearnedLessons } from '../core/LearnedLessons.js';
 
 // ANSI terminal color palette (Minimalist B&W + Traffic Light standard)
 const C = {
@@ -115,6 +116,34 @@ export function renderTerminalMarkdown(md: string): string {
 
   // 10. Horizontal rules: ---
   text = text.replace(/^[-*_]{3,}$/gm, `${C.gray}${'─'.repeat(50)}${C.reset}`);
+
+  // 11. Tables: | h1 | h2 |
+  text = text.replace(/((?:^[ \t]*\|.+?\|[ \t]*\r?\n)+)/gm, (tableBlock) => {
+    const rows = tableBlock.trim().split('\n').map(r => r.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim()));
+    if (rows.length < 2) return tableBlock;
+    const isSep = (r: string[]) => r.every(c => /^[\s:|-]+$/.test(c));
+    const dataRows = rows.filter(r => !isSep(r));
+    if (!dataRows.length) return tableBlock;
+    const colCount = Math.max(...dataRows.map(r => r.length));
+    const widths: number[] = Array(colCount).fill(0);
+    for (const r of dataRows) {
+      for (let i = 0; i < colCount; i++) {
+        widths[i] = Math.max(widths[i], (r[i] || '').length);
+      }
+    }
+    const pad = (s: string, w: number) => s + ' '.repeat(Math.max(0, w - s.length));
+    const outLines: string[] = [];
+    outLines.push('  ' + C.gray + '┌' + widths.map(w => '─'.repeat(w + 2)).join('┬') + '┐' + C.reset);
+    const header = dataRows[0];
+    outLines.push('  ' + C.gray + '│' + C.reset + header.map((c, i) => ` ${C.bold}${C.green}${pad(c, widths[i])}${C.reset} `).join(C.gray + '│' + C.reset) + C.gray + '│' + C.reset);
+    outLines.push('  ' + C.gray + '├' + widths.map(w => '─'.repeat(w + 2)).join('┼') + '┤' + C.reset);
+    for (let r = 1; r < dataRows.length; r++) {
+      const row = dataRows[r];
+      outLines.push('  ' + C.gray + '│' + C.reset + row.map((c, i) => ` ${pad(c || '', widths[i])} `).join(C.gray + '│' + C.reset) + C.gray + '│' + C.reset);
+    }
+    outLines.push('  ' + C.gray + '└' + widths.map(w => '─'.repeat(w + 2)).join('┴') + '┘' + C.reset);
+    return '\n' + outLines.join('\n') + '\n';
+  });
 
   return text;
 }
@@ -758,6 +787,30 @@ ${C.yellow}${C.bold}USER PROFILE${C.reset}`);
           console.log(await ModelCommand.executeAsync(input));
           break;
 
+        case '/learn': {
+          const lesson = arg.trim();
+          if (!lesson) {
+            console.log(`${C.yellow}[WRN] Использование: /learn <правило или урок>${C.reset}`);
+          } else {
+            LearnedLessons.addLesson(lesson, 'terminal_cli', 'cli');
+            console.log(`${C.green}[OK] Урок сохранен в базу знаний и немедленно применен ко всем сессиям.${C.reset}`);
+          }
+          break;
+        }
+
+        case '/lessons': {
+          const lessons = LearnedLessons.getTopLessons(10);
+          if (lessons.length === 0) {
+            console.log(`${C.yellow}[INFO] База выученных уроков пуста.${C.reset}`);
+          } else {
+            console.log(`${C.cyan}─── ВЫУЧЕННЫЕ УРОКИ ЕВЫ (${lessons.length}) ───${C.reset}`);
+            lessons.forEach((l, i) => {
+              console.log(`${C.bold}${i + 1}.${C.reset} [${C.magenta}${l.category}${C.reset}] ${l.lesson}`);
+            });
+          }
+          break;
+        }
+
         default: {
           // Multilingual aliases (UK/RU) of server commands → route through the
           // alias-normalizing registry (e.g. /історія → /history, /пошук → /search).
@@ -818,12 +871,12 @@ ${C.yellow}${C.bold}USER PROFILE${C.reset}`);
       const client = new UniversalLlmClient();
       const streamer = new TerminalMarkdownStreamer((text) => process.stdout.write(text));
       const span = startSpan(session.getModel(), client.resolveProvider(session.getModel()));
-      
+
       // Build messages array with system prompt if available
       const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = systemPrompt
         ? [{ role: 'system', content: systemPrompt }, { role: 'user', content: input }]
         : [{ role: 'user', content: input }];
-      
+
       await client.streamContent(
         session.getModel(),
         messages,
