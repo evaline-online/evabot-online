@@ -1110,6 +1110,37 @@
       display: inline-block;
       margin-top: 4px;
     }
+
+    /* ── eva-tui skin (universal terminal interface) ───────────────────── */
+    :root{
+      --tui-bg:#0d1117; --tui-fg:#c0caf4; --tui-accent:#ffcc66;
+      --tui-muted:#888888; --tui-success:#a6e3a1; --tui-info:#89b4fa;
+    }
+    .eva-tui-topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      background:var(--tui-accent); color:var(--tui-bg);
+      font-family:'Roboto',ui-monospace,monospace; font-weight:700;
+      font-size:0.72rem; letter-spacing:0.5px; padding:2px 10px; flex:0 0 auto;
+    }
+    .eva-tui-topbar .eva-tui-title{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .eva-tui-topbar .eva-tui-live{white-space:nowrap; font-weight:700}
+    .eva-tui-banner{
+      flex:0 0 auto; margin:0; padding:6px 0 2px; text-align:center;
+      color:var(--tui-accent); font-family:ui-monospace,monospace;
+      font-size:6px; line-height:1.05; white-space:pre;
+      overflow:hidden; user-select:none;
+    }
+    .eva-tui-statusbar{
+      flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:8px;
+      background:var(--tui-accent); color:var(--tui-bg);
+      font-family:ui-monospace,monospace; font-weight:700; font-size:0.64rem;
+      padding:2px 10px;
+    }
+    .eva-tui-statusbar .eva-tui-hint{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    @media(max-width:520px){
+      .eva-tui-banner{font-size:5px}
+      .eva-tui-statusbar .eva-tui-hint{max-width:72%; letter-spacing:-0.2px}
+    }
   </style>
   <script>
     (function () {
@@ -1150,6 +1181,17 @@
 
   <!-- SCREEN 1: Minimalist Chat Interface -->
   <div class="chat-screen-wrapper" id="screen-chat">
+    <!-- eva-tui chrome -->
+    <div class="eva-tui-topbar">
+      <span class="eva-tui-title">◈ EVABOT // UNIVERSAL TERMINAL INTERFACE</span>
+      <span class="eva-tui-live">● LIVE · v1.0</span>
+    </div>
+    <pre class="eva-tui-banner" aria-hidden="true">███████╗ ██╗   ██╗  █████╗  ██████╗   ██████╗  ████████╗
+██╔════╝ ██║   ██║ ██╔══██╗ ██╔══██╗ ██╔═══██╗ ╚══██╔══╝
+█████╗   ██║   ██║ ███████║ ██████╔╝ ██║   ██║    ██║
+██╔══╝   ╚██╗ ██╔╝ ██╔══██║ ██╔══██╗ ██║   ██║    ██║
+███████╗  ╚████╔╝  ██║  ██║ ██████╔╝ ╚██████╔╝    ██║
+╚══════╝   ╚═══╝   ╚═╝  ╚═╝ ╚═════╝   ╚═════╝     ╚═╝   </pre>
     <!-- Minimal Header: Logo Only -->
     <header class="header-minimal">
       <div class="header-minimal-content">
@@ -1182,6 +1224,10 @@
           <button type="button" class="mic-btn audio-stt-btn" id="mic-btn" title="Voice input [🎙]" onclick="VoiceEngine.toggle()">[🎙]</button>
         </div>
       </div>
+    </div>
+    <div class="eva-tui-statusbar">
+      <span class="eva-tui-hint">[Space] palette  [↑↓] scroll  [1-4] tabs  [L] lang</span>
+      <span>eva-tui SSR · 0 JS</span>
     </div>
   </div>
 
@@ -1326,7 +1372,7 @@
         <span class="c-dim"><span id="lbl-load">Load:</span></span> <span id="metrics-frankfurt">Brain(Frankfurt) CPU <span class="c-ok">25%</span> · RAM <span class="c-ok">15%</span> 4.7/31GB</span> │ <span id="metrics-iowa">Face(Iowa) CPU <span class="c-ok">2%</span> · RAM <span class="c-ok">46%</span> 440MB</span> │ <span id="heartbeat-indicator" class="c-ok"><span style="color:var(--red)">*</span> 72bpm</span>
       </div>
       <div class="tui-line desk-only" id="network-strip" style="padding: 4px 0; font-size: 0.78rem;">
-        <span class="c-dim">Cluster:</span> <span class="cmd-link bold c-ok">[evabot.online]</span><a href="https://evaline.network" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.network ↗</a><a href="https://evaline.online" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.online ↗</a><a href="https://evaline.website" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.website ↗</a><span class="c-dim">│</span> <a href="https://github.com/evaline-online" class="cmd-link" target="_blank" style="color:var(--yellow); font-weight:700; text-decoration:underline;">GitHub @evaline-online ↗</a>
+        <span class="c-dim">Cluster:</span> <span class="cmd-link bold c-ok">[evabot.online]</span><a href="https://evaline.network" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.network ↗</a><a href="https://evaline.online" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.online ↗</a><a href="https://evaline.website" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.website ↗</a><a href="/stack" class="cmd-link" style="color:var(--fg); text-decoration:underline;">stack ↗</a><a href="/pitch" class="cmd-link" style="color:var(--fg); text-decoration:underline;">pitch ↗</a><span class="c-dim">│</span> <a href="https://github.com/evaline-online" class="cmd-link" target="_blank" style="color:var(--yellow); font-weight:700; text-decoration:underline;">GitHub @evaline-online ↗</a>
       </div>
       <div class="chat-container" id="metrics-container" style="flex: 1; overflow-y: auto; max-height: 480px;">
         <div class="msg" style="color: var(--dim);">Loading live metrics...</div>

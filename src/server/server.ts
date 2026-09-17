@@ -32,6 +32,8 @@ const MIME_TYPES: Record<string, string> = {
   '.js': 'application/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.txt': 'text/plain; charset=utf-8',
+  '.xml': 'application/xml; charset=utf-8',
   '.webmanifest': 'application/manifest+json; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
@@ -76,6 +78,63 @@ function parseJsonBody(req: http.IncomingMessage): Promise<unknown> {
   });
 }
 
+// ── Stack status probe (read-only) ─────────────────────────────────────────
+// Server-side reachability sweep of the local cluster for GET /api/stack/status.
+// Each target is probed independently with a hard 4s AbortController timeout;
+// failures are captured (never thrown) so one dead service cannot fail the
+// whole response. Read-only: no credentials or secrets are used or returned.
+const STACK_PROBE_TIMEOUT_MS = 4000;
+
+interface StackTargetSpec {
+  name: string;
+  url: string;
+  expectedStatus: number;
+}
+
+const STACK_TARGETS: StackTargetSpec[] = [
+  { name: 'backend', url: 'http://127.0.0.1:3000/api/health', expectedStatus: 200 },
+  { name: 'voice', url: 'http://127.0.0.1:8000/', expectedStatus: 200 },
+  { name: 'face', url: 'http://127.0.0.1:8093/', expectedStatus: 200 },
+  { name: 'n8n', url: 'http://127.0.0.1:5678/', expectedStatus: 200 },
+  { name: 'openclaw', url: 'http://127.0.0.1:18789/health', expectedStatus: 200 },
+  { name: 'hermes', url: 'http://127.0.0.1:8642/v1/models', expectedStatus: 401 },
+  { name: 'omniroute', url: 'http://127.0.0.1:20128/health/liveliness', expectedStatus: 200 },
+  { name: 'nginx', url: 'http://127.0.0.1:80/', expectedStatus: 200 },
+  // micro → compute hop is implied by the mesh; probed over the Tailscale IP.
+  { name: 'micro-compute', url: 'http://100.66.98.4:3000/api/health', expectedStatus: 200 },
+];
+
+interface StackProbeResult {
+  name: string;
+  url: string;
+  expectedStatus: number;
+  status: number;
+  latencyMs: number;
+  ok: boolean;
+}
+
+async function probeStackTarget(target: StackTargetSpec): Promise<StackProbeResult> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), STACK_PROBE_TIMEOUT_MS);
+  const startedAt = Date.now();
+  try {
+    const response = await fetch(target.url, {
+      method: 'GET',
+      redirect: 'manual',
+      signal: controller.signal,
+      headers: { Accept: '*/*' },
+    });
+    const latencyMs = Date.now() - startedAt;
+    // Reachability + status code is all we need — drop any response body.
+    try { await response.body?.cancel(); } catch { /* ignore */ }
+    return { ...target, status: response.status, latencyMs, ok: response.status === target.expectedStatus };
+  } catch {
+    return { ...target, status: 0, latencyMs: Date.now() - startedAt, ok: false };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function initializePlugins(): Promise<void> {
   logger.info(LogCategory.SYSTEM, 'Server', 'Initializing plugin system...');
   await pluginManager.register(llmProvidersPlugin);
@@ -84,19 +143,19 @@ async function initializePlugins(): Promise<void> {
   // Core KB (SQLite FTS5 + memory docs) must be initialized at boot so
   // /api/health reports LIVE database stats and search is warm from req #1.
   await knowledgeBase.initialize();
-  
+
   const list = pluginManager.list();
   logger.info(LogCategory.SYSTEM, 'Server', `Loaded ${list.length} plugins: ${list.map(p => p.id).join(', ')}`);
 }
 
 export function buildRouter(): Router {
   const router = new Router();
-  
+
   router.get('/api/health', async (ctx) => {
     const creds = await GoogleAuthProvider.getCredentials();
     const pluginList = pluginManager.list();
     const pluginStatuses = await pluginManager.healthCheckAll();
-    
+
     const micro = ClusterMonitor.getMicroMetrics();
     const meshLatency = ClusterMonitor.getMeshLatency();
     const bLoad = os.loadavg()[0].toFixed(2);
@@ -191,7 +250,13 @@ export function buildRouter(): Router {
       ],
     });
   });
-  
+
+  router.get('/api/stack/status', async (ctx) => {
+    const targets = await Promise.all(STACK_TARGETS.map(probeStackTarget));
+    const overall = targets.every((t) => t.ok) ? 'ok' : 'degraded';
+    ctx.sendJson(200, { ts: new Date().toISOString(), overall, targets });
+  });
+
   const subRouters = [
     createModelsRouter(),
     createLogsRouter(),
@@ -203,13 +268,13 @@ export function buildRouter(): Router {
     createServicesRouter(),
     createUploadRouter(),
   ];
-  
+
   for (const sub of subRouters) {
     for (const route of (sub as unknown as { routes: Array<{ method: string; pattern: string | RegExp; handler: (ctx: unknown) => Promise<void> }> }).routes) {
       router.add(route.method, route.pattern as string, route.handler as (ctx: import('./routes/Router.js').RouteContext) => Promise<void>);
     }
   }
-  
+
   const pluginRoutes = pluginManager.getAllPluginRoutes();
   for (const pr of pluginRoutes) {
     router.add(pr.method, pr.path, async (ctx) => {
@@ -224,20 +289,20 @@ export function buildRouter(): Router {
       }
     });
   }
-  
+
   const chatRouter = new ChatRouter();
   for (const route of (chatRouter as unknown as { routes: Array<{ method: string; pattern: string | RegExp; handler: (ctx: unknown) => Promise<void> }> }).routes) {
     router.add(route.method, route.pattern as string, route.handler as (ctx: import('./routes/Router.js').RouteContext) => Promise<void>);
   }
-  
+
   return router;
 }
 
 export function createServer(): http.Server {
   ClusterMonitor.init();
-  
+
   const router = buildRouter();
-  
+
   return http.createServer(async (req, res) => {
     const parsedUrl = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
     const pathname = parsedUrl.pathname;
@@ -245,7 +310,7 @@ export function createServer(): http.Server {
     const clientIp = (req.headers['x-forwarded-for'] as string)?.split(',')[0] || req.socket.remoteAddress || 'unknown';
     const userAgent = (req.headers['user-agent'] as string) || 'unknown';
     const method = req.method || 'GET';
-    
+
     if (method === 'OPTIONS') {
       res.writeHead(204, {
         'Access-Control-Allow-Origin': req.headers.origin || '*',
@@ -255,14 +320,14 @@ export function createServer(): http.Server {
       res.end();
       return;
     }
-    
+
     if (securityConfig.blockedIPs.has(clientIp)) {
       logger.warn(LogCategory.SYSTEM, 'SECURITY', `Blocked IP: ${clientIp} -> ${method} ${pathname}`);
       res.writeHead(403, { 'Content-Type': 'text/plain' });
       res.end('403 Forbidden');
       return;
     }
-    
+
     // Health polls every 1s from the frontend (60 req/min) would exhaust the
     // global 100 req/60s per-IP budget and starve real traffic → JSON 429
     // parse errors client-side. Health is cheap and unauthenticated: exempt it.
@@ -280,15 +345,15 @@ export function createServer(): http.Server {
         return;
       }
     }
-    
+
     const suspCheck = Security.isSuspicious(pathname, method);
     if (suspCheck.suspicious) Security.recordSuspicious(clientIp, suspCheck.reason || 'unknown');
-    
+
     res.on('finish', () => {
       const duration = Date.now() - startTime;
       logger.logHttpRequest(method, pathname, res.statusCode, duration, clientIp, userAgent);
     });
-    
+
     const match = router.match(method, pathname);
     if (match) {
       const ctx = createRouteContext(req, res, pathname, parsedUrl, {
@@ -307,7 +372,7 @@ export function createServer(): http.Server {
       }
       return;
     }
-    
+
     const staticRoutes = [
       '/', '/index.html',
       '/manifesto', '/manifesto.html',
@@ -320,10 +385,15 @@ export function createServer(): http.Server {
       '/hub', '/hub.html',
       '/network', '/network.html',
       '/visualize', '/visualize.html',
+      '/robots.txt', '/sitemap.xml',
+      '/favicon.ico', '/favicon.svg',
+      '/stack', '/stack.html',
+      '/pitch', '/pitch.html',
       '/terminal', '/terminal.txt', '/plain',
       '/sw.js', '/service-worker.js',
       '/manifest.webmanifest', '/manifest.json',
       '/offline.html',
+      '/tui', '/tui.html',
     ];
 
     if (pathname.startsWith('/dist/') || pathname.startsWith('/fonts/') || pathname.startsWith('/assets/') || staticRoutes.includes(pathname)) {
@@ -342,6 +412,8 @@ export function createServer(): http.Server {
         filePath = path.resolve(process.cwd(), 'public', 'sw.js');
       } else if (pathname === '/manifest.webmanifest' || pathname === '/manifest.json') {
         filePath = path.resolve(process.cwd(), 'public', 'manifest.webmanifest');
+      } else if (pathname === '/favicon.ico' || pathname === '/favicon.svg') {
+        filePath = path.resolve(process.cwd(), 'public', 'favicon.svg');
       } else if (pathname === '/offline.html') {
         filePath = path.resolve(process.cwd(), 'public', 'offline.html');
       } else if (pathname.startsWith('/dist/')) {
@@ -380,8 +452,22 @@ export function createServer(): http.Server {
         filePath = path.resolve(process.cwd(), 'public', 'MANIFESTO.md');
       } else if (pathname === '/hub' || pathname === '/hub.html') {
         filePath = path.resolve(process.cwd(), 'public', 'hub.html');
-      } else if (pathname === '/network' || pathname === '/network.html' || pathname === '/visualize' || pathname === '/visualize.html') {
+      } else if (pathname === '/visualize' || pathname === '/visualize.html') {
+        res.writeHead(301, { 'Location': '/network', 'Cache-Control': 'no-store' });
+        res.end();
+        return;
+      } else if (pathname === '/network' || pathname === '/network.html') {
         filePath = path.resolve(process.cwd(), 'public', 'network.html');
+      } else if (pathname === '/tui' || pathname === '/tui.html') {
+        filePath = path.resolve(process.cwd(), 'public', 'eva-tui.html');
+      } else if (pathname === '/robots.txt') {
+        filePath = path.resolve(process.cwd(), 'public', 'robots.txt');
+      } else if (pathname === '/sitemap.xml') {
+        filePath = path.resolve(process.cwd(), 'public', 'sitemap.xml');
+      } else if (pathname === '/stack' || pathname === '/stack.html') {
+        filePath = path.resolve(process.cwd(), 'public', 'stack.html');
+      } else if (pathname === '/pitch' || pathname === '/pitch.html') {
+        filePath = path.resolve(process.cwd(), 'public', 'pitch.html');
       } else if (pathname === '/' || pathname === '/index.html') {
         const ua = (req.headers['user-agent'] || '').toLowerCase();
         const isCurl = ua.includes('curl') || ua.includes('wget') || ua.includes('httpie');
@@ -400,14 +486,18 @@ export function createServer(): http.Server {
             const file = lang === 'uk' ? 'manifesto-uk.html' : lang === 'en' ? 'manifesto-en.html' : 'manifesto-ru.html';
             filePath = path.resolve(process.cwd(), 'public', file);
           } else {
-            filePath = path.resolve(process.cwd(), 'public', 'manifesto.html');
+            const evaTuiPath = path.resolve(process.cwd(), 'public', 'eva-tui-evaline-online.html');
+            filePath = fs.existsSync(evaTuiPath) ? evaTuiPath : path.resolve(process.cwd(), 'public', 'manifesto.html');
           }
         } else if (isCurl || isTextBrowser) {
           const text = TuiRenderer.renderText(host);
           sendText(res, 200, text, 'text/plain; charset=utf-8', req.headers.origin || '*');
           return;
+        } else if (host === 'evabot.online' || host.startsWith('evabot.online:')) {
+          filePath = path.resolve(process.cwd(), 'public', 'index.html');
         } else if (host.includes('evaline.website')) {
-          filePath = path.resolve(process.cwd(), 'public', 'hub.html');
+          const evaTuiPath = path.resolve(process.cwd(), 'public', 'eva-tui-evaline-website.html');
+          filePath = fs.existsSync(evaTuiPath) ? evaTuiPath : path.resolve(process.cwd(), 'public', 'hub.html');
         } else if (host.includes('evaline.network')) {
           if (isCurl) {
             const text = TuiRenderer.renderText(host);
@@ -419,7 +509,8 @@ export function createServer(): http.Server {
             sendText(res, 200, text, 'text/html; charset=utf-8', req.headers.origin || '*');
             return;
           }
-          filePath = path.resolve(process.cwd(), 'public', 'network.html');
+          filePath = path.resolve(process.cwd(), 'public', 'eva-tui-evaline-network.html');
+          if (!fs.existsSync(filePath)) filePath = path.resolve(process.cwd(), 'public', 'network.html');
         } else {
           filePath = path.resolve(process.cwd(), 'public', 'index.html');
         }
@@ -430,7 +521,7 @@ export function createServer(): http.Server {
         sendText(res, 200, text, contentType, req.headers.origin || '*');
         return;
       }
-      
+
       if (filePath && fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
         const ext = path.extname(filePath).toLowerCase();
         const contentType = MIME_TYPES[ext] || 'application/octet-stream';
@@ -442,14 +533,14 @@ export function createServer(): http.Server {
         return;
       }
     }
-    
+
     sendText(res, 404, 'Not Found', undefined, req.headers.origin || '*');
   });
 }
 
 export async function startServerAsync(port: number = Config.serverPort, host: string = Config.serverHost): Promise<void> {
   const server = createServer();
-  
+
   server.listen(port, host, () => {
     logger.info(LogCategory.SYSTEM, 'Server', `[+] EvaBot HTTP Server listening on http://${host}:${port}`);
   });
@@ -465,7 +556,7 @@ export async function startServerAsync(port: number = Config.serverPort, host: s
   } catch (err: unknown) {
     logger.warn(LogCategory.SYSTEM, 'Server', `Telegram bot init failed: ${err instanceof Error ? err.message : String(err)}`);
   }
-  
+
   process.on('SIGTERM', async () => {
     logger.info(LogCategory.SYSTEM, 'Server', 'Shutting down...');
     await pluginManager.shutdownAll();

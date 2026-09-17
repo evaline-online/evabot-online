@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>EvaLine // Control Hub</title>
+<meta name="description" content="EvaLine control hub — one console for services, documentation, finance and the agent network.">
+<meta name="keywords" content="evaline, control hub, dashboard, services, agents">
+<meta name="author" content="EvaLine Collective">
+<meta name="color-scheme" content="dark light">
+<link rel="canonical" href="https://evaline.website/">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="EvaLine // Control Hub">
+<meta property="og:description" content="EvaLine control hub — one console for services, documentation, finance and the agent network.">
+<meta property="og:site_name" content="EvaLine">
+<meta property="og:url" content="https://evaline.website/">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="EvaLine // Control Hub">
+<meta name="twitter:description" content="EvaLine control hub — one console for services, documentation, finance and the agent network.">
+
+<!-- Theme color for browser chrome -->
+<meta name="theme-color" content="#0d1117">
+<style>
+/* eva-tui SSR stylesheet */
+:root {
+:root {
+  --tui-bg: #0d1117;
+  --tui-fg: #c0caf4;
+  --tui-accent: #ffcc66;
+  --tui-border: #30363d;
+  --tui-muted: #8b949e;
+  --tui-success: #a6e3a1;
+  --tui-warning: #f9e2af;
+  --tui-error: #f38ba8;
+  --tui-info: #89b4fa;
+  --tui-font-mono: 'IBM Plex Mono', 'Roboto Mono', 'SF Mono', Menlo, monospace;
+  --tui-font-size: clamp(11px, 2.5vw, 16px);
+}
+
+[data-theme="dark"] {
+  --tui-bg: #0d1117;
+  --tui-fg: #c0caf4;
+  --tui-accent: #ffcc66;
+  --tui-border: #30363d;
+  --tui-muted: #8b949e;
+  --tui-success: #a6e3a1;
+  --tui-warning: #f9e2af;
+  --tui-error: #f38ba8;
+  --tui-info: #89b4fa;
+}
+
+[data-theme="light"] {
+  --tui-bg: #faf0eb;
+  --tui-fg: #4c4f69;
+  --tui-accent: #d20f34;
+  --tui-border: #d0d7de;
+  --tui-muted: #8c8fa1;
+  --tui-success: #a6e3a1;
+  --tui-warning: #f9e2af;
+  --tui-error: #f38ba8;
+  --tui-info: #89b4fa;
+}
+
+[data-theme="high-contrast"],
+[data-theme="highContrast"] {
+  --tui-bg: #000000;
+  --tui-fg: #ffffff;
+  --tui-accent: #ffff00;
+  --tui-border: #ffffff;
+  --tui-muted: #888888;
+  --tui-success: #00ff00;
+  --tui-warning: #ffff00;
+  --tui-error: #ff0000;
+  --tui-info: #00ffff;
+}
+  --tui-cols: 84;
+  --tui-rows: 30;
+  --tui-font-size: min(18px, calc(97vw / (var(--tui-cols) * 0.62)));
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  background:var(--bg, #0d1117);
+  color:var(--fg, #c0caf4);
+  font-family:'Cascadia Code','Fira Code','JetBrains Mono','Noto Mono',
+    'DejaVu Sans Mono',ui-monospace,monospace;
+  font-size:var(--tui-font-size);
+  line-height:1.2;
+  -webkit-font-smoothing:subpixel-antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeSpeed;
+  tab-size:8;
+  overflow-x:auto;
+}
+.tui-screen{
+  display:grid;
+  grid-template-rows:repeat(var(--tui-rows), 1.2em);
+  width:calc(var(--tui-cols) * 1ch);
+  max-width:100vw;
+  overflow:visible;
+  margin:0 auto;
+}
+.tui-row{
+  display:block;
+  white-space:pre;
+  overflow:hidden;
+  height:1.2em;
+}
+a{color:var(--accent,#ffcc66);text-decoration:none}
+a:hover{text-decoration:underline}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Adaptive tiers — the TUI always shows ALL cols and scales to the viewport. */
+/* watch / tiny: only a legibility floor; body scrolls if it cannot fit */
+@media(max-width:240px){
+  html,body{font-size:6px}
+}
+/* High contrast mode */
+@media(prefers-contrast:more){
+  :root{--bg:#000;--fg:#fff;--accent:#ff0}
+}
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+/* Print */
+@media print{
+  body{background:#fff;color:#000;font-size:10pt}
+  a{color:#000;text-decoration:underline}
+  .no-print{display:none}
+}
+a:hover{filter:brightness(1.25)}
+</style>
+
+</head>
+<body>
+<main class="tui-screen" role="main" aria-label="EvaLine // Control Hub">
+<div class="tui-row"><span style="color:#0d1117;background:#ffcc66;font-weight:700"> ◈ EVALINE // CONTROL HUB                                          ● LIVE  ·  v1.0  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">                                                                                    </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">            </span><span style="color:#ffcc66;background:#0d1117;font-weight:700">███████╗ ██╗   ██╗  █████╗  ██╗      ██╗ ███╗   ██╗ ███████╗</span><span style="color:#c0caf4;background:#0d1117">            </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">            </span><span style="color:#ffcc66;background:#0d1117;font-weight:700">██╔════╝ ██║   ██║ ██╔══██╗ ██║      ██║ ████╗  ██║ ██╔════╝</span><span style="color:#c0caf4;background:#0d1117">            </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">            </span><span style="color:#ffcc66;background:#0d1117;font-weight:700">█████╗   ██║   ██║ ███████║ ██║      ██║ ██╔██╗ ██║ █████╗  </span><span style="color:#c0caf4;background:#0d1117">            </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">            </span><span style="color:#ffcc66;background:#0d1117;font-weight:700">██╔══╝   ╚██╗ ██╔╝ ██╔══██║ ██║      ██║ ██║╚██╗██║ ██╔══╝  </span><span style="color:#c0caf4;background:#0d1117">            </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">            </span><span style="color:#ffcc66;background:#0d1117;font-weight:700">███████╗  ╚████╔╝  ██║  ██║ ███████╗ ██║ ██║ ╚████║ ███████╗</span><span style="color:#c0caf4;background:#0d1117">            </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">            </span><span style="color:#ffcc66;background:#0d1117;font-weight:700">╚══════╝   ╚═══╝   ╚═╝  ╚═╝ ╚══════╝ ╚═╝ ╚═╝  ╚═══╝ ╚══════╝</span><span style="color:#c0caf4;background:#0d1117">            </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">                                                                                    </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">                    One console for the whole EvaLine ecosystem                     </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">               </span><span style="color:#888888;background:#0d1117">services · documentation · finance · network · agents</span><span style="color:#c0caf4;background:#0d1117">                </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">                                                                                    </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">╭─ SERVICES ──────────────────────────╮</span><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">╭─ NAVIGATE ──────────────────────────╮</span><span style="color:#c0caf4;background:#0d1117">  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><span style="color:#888888;background:#0d1117">brain      </span><span style="color:#c0caf4;background:#0d1117"> :3000  ok               </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><a href="/hub.html" style="color:#89b4fa;background:#0d1117;text-decoration:underline">/hub.html</a><span style="color:#c0caf4;background:#0d1117">     </span><span style="color:#888888;background:#0d1117">Full hub</span><span style="color:#c0caf4;background:#0d1117">              </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><span style="color:#888888;background:#0d1117">face       </span><span style="color:#c0caf4;background:#0d1117"> :8093  ok               </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><a href="/docs" style="color:#89b4fa;background:#0d1117;text-decoration:underline">/docs</a><span style="color:#c0caf4;background:#0d1117">         </span><span style="color:#888888;background:#0d1117">Documentation</span><span style="color:#c0caf4;background:#0d1117">         </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><span style="color:#888888;background:#0d1117">voice      </span><span style="color:#c0caf4;background:#0d1117"> :8000  ok               </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><a href="/billing" style="color:#89b4fa;background:#0d1117;text-decoration:underline">/billing</a><span style="color:#c0caf4;background:#0d1117">      </span><span style="color:#888888;background:#0d1117">Finance ledger</span><span style="color:#c0caf4;background:#0d1117">        </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><span style="color:#888888;background:#0d1117">omniroute  </span><span style="color:#c0caf4;background:#0d1117"> :20128 ok               </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><a href="/face/" style="color:#89b4fa;background:#0d1117;text-decoration:underline">/face/</a><span style="color:#c0caf4;background:#0d1117">        </span><span style="color:#888888;background:#0d1117">Eva 4D head</span><span style="color:#c0caf4;background:#0d1117">           </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><span style="color:#888888;background:#0d1117">hermes     </span><span style="color:#c0caf4;background:#0d1117"> :8642  ok               </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><a href="/stack" style="color:#89b4fa;background:#0d1117;text-decoration:underline">/stack</a><span style="color:#c0caf4;background:#0d1117">        </span><span style="color:#888888;background:#0d1117">Tech stack</span><span style="color:#c0caf4;background:#0d1117">            </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><span style="color:#888888;background:#0d1117">openclaw   </span><span style="color:#c0caf4;background:#0d1117"> :18789 ok               </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><a href="/network" style="color:#89b4fa;background:#0d1117;text-decoration:underline">/network</a><span style="color:#c0caf4;background:#0d1117">      </span><span style="color:#888888;background:#0d1117">Live network</span><span style="color:#c0caf4;background:#0d1117">          </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><span style="color:#888888;background:#0d1117">status     </span><span style="color:#c0caf4;background:#0d1117"> </span><span style="color:#a6e3a1;background:#0d1117;font-weight:700">ONLINE</span><span style="color:#c0caf4;background:#0d1117">                  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><a href="/pitch" style="color:#89b4fa;background:#0d1117;text-decoration:underline">/pitch</a><span style="color:#c0caf4;background:#0d1117">        </span><span style="color:#888888;background:#0d1117">Investor pitch</span><span style="color:#c0caf4;background:#0d1117">        </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">                                     </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><a href="/" style="color:#89b4fa;background:#0d1117;text-decoration:underline">/</a><span style="color:#c0caf4;background:#0d1117">             </span><span style="color:#888888;background:#0d1117">EvaBot</span><span style="color:#c0caf4;background:#0d1117">                </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">╰─────────────────────────────────────╯</span><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">╰─────────────────────────────────────╯</span><span style="color:#c0caf4;background:#0d1117">  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">                                                                                    </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">┌─ ECOSYSTEM ──────────────────────────────────────────────────────────────────┐</span><span style="color:#c0caf4;background:#0d1117">  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> evabot.online · evaline.network · evaline.online                             </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117"> </span><span style="color:#888888;background:#0d1117">evaline.website · evaline.com.ua · docs · status · billing</span><span style="color:#c0caf4;background:#0d1117">                   </span><span style="color:#ffcc66;background:#0d1117">│</span><span style="color:#c0caf4;background:#0d1117">  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">  </span><span style="color:#ffcc66;background:#0d1117">└──────────────────────────────────────────────────────────────────────────────┘</span><span style="color:#c0caf4;background:#0d1117">  </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">                                                                                    </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117">                                                                                    </span></div>
+<div class="tui-row"><span style="color:#c0caf4;background:#0d1117"> </span><span style="color:#0d1117;background:#ffcc66;font-weight:700"> [Space] palette  [↑↓] scroll  [1-4] tabs  [L] lang</span><span style="color:#c0caf4;background:#0d1117">            </span><span style="color:#0d1117;background:#ffcc66;font-weight:700">eva-tui SSR · 0 JS </span><span style="color:#c0caf4;background:#0d1117"> </span></div>
+</main>
+
+</body>
+</html>

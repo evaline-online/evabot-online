@@ -55,3 +55,6 @@ backups/
 *.bak-*
 *.backup*
 
+# Agent backups / caches (local only)
+.codex-backups/
+.vector-cache.json

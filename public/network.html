@@ -15,7 +15,7 @@
   <meta property="og:description" content="Live dual-node cluster telemetry, 94 LLMs catalog, WireGuard backbone mesh visualizer, infrastructure financial accounting & AI Agent Consilium.">
   <meta property="og:url" content="https://evaline.network">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%230e1118' stroke='%2300e5ff' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%2300e676'/%3E%3C/svg%3E">
-  
+
   <!-- COMPLETE ROBOTO SUPERFAMILY: Roboto, Roboto Mono, Roboto Condensed, Roboto Slab, Roboto Serif, Roboto Flex -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2396,7 +2396,7 @@
     <!-- FOOTER -->
     <footer>
       <div>
-        <strong>EVALINE.NETWORK // CLUSTER TOPOLOGY</strong> · 
+        <strong>EVALINE.NETWORK // CLUSTER TOPOLOGY</strong> ·
         <span class="t-en">2 Nodes · WireGuard Mesh Backbone · Zero-Cache Architecture · All Roboto Styles</span>
         <span class="t-uk">2 Ноди · Магістраль WireGuard · Архітектура Zero-Cache · Усі стилі Roboto</span>
         <span class="t-ru">2 Ноды · Магистраль WireGuard · Архитектура Zero-Cache · Все стили Roboto</span>
@@ -2408,6 +2408,9 @@
         <a href="https://evaline.website" target="_blank">evaline.website ↗</a>
         <span style="color: var(--border);">│</span>
         <a href="https://github.com/evaline-online" target="_blank" style="color: var(--accent-amber); font-weight: 700;">GitHub @evaline-online ↗</a>
+        <span style="color: var(--border);">│</span>
+        <a href="/stack">stack ↗</a>
+        <a href="/pitch">pitch ↗</a>
       </div>
     </footer>
 
@@ -2608,8 +2611,8 @@
 
       const countBadge = document.getElementById('models-count-badge');
       if (countBadge) {
-        countBadge.textContent = (filtered.length === rawCatalog.length) 
-          ? rawCatalog.length + ' models' 
+        countBadge.textContent = (filtered.length === rawCatalog.length)
+          ? rawCatalog.length + ' models'
           : filtered.length + ' / ' + rawCatalog.length + ' models';
       }
 
@@ -2619,16 +2622,16 @@
       }
 
       tbody.innerHTML = filtered.map((m, idx) => {
-        const tierBadge = m.isFree 
+        const tierBadge = m.isFree
           ? '<span class="node-badge">100% FREE QUOTA</span>'
           : '<span class="node-badge" style="border-color: var(--border-amber); color: var(--accent-amber); background: rgba(255,214,0,0.1);">PAID TIER</span>';
-        
+
         const priceDisplay = m.isFree
           ? '<span style="color: var(--accent-green); font-weight: 600;">$0.00 / $0.00</span>'
           : '<span style="color: var(--accent-amber); font-weight: 600;">' + escapeHtml(m.priceIn || '$0.00') + ' / ' + escapeHtml(m.priceOut || '$0.00') + '</span>';
 
-        const ctxFormatted = (m.context >= 1000000) 
-          ? (m.context / 1000000).toFixed(1) + 'M' 
+        const ctxFormatted = (m.context >= 1000000)
+          ? (m.context / 1000000).toFixed(1) + 'M'
           : (m.context / 1000) + 'k';
 
         return '<tr>' +

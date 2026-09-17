@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#070b12">
+<meta name="description" content="EvaLine — AI agent factory and LLM agency built on top of a real EVA polymer manufacturing business in Ukraine with an EU warehouse in Bratislava.">
+<title>EvaLine — AI Agent Factory &amp; LLM Agency</title>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+  :root{
+    --bg:#070b12;
+    --bg-2:#0a1120;
+    --surface:#0d1626;
+    --surface-2:#12203a;
+    --line:rgba(255,255,255,.08);
+    --line-2:rgba(255,255,255,.16);
+    --fg:#e9eef7;
+    --dim:#96a3bb;
+    --faint:#5d6a83;
+    --cyan:#3ad7e8;
+    --cyan-2:#0e93a8;
+    --gold:#e9c46a;
+    --gold-2:#bd8f33;
+    --violet:#9b8cff;
+    --good:#54d98c;
+    --warn:#eaa53a;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    --wrap:1180px;
+    --r:16px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    background:
+      radial-gradient(900px 600px at 82% -8%, rgba(58,215,232,.10), transparent 60%),
+      radial-gradient(760px 520px at 8% 12%, rgba(233,196,106,.09), transparent 62%),
+      radial-gradient(1100px 800px at 50% 120%, rgba(155,140,255,.08), transparent 60%),
+      linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 55%,var(--bg) 100%);
+  }
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    pointer-events:none;
+    opacity:.35;
+    background-image:
+      linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(circle at 50% 30%, #000 0%, transparent 78%);
+    -webkit-mask-image:radial-gradient(circle at 50% 30%, #000 0%, transparent 78%);
+  }
+  a{color:inherit}
+  img,svg{display:block;max-width:100%}
+  ::selection{background:rgba(233,196,106,.28)}
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:#1b2740;border-radius:6px;border:2px solid var(--bg)}
+  ::-webkit-scrollbar-thumb:hover{background:#2a3b5e}
+
+  /* ---------- progress + header ---------- */
+  .progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:60;background:transparent}
+  .progress i{
+    display:block;height:100%;width:0%;
+    background:linear-gradient(90deg,var(--cyan),var(--gold));
+    box-shadow:0 0 14px rgba(58,215,232,.6);
+    transition:width .12s linear;
+  }
+  header.top{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    background:rgba(7,11,18,.72);
+    border-bottom:1px solid var(--line);
+  }
+  .top-in{
+    max-width:var(--wrap);margin:0 auto;
+    padding:12px clamp(14px,4vw,40px);
+    display:flex;align-items:center;gap:16px;justify-content:space-between;
+  }
+  .brand{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:.14em;font-size:.78rem;text-transform:uppercase}
+  .brand .mark{width:22px;height:22px;flex:0 0 auto}
+  .brand small{display:block;font-weight:400;letter-spacing:.06em;color:var(--faint);font-size:.62rem;text-transform:none}
+  .top-actions{display:flex;align-items:center;gap:10px}
+  .lang{display:flex;border:1px solid var(--line-2);border-radius:999px;overflow:hidden;background:rgba(255,255,255,.03)}
+  .lang button{
+    appearance:none;border:0;background:transparent;color:var(--dim);
+    font:600 .72rem/1 var(--mono);letter-spacing:.1em;padding:8px 12px;cursor:pointer;transition:.2s;
+  }
+  .lang button.on{background:linear-gradient(180deg,rgba(233,196,106,.22),rgba(233,196,106,.08));color:var(--gold)}
+  .lang button:hover{color:var(--fg)}
+  .btn{
+    appearance:none;cursor:pointer;border-radius:999px;
+    font:600 .74rem/1 var(--sans);letter-spacing:.04em;
+    padding:10px 16px;border:1px solid var(--line-2);
+    background:rgba(255,255,255,.04);color:var(--fg);transition:.22s;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn:hover{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(58,215,232,.25),0 8px 26px rgba(58,215,232,.12)}
+  .btn.gold{background:linear-gradient(180deg,rgba(233,196,106,.25),rgba(233,196,106,.07));border-color:rgba(233,196,106,.45);color:#fbe7b8}
+  .btn.ghost{background:transparent}
+  .btn svg{width:15px;height:15px}
+
+  .replay-fab{
+    position:fixed;right:16px;bottom:16px;z-index:55;
+    box-shadow:0 10px 34px rgba(0,0,0,.5);
+  }
+
+  /* ---------- layout ---------- */
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+  .stage{padding:clamp(58px,8.5vw,132px) 0;position:relative}
+  .stage + .stage{border-top:1px solid var(--line)}
+  .head{margin-bottom:clamp(26px,4vw,46px);max-width:74ch}
+  .kicker{
+    display:inline-flex;align-items:center;gap:10px;
+    font:700 .68rem/1 var(--mono);letter-spacing:.24em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:16px;
+  }
+  .kicker .n{
+    width:26px;height:26px;border-radius:8px;display:grid;place-items:center;
+    border:1px solid rgba(233,196,106,.4);color:var(--gold);font-size:.62rem;letter-spacing:.02em;
+    background:rgba(233,196,106,.07);
+  }
+  h1{font-size:clamp(1.9rem,6.4vw,4rem);line-height:1.06;letter-spacing:-.02em;font-weight:800}
+  h2{font-size:clamp(1.5rem,4.1vw,2.7rem);line-height:1.13;letter-spacing:-.015em;font-weight:770}
+  h3{font-size:clamp(1rem,2.1vw,1.2rem);line-height:1.3;font-weight:700}
+  .lead{color:var(--dim);font-size:clamp(.98rem,1.6vw,1.12rem);margin-top:16px;max-width:72ch}
+  .muted{color:var(--faint)}
+  .hl-gold{color:var(--gold)}
+  .hl-cyan{color:var(--cyan)}
+  .mono{font-family:var(--mono)}
+
+  .grid{display:grid;gap:16px}
+  .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  @media (max-width:900px){.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+  .card{
+    border:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));
+    border-radius:var(--r);
+    padding:clamp(16px,2.4vw,24px);
+    position:relative;
+    overflow:hidden;
+    transition:border-color .3s, transform .3s, box-shadow .3s;
+  }
+  .card::before{
+    content:"";position:absolute;inset:0 auto auto 0;height:2px;width:100%;
+    background:linear-gradient(90deg,var(--cyan),transparent 60%);opacity:.5;
+  }
+  .card.gold-line::before{background:linear-gradient(90deg,var(--gold),transparent 60%)}
+  .card:hover{border-color:var(--line-2);transform:translateY(-2px)}
+  .card p{color:var(--dim);font-size:.92rem;margin-top:8px}
+  .card .ico{width:34px;height:34px;margin-bottom:14px;color:var(--cyan)}
+  .card.gold-line .ico{color:var(--gold)}
+  .tagrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .tag{
+    font:600 .68rem/1 var(--mono);letter-spacing:.05em;
+    padding:6px 10px;border-radius:999px;
+    border:1px solid var(--line-2);color:var(--dim);background:rgba(255,255,255,.03);
+  }
+  .tag.cy{border-color:rgba(58,215,232,.4);color:var(--cyan)}
+  .tag.gd{border-color:rgba(233,196,106,.4);color:var(--gold)}
+
+  /* ---------- hero ---------- */
+  .hero{padding-top:clamp(40px,7vw,86px);padding-bottom:clamp(40px,7vw,96px)}
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(20px,4vw,52px);align-items:center}
+  @media (max-width:900px){.hero-grid{grid-template-columns:1fr}}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    border:1px solid var(--line-2);border-radius:999px;padding:7px 14px;
+    font:600 .7rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+    margin-bottom:22px;background:rgba(255,255,255,.03);
+  }
+  .dot-live{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 10px var(--good)}
+  .hero-tagline{color:var(--dim);font-size:clamp(1rem,1.9vw,1.22rem);margin-top:20px;max-width:60ch}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+  .hero-note{margin-top:22px;font-size:.8rem;color:var(--faint)}
+  .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:34px}
+  @media (max-width:640px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .stat{
+    border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;
+    background:rgba(255,255,255,.026);
+  }
+  .stat b{display:block;font-size:clamp(1.25rem,3.2vw,1.85rem);font-weight:800;letter-spacing:-.02em;
+    background:linear-gradient(120deg,var(--fg),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat span{display:block;color:var(--faint);font-size:.72rem;margin-top:4px;letter-spacing:.03em}
+
+  /* ---------- svg helpers ---------- */
+  .diagram{
+    border:1px solid var(--line);border-radius:var(--r);
+    background:
+      radial-gradient(600px 340px at 50% 0%, rgba(58,215,232,.07), transparent 65%),
+      linear-gradient(180deg,rgba(255,255,255,.028),rgba(255,255,255,.008));
+    padding:clamp(10px,2vw,20px);
+    overflow:hidden;
+  }
+  .diagram svg{width:100%;height:auto}
+
+  /* node/label styling inside svg */
+  .nlabel{font:600 12px var(--sans);fill:var(--fg)}
+  .npmid{font:600 11px var(--sans);fill:var(--fg)}
+  .nsub{font:500 10.5px var(--mono);fill:var(--faint)}
+  .ncount{font:800 13px var(--mono);fill:var(--gold)}
+  .clink{stroke:rgba(255,255,255,.18);stroke-width:1.3;fill:none}
+  .clink.cy{stroke:rgba(58,215,232,.4)}
+  .node-box{fill:rgba(255,255,255,.035);stroke:rgba(255,255,255,.16);stroke-width:1.1}
+  .node-box.cy{stroke:rgba(58,215,232,.45)}
+  .node-box.gd{stroke:rgba(233,196,106,.45)}
+
+  /* ---------- reveal / draw animations (js only) ---------- */
+  html.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .75s ease,transform .85s cubic-bezier(.2,.75,.2,1);transition-delay:var(--d,0s)}
+  html.js .stage.in .reveal{opacity:1;transform:none}
+  html.js .draw{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.7s cubic-bezier(.3,.7,.2,1);transition-delay:var(--dd,0s)}
+  html.js .stage.in .draw{stroke-dashoffset:0}
+  html.js .node{opacity:0;transform:scale(.55);transform-box:fill-box;transform-origin:center;transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0s)}
+  html.js .stage.in .node{opacity:1;transform:scale(1)}
+  html.js .bar i{transform:scaleX(0);transform-origin:left center;transition:transform 1.5s cubic-bezier(.25,.8,.25,1);transition-delay:var(--d,.1s)}
+  html.js .stage.in .bar i{transform:scaleX(var(--p,.5))}
+  html.js.reset .reveal,html.js.reset .draw,html.js.reset .node,html.js.reset .bar i,html.js.reset .tetra-group,html.js.reset .core{transition-duration:0s !important}
+
+  /* tetraxis */
+  .tetra-group{transform-origin:200px 182px;transform:scale(1);transition:transform 2.2s cubic-bezier(.2,.8,.2,1) 1s}
+  html.js .stage.in .tetra-group{transform:scale(.5)}
+  html.js .orbit{transform-origin:200px 182px;animation:spin 26s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .core{transform-origin:200px 182px;transform:scale(1);transition:opacity .9s ease 2.5s,transform 1.1s cubic-bezier(.2,.9,.2,1) 2.5s}
+  html.js .core{opacity:0;transform:scale(.15)}
+  html.js .stage.in .core{opacity:1;transform:scale(1)}
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    html.js .reveal,html.js .draw,html.js .node,html.js .bar i,html.js .tetra-group,html.js .core{opacity:1 !important;transform:none !important;stroke-dashoffset:0 !important;transition:none !important}
+    html.js .orbit{animation:none !important}
+    html.js .stage.in .tetra-group{transform:scale(.62)}
+  }
+
+  /* ---------- layers stack ---------- */
+  .layer{
+    display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px;align-items:center;
+    border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01));
+    transition:border-color .3s,transform .3s;
+  }
+  .layer:hover{border-color:var(--line-2);transform:translateX(3px)}
+  .layer .idx{font:800 .78rem var(--mono);color:var(--gold);letter-spacing:.08em}
+  .layer h3{font-size:1rem}
+  .layer p{color:var(--dim);font-size:.88rem;margin-top:3px}
+  .layer .st{font:600 .68rem var(--mono);letter-spacing:.08em;color:var(--cyan);white-space:nowrap;border:1px solid rgba(58,215,232,.35);padding:5px 9px;border-radius:999px}
+  .stack{display:grid;gap:12px}
+  .stack .connector{height:14px;display:grid;place-items:center;color:var(--faint)}
+  .stack .connector svg{width:14px;height:14px}
+
+  /* ---------- groups (consilium) ---------- */
+  .group{
+    border:1px solid var(--line);border-radius:14px;padding:16px;
+    background:rgba(255,255,255,.026);display:grid;gap:8px;
+  }
+  .group .gtop{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .group .gl{font:800 .72rem var(--mono);letter-spacing:.14em;color:var(--cyan)}
+  .group .gc{font:700 .72rem var(--mono);color:var(--faint)}
+  .group h3{font-size:.98rem}
+  .group p{color:var(--dim);font-size:.84rem}
+  .consilium-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(18px,3.4vw,40px);align-items:center}
+  @media (max-width:900px){.consilium-grid{grid-template-columns:1fr}}
+
+  .caption{margin-top:14px;color:var(--faint);font-size:.82rem;text-align:center}
+
+  /* ---------- roadmap ---------- */
+  .phase{
+    border:1px solid var(--line);border-radius:14px;padding:18px;
+    background:linear-gradient(180deg,rgba(255,255,255,.032),rgba(255,255,255,.01));
+  }
+  .phase .ptop{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .phase .pn{font:800 .74rem var(--mono);color:var(--gold);letter-spacing:.1em}
+  .phase .ps{font:600 .66rem var(--mono);letter-spacing:.08em;color:var(--dim)}
+  .phase .ps.live{color:var(--good)}
+  .phase .ps.active{color:var(--cyan)}
+  .phase .ps.plan{color:var(--faint)}
+  .phase h3{margin-top:8px;font-size:1rem}
+  .phase p{color:var(--dim);font-size:.86rem;margin-top:5px}
+  .bar{height:5px;border-radius:99px;background:rgba(255,255,255,.08);margin-top:14px;overflow:hidden}
+  .bar i{display:block;height:100%;width:100%;border-radius:99px;
+    background:linear-gradient(90deg,var(--cyan),var(--gold))}
+
+  /* ---------- ask ---------- */
+  .ask .card{min-height:100%}
+  .ask .ph{
+    display:inline-block;margin-top:12px;font:600 .7rem var(--mono);letter-spacing:.08em;
+    color:var(--warn);border:1px dashed rgba(234,165,58,.45);border-radius:8px;padding:6px 10px;
+    background:rgba(234,165,58,.06);
+  }
+  .contact{
+    margin-top:26px;border:1px solid var(--line-2);border-radius:18px;padding:clamp(18px,3vw,30px);
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;
+    background:
+      radial-gradient(500px 200px at 0% 0%, rgba(58,215,232,.1), transparent 60%),
+      linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.012));
+  }
+  .contact .dom{font:800 clamp(1.1rem,3vw,1.7rem)/1 var(--mono);letter-spacing:.02em}
+  .contact a{text-decoration:none;color:var(--cyan)}
+
+  footer{border-top:1px solid var(--line);padding:30px 0 46px;color:var(--faint);font-size:.8rem}
+  .foot-grid{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:space-between;align-items:flex-start}
+  .foot-note{max-width:62ch;line-height:1.7}
+
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  @media (max-width:520px){
+    .brand small{display:none}
+    .only-desktop{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"><i id="pbar"></i></div>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="13.4" fill="none" stroke="#3ad7e8" stroke-width="1.6"/>
+        <circle cx="16" cy="16" r="5.4" fill="none" stroke="#e9c46a" stroke-width="1.6"/>
+        <circle cx="16" cy="16" r="1.7" fill="#e9c46a"/>
+      </svg>
+      <span>EvaLine<small data-ru="Фабрика ИИ-агентов">AI Agent Factory</small></span>
+    </div>
+    <div class="top-actions">
+      <button class="btn ghost only-desktop" id="jump" type="button" data-ru="Смотреть">Walkthrough</button>
+      <div class="lang" role="group" aria-label="Language / Язык">
+        <button class="lang-btn on" type="button" data-lang="en">EN</button>
+        <button class="lang-btn" type="button" data-lang="ru">RU</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ STAGE 1 — HERO ============ -->
+  <section class="stage hero in" id="s1" data-stage>
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow"><span class="dot-live" aria-hidden="true"></span><span data-ru="Частная система ИИ-агентов">Private AI agent system</span></span>
+        <h1 data-ru="EvaLine: фабрика ИИ-агентов и LLM-агентство">EvaLine: AI Agent Factory &amp; LLM Agency</h1>
+        <p class="hero-tagline" data-ru="Мы строим автономный штат цифровых сотрудников — и одновременно управляем реальным заводом полимеров. Технологии подкреплены производством, а не наоборот.">
+          We build an autonomous staff of digital co-workers — while running a real polymer factory. The technology is grounded in production, not the other way round.
+        </p>
+        <div class="hero-cta">
+          <button class="btn gold" id="replayHero" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/></svg>
+            <span data-ru="Повторить анимацию">Replay animation</span>
+          </button>
+          <a class="btn ghost" href="#s2" data-ru="Начать обзор">Start the walkthrough</a>
+        </div>
+        <p class="hero-note" data-ru="Черноморск, Украина (завод) · Братислава, Словакия (склад ЕС)">Chernomorsk, Ukraine (plant) · Bratislava, Slovakia (EU warehouse)</p>
+      </div>
+      <div class="diagram reveal" style="--d:.15s">
+        <svg viewBox="0 0 520 420" role="img" aria-label="Layer diagram: reality, models, agents, tools">
+          <defs>
+            <linearGradient id="hgl" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#3ad7e8"/><stop offset="1" stop-color="#e9c46a"/>
+            </linearGradient>
+          </defs>
+          <g fill="none" stroke="url(#hgl)" stroke-width="1.4" opacity=".85">
+            <rect x="60" y="34" width="400" height="66" rx="12"/>
+            <rect x="60" y="124" width="400" height="66" rx="12"/>
+            <rect x="60" y="214" width="400" height="66" rx="12"/>
+            <rect x="60" y="304" width="400" height="66" rx="12"/>
+          </g>
+          <g class="node" style="--d:.2s">
+            <text class="nlabel" x="82" y="62" data-ru="Среды агентов">Agent runtimes</text>
+            <text class="nsub" x="82" y="82">Hermes · OpenClaw · agy · opencode / kilo / qwen</text>
+            <text class="ncount" x="438" y="72" text-anchor="end">6</text>
+          </g>
+          <g class="node" style="--d:.4s">
+            <text class="nlabel" x="82" y="152" data-ru="Единый шлюз моделей">Single model gateway</text>
+            <text class="nsub" x="82" y="172">OmniRoute · OpenAI-compatible LiteLLM</text>
+            <text class="ncount" x="438" y="162" text-anchor="end">36</text>
+          </g>
+          <g class="node" style="--d:.6s">
+            <text class="nlabel" x="82" y="242" data-ru="Шина инструментов MCP">MCP tool bus</text>
+            <text class="nsub" x="82" y="262" data-ru="файлы · git · база · браузер · память">files · git · database · browser · memory</text>
+            <text class="ncount" x="438" y="252" text-anchor="end">21</text>
+          </g>
+          <g class="node" style="--d:.8s">
+            <text class="nlabel" x="82" y="332" data-ru="Реальный бизнес">Real business</text>
+            <text class="nsub" x="82" y="352" data-ru="производство ЭВА и дистрибуция по ЕС">EVA polymer manufacturing &amp; EU distribution</text>
+            <text class="ncount" x="438" y="342" text-anchor="end">1</text>
+          </g>
+          <g stroke="url(#hgl)" stroke-width="1.2" opacity=".55">
+            <line class="draw" pathLength="1" x1="260" y1="104" x2="260" y2="120"/>
+            <line class="draw" pathLength="1" style="--dd:.25s" x1="260" y1="194" x2="260" y2="210"/>
+            <line class="draw" pathLength="1" style="--dd:.5s" x1="260" y1="284" x2="260" y2="300"/>
+          </g>
+        </svg>
+        <p class="caption" data-ru="Один шлюз, много сред, реальные инструменты.">One gateway, many runtimes, real tools.</p>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="stats">
+        <div class="stat reveal" style="--d:.1s"><b>94</b><span data-ru="модели в реестре">models in the registry</span></div>
+        <div class="stat reveal" style="--d:.2s"><b>30</b><span data-ru="агентов консилиума">Consilium agents</span></div>
+        <div class="stat reveal" style="--d:.3s"><b>21</b><span data-ru="MCP-сервера в наборе">MCP servers in the suite</span></div>
+        <div class="stat reveal" style="--d:.4s"><b>6</b><span data-ru="фаз до продукта">phases to product</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STAGE 2 — THE COMPANY ============ -->
+  <section class="stage" id="s2" data-stage>
+    <div class="wrap">
+      <div class="head">
+        <span class="kicker"><span class="n">02</span><span data-ru="Компания">The company</span></span>
+        <h2 class="reveal" data-ru="Настоящий завод, а не презентация.">A real factory, not a slide deck.</h2>
+        <p class="lead reveal" style="--d:.08s" data-ru="EvaLine производит изделия из полимера ЭВА в Украине и поставляет их по ЕС со склада в Братиславе. Это фундамент, на котором строится агентная платформа.">
+          EvaLine manufactures EVA polymer products in Ukraine and distributes them across the EU from a Bratislava warehouse. That business is the foundation the agent platform is built on.
+        </p>
+      </div>
+
+      <div class="grid g3">
+        <div class="card reveal" style="--d:.05s">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M6 7v10M12 7v10M18 7v10"/></svg>
+          <h3 data-ru="Автоковрики">Car mats</h3>
+          <p data-ru="Серия EvaLine Drive: ячейки «ромб» и «соты», лист 8 мм. Объёмные ячейки удерживают до 2.5 л воды на салон.">EvaLine Drive line: diamond and honeycomb cells, 8 mm sheet. Deep cells trap up to 2.5 L of water per cabin.</p>
+        </div>
+        <div class="card reveal" style="--d:.12s">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/><path d="M11 7h4a2 2 0 0 1 2 2v4"/></svg>
+          <h3 data-ru="Татами и спортивные полы">Tatami and sport floors</h3>
+          <p data-ru="Сборные маты с замком «ласточкин хвост», плотность 75–250 кг/м³, толщина 20–40 мм.">Interlocking dovetail mats, density 75–250 kg/m³, thickness 20–40 mm.</p>
+        </div>
+        <div class="card reveal" style="--d:.19s">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/></svg>
+          <h3 data-ru="Маты для ферм">Agro mats</h3>
+          <p data-ru="Маты «Бурьонка» для молочных ферм: теплоизоляция, антискользящее рифление, антибактериальная пропитка.">Buryonka mats for dairy farms: thermal insulation, anti-slip relief, antibacterial treatment.</p>
+        </div>
+        <div class="card reveal" style="--d:.05s">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17c3 0 4-3 7-3s4 3 7 3 4-2 4-2"/><path d="M3 12c3 0 4-3 7-3s4 3 7 3 4-2 4-2"/></svg>
+          <h3 data-ru="Морской тик">Marine teak</h3>
+          <p data-ru="УФ-стабилизированное покрытие для палуб катеров и яхт с клеевым слоем 3M VHB.">UV-stabilised decking for boats and yachts with a 3M VHB adhesive layer.</p>
+        </div>
+        <div class="card reveal" style="--d:.12s">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h9l3 3v13H6z"/><path d="M9 4c0 3 6 3 6 0"/></svg>
+          <h3 data-ru="Обувь и лист ЭВА">Footwear and EVA sheet</h3>
+          <p data-ru="Подошвы и листовые материалы ЭВА для партнёров, включая контрактное производство под вашим брендом.">EVA soles and sheet materials for partners, including private-label contract manufacturing.</p>
+        </div>
+        <div class="card gold-line reveal" style="--d:.19s">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg>
+          <h3 data-ru="Каналы сбыта">Routes to market</h3>
+          <p data-ru="B2B: опт, экспорт в ЕС, контрактное производство. B2C: собственные интернет-магазины.">B2B: wholesale, EU export, private label. B2C: direct online stores.</p>
+        </div>
+      </div>
+
+      <div class="grid g4" style="margin-top:16px">
+        <div class="card reveal" style="--d:.05s"><h3 data-ru="2.8 га">2.8 ha</h3><p data-ru="производственная площадка в Черноморске, Украина">plant in Chernomorsk, Ukraine</p></div>
+        <div class="card reveal" style="--d:.12s"><h3>100+</h3><p data-ru="сотрудников на заводе">people at the plant</p></div>
+        <div class="card reveal" style="--d:.19s"><h3>550+ t</h3><p data-ru="выпуск листа ЭВА в месяц; 8 линий вспенивания и 4 плоттера ЧПУ">EVA sheet per month; 8 foaming lines and 4 CNC plotters</p></div>
+        <div class="card gold-line reveal" style="--d:.26s"><h3>ISO 9001 · CE</h3><p data-ru="склад ЕС в Братиславе, доставка по ЕС за 24–48 часов">EU warehouse in Bratislava, 24–48 h delivery inside the EU</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STAGE 3 — THE LAYER BEING BUILT ============ -->
+  <section class="stage" id="s3" data-stage>
+    <div class="wrap">
+      <div class="head">
+        <span class="kicker"><span class="n">03</span><span data-ru="Слой, который мы строим">The layer being built</span></span>
+        <h2 class="reveal" data-ru="Фабрика ИИ-агентов поверх фабрики полимеров.">An AI agent factory on top of the polymer factory.</h2>
+        <p class="lead reveal" style="--d:.08s" data-ru="Агент — это не окно чата. Это цифровой сотрудник с ролью, памятью, инструментами и следом аудита. Четыре слоя превращают модель в исполнителя.">
+          An agent is not a chat window. It is a digital co-worker with a role, memory, tools and an audit trail. Four layers turn a model into a worker.
+        </p>
+      </div>
+
+      <div class="stack">
+        <div class="layer reveal" style="--d:.05s">
+          <span class="idx">L4</span>
+          <div>
+            <h3 data-ru="Среды выполнения агентов">Agent runtimes</h3>
+            <p data-ru="Hermes, OpenClaw, agy и связка opencode / kilo / qwen. Разные агенты под разные задачи, у каждого свой характер и сильные стороны.">Hermes, OpenClaw, agy and the opencode / kilo / qwen set. Different agents for different jobs, each with its own character and strengths.</p>
+          </div>
+          <span class="st">6</span>
+        </div>
+        <div class="connector" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M6 15l6 6 6-6"/></svg></div>
+
+        <div class="layer reveal" style="--d:.12s">
+          <span class="idx">L3</span>
+          <div>
+            <h3 data-ru="Единый шлюз моделей">Single model gateway</h3>
+            <p data-ru="OmniRoute — один OpenAI-совместимый вход (LiteLLM). Все 94 модели стоят за одной дверью, поэтому смена поставщика не требует переписывать агентов.">OmniRoute: one OpenAI-compatible endpoint (LiteLLM). All 94 models sit behind a single door, so switching a provider never means rewriting agents.</p>
+          </div>
+          <span class="st">1</span>
+        </div>
+        <div class="connector" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M6 15l6 6 6-6"/></svg></div>
+
+        <div class="layer reveal" style="--d:.19s">
+          <span class="idx">L2</span>
+          <div>
+            <h3 data-ru="Шина инструментов MCP">MCP tool bus</h3>
+            <p data-ru="21 сервер, из них 8 подключены в каждой среде. Файлы, Git, GitHub, базы данных, браузер, память — так у агентов появляются «руки».">21 servers, with 8 wired into every runtime. Files, Git, GitHub, databases, browser and memory — this is how agents get hands.</p>
+          </div>
+          <span class="st">21</span>
+        </div>
+        <div class="connector" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M6 15l6 6 6-6"/></svg></div>
+
+        <div class="layer reveal" style="--d:.26s">
+          <span class="idx">L1</span>
+          <div>
+            <h3 data-ru="Память">Memory</h3>
+            <p data-ru="Графовая память, полнотекстовый поиск SQLite и векторное хранилище. Каждый ответ опирается на реальные документы, а не на догадки.">Graph memory, SQLite full-text search and a vector store. Every answer is grounded in real documents rather than guesswork.</p>
+          </div>
+          <span class="st">RAG</span>
+        </div>
+      </div>
+
+      <div class="grid g3" style="margin-top:18px">
+        <div class="card reveal" style="--d:.05s"><h3 data-ru="Закрытый контур">Closed execution loop</h3><p data-ru="Восприятие, план, выполнение в изолированной среде, проверка и автоматический откат при ошибке — без ручного переноса текста.">Perceive, plan, execute in an isolated sandbox, review, and roll back automatically on error — with no human copying text between screens.</p></div>
+        <div class="card reveal" style="--d:.12s"><h3 data-ru="Ноль вендор-лока">No vendor lock-in</h3><p data-ru="94 модели и 36 маршрутов. Если поставщик замедлился или изменил условия, трафик переезжает к другому за миллисекунды.">94 models and 36 routes. If a provider slows down or changes terms, traffic moves to another in milliseconds.</p></div>
+        <div class="card reveal" style="--d:.19s"><h3 data-ru="Контроль качества">Quality gates</h3><p data-ru="Спорные решения уходят на перекрёстную проверку независимыми моделями до того, как попадут в работу завода.">Contested decisions are cross-checked by independent models before they ever reach the plant floor.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STAGE 4 — THE NETWORK ============ -->
+  <section class="stage" id="s4" data-stage>
+    <div class="wrap">
+      <div class="head">
+        <span class="kicker"><span class="n">04</span><span data-ru="Сеть">The network</span></span>
+        <h2 class="reveal" data-ru="Два узла: щит на краю, мозг в ядре.">Two nodes: a shield at the edge, a brain in the core.</h2>
+        <p class="lead reveal" style="--d:.08s" data-ru="Публичный трафик принимает лёгкий узел. Тяжёлые вычисления идут в защищённом контуре. Узлы связаны приватным шифрованным туннелем.">
+          A lightweight node takes the public traffic. Heavy computation runs in a protected core. The two are joined by a private encrypted tunnel.
+        </p>
+      </div>
+
+      <div class="diagram reveal">
+        <svg viewBox="0 0 960 420" role="img" aria-label="Network topology: edge node, compute node, private mesh and public domains">
+          <!-- mesh link -->
+          <path class="clink cy draw" pathLength="1" d="M300 150 C 430 60, 530 60, 660 150" stroke-width="2"/>
+          <path class="clink draw" pathLength="1" style="--dd:.2s" d="M300 150 C 430 240, 530 240, 660 150" stroke-width="2" stroke-dasharray="5 6"/>
+          <text class="nsub" x="480" y="92" text-anchor="middle" data-ru="Приватный туннель WireGuard">Private WireGuard mesh</text>
+
+          <g class="node" style="--d:.1s">
+            <rect class="node-box cy" x="120" y="110" width="230" height="96" rx="16"/>
+            <circle cx="154" cy="146" r="9" fill="none" stroke="#3ad7e8" stroke-width="2"/>
+            <text class="nlabel" x="176" y="151" data-ru="Вычислительное ядро">Compute core</text>
+            <text class="nsub" x="146" y="180">Frankfurt, EU · 8 vCPU / 32 GB</text>
+            <text class="nsub" x="146" y="196" data-ru="модели, агенты, базы данных">models, agents, databases</text>
+          </g>
+          <g class="node" style="--d:.25s">
+            <rect class="node-box gd" x="610" y="110" width="230" height="96" rx="16"/>
+            <circle cx="644" cy="146" r="9" fill="none" stroke="#e9c46a" stroke-width="2"/>
+            <text class="nlabel" x="666" y="151" data-ru="Краевой узел">Edge ingress</text>
+            <text class="nsub" x="636" y="180" data-ru="Айова, США · лёгкий постоянный узел">Iowa, US · small always-on node</text>
+            <text class="nsub" x="636" y="196" data-ru="HTTP/3, TLS, прокси к ядру">HTTP/3, TLS, proxy to core</text>
+          </g>
+
+          <!-- domain chips -->
+          <g class="node" style="--d:.4s">
+            <rect class="node-box" x="120" y="290" width="220" height="44" rx="12"/>
+            <text class="nlabel" x="140" y="317">evabot.online</text>
+          </g>
+          <g class="node" style="--d:.48s">
+            <rect class="node-box" x="356" y="290" width="220" height="44" rx="12"/>
+            <text class="nlabel" x="376" y="317">evaline.network</text>
+          </g>
+          <g class="node" style="--d:.56s">
+            <rect class="node-box" x="592" y="290" width="248" height="44" rx="12"/>
+            <text class="nlabel" x="612" y="317">evaline.online · evaline.website</text>
+          </g>
+          <g stroke="rgba(255,255,255,.14)" stroke-width="1.1" fill="none">
+            <line class="draw" pathLength="1" style="--dd:.5s" x1="230" y1="206" x2="230" y2="290"/>
+            <line class="draw" pathLength="1" style="--dd:.6s" x1="466" y1="206" x2="466" y2="290"/>
+            <line class="draw" pathLength="1" style="--dd:.7s" x1="716" y1="206" x2="716" y2="290"/>
+          </g>
+        </svg>
+        <p class="caption" data-ru="Если один узел недоступен, второй продолжает обслуживать.">If one node goes down, the other keeps serving.</p>
+      </div>
+
+      <div class="grid g2" style="margin-top:18px">
+        <div class="card reveal" style="--d:.05s">
+          <h3 data-ru="Изоляция данных">Data isolation</h3>
+          <p data-ru="Служебный трафик идёт только внутри приватной сети. Публичный интернет видит лишь точку входа.">Internal traffic stays inside the private network. The public internet only sees the entry point.</p>
+        </div>
+        <div class="card gold-line reveal" style="--d:.12s">
+          <h3 data-ru="Непрерывность работы">Continuity</h3>
+          <p data-ru="Разные провайдеры и разные узлы. Отказ одного элемента не останавливает приём заказов и расчёты.">Different providers and different nodes. One failing element does not stop orders or calculations.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STAGE 5 — CONSILIUM-30 ============ -->
+  <section class="stage" id="s5" data-stage>
+    <div class="wrap">
+      <div class="head">
+        <span class="kicker"><span class="n">05</span><span data-ru="Консилиум-30">Consilium-30</span></span>
+        <h2 class="reveal" data-ru="Тридцать специализированных агентов, которые спорят, прежде чем решить.">Thirty specialised agents that debate before they decide.</h2>
+        <p class="lead reveal" style="--d:.08s" data-ru="Одна модель может уверенно ошибаться. Консилиум-30 отдаёт задачу тридцати ролям в пяти группах, после чего арбитр синтезирует согласованное решение.">
+          A single model can be confidently wrong. Consilium-30 sends one task to thirty roles across five groups, then an arbiter synthesises the agreed decision.
+        </p>
+      </div>
+
+      <div class="consilium-grid">
+        <div class="diagram reveal">
+          <svg viewBox="0 0 400 400" role="img" aria-label="Tetraxis layered pyramid: four base roles converge into one arbiter">
+            <defs>
+              <radialGradient id="gG" cx="50%" cy="40%" r="65%">
+                <stop offset="0" stop-color="#fbe7b8"/><stop offset="1" stop-color="#bd8f33"/>
+              </radialGradient>
+              <radialGradient id="gC" cx="50%" cy="40%" r="65%">
+                <stop offset="0" stop-color="#bff4fb"/><stop offset="1" stop-color="#0e93a8"/>
+              </radialGradient>
+              <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="9" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <g fill="none" stroke="rgba(233,196,106,.4)" stroke-width="1.4">
+              <path class="draw" pathLength="1" d="M200 70 L87 155" style="--dd:.05s"/>
+              <path class="draw" pathLength="1" d="M200 70 L313 155" style="--dd:.12s"/>
+              <path class="draw" pathLength="1" d="M200 70 L200 350" style="--dd:.19s"/>
+              <path class="draw" pathLength="1" d="M87 155 L313 155" style="--dd:.26s"/>
+              <path class="draw" pathLength="1" d="M87 155 L200 350" style="--dd:.33s"/>
+              <path class="draw" pathLength="1" d="M313 155 L200 350" style="--dd:.4s"/>
+            </g>
+
+            <g class="orbit">
+              <g class="tetra-group">
+                <circle cx="200" cy="70" r="30" fill="url(#gG)" filter="url(#soft)"/>
+                <circle cx="87" cy="155" r="30" fill="url(#gC)" filter="url(#soft)"/>
+                <circle cx="313" cy="155" r="30" fill="url(#gC)" filter="url(#soft)"/>
+                <circle cx="200" cy="350" r="30" fill="url(#gG)" filter="url(#soft)"/>
+              </g>
+            </g>
+
+            <circle class="core" cx="200" cy="182" r="27" fill="url(#gG)" filter="url(#soft)"/>
+            <circle class="core" cx="200" cy="182" r="10" fill="#fff" opacity=".85"/>
+          </svg>
+          <p class="caption" data-ru="Четыре базовые роли вращаются и сходятся в единый центр — арбитра.">Four base roles rotate and converge into one balanced centre — the arbiter.</p>
+        </div>
+
+        <div class="grid" style="gap:12px">
+          <div class="group reveal" style="--d:.05s">
+            <div class="gtop"><span class="gl">A</span><span class="gc">01–08</span></div>
+            <h3 data-ru="Производство и технологии">Production and technology</h3>
+            <p data-ru="Главный технолог, специалист по автоковрикам, инженер татами, обувной технолог, агро-советник, мастер бутафории, контроль качества, рециклинг.">Chief technologist, auto-stylist, tatami engineer, footwear expert, agro advisor, craft master, QC inspector, recycling officer.</p>
+          </div>
+          <div class="group reveal" style="--d:.1s">
+            <div class="gtop"><span class="gl">B</span><span class="gc">09–13</span></div>
+            <h3 data-ru="Логистика, продажи, клиенты">Logistics, sales and clients</h3>
+            <p data-ru="Экспорт в ЕС, оптовые продажи, поддержка клиентов, аналитик цен, тендерный специалист.">EU export, wholesale, customer care, pricing analyst, tender specialist.</p>
+          </div>
+          <div class="group reveal" style="--d:.15s">
+            <div class="gtop"><span class="gl">C</span><span class="gc">14–18</span></div>
+            <h3 data-ru="ИТ, инфраструктура, интеллект">IT, infrastructure and intelligence</h3>
+            <p data-ru="Системный администратор, специалист по памяти RAG, оператор шлюза моделей, интегратор API, аудитор безопасности.">Sysadmin, RAG master, gateway operator, API integrator, security auditor.</p>
+          </div>
+          <div class="group reveal" style="--d:.2s">
+            <div class="gtop"><span class="gl">D</span><span class="gc">19–24</span></div>
+            <h3 data-ru="Аналитика, стратегия, арбитраж">Analytics, strategy and arbitration</h3>
+            <p data-ru="Критик, арбитр-синтезатор, маркетинг, юридический комплаенс, финансовый аналитик, скаут инноваций.">Devil's advocate, arbiter, marketing growth, legal compliance, finance lead, innovation scout.</p>
+          </div>
+          <div class="group reveal" style="--d:.25s">
+            <div class="gtop"><span class="gl">E</span><span class="gc">25–30</span></div>
+            <h3 data-ru="Игровая динамика и обучение">Game dynamics and learning</h3>
+            <p data-ru="Гейм-мастер, психолог поведения, тактик, стратег, счётчик очков, тренер моделей.">Game master, behaviour psychologist, tactician, strategist, scorekeeper, coach.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid g3" style="margin-top:18px">
+        <div class="card reveal" style="--d:.05s"><h3 data-ru="Уровень 1 — 10 агентов">Level 1 — 10 agents</h3><p data-ru="Быстрый режим на бесплатных моделях для повседневных задач.">Fast mode on free models for everyday work.</p></div>
+        <div class="card reveal" style="--d:.12s"><h3 data-ru="Уровень 2 — 20 агентов">Level 2 — 20 agents</h3><p data-ru="Рабочий режим: бесплатные модели плюс экономичный платный уровень.">Production mode: free models plus an economical paid tier.</p></div>
+        <div class="card gold-line reveal" style="--d:.19s"><h3 data-ru="Уровень 3 — 30 агентов">Level 3 — 30 agents</h3><p data-ru="Полный консилиум со специализированными ролями и платным арбитражем.">Full Consilium with specialised roles and paid arbitration.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STAGE 6 — ALL THE MODELS ============ -->
+  <section class="stage" id="s6" data-stage>
+    <div class="wrap">
+      <div class="head">
+        <span class="kicker"><span class="n">06</span><span data-ru="Все модели">All the models</span></span>
+        <h2 class="reveal" data-ru="Федерация моделей: ни один поставщик не является единственным.">A federation of models — no single vendor.</h2>
+        <p class="lead reveal" style="--d:.08s" data-ru="В реестре 94 модели: 62 бесплатные и 32 платные. Шлюз OmniRoute открывает 36 маршрутов по шести группам поставщиков плюс отдельный маршрут агента.">
+          The registry holds 94 models: 62 free and 32 paid. The OmniRoute gateway exposes 36 routes across six provider groups plus a dedicated agent route.
+        </p>
+      </div>
+
+      <div class="diagram reveal">
+        <svg viewBox="0 0 960 560" role="img" aria-label="Model constellation grouped by provider around the gateway">
+          <g stroke="rgba(255,255,255,.16)" stroke-width="1.2" fill="none">
+            <line class="draw" pathLength="1" x1="480" y1="280" x2="480" y2="80" style="--dd:.05s"/>
+            <line class="draw" pathLength="1" x1="480" y1="280" x2="653" y2="180" style="--dd:.12s"/>
+            <line class="draw" pathLength="1" x1="480" y1="280" x2="653" y2="380" style="--dd:.19s"/>
+            <line class="draw" pathLength="1" x1="480" y1="280" x2="480" y2="480" style="--dd:.26s"/>
+            <line class="draw" pathLength="1" x1="480" y1="280" x2="307" y2="380" style="--dd:.33s"/>
+            <line class="draw" pathLength="1" x1="480" y1="280" x2="307" y2="180" style="--dd:.4s"/>
+          </g>
+
+          <!-- provider clusters -->
+          <g>
+            <g class="node" style="--d:.15s">
+              <circle cx="438" cy="80" r="4.5" fill="#3ad7e8" opacity=".6"/>
+              <circle cx="522" cy="80" r="4.5" fill="#3ad7e8" opacity=".6"/>
+              <circle cx="480" cy="38" r="4.5" fill="#3ad7e8" opacity=".6"/>
+              <circle cx="480" cy="80" r="32" fill="rgba(58,215,232,.1)" stroke="rgba(58,215,232,.5)" stroke-width="1.4"/>
+              <text class="npmid" x="480" y="84" text-anchor="middle">Google</text>
+              <text class="ncount" x="480" y="128" text-anchor="middle">5</text>
+            </g>
+            <g class="node" style="--d:.22s">
+              <circle cx="611" cy="180" r="4.5" fill="#e9c46a" opacity=".6"/>
+              <circle cx="695" cy="180" r="4.5" fill="#e9c46a" opacity=".6"/>
+              <circle cx="653" cy="138" r="4.5" fill="#e9c46a" opacity=".6"/>
+              <circle cx="653" cy="180" r="32" fill="rgba(233,196,106,.1)" stroke="rgba(233,196,106,.5)" stroke-width="1.4"/>
+              <text class="npmid" x="653" y="184" text-anchor="middle">Cloudflare</text>
+              <text class="ncount" x="653" y="228" text-anchor="middle">8</text>
+            </g>
+            <g class="node" style="--d:.29s">
+              <circle cx="611" cy="380" r="4.5" fill="#9b8cff" opacity=".6"/>
+              <circle cx="695" cy="380" r="4.5" fill="#9b8cff" opacity=".6"/>
+              <circle cx="653" cy="338" r="4.5" fill="#9b8cff" opacity=".6"/>
+              <circle cx="653" cy="380" r="32" fill="rgba(155,140,255,.1)" stroke="rgba(155,140,255,.5)" stroke-width="1.4"/>
+              <text class="npmid" x="653" y="384" text-anchor="middle">Groq</text>
+              <text class="ncount" x="653" y="428" text-anchor="middle">6</text>
+            </g>
+            <g class="node" style="--d:.36s">
+              <circle cx="438" cy="480" r="4.5" fill="#54d98c" opacity=".6"/>
+              <circle cx="522" cy="480" r="4.5" fill="#54d98c" opacity=".6"/>
+              <circle cx="480" cy="438" r="4.5" fill="#54d98c" opacity=".6"/>
+              <circle cx="480" cy="480" r="32" fill="rgba(84,217,140,.1)" stroke="rgba(84,217,140,.5)" stroke-width="1.4"/>
+              <text class="npmid" x="480" y="484" text-anchor="middle">OpenRouter</text>
+              <text class="ncount" x="480" y="528" text-anchor="middle">13</text>
+            </g>
+            <g class="node" style="--d:.43s">
+              <circle cx="265" cy="380" r="4.5" fill="#eaa53a" opacity=".6"/>
+              <circle cx="349" cy="380" r="4.5" fill="#eaa53a" opacity=".6"/>
+              <circle cx="307" cy="338" r="4.5" fill="#eaa53a" opacity=".6"/>
+              <circle cx="307" cy="380" r="32" fill="rgba(234,165,58,.1)" stroke="rgba(234,165,58,.5)" stroke-width="1.4"/>
+              <text class="npmid" x="307" y="384" text-anchor="middle">Mistral</text>
+              <text class="ncount" x="307" y="428" text-anchor="middle">1</text>
+            </g>
+            <g class="node" style="--d:.5s">
+              <circle cx="265" cy="180" r="4.5" fill="#3ad7e8" opacity=".6"/>
+              <circle cx="349" cy="180" r="4.5" fill="#3ad7e8" opacity=".6"/>
+              <circle cx="307" cy="138" r="4.5" fill="#3ad7e8" opacity=".6"/>
+              <circle cx="307" cy="180" r="32" fill="rgba(58,215,232,.1)" stroke="rgba(58,215,232,.5)" stroke-width="1.4"/>
+              <text class="npmid" x="307" y="184" text-anchor="middle">Z.AI</text>
+              <text class="ncount" x="307" y="228" text-anchor="middle">2</text>
+            </g>
+          </g>
+
+          <!-- hub -->
+          <g class="node" style="--d:.6s">
+            <circle cx="480" cy="280" r="66" fill="rgba(233,196,106,.09)" stroke="rgba(233,196,106,.55)" stroke-width="1.6"/>
+            <text class="nlabel" x="480" y="272" text-anchor="middle">OmniRoute</text>
+            <text class="nsub" x="480" y="290" text-anchor="middle">single gateway</text>
+            <text class="ncount" x="480" y="312" text-anchor="middle">36</text>
+          </g>
+        </svg>
+        <p class="caption" data-ru="Плюс отдельный маршрут агента Hermes. Модели группируются по поставщикам и переключаются автоматически.">Plus a dedicated Hermes agent route. Models are grouped by provider and switched automatically.</p>
+      </div>
+
+      <div class="grid g4" style="margin-top:18px">
+        <div class="card reveal" style="--d:.05s"><h3>62</h3><p data-ru="бесплатные модели для повседневных задач">free models for everyday tasks</p></div>
+        <div class="card reveal" style="--d:.12s"><h3>32</h3><p data-ru="платные флагманские модели для сложных расчётов">paid flagship models for hard problems</p></div>
+        <div class="card reveal" style="--d:.19s"><h3>36</h3><p data-ru="маршрута через единый шлюз">routes through the single gateway</p></div>
+        <div class="card gold-line reveal" style="--d:.26s"><h3 data-ru="Авто-переключение">Auto-failover</h3><p data-ru="Если поставщик недоступен, запрос уходит к другому без простоя.">If a provider is unavailable, the request moves to another with no downtime.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STAGE 7 — STACK AND SKILLS ============ -->
+  <section class="stage" id="s7" data-stage>
+    <div class="wrap">
+      <div class="head">
+        <span class="kicker"><span class="n">07</span><span data-ru="Технологии и навыки">Technology and skills</span></span>
+        <h2 class="reveal" data-ru="Глубокий набор навыков и стандартов.">A deep library of skills and standards.</h2>
+        <p class="lead reveal" style="--d:.08s" data-ru="Агенты не пишут код с нуля каждый раз. Они берут готовые проверенные процедуры — «рунбуки» — и применяют их к задаче.">
+          Agents do not start from scratch every time. They load proven, reusable procedures — runbooks — and apply them to the task.
+        </p>
+      </div>
+
+      <div class="grid g4">
+        <div class="card reveal" style="--d:.05s"><h3>58</h3><p data-ru="активных навыков агента Hermes в 12 категориях">active Hermes agent skills across 12 categories</p></div>
+        <div class="card reveal" style="--d:.12s"><h3>147</h3><p data-ru="дополнительных навыков, готовых к установке">optional skills available to install</p></div>
+        <div class="card reveal" style="--d:.19s"><h3>21 / 8</h3><p data-ru="MCP-серверов всего и в каждой среде">MCP servers in total and wired into every runtime</p></div>
+        <div class="card gold-line reveal" style="--d:.26s"><h3>RU · UK · EN</h3><p data-ru="рабочие языки агентов; база знаний охватывает 6 языков">agent working languages; the knowledge base spans 6 languages</p></div>
+      </div>
+
+      <div class="grid g3" style="margin-top:16px">
+        <div class="card reveal" style="--d:.05s">
+          <h3 data-ru="Шина инструментов">Tool bus</h3>
+          <p data-ru="Файлы, Git, GitHub, базы данных, веб-запросы, память, последовательное мышление, документация библиотек.">Files, Git, GitHub, databases, web fetch, memory, sequential thinking, library documentation.</p>
+          <div class="tagrow"><span class="tag cy">filesystem</span><span class="tag cy">git</span><span class="tag cy">github</span><span class="tag cy">sqlite</span><span class="tag cy">memory</span></div>
+        </div>
+        <div class="card reveal" style="--d:.12s">
+          <h3 data-ru="Среды разработки">Developer tooling</h3>
+          <p data-ru="Языковые серверы для TypeScript, Python, HTML, CSS, JSON и Markdown обеспечивают проверку кода в реальном времени.">Language servers for TypeScript, Python, HTML, CSS, JSON and Markdown provide real-time code checking.</p>
+          <div class="tagrow"><span class="tag">TypeScript</span><span class="tag">Python</span><span class="tag">HTML/CSS</span><span class="tag">Markdown</span></div>
+        </div>
+        <div class="card reveal" style="--d:.19s">
+          <h3 data-ru="Память и знания">Memory and knowledge</h3>
+          <p data-ru="Граф знаний, полнотекстовый поиск и векторная база: ответы опираются на первоисточники с точными ссылками.">Graph memory, full-text search and a vector database: answers cite their sources precisely.</p>
+          <div class="tagrow"><span class="tag gd">Graph</span><span class="tag gd">FTS5</span><span class="tag gd">Vectors</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STAGE 8 — ROADMAP ============ -->
+  <section class="stage" id="s8" data-stage>
+    <div class="wrap">
+      <div class="head">
+        <span class="kicker"><span class="n">08</span><span data-ru="Дорожная карта">Roadmap</span></span>
+        <h2 class="reveal" data-ru="Шесть фаз: от инфраструктуры до продукта.">Six phases from infrastructure to product.</h2>
+        <p class="lead reveal" style="--d:.08s" data-ru="Каждая фаза опирается на предыдущую. Прогресс показан качественно; числовые ориентиры и сроки будут уточнены.">
+          Each phase builds on the previous one. Progress is shown qualitatively; numeric targets and dates are still to be defined.
+        </p>
+      </div>
+
+      <div class="grid g3">
+        <div class="phase reveal" style="--d:.05s">
+          <div class="ptop"><span class="pn">Phase 01</span><span class="ps live" data-ru="Работает">Live</span></div>
+          <h3 data-ru="Инфраструктура">Infrastructure</h3>
+          <p data-ru="Двухузловой кластер, приватная сеть, публичные домены и сертификаты.">Dual-node cluster, private mesh, public domains and certificates.</p>
+          <div class="bar"><i style="--p:1;--d:.15s"></i></div>
+        </div>
+        <div class="phase reveal" style="--d:.1s">
+          <div class="ptop"><span class="pn">Phase 02</span><span class="ps active" data-ru="Активно">Active</span></div>
+          <h3 data-ru="Агенты">Agents</h3>
+          <p data-ru="Среды выполнения и роли подняты, консилиум проводит состязательные обсуждения.">Runtimes and roles are online; the Consilium runs adversarial deliberation.</p>
+          <div class="bar"><i style="--p:.8;--d:.25s"></i></div>
+        </div>
+        <div class="phase reveal" style="--d:.15s">
+          <div class="ptop"><span class="pn">Phase 03</span><span class="ps active" data-ru="Активно">Active</span></div>
+          <h3 data-ru="MCP и память">MCP and memory</h3>
+          <p data-ru="Коннекторы к инструментам, база знаний и векторный поиск.">Tool connectors, the knowledge base and vector search.</p>
+          <div class="bar"><i style="--p:.7;--d:.35s"></i></div>
+        </div>
+        <div class="phase reveal" style="--d:.2s">
+          <div class="ptop"><span class="pn">Phase 04</span><span class="ps active" data-ru="Строится">Building</span></div>
+          <h3 data-ru="Оркестрация">Orchestration</h3>
+          <p data-ru="Маршрутизация, контроль затрат на токены и автоматические шлюзы качества.">Routing, token-cost control and automated quality gates.</p>
+          <div class="bar"><i style="--p:.5;--d:.45s"></i></div>
+        </div>
+        <div class="phase reveal" style="--d:.25s">
+          <div class="ptop"><span class="pn">Phase 05</span><span class="ps plan" data-ru="В планах">Planned</span></div>
+          <h3 data-ru="Агенты Google">Google Agents</h3>
+          <p data-ru="Интеграция с облачными агентными сервисами. Сейчас сдерживается вопросом по биллингу облачного аккаунта.">Integration with cloud agent services. Currently held back by a billing issue on the cloud account.</p>
+          <div class="bar"><i style="--p:.15;--d:.55s"></i></div>
+        </div>
+        <div class="phase reveal" style="--d:.3s">
+          <div class="ptop"><span class="pn">Phase 06</span><span class="ps plan" data-ru="В планах">Planned</span></div>
+          <h3 data-ru="Продукт">Product</h3>
+          <p data-ru="Агентство как продукт: пилоты для клиентов и готовые команды агентов.">The agency as a product: client pilots and packaged agent teams.</p>
+          <div class="bar"><i style="--p:.1;--d:.65s"></i></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STAGE 9 — THE ASK ============ -->
+  <section class="stage ask" id="s9" data-stage>
+    <div class="wrap">
+      <div class="head">
+        <span class="kicker"><span class="n">09</span><span data-ru="Что мы ищем">The ask</span></span>
+        <h2 class="reveal" data-ru="Что мы ищем и как связаться.">What we are looking for.</h2>
+        <p class="lead reveal" style="--d:.08s" data-ru="Мы намеренно не называем финансовые суммы и условия до разговора. Ниже — три направления сотрудничества.">
+          We deliberately do not quote financial amounts or terms before a conversation. Below are three directions for partnership.
+        </p>
+      </div>
+
+      <div class="grid g3">
+        <div class="card reveal" style="--d:.05s">
+          <h3 data-ru="Партнёрства">Partnerships</h3>
+          <p data-ru="Дистрибуция и интеграторы в ЕС, поставщики оборудования и материалов.">Distribution and integration partners in the EU, equipment and materials suppliers.</p>
+          <span class="ph" data-ru="Объём и условия: уточняются">Scope and terms: to be defined</span>
+        </div>
+        <div class="card reveal" style="--d:.12s">
+          <h3 data-ru="Пилотные клиенты">Pilot clients</h3>
+          <p data-ru="Производители и B2B-дистрибьюторы, готовые запустить платный пилот агентной поддержки.">Manufacturers and B2B distributors ready to run a paid agent-support pilot.</p>
+          <span class="ph" data-ru="Объём и цены: уточняются (USD / EUR / UAH)">Scope and pricing: to be defined (USD / EUR / UAH)</span>
+        </div>
+        <div class="card gold-line reveal" style="--d:.19s">
+          <h3 data-ru="Инвестиции">Investment</h3>
+          <p data-ru="Капитал на развитие платформы и выход на рынки ЕС.">Capital for platform development and EU market expansion.</p>
+          <span class="ph" data-ru="Сумма и раунд: уточняются">Amount and round: to be defined</span>
+        </div>
+      </div>
+
+      <div class="contact reveal" style="--d:.1s">
+        <div>
+          <div class="mono muted" style="font-size:.72rem;letter-spacing:.16em;text-transform:uppercase" data-ru="Связаться">Get in touch</div>
+          <div class="dom" style="margin-top:8px"><a href="https://evaline.online">evaline.online</a></div>
+          <div class="muted" style="margin-top:8px;font-size:.84rem" data-ru="Черноморск, Украина · Братислава, Словакия">Chernomorsk, Ukraine · Bratislava, Slovakia</div>
+        </div>
+        <button class="btn gold" id="replayEnd" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/></svg>
+          <span data-ru="Повторить анимацию">Replay animation</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<button class="btn gold replay-fab" id="replayFab" type="button" title="Replay animation / Повторить анимацию">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/></svg>
+  <span data-ru="Повтор">Replay</span>
+</button>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div class="foot-note" data-ru="Числовые показатели на этой странице взяты из внутренней документации EvaLine (манифест, реестры ролей и навыков, конфигурация шлюза моделей). Финансовые условия и сроки не раскрываются до переговоров.">
+      The figures on this page are drawn from EvaLine internal documentation (manifesto, role and skill registries, model-gateway configuration). Financial terms and dates are not disclosed before discussion.
+    </div>
+    <div class="mono" style="text-align:right">
+      <div data-ru="2026 EvaLine. Все права защищены.">2026 EvaLine. All rights reserved.</div>
+      <div style="margin-top:6px">Chernomorsk, Ukraine &middot; Bratislava, Slovakia</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- bilingual toggle (EN default) ---------- */
+  var i18n = Array.prototype.slice.call(document.querySelectorAll('[data-ru]'));
+  i18n.forEach(function(el){
+    if(!el.hasAttribute('data-en')) el.setAttribute('data-en', el.textContent.trim());
+  });
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    root.setAttribute('data-lang', lang);
+    i18n.forEach(function(el){
+      var v = el.getAttribute(lang === 'ru' ? 'data-ru' : 'data-en');
+      if(v !== null) el.textContent = v;
+    });
+    Array.prototype.slice.call(document.querySelectorAll('.lang-btn')).forEach(function(b){
+      b.classList.toggle('on', b.getAttribute('data-lang') === lang);
+    });
+    try{ localStorage.setItem('evaline.pitch.lang', lang); }catch(e){}
+  }
+
+  Array.prototype.slice.call(document.querySelectorAll('.lang-btn')).forEach(function(b){
+    b.addEventListener('click', function(){ applyLang(b.getAttribute('data-lang')); });
+  });
+
+  var saved = null;
+  try{ saved = localStorage.getItem('evaline.pitch.lang'); }catch(e){}
+  applyLang(saved === 'ru' ? 'ru' : 'en');
+
+  /* ---------- staged reveal ---------- */
+  var stages = Array.prototype.slice.call(document.querySelectorAll('[data-stage]'));
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var observer = null;
+  if('IntersectionObserver' in window && !reduced){
+    observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting) en.target.classList.add('in');
+      });
+    }, { threshold: 0, rootMargin: '0px 0px -14% 0px' });
+  }
+
+  function observeAll(){
+    stages.forEach(function(s){
+      if(observer) observer.observe(s);
+      else s.classList.add('in');
+    });
+  }
+
+  function replay(){
+    root.classList.add('reset');
+    stages.forEach(function(s){ s.classList.remove('in'); });
+    void document.body.offsetWidth;
+    root.classList.remove('reset');
+    if(observer){
+      stages.forEach(function(s){ observer.unobserve(s); });
+      requestAnimationFrame(function(){
+        window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+        observeAll();
+      });
+    } else {
+      stages.forEach(function(s){ s.classList.add('in'); });
+    }
+  }
+
+  ['replayHero','replayEnd','replayFab'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.addEventListener('click', replay);
+  });
+
+  var jump = document.getElementById('jump');
+  if(jump) jump.addEventListener('click', function(){
+    var t = document.getElementById('s2');
+    if(t) t.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+  });
+
+  observeAll();
+
+  /* ---------- scroll progress ---------- */
+  var pbar = document.getElementById('pbar');
+  var ticking = false;
+  function onScroll(){
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      var p = h > 0 ? (window.scrollY / h) * 100 : 0;
+      if(pbar) pbar.style.width = Math.max(0, Math.min(100, p)) + '%';
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dist/
+
+Sitemap: https://evabot.online/sitemap.xml
