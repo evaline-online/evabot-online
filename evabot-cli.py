@@ -85,7 +85,7 @@ def get_node_metrics():
                 load_str = ", ".join(load_parts)
         else:
             load_str = "0.42, 0.58, 0.65"
-    except Exception:
+    except Exception:  # noqa: BLE001
         load_str = "0.42, 0.58, 0.65"
 
     nodes = {
@@ -144,7 +144,7 @@ def get_node_metrics():
 
 
 def render_progress_bar(pct, width=20):
-    filled = int(round(width * (pct / 100.0)))
+    filled = round(width * (pct / 100.0))
     filled = max(0, min(width, filled))
     empty = width - filled
     bar = "█" * filled + "░" * empty
@@ -165,7 +165,7 @@ def show_nodes_table():
     )
     print(SEP_SINGLE)
 
-    for key, n in nodes.items():
+    for n in nodes.values():
         st = (
             f"{CLR_GREEN}ONLINE{CLR_RESET}"
             if n["status"] == "RUNNING"
@@ -805,7 +805,7 @@ def run_automated_tests() -> int:
         test_results.append(
             ("T01: ASCII Header & Typography", True, f"{time.time() - t0:.3f}s")
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         test_results.append(("T01: ASCII Header & Typography", False, str(e)))
 
     # Test 2: Physical & Virtual VM Metrics
@@ -829,7 +829,7 @@ def run_automated_tests() -> int:
                 f"{time.time() - t0:.3f}s",
             )
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         test_results.append(
             ("T02: Dual VM Telemetry (Frankfurt & Iowa)", False, str(e))
         )
@@ -854,7 +854,7 @@ def run_automated_tests() -> int:
         test_results.append(
             ("T03: Connected Services Status Check", True, f"{time.time() - t0:.3f}s")
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         test_results.append(("T03: Connected Services Status Check", False, str(e)))
 
     # Test 4: Top-10 Smartest Models Table
@@ -868,7 +868,7 @@ def run_automated_tests() -> int:
         test_results.append(
             ("T04: Top-10 Smartest Frontier Models", True, f"{time.time() - t0:.3f}s")
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         test_results.append(("T04: Top-10 Smartest Frontier Models", False, str(e)))
 
     # Test 5: Top-10 Free Models Table
@@ -881,7 +881,7 @@ def run_automated_tests() -> int:
         test_results.append(
             ("T05: Top-10 Free / Open-Weights Models", True, f"{time.time() - t0:.3f}s")
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         test_results.append(("T05: Top-10 Free / Open-Weights Models", False, str(e)))
 
     # Test 6: Conversational Core Inference
@@ -897,7 +897,7 @@ def run_automated_tests() -> int:
         test_results.append(
             ("T06: EvaBot / Gemini Inference Engine", True, f"{time.time() - t0:.3f}s")
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         test_results.append(("T06: EvaBot / Gemini Inference Engine", False, str(e)))
 
     # Test 7: Strict Currency & Geography Verification
@@ -922,7 +922,7 @@ def run_automated_tests() -> int:
         test_results.append(
             ("T07: Strict Currency Compliance (USD/EUR only)", True, "100% compliant")
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         test_results.append(
             ("T07: Strict Currency Compliance (USD/EUR only)", False, str(e))
         )
