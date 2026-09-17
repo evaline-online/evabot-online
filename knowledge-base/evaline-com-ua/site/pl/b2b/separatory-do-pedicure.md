@@ -60,7 +60,7 @@ Separator umieszcza się między palcami po przeszlifowaniu stóp, pięt i palc�
 
 Firma EvaLine oferuje Państwu wysokiej jakości separatory, które mają unikalną strukturę, charakteryzują się lekkością i są bardzo przyjemne w dotyku.
 
-Separatory do pedicure EVA mają szereg zalet: 
+Separatory do pedicure EVA mają szereg zalet:
 
   * przyjazne dla środowiska i bezpieczne dla zdrowia - oznacza to, że można ich używać nie obawiając się, że spowodują alergie lub uczulenie;
   * mają doskonałą amortyzację - dzięki tej właściwości łatwo włożyć separator między palce nie odczuwając dyskomfortu, niezależnie od wielkości stóp;
@@ -73,8 +73,8 @@ Firma EvaLine to lider w produkcji produktów EVA, w tym separatorów do pedicur
 
 Zapraszamy do kontaktu, u nas mogą Państwo kupić separatory hurtowo i detalicznie w najlepszej cenie. Zapraszamy Państwo do kontaktu, a my zorganizujemy dostawę zamówienia.
 
-  
-  
+
+
 
 
 * * *
@@ -85,7 +85,7 @@ Zapraszamy do kontaktu, u nas mogą Państwo kupić separatory hurtowo i detalic
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#ff9a899e9396919ad19c9092d18a9ebf98929e9693d19c9092>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

@@ -77,13 +77,13 @@ def run_tests():
         lang = tc["lang"]
         desc = tc["desc"]
         print(f"\n  --- Query {i}: '{q}' ({desc}) ---")
-        
+
         results = collection.query(
             query_texts=[q],
             n_results=2,
             where={"language": lang}
         )
-        
+
         for rank, (doc_id, dist, meta, doc) in enumerate(
             zip(results["ids"][0], results["distances"][0], results["metadatas"][0], results["documents"][0]), 1
         ):

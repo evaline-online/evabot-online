@@ -19,7 +19,7 @@ Thanks to modern technologies, the range of various materials for needlework is 
 
 ## **What is EVA Foam?**
 
-These are sheets of foamed ethylene vinyl acetate EVA, which in appearance and touch strongly resemble suede. Not without reason they have a second name "plastic suede" due to their very smooth and velvety surface. For the manufacture of foam is used EVA material, which is easy to work with. When heated, the material becomes plastic, stretches well, is able to acquire various configurations. When cooling down, foamine retains the given shape, so it is in demand in needlework and other spheres of activity.  
+These are sheets of foamed ethylene vinyl acetate EVA, which in appearance and touch strongly resemble suede. Not without reason they have a second name "plastic suede" due to their very smooth and velvety surface. For the manufacture of foam is used EVA material, which is easy to work with. When heated, the material becomes plastic, stretches well, is able to acquire various configurations. When cooling down, foamine retains the given shape, so it is in demand in needlework and other spheres of activity.
 
 
 ### **Material characteristics**
@@ -49,7 +49,7 @@ These are sheets of foamed ethylene vinyl acetate EVA, which in appearance and t
 
 When working with foam, it is necessary to correctly select the thickness. To create floral compositions and scrapbooking use a material thickness of 2 millimeters. Thicker foam used for making theatrical masks, crowns, special costumes, rostovyh figures, frames for photos and paintings.
 
-  
+
 
 
 In our company you can [buy wholesale EVA foam from 2 mm](<../b2c/foam-material.md> "Buy foamirane EVA-line") at favorable prices. The material is of high quality, has excellent performance characteristics, attractive appearance. Cooperation with each major customer is on special terms, which are discussed individually. The cost of the material is specified for one square meter of sheet, which has a thickness of one millimeter. If you need to buy foam of other thickness, the price should be multiplied by the corresponding parameter. Contact our managers to discuss all terms of cooperation and order the material.

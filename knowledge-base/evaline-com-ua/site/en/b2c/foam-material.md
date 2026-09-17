@@ -12,7 +12,7 @@ file: en/b2c/foam-material.md
 
 # FOAM: A UNIVERSAL MATERIAL FOR THE REALIZATION OF BOLD CREATIVE IDEAS
 
-Production and sale of Foam material 
+Production and sale of Foam material
 
 Bright and original three-dimensional flowers and compositions, applications, elements of costumes for animators and puppets - all this is possible to make with the help of light and plastic sheet material foam. Our company produces and sells foam wholesale. Let's look at its features, performance characteristics and applications.
 
@@ -44,7 +44,7 @@ A wide palette of colors gives you the opportunity to choose the material to imp
 
 ## Application of Foam
 
-Thanks to its technical characteristics, foam is widely used by needlewomen in various spheres: 
+Thanks to its technical characteristics, foam is widely used by needlewomen in various spheres:
 
   * in the manufacture of artificial flowers of various sizes
   * decorating postcards, frames and albums, paintings and panels
@@ -63,8 +63,8 @@ Thanks to its technical characteristics, foam is widely used by needlewomen in v
 
 In our company you can buy foam at favorable prices. We are a manufacturer, so you can order the material of the required color, density, thickness and in the required quantity. Contact our managers to discuss all terms of cooperation, order the material and realize your bold creative ideas!
 
-  
-  
+
+
 
 
 * * *
@@ -75,7 +75,7 @@ In our company you can buy foam at favorable prices. We are a manufacturer, so y
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

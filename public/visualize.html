@@ -81,14 +81,14 @@
 <body>
 <div class="container">
   <h1>⚡ EvaBot Online // System Visualizer v0.1.0</h1>
-  
+
   <div class="metrics">
     <div class="metric"><div class="metric-value" id="m-uptime">--</div><div class="metric-label">Uptime (s)</div></div>
     <div class="metric"><div class="metric-value" id="m-models">--</div><div class="metric-label">Models (78)</div></div>
     <div class="metric"><div class="metric-value" id="m-plugins">--</div><div class="metric-label">Active Plugins</div></div>
     <div class="metric"><div class="metric-value" id="m-blocked">--</div><div class="metric-label">Blocked IPs</div></div>
   </div>
-  
+
   <h2>🏗️ System Architecture (Live)</h2>
   <div class="full">
     <div class="box">
@@ -109,10 +109,10 @@
       </div>
     </div>
   </div>
-  
+
   <h2>🔌 Loaded Plugins</h2>
   <div class="box" id="plugins-box">Loading...</div>
-  
+
   <h2>💬 Request Flow (How a Message Travels)</h2>
   <div class="flow">
     <div class="flow-step">
@@ -137,7 +137,7 @@
       <strong>7. 📊 Log</strong> → Logged in logs/evabot.log with IP, duration, model
     </div>
   </div>
-  
+
   <h2>🧠 Consilium Multi-Agent Flow</h2>
   <div class="flow">
     <h3>Mode: <span id="cs-mode">consilium</span></h3>
@@ -147,25 +147,25 @@
     <button onclick="testConsilium()" style="padding: 10px 20px; background: #0f0; color: #000; border: none; cursor: pointer; font-weight: bold; margin-top: 10px;">▶ Run Test Consilium</button>
     <pre id="cs-output">Click to test...</pre>
   </div>
-  
+
   <div class="grid">
     <div>
       <h2>🤖 Top Free Models (Live)</h2>
       <div class="box" id="models-box">Loading...</div>
     </div>
-    
+
     <div>
       <h2>🔌 LLM Providers Status</h2>
       <div class="box" id="providers-box">Loading...</div>
     </div>
   </div>
-  
+
   <h2>📊 Knowledge Base (EvaLine)</h2>
   <div class="box" id="kb-box">Loading...</div>
-  
+
   <h2>🛡️ Security Status (Live)</h2>
   <div class="box" id="security-box">Loading...</div>
-  
+
   <h2>📜 Live Logs (last 10)</h2>
   <div class="box" id="logs-box">Loading...</div>
 </div>
@@ -183,10 +183,10 @@ async function refreshAll() {
     document.getElementById('m-uptime').textContent = health.uptimeSeconds;
     document.getElementById('m-models').textContent = health.availableModels;
     document.getElementById('m-plugins').textContent = (health.plugins?.active || 0) + '/' + (health.plugins?.loaded || 0);
-    
+
     const sec = await fetchJSON('/api/security/status');
     document.getElementById('m-blocked').textContent = sec.blockedIPs.length;
-    
+
     if (health.plugins) {
       let html = '<h3>Active Plugins:</h3>';
       for (const p of health.plugins.list) {
@@ -196,7 +196,7 @@ async function refreshAll() {
       }
       document.getElementById('plugins-box').innerHTML = html;
     }
-    
+
     const models = await fetchJSON('/api/models/top?dimension=quality&limit=8&free=true');
     let mhtml = '';
     for (const e of models.entries) {
@@ -206,7 +206,7 @@ async function refreshAll() {
       mhtml += `<span class="model ${cls}">${m.id} <small>${tag}</small></span> `;
     }
     document.getElementById('models-box').innerHTML = mhtml;
-    
+
     try {
       const providers = await fetchJSON('/api/llm/providers');
       let phtml = '';
@@ -218,7 +218,7 @@ async function refreshAll() {
     } catch(e) {
       document.getElementById('providers-box').innerHTML = '<i>Plugin not loaded</i>';
     }
-    
+
     try {
       const kb = await fetchJSON('/api/kb/status');
       let kbhtml = `<div class="stat"><strong>Total Documents</strong><span>${kb.totalDocuments}</span></div>`;
@@ -228,13 +228,13 @@ async function refreshAll() {
     } catch(e) {
       document.getElementById('kb-box').innerHTML = '<i>Plugin not loaded</i>';
     }
-    
+
     const secStats = sec;
     let shtml = `<div class="stat"><strong>Blocked IPs</strong><span>${secStats.blockedIPs.length}</span></div>`;
     shtml += `<div class="stat"><strong>Suspicious Patterns</strong><span>${secStats.suspiciousPatterns}</span></div>`;
     shtml += `<div class="stat"><strong>Tracked IPs</strong><span>${secStats.totalTracked}</span></div>`;
     document.getElementById('security-box').innerHTML = shtml;
-    
+
     try {
       const logs = await fetchJSON('/api/logs/recent?limit=10');
       let lhtml = '';
@@ -244,7 +244,7 @@ async function refreshAll() {
       }
       document.getElementById('logs-box').innerHTML = lhtml;
     } catch(e) {}
-    
+
   } catch (err) {
     console.error('Refresh error:', err);
   }

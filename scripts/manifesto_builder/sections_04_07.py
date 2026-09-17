@@ -79,7 +79,7 @@ def get_section_04(prerendered_models_html):
 
       <div class="search-sort-bar">
         <input type="text" id="model-search" class="matrix-search-input" placeholder="{t('🔍 Поиск по названию, роли, провайдеру...', '🔍 Пошук за назвою, роллю, провайдером...', '🔍 Search by name, role, provider...')}">
-        
+
         <select id="model-sort" class="matrix-select">
           <option value="quality">{t("Сортировка: По интеллекту / IQ 🧠", "Сортування: За інтелектом / IQ 🧠", "Sort: Quality / IQ Score 🧠")}</option>
           <option value="recency">{t("Сортировка: По новизне ✨", "Сортування: За новизною ✨", "Sort: Recency / Newest ✨")}</option>

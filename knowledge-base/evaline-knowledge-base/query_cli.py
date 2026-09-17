@@ -19,11 +19,11 @@ def main():
     parser.add_argument("--cat", choices=["b2b", "b2c", "news", "general"], default=None, help="Filter by category")
     parser.add_argument("-k", "--top-k", type=int, default=3, help="Number of top chunks to retrieve")
     parser.add_argument("-i", "--interactive", action="store_true", help="Start interactive query loop")
-    
+
     args = parser.parse_args()
-    
+
     kb = EvaLineKnowledgeBase()
-    
+
     if args.interactive or not args.query:
         print("=== EvaLine Knowledge Base Interactive Search ===")
         print("Type your questions or search keywords. Type 'exit' or 'q' to quit.\n")

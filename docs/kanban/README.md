@@ -16,6 +16,6 @@
 
 ---
 
-**Last Updated:** 2026-09-07  
-**Sprint:** v0.0.2 → v0.1.0  
+**Last Updated:** 2026-09-07
+**Sprint:** v0.0.2 → v0.1.0
 **Velocity:** 25 tasks/sprint

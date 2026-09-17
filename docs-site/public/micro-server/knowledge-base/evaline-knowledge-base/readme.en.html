@@ -8,7 +8,7 @@
     A[Markdown Site Archive&lt;br/>evaline-com-ua/site/] --> B[Semantic Chunker]
     B --> C[(ChromaDB Vector Store&lt;br/>chroma_db/)]
     B --> D[(SQLite FTS5 Full-Text&lt;br/>fts_index.db/)]
-    
+
     Q[User / Agent Query] --> E[EvaLineKnowledgeBase Engine]
     E -->|Dense Semantic Match| C
     E -->|Exact Keyword / BM25| D

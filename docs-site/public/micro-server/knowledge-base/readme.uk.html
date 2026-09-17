@@ -8,7 +8,7 @@
     A[Markdown-архів сайту&lt;br/>evaline-com-ua/site/] --> B[Семантичний чанкер]
     B --> C[(Векторне сховище ChromaDB&lt;br/>chroma_db/)]
     B --> D[(Повнотекстовий пошук SQLite FTS5&lt;br/>fts_index.db/)]
-    
+
     Q[Запит користувача / LLM-агента] --> E[Двигун EvaLineKnowledgeBase]
     E -->|Щільний векторний пошук| C
     E -->|Точний пошук за ключовими словами| D

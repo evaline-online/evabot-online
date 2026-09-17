@@ -34,8 +34,8 @@ EVA does not accumulate static charge even when walking and crawling along it, s
 
 The modular flooring has good thermal insulation, similar to the underfloor heating. Textured notches are applied to the elements of this children’s flooring to prevent slipping. The modern floor design damps all noises and perfectly cushions the fall, which is very important for small children.
 
-  
-  
+
+
 
 
 * * *
@@ -46,7 +46,7 @@ The modular flooring has good thermal insulation, similar to the underfloor heat
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

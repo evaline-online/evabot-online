@@ -37,8 +37,8 @@ EvaLine sheets are available in diverse design variations: they fit perfectly in
 
 ![](https://eva-line.com/images/news/auto/photo_2024-01-23_14-57-41 \(2\).jpg)![](https://eva-line.com/images/news/auto/photo_2024-01-23_14-57-41 \(3\).jpg)![](https://eva-line.com/images/news/auto/photo_2024-01-23_14-57-41.jpg)
 
-  
-  
+
+
 
 
 * * *
@@ -49,7 +49,7 @@ EvaLine sheets are available in diverse design variations: they fit perfectly in
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

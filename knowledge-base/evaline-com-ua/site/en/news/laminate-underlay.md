@@ -14,7 +14,7 @@ file: en/news/laminate-underlay.md
 
 01.09.2014
 
-The substrate is made of polymeric material based on EVA (ethylene vinyl acetate), which performs the following functions: 
+The substrate is made of polymeric material based on EVA (ethylene vinyl acetate), which performs the following functions:
 
   * Depreciation All types of substrates under the laminate to a certain extent eliminate small inequalities of the floor;
   * Soundproofing. Due to the porous structure, even a 3 mm substrate under the laminate is capable of extinguishing the sound vibrations that arise when walking (from the paws of a cat to heels with nails), falling objects on the floor;

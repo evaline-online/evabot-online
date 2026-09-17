@@ -19,6 +19,6 @@
 
 ---
 
-**Last Updated:** 2026-09-07  
-**Current:** v0.0.2  
+**Last Updated:** 2026-09-07
+**Current:** v0.0.2
 **Next:** v0.1.0

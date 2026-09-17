@@ -40,8 +40,8 @@ The surface of our soft floor does not conduct electricity and has water-repelle
 
 ![](https://eva-line.com/images/dom-ydobstvo.jpg)
 
-  
-  
+
+
 
 
 * * *
@@ -52,7 +52,7 @@ The surface of our soft floor does not conduct electricity and has water-repelle
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

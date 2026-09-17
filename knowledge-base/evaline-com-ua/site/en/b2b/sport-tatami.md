@@ -33,8 +33,8 @@ Thermal and good shock-absorbing properties make it possible to use Evaline Tata
 
 The embossed texture on the mat surfaces increases the adhesion of the coating to feet of athletes. Special Anti-Slip embossment enhances the efficiency of adhesion with the mats and prevents slipping even more.
 
-  
-  
+
+
 
 
 * * *
@@ -45,7 +45,7 @@ The embossed texture on the mat surfaces increases the adhesion of the coating t
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

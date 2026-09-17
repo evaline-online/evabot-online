@@ -87,5 +87,5 @@ Development документация
 
 ---
 
-**Maintained by:** EvaBot Engineering Team  
+**Maintained by:** EvaBot Engineering Team
 **License:** Proprietary © 2026 Evaline Corporation

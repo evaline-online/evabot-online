@@ -1,6 +1,6 @@
 # 🔍 EvaBot Online — Полный Code Audit v0.0.2
 
-**Дата:** 2026-09-07  
+**Дата:** 2026-09-07
 **Аудитор:** EvaBot Engineering Team
 
 ---
@@ -208,5 +208,5 @@
 
 **Status:** ✅ Production-Ready, рекомендуется улучшить покрытие тестами и убрать `any` в v0.1.0
 
-**Auditor:** EvaBot Engineering Team  
+**Auditor:** EvaBot Engineering Team
 **Date:** 2026-09-07

@@ -80,23 +80,23 @@ if command -v gcloud &> /dev/null; then
     git pull origin main || true
     npm install 2>/dev/null || true
     npm run build 2>/dev/null || true
-    
+
     # Restart backend
     sudo systemctl restart evabot-brain 2>/dev/null || sudo systemctl restart evabot-chat 2>/dev/null || true
     echo '[+] EvaBrain backend restarted'
   " 2>&1 | head -20 || echo -e "${YELLOW}  ⚠ Could not deploy to EvaBrain (check gcloud auth)${NC}"
-  
+
   echo ""
   echo -e "${BLUE}  → EvaFace (Iowa / evaline-micro-vm / us-central1-a)${NC}"
   gcloud compute ssh evaline-micro-vm --zone=us-central1-a --quiet --command="
     set -e
     cd /var/www/evabot.online 2>/dev/null || cd /home/evabot/Desktop/evabot-online 2>/dev/null || cd ~/evabot-online
     git pull origin main || true
-    
+
     # Sync frontend files
     sudo rsync -av --exclude='.git' --exclude='node_modules' --exclude='dist' --exclude='src' ./ /var/www/evabot.online/ 2>/dev/null || true
     sudo chown -R www-data:www-data /var/www/evabot.online 2>/dev/null || true
-    
+
     # Reload Caddy
     sudo systemctl reload caddy 2>/dev/null || true
     echo '[+] EvaFace frontend synced'

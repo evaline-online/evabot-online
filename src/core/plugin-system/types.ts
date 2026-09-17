@@ -41,27 +41,27 @@ export type PluginEventHandler = (data: any) => void | Promise<void>;
 
 export class PluginEventBus {
   private handlers: Map<string, Set<PluginEventHandler>> = new Map();
-  
+
   public on(event: string, handler: PluginEventHandler): void {
     if (!this.handlers.has(event)) {
       this.handlers.set(event, new Set());
     }
     this.handlers.get(event)!.add(handler);
   }
-  
+
   public off(event: string, handler: PluginEventHandler): void {
     this.handlers.get(event)?.delete(handler);
   }
-  
+
   public async emit(event: string, data: any): Promise<void> {
     const handlers = this.handlers.get(event);
     if (!handlers) return;
-    
+
     await Promise.all(
       Array.from(handlers).map(h => Promise.resolve(h(data)))
     );
   }
-  
+
   public clear(): void {
     this.handlers.clear();
   }

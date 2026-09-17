@@ -7,7 +7,7 @@ Model: GPT-4o | Tokens: 1.2k | Cost: $0.02
 How can I optimize my workflow?
 
 > EvaBot:
-I recommend evaluating your daily 
+I recommend evaluating your daily
 tasks and utilizing automation scripts.
 ----------------------------------------
 [ Type your message here...            ]

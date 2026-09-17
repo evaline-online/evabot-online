@@ -148,7 +148,7 @@ Full support and technical consultations of the client by a responsible manager 
 
 We are ready to cooperate with dealers and representatives in the EU countries
 
-Leave a request, and we will agree upon the details of our cooperation 
+Leave a request, and we will agree upon the details of our cooperation
 
 ![](https://eva-line.com/theme/img/23-main/map.png)
 
@@ -168,7 +168,7 @@ Production:
 Trade:
 
   * ![](https://eva-line.com/theme/img/23-main/trade-1.svg) EVA puzzle mats, tatami, sports mats - for schools, kindergartens and other educational institutions
-  * ![](https://eva-line.com/theme/img/23-main/trade-2.svg) Mats for cattle - for farmers 
+  * ![](https://eva-line.com/theme/img/23-main/trade-2.svg) Mats for cattle - for farmers
   * ![](https://eva-line.com/theme/img/23-main/trade-3.svg) Underlayments, gaskets and seals - to construction stores and companies
 
 

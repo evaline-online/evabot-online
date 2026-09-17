@@ -24,7 +24,7 @@
 
 ```
 POST /wp-json/batch/v1            - WordPress Batch Processing RCE (CVE-2024-31210)
-POST /wp-json/Batch/v1            - Bypass uppercase 
+POST /wp-json/Batch/v1            - Bypass uppercase
 POST /wp-json/batch/v1/           - Bypass trailing slash
 POST /blog/wp-json/batch/v1       - Path traversal
 POST /wordpress/wp-json/batch/v1  - Path traversal
@@ -214,6 +214,6 @@ sudo apt install suricata
 
 ---
 
-**© 2026 EvaBot Security**  
-**Версия:** 1.0  
+**© 2026 EvaBot Security**
+**Версия:** 1.0
 **Статус:** ⚠️ 0 успешных атак, но НЕТ автоматической защиты

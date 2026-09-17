@@ -5,7 +5,7 @@ export async function runPluginConsiliumTests(): Promise<boolean> {
   console.log('=== Consilium Tests ===\n');
   let passed = 0;
   let failed = 0;
-  
+
   async function test(name: string, fn: () => Promise<void> | void) {
     try {
       await fn();
@@ -16,14 +16,14 @@ export async function runPluginConsiliumTests(): Promise<boolean> {
       failed++;
     }
   }
-  
+
   await test('Plugin has valid manifest', () => {
     const p = new ConsiliumPlugin();
     assert.equal(p.manifest.id, 'consilium');
     assert.equal(p.manifest.name, 'Consilium Multi-Agent Engine');
     assert.equal(p.manifest.category, 'ai');
   });
-  
+
   await test('Initialize registers routes', async () => {
     const p = new ConsiliumPlugin();
     await p.initialize({} as any);
@@ -31,7 +31,7 @@ export async function runPluginConsiliumTests(): Promise<boolean> {
     assert.equal(p.routes[0].path, '/api/consilium');
     assert.equal(p.routes[0].method, 'POST');
   });
-  
+
   await test('Initialize registers commands', async () => {
     const p = new ConsiliumPlugin();
     await p.initialize({} as any);
@@ -41,19 +41,19 @@ export async function runPluginConsiliumTests(): Promise<boolean> {
     assert.ok(cmds.includes('/dialogue'));
     assert.ok(cmds.includes('/broadcast'));
   });
-  
+
   await test('Shutdown is safe', async () => {
     const p = new ConsiliumPlugin();
     await p.initialize({} as any);
     await p.shutdown();
   });
-  
+
   await test('Health check healthy', async () => {
     const p = new ConsiliumPlugin();
     const h = await p.healthCheck();
     assert.equal(h.status, 'healthy');
   });
-  
+
   await test('Handle command requires mode and prompt', async () => {
     const p = new ConsiliumPlugin();
     await p.initialize({} as any);
@@ -62,14 +62,14 @@ export async function runPluginConsiliumTests(): Promise<boolean> {
     const r2 = await p.handleCommand('solo');
     assert.ok(r2.includes('Usage'));
   });
-  
+
   await test('Handle command with invalid mode', async () => {
     const p = new ConsiliumPlugin();
     await p.initialize({} as any);
     const r = await p.handleCommand('invalidmode test prompt');
     assert.ok(r.includes('Usage'));
   });
-  
+
   await test('Run solo mode with real API (mock fallback)', async () => {
     const p = new ConsiliumPlugin('test-key');
     await p.initialize({} as any);
@@ -87,7 +87,7 @@ export async function runPluginConsiliumTests(): Promise<boolean> {
       assert.ok(true);
     }
   });
-  
+
   await test('Run broadcast mode (mocked)', async () => {
     const p = new ConsiliumPlugin('test-key');
     await p.initialize({} as any);
@@ -103,7 +103,7 @@ export async function runPluginConsiliumTests(): Promise<boolean> {
       assert.ok(true);
     }
   });
-  
+
   await test('Run dialogue mode (mocked)', async () => {
     const p = new ConsiliumPlugin('test-key');
     await p.initialize({} as any);
@@ -120,7 +120,7 @@ export async function runPluginConsiliumTests(): Promise<boolean> {
       assert.ok(true);
     }
   });
-  
+
   await test('Run consilium mode (mocked)', async () => {
     const p = new ConsiliumPlugin('test-key');
     await p.initialize({} as any);
@@ -136,7 +136,7 @@ export async function runPluginConsiliumTests(): Promise<boolean> {
       assert.ok(true);
     }
   });
-  
+
   await test('Run with unknown mode throws', async () => {
     const p = new ConsiliumPlugin('test-key');
     await p.initialize({} as any);
@@ -151,7 +151,7 @@ export async function runPluginConsiliumTests(): Promise<boolean> {
       assert.ok(err.message.includes('Unknown mode'));
     }
   });
-  
+
   console.log(`\nConsilium: ${passed} passed, ${failed} failed\n`);
   return failed === 0;
 }

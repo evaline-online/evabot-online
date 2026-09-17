@@ -16,12 +16,12 @@
       --text: #ffffff;
       --text-dim: #888888;
       --text-muted: #555555;
-      
+
       /* STRICT TRAFFIC LIGHT ACCENTS ONLY */
       --led-green: #00ff66;
       --led-yellow: #ffcc00;
       --led-red: #ff3333;
-      
+
       --glow-green: rgba(0, 255, 102, 0.4);
       --glow-yellow: rgba(255, 204, 0, 0.4);
       --glow-red: rgba(255, 51, 51, 0.4);
@@ -951,21 +951,21 @@
       if (!voiceSynth) return null;
       const voices = voiceSynth.getVoices();
       const ruVoices = voices.filter(v => v.lang && (v.lang.startsWith('ru') || v.lang === 'ru_RU'));
-      
+
       // 1. Prioritize Google Russian Neural voice
       const googleRu = ruVoices.find(v => v.name.includes('Google') && (v.name.includes('русский') || v.name.includes('Russian')));
       if (googleRu) return googleRu;
 
       // 2. Prioritize Microsoft / Yandex / Natural female Russian voices
-      const femaleNatural = ruVoices.find(v => 
-        v.name.includes('Natural') || 
-        v.name.includes('Dariya') || 
-        v.name.includes('Svetlana') || 
-        v.name.includes('Alena') || 
-        v.name.includes('Tatiana') || 
-        v.name.includes('Milena') || 
-        v.name.includes('Elena') || 
-        v.name.includes('Tatyana') || 
+      const femaleNatural = ruVoices.find(v =>
+        v.name.includes('Natural') ||
+        v.name.includes('Dariya') ||
+        v.name.includes('Svetlana') ||
+        v.name.includes('Alena') ||
+        v.name.includes('Tatiana') ||
+        v.name.includes('Milena') ||
+        v.name.includes('Elena') ||
+        v.name.includes('Tatyana') ||
         v.name.includes('Irina') ||
         v.name.includes('Female')
       );
@@ -991,7 +991,7 @@
       const text = document.getElementById("report-text").innerText;
       const utt = new SpeechSynthesisUtterance(text);
       utt.lang = "ru-RU";
-      
+
       // Natural human speech rate and pitch
       utt.rate = 0.93;
       utt.pitch = 1.02;

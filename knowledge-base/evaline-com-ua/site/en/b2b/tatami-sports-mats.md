@@ -38,7 +38,7 @@ Gymnastics, wrestling, fitness and many other sports require special sports mats
 
 ## Types of mats and their features
 
-Sports mats are usually divided into several groups, depending on their purpose and disciplines, namely: 
+Sports mats are usually divided into several groups, depending on their purpose and disciplines, namely:
 
   * gymnastic;
   * tatami mats;
@@ -59,7 +59,7 @@ Folding mats are characterized by their compact size and light weight. For examp
 
 ## Types of sports mats
 
-There are currently several options for sports mats on the market. They all have their own characteristics: 
+There are currently several options for sports mats on the market. They all have their own characteristics:
 
   * Secondary foam rubber - mats from this material began to be produced back in the days of the Soviet Union. Today, PVV sports mats are not so popular anymore. This is due to the fact that they strongly absorb moisture, crumble and quickly break at bends.
   * Polyethylene foam - mats made of this material are non-toxic and safe for health. Such mats and tatami mats are durable, elastic, do not absorb moisture and have good shock absorption.
@@ -74,8 +74,8 @@ We are the first to start producing EVA tatami mats in Ukraine. We know all the 
 
 Call us and we will answer all your questions, help you determine the size of the tatami, make and deliver them on time to any corner of our country.
 
-  
-  
+
+
 
 
 * * *
@@ -86,7 +86,7 @@ Call us and we will answer all your questions, help you determine the size of th
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

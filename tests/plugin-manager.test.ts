@@ -10,7 +10,7 @@ class TestPlugin implements Plugin {
   public manifest: PluginManifest;
   public initCalled = false;
   public shutdownCalled = false;
-  
+
   constructor(id?: string) {
     this.manifest = {
       id: id || makePluginId(),
@@ -21,16 +21,16 @@ class TestPlugin implements Plugin {
       category: 'core',
     };
   }
-  
+
   async initialize(context: any): Promise<void> {
     this.initCalled = true;
     context.registerCommand('/test-' + this.manifest.id, async () => 'ok');
   }
-  
+
   async shutdown(): Promise<void> {
     this.shutdownCalled = true;
   }
-  
+
   async healthCheck() {
     return { status: 'healthy' as const, message: 'ok' };
   }
@@ -46,7 +46,7 @@ class DependentPlugin implements Plugin {
     category: 'core',
     dependencies: ['nonexistent-' + makePluginId()],
   };
-  
+
   async initialize(): Promise<void> {}
   async shutdown(): Promise<void> {}
 }
@@ -55,7 +55,7 @@ export async function runPluginManagerTests(): Promise<boolean> {
   console.log('=== PluginManager Tests ===\n');
   let passed = 0;
   let failed = 0;
-  
+
   async function test(name: string, fn: () => Promise<void> | void) {
     try {
       await fn();
@@ -66,13 +66,13 @@ export async function runPluginManagerTests(): Promise<boolean> {
       failed++;
     }
   }
-  
+
   await test('PluginManager is singleton', () => {
     const a = PluginManager.getInstance();
     const b = PluginManager.getInstance();
     assert.equal(a, b);
   });
-  
+
   await test('Register and retrieve plugin', async () => {
     const mgr = PluginManager.getInstance();
     const p = new TestPlugin();
@@ -82,7 +82,7 @@ export async function runPluginManagerTests(): Promise<boolean> {
     assert.equal(got, p);
     await mgr.shutdown(p.manifest.id);
   });
-  
+
   await test('Plugin initialize was called', async () => {
     const mgr = PluginManager.getInstance();
     const p = new TestPlugin();
@@ -90,7 +90,7 @@ export async function runPluginManagerTests(): Promise<boolean> {
     assert.equal(p.initCalled, true);
     await mgr.shutdown(p.manifest.id);
   });
-  
+
   await test('Cannot register duplicate', async () => {
     const mgr = PluginManager.getInstance();
     const p = new TestPlugin();
@@ -103,7 +103,7 @@ export async function runPluginManagerTests(): Promise<boolean> {
     }
     await mgr.shutdown(p.manifest.id);
   });
-  
+
   await test('Cannot register with missing dependency', async () => {
     const mgr = PluginManager.getInstance();
     const dep = new DependentPlugin();
@@ -114,13 +114,13 @@ export async function runPluginManagerTests(): Promise<boolean> {
       assert.ok(err.message.includes('Missing dependency'));
     }
   });
-  
+
   await test('List plugins works', async () => {
     const mgr = PluginManager.getInstance();
     const list = mgr.list();
     assert.ok(Array.isArray(list));
   });
-  
+
   await test('Get plugin status', async () => {
     const mgr = PluginManager.getInstance();
     const p = new TestPlugin();
@@ -129,13 +129,13 @@ export async function runPluginManagerTests(): Promise<boolean> {
     assert.equal(status, 'active');
     await mgr.shutdown(p.manifest.id);
   });
-  
+
   await test('Health check all plugins', async () => {
     const mgr = PluginManager.getInstance();
     const health = await mgr.healthCheckAll();
     assert.ok(typeof health === 'object');
   });
-  
+
   await test('Disable and enable', async () => {
     const mgr = PluginManager.getInstance();
     const p = new TestPlugin();
@@ -146,7 +146,7 @@ export async function runPluginManagerTests(): Promise<boolean> {
     assert.equal(mgr.getStatus(p.manifest.id), 'active');
     await mgr.shutdown(p.manifest.id);
   });
-  
+
   await test('Get commands includes registered', async () => {
     const mgr = PluginManager.getInstance();
     const p = new TestPlugin();
@@ -155,7 +155,7 @@ export async function runPluginManagerTests(): Promise<boolean> {
     assert.ok(cmds.has('/test-' + p.manifest.id));
     await mgr.shutdown(p.manifest.id);
   });
-  
+
   await test('Shutdown plugin', async () => {
     const mgr = PluginManager.getInstance();
     const p = new TestPlugin();
@@ -163,13 +163,13 @@ export async function runPluginManagerTests(): Promise<boolean> {
     await mgr.shutdown(p.manifest.id);
     assert.equal(p.shutdownCalled, true);
   });
-  
+
   await test('GetAllPluginRoutes works', () => {
     const mgr = PluginManager.getInstance();
     const routes = mgr.getAllPluginRoutes();
     assert.ok(Array.isArray(routes));
   });
-  
+
   console.log(`\nPluginManager: ${passed} passed, ${failed} failed\n`);
   return failed === 0;
 }
@@ -178,7 +178,7 @@ export async function runEventBusTests(): Promise<boolean> {
   console.log('=== PluginEventBus Tests ===\n');
   let passed = 0;
   let failed = 0;
-  
+
   async function test(name: string, fn: () => Promise<void> | void) {
     try {
       await fn();
@@ -189,7 +189,7 @@ export async function runEventBusTests(): Promise<boolean> {
       failed++;
     }
   }
-  
+
   await test('Subscribe and emit', async () => {
     const bus = new PluginEventBus();
     let received: any = null;
@@ -197,7 +197,7 @@ export async function runEventBusTests(): Promise<boolean> {
     await bus.emit('test', { foo: 'bar' });
     assert.equal(received.foo, 'bar');
   });
-  
+
   await test('Unsubscribe', async () => {
     const bus = new PluginEventBus();
     let count = 0;
@@ -207,7 +207,7 @@ export async function runEventBusTests(): Promise<boolean> {
     await bus.emit('test', {});
     assert.equal(count, 0);
   });
-  
+
   await test('Multiple handlers', async () => {
     const bus = new PluginEventBus();
     let count = 0;
@@ -217,7 +217,7 @@ export async function runEventBusTests(): Promise<boolean> {
     await bus.emit('test', {});
     assert.equal(count, 3);
   });
-  
+
   await test('Async handler', async () => {
     const bus = new PluginEventBus();
     let resolved = false;
@@ -228,7 +228,7 @@ export async function runEventBusTests(): Promise<boolean> {
     await bus.emit('test', {});
     assert.equal(resolved, true);
   });
-  
+
   await test('Clear all handlers', async () => {
     const bus = new PluginEventBus();
     let count = 0;
@@ -239,12 +239,12 @@ export async function runEventBusTests(): Promise<boolean> {
     await bus.emit('b', {});
     assert.equal(count, 0);
   });
-  
+
   await test('Emit to non-existent event', async () => {
     const bus = new PluginEventBus();
     await bus.emit('nothing', {});
   });
-  
+
   console.log(`\nEventBus: ${passed} passed, ${failed} failed\n`);
   return failed === 0;
 }

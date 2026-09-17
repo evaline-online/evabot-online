@@ -44,7 +44,7 @@ Our company brings to your attention a unique separating bar made of ethylene vi
 
 ## Features of the EVA separating bar
 
-Environmental friendliness - the material from which such a bar is made is hypoallergenic and hygienic and does not emit odors, so it can be used to transport any cargo. 
+Environmental friendliness - the material from which such a bar is made is hypoallergenic and hygienic and does not emit odors, so it can be used to transport any cargo.
 
 Excellent shock absorption - such a bar is distinguished by its firmness, elasticity and flexibility, it perfectly absorbs impacts and is able to return to its original appearance even after slight deformation.
 
@@ -76,8 +76,8 @@ In other words, by choosing our EVA separating bar, you can be sure that your ca
 
 Call us and we will help you buy a high quality EVA separation bar at the best price and organize its delivery to any region of Ukraine.
 
-  
-  
+
+
 
 
 * * *
@@ -88,7 +88,7 @@ Call us and we will help you buy a high quality EVA separation bar at the best p
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

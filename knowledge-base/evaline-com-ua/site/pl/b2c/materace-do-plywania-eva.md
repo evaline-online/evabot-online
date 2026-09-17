@@ -59,7 +59,7 @@ Mata pozwala spokojnie pływać, unosząc się na wodzie.
 
 ## Mata do pływania EVA
 
-Główne zalety: 
+Główne zalety:
 
   * wszechstronność - mata może być używana w morzu, na rzece, w basenie, aquaparku;
   * lekkość - można ją zabrać na każdą wycieczkę lub wędrówkę, gdyż taka mata waży do 3 kg;
@@ -88,8 +88,8 @@ W celu złożenia zamówienia mogą Państwo skorzystać z elektronicznego formu
 
 Jeżeli zamówią Państwo matę do pływania EVA, to wypoczynek na wodzie będzie przyjemny i bezpieczny.
 
-  
-  
+
+
 
 
 * * *
@@ -100,7 +100,7 @@ Jeżeli zamówią Państwo matę do pływania EVA, to wypoczynek na wodzie będz
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#f4918295989d9a91da979b99da8195b49399959d98da979b99>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

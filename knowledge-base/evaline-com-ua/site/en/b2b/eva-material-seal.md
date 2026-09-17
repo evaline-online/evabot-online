@@ -48,13 +48,13 @@ EVA material easily adapts to different shapes and sizes, providing high airtigh
 
 ### Waterproof:
 
-The material's ability to prevent water penetration makes it ideal for applications where water resistance is important. 
+The material's ability to prevent water penetration makes it ideal for applications where water resistance is important.
 
 ![](https://eva-line.com/images/news/211/Screenshot_5 \(1\).png)
 
 ![](https://eva-line.com/images/news/211/Screenshot_2.png)
 
-### Thermal insulation and impact protection: 
+### Thermal insulation and impact protection:
 
 EVA material is good at thermal insulation and shock absorption, which makes it indispensable in many areas.
 
@@ -64,10 +64,10 @@ Our company offers custom manufacturing of EVA seals to meet your unique needs.
 
 EVA-line is a leading company in the production of EVA seals. Thanks to our advanced technology and extensive experience, we are able to meet the needs of various industries by providing high-quality products made to individual customer orders.
 
-EVA seals remain an integral part of many modern technologies and industrial processes. They help to achieve high efficiency and quality in various fields. Our company is ready to provide customized solutions for any of our customers' sealing and sealing needs. 
+EVA seals remain an integral part of many modern technologies and industrial processes. They help to achieve high efficiency and quality in various fields. Our company is ready to provide customized solutions for any of our customers' sealing and sealing needs.
 
-  
-  
+
+
 
 
 * * *
@@ -78,7 +78,7 @@ EVA seals remain an integral part of many modern technologies and industrial pro
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

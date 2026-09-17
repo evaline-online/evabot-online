@@ -36,7 +36,7 @@ Unlike rubber coatings, Burenka EVA mats are easy and comfortable when cleaning.
 
 ### EVA Line - high quality livestock flooring
 
-When choosing a material for the arrangement of livestock complexes, three key factors must be considered: 
+When choosing a material for the arrangement of livestock complexes, three key factors must be considered:
 
   * compliance with sanitary standards;
   * compliance of the material with building codes for this category of premises;
@@ -51,19 +51,19 @@ Its multilayer structure deserves special attention: the bottom is a drainage sy
 
 Burenka EVA mats are unique in their low thermal conductivity. Unlike rubber coatings, at low temperatures, Burenka EVA mats retain all their properties, do not get slippery, and animals may get up and lay steadily without fear of injuries. Lying areas equipped with Burenka EVA mats ensure that cows may rest several-fold than on a similar product made of another material. The use of EVA coatings greatly reduces mastitis probability, which leads to an increase in milk yield.
 
-| Burenka EVA mat: | Rubber: | Wood (oak):  
----|---|---|---  
-Thermal conductivity, W/(m*K) | 0,035 | 0,28 | 0,10  
-Hardness, Shore А | 65 - 70 | 80 - 85 | -  
-Density (kg/m3) | 320 | 1190 | 870  
-Service life | up to 10 years | up to 10 years | up to 1 years  
-  
+| Burenka EVA mat: | Rubber: | Wood (oak):
+---|---|---|---
+Thermal conductivity, W/(m*K) | 0,035 | 0,28 | 0,10
+Hardness, Shore А | 65 - 70 | 80 - 85 | -
+Density (kg/m3) | 320 | 1190 | 870
+Service life | up to 10 years | up to 10 years | up to 1 years
+
 ### Delivery
 
 Evaline has experience in delivering EVA foam to Europe. Leave your phone number and our manager will contact you shortly.
 
-  
-  
+
+
 
 
 * * *
@@ -74,7 +74,7 @@ Evaline has experience in delivering EVA foam to Europe. Leave your phone number
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

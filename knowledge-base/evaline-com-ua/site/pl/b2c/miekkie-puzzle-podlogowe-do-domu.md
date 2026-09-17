@@ -51,7 +51,7 @@ W naszej firmie można zamówić puzzle o dowolnej konfiguracji, wielkości, twa
 
 Maty EVA wykonane są z hipoalergicznego elastycznego polimeru. I właśnie ze względu na specyfikę tego materiału taka podłoga ma wiele zalet w porównaniu z innymi pokryciami podłogowymi.
 
-Główne zalety naszej podłogi to: 
+Główne zalety naszej podłogi to:
 
   * przyjazność dla środowiska - nasze puzzle podłogowe nie wydzielają żadnych szkodliwych substancji, nie mają zapachu i są całkowicie nieszkodliwe dla dzieci i dorosłych;
   * łatwość montażu - tego materiału nie trzeba przyklejać do podłogi ani mocować, a dzięki specjalnemu systemowi mocowania puzzli na jaskółczy ogon nawet dziecko potrafi złożyć puzzle EVA;
@@ -70,8 +70,8 @@ Nasza firma specjalizuje się w produkcji puzzli podłogowych. Jesteśmy gotowi 
 
 Zadzwoń do nas, a my doradzimy przy zakupie nawierzchni, która na długie lata stanie się ozdobą domu lub biura.
 
-  
-  
+
+
 
 
 * * *
@@ -82,7 +82,7 @@ Zadzwoń do nas, a my doradzimy przy zakupie nawierzchni, która na długie lata
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#a5c0d3c4c9cccbc08bc6cac88bd0c4e5c2c8c4ccc98bc6cac8>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

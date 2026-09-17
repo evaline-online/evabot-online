@@ -56,7 +56,7 @@ Maty EVA dla kotów charakteryzują się wysoką jakością i trwałością, a i
 
 Maty pod kuwetę EVA są naprawdę wyjątkowym dodatkiem. Z nią mieć kota zgodzi się nawet ten, który zawsze odmawiał z powodu brudu. A co najważniejsze, są wykonane z przyjaznego dla środowiska, absolutnie bezpiecznego materiału. Maty nie mają nieprzyjemnego zapachu, nie uczulają i są całkowicie nieszkodliwe dla zdrowia i życia ludzi i zwierząt.
 
-Do głównych zalet mat pod kuwety dla kotów należą następujące parametry: 
+Do głównych zalet mat pod kuwety dla kotów należą następujące parametry:
 
   * Resztki żwirku, które spadną na powierzchnię maty, automatycznie wpadną do jej środka. Powierzchnia maty jest zawsze sucha i czysta, co oznacza, że kot nie będzie roznosił brudu.
   * Nie przemaka, nie chłonie wilgoci, a jeśli dostanie się na niej płyn to szybko wysycha - to znaczy, że jeśli taka mata leży pod tacą czy miską, to zawsze będzie tam czysto.
@@ -74,8 +74,8 @@ Jesteśmy gotowi wyprodukować dla Państwa matę w wybranym przez Państwo kolo
 
 Mogą Państwo kupić u nas wysokiej jakości matę pod kuwetę w najlepszej cenie. Dla Państwa wygody wszystkie modele mat są prezentowane z kilkoma zdjęciami. Dzięki temu szybko znajdą Państwo opcję spełniającą wszystkie wymagania. Wtedy pozostaje jedynie złożyć zamówienie elektronicznie lub skontaktować się telefonicznie z naszymi menadżerami.
 
-  
-  
+
+
 
 
 * * *
@@ -86,7 +86,7 @@ Mogą Państwo kupić u nas wysokiej jakości matę pod kuwetę w najlepszej cen
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#b4d1c2d5d8dddad19ad7dbd99ac1d5f4d3d9d5ddd89ad7dbd9>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

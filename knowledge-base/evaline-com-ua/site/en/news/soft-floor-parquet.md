@@ -14,7 +14,7 @@ file: en/news/soft-floor-parquet.md
 
 22.03.2014
 
-Soft Flooring PARQUET has an original design, which is great for children's rooms, balconies, and for rooms that have a strict or modern interior. Soft floor PARQUET has no analogues in Ukraine! Special Castle "Dovetail" allows you to easily and simply collect the surface of any area. This type of fastening allows to collect any area, to avoid cracks in joints at full mobility of the given covering. 
+Soft Flooring PARQUET has an original design, which is great for children's rooms, balconies, and for rooms that have a strict or modern interior. Soft floor PARQUET has no analogues in Ukraine! Special Castle "Dovetail" allows you to easily and simply collect the surface of any area. This type of fastening allows to collect any area, to avoid cracks in joints at full mobility of the given covering.
 
   * Easiest
   * Elastic

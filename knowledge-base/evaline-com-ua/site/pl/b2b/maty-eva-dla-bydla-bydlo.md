@@ -37,7 +37,7 @@ Maty EVA „Burenka” w przeciwieństwie do wykładzin gumowych są lekkie i wy
 
 ## Linia EVA - wysokiej jakości dla bydła
 
-Wybierając materiał do aranżacji kompleksów inwentarskich, należy wziąć pod uwagę trzy kluczowe czynniki: 
+Wybierając materiał do aranżacji kompleksów inwentarskich, należy wziąć pod uwagę trzy kluczowe czynniki:
 
   * zgodność z normami sanitarnymi;
   * zgodność materiału z przepisami budowlanymi;
@@ -50,18 +50,18 @@ Na szczególną uwagę zasługuje jego wielowarstwowa budowa: dół - system dre
 
 ## Niska przewodność cieplna
 
-| Mata EVA "Burenka": | Guma: | Drzewo (dąb):  
----|---|---|---  
-Przewodność cieplna, W / (m * K) | 0,035 | 0,28 | 0,10  
-Twardość, Shore A | 65 - 70 | 80 - 85 | -  
-Gęstość (kg / m3) | 320 | 1190 | 870  
-Dożywotni | do 10 lat | do 10 lat | do 1 roku  
-  
+| Mata EVA "Burenka": | Guma: | Drzewo (dąb):
+---|---|---|---
+Przewodność cieplna, W / (m * K) | 0,035 | 0,28 | 0,10
+Twardość, Shore A | 65 - 70 | 80 - 85 | -
+Gęstość (kg / m3) | 320 | 1190 | 870
+Dożywotni | do 10 lat | do 10 lat | do 1 roku
+
 ## Maty EVA do hodowli zwierząt: cechy i zalety
 
 Zwracamy uwagę na Maty EVA dla bydła, które pomogą stworzyć najbardziej komfortowe warunki do trzymania zwierząt w gospodarstwie.
 
-Do głównych zalet tej powłoki należy szereg następujących parametrów: 
+Do głównych zalet tej powłoki należy szereg następujących parametrów:
 
   * Ochrona zdrowia zwierząt - Maty EVA dla krów są odporne na ekstremalne temperatury, dzięki czemu nawet w niskich temperaturach nie ślizgają się, a zwierzęta mogą łatwo wstać lub położyć się. To nie tylko zmniejsza obciążenie stawów krowy, ale także znacznie zmniejsza ryzyko kontuzji.
   * Izolacja termiczna - maty polimerowe EVA do stajni czy obór nie przepuszczają zimna i nie oddają ciepła, dzięki czemu zwierzęta odpoczywają 12-13 godzin, a nie 6-8 godzin, jak to często bywa na piasku czy betonie. Odpowiedni wypoczynek wpływa pozytywnie na kondycję bydła i koni, au krów zmniejsza prawdopodobieństwo wystąpienia mastitis oraz zwiększa mleczność.
@@ -81,8 +81,8 @@ Prosimy o kontakt, a my wykonamy dla Państwa maty w uzgodnionym terminie i dost
 
 Evaline ma doświadczenie w dostarczaniu pianka EVA do Europy. Zostaw swój numer, a nasz menedżer wkrótce się z Tobą skontaktuje.
 
-  
-  
+
+
 
 
 * * *
@@ -93,7 +93,7 @@ Evaline ma doświadczenie w dostarczaniu pianka EVA do Europy. Zostaw swój nume
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#600516010c090e054e030f0d4e150120070d01090c4e030f0d>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

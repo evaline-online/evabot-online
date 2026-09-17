@@ -149,7 +149,7 @@ export class BootDiagnostics {
     const freeModels = ModelRegistry.getFreeModels();
     const paidModels = ModelRegistry.getPaidOnlyModels();
     const frontierModels = ['gemini-3.8-flash', 'gemini-3.1-pro', 'gemini-3.1-flash', 'google/gemini-3.0-flash:free', 'claude-3-7-sonnet', 'deepseek/deepseek-r1:free'];
-    
+
     steps.push({
       id: 'step-models',
       name: 'Audit Model Registry & Frontier Fleet',

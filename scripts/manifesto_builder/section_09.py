@@ -13,10 +13,10 @@ def render_glossary_cards(items):
     for g in items:
         badge = f'<span class="glossary-category-pill {g["badgeClass"]}">{t(g["categoryNames"]["ru"], g["categoryNames"]["uk"], g["categoryNames"]["en"])}</span>'
         term = f'<div class="glossary-term">{t(g["terms"]["ru"], g["terms"]["uk"], g["terms"]["en"])}</div>'
-        
+
         plain_label = t("Простыми словами:", "Простими словами:", "In Plain English:")
         plain_desc = t(g["plain"]["ru"], g["plain"]["uk"], g["plain"]["en"])
-        
+
         tech_label = t("Техническое определение:", "Технічне визначення:", "Technical Specification:")
         tech_desc = t(g["tech"]["ru"], g["tech"]["uk"], g["tech"]["en"])
 

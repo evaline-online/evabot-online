@@ -70,8 +70,8 @@ Any of the models presented can be used as a fishing seat or paddle seat for hik
 
 To buy EVA seat pads you just need to make an electronic order or call the phones on the website. We work throughout Ukraine and are ready to promptly deliver the required number of seat cushions of the desired color to any region of our country.
 
-  
-  
+
+
 
 
 * * *
@@ -82,7 +82,7 @@ To buy EVA seat pads you just need to make an electronic order or call the phone
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

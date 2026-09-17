@@ -1,9 +1,9 @@
 # Evaline.Network — Метрики и Показатели
 
-> **Статус**: LIVE (данные в реальном времени)  
-> **Backend**: `evabot-brain.service` на `evabot-agent-vm` (Frankfurt, europe-west3-a)  
-> **Edge**: Caddy на `evaline-micro-vm` (Iowa, us-central1-a)  
-> **API**: `https://evaline.network/api/health`  
+> **Статус**: LIVE (данные в реальном времени)
+> **Backend**: `evabot-brain.service` на `evabot-agent-vm` (Frankfurt, europe-west3-a)
+> **Edge**: Caddy на `evaline-micro-vm` (Iowa, us-central1-a)
+> **API**: `https://evaline.network/api/health`
 
 ---
 

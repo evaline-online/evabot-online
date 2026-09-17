@@ -1,6 +1,6 @@
 # EvaBot Online — Architecture
 
-**Last Updated:** 2026-09-07  
+**Last Updated:** 2026-09-07
 **Version:** v0.0.2
 
 ---
@@ -45,9 +45,9 @@
 ## 🖥️ Components
 
 ### 1. EvaFace (Edge Gateway) - Iowa
-**VM:** `evaline-micro-vm`  
-**Type:** `e2-micro` (2 vCPU, 1 GB RAM)  
-**Region:** `us-central1-a`  
+**VM:** `evaline-micro-vm`
+**Type:** `e2-micro` (2 vCPU, 1 GB RAM)
+**Region:** `us-central1-a`
 **Cost:** $0.00/mo (Always Free Tier)
 
 **Role:**
@@ -69,9 +69,9 @@
 - Tailscale daemon
 
 ### 2. EvaBrain (Compute Core) - Frankfurt
-**VM:** `evabot-agent-vm`  
-**Type:** `c3-standard-8` (8 vCPU, 32 GB RAM)  
-**Region:** `europe-west3-a`  
+**VM:** `evabot-agent-vm`
+**Type:** `c3-standard-8` (8 vCPU, 32 GB RAM)
+**Region:** `europe-west3-a`
 **Cost:** ~$357.80/mo (on-demand)
 
 **Role:**
@@ -90,9 +90,9 @@
 - Tailscale daemon
 
 ### 3. WireGuard Mesh
-**Network:** Tailscale 100.x  
-**Encryption:** ChaCha20-Poly1305  
-**Latency:** ~120ms (Frankfurt ↔ Iowa)  
+**Network:** Tailscale 100.x
+**Encryption:** ChaCha20-Poly1305
+**Latency:** ~120ms (Frankfurt ↔ Iowa)
 **Tunnels:**
 - `100.66.98.4` (Frankfurt)
 - `100.125.200.49` (Iowa)
@@ -408,5 +408,5 @@ GitHub Actions
 
 ---
 
-**Last Review:** 2026-09-07  
+**Last Review:** 2026-09-07
 **Next Review:** After v0.1.0 release

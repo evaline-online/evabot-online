@@ -156,7 +156,7 @@ export class Logger {
     if (level < this.minLevel) return;
 
     const entry = this.formatMessage(level, category, tag, message, meta);
-    
+
     this.inMemoryBuffer.push(entry);
     if (this.inMemoryBuffer.length > this.maxBufferSize) {
       this.inMemoryBuffer.shift();

@@ -1,7 +1,7 @@
 # EvaBot Online — Roadmap
 
-**Last Updated:** 2026-09-07  
-**Current Version:** v0.0.2  
+**Last Updated:** 2026-09-07
+**Current Version:** v0.0.2
 **Status:** ✅ Production Ready (MVP + Security)
 
 ---
@@ -227,6 +227,6 @@
 
 ---
 
-**Last Review:** 2026-09-07  
-**Next Review:** 2026-10-01  
+**Last Review:** 2026-09-07
+**Next Review:** 2026-10-01
 **Owner:** EvaBot Engineering Team

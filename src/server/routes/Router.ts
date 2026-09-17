@@ -37,7 +37,7 @@ export class Router {
   public match(method: string, pathname: string): { route: Route; params: Record<string, string> } | null {
     for (const route of this.routes) {
       if (route.method !== method.toUpperCase()) continue;
-      
+
       if (typeof route.pattern === 'string') {
         if (route.pattern === pathname) {
           return { route, params: {} };
@@ -53,7 +53,7 @@ export class Router {
     const patternParts = pattern.split('/');
     const pathParts = pathname.split('/');
     if (patternParts.length !== pathParts.length) return null;
-    
+
     const params: Record<string, string> = {};
     for (let i = 0; i < patternParts.length; i++) {
       if (patternParts[i].startsWith(':')) {

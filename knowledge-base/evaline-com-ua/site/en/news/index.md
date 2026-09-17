@@ -51,7 +51,7 @@ Most of the time, kids spend in their playroom. If they are just learning to wal
 
 [10.10.2023](<eva-sheets-for-car-carpets.md>)
 
-Car mats are a necessary accessory for any car. They serve not only as an element of interior design, but also prevent dirt and water from getting on the upholstery and metal body 
+Car mats are a necessary accessory for any car. They serve not only as an element of interior design, but also prevent dirt and water from getting on the upholstery and metal body
 
 [Далее](<eva-sheets-for-car-carpets.md>)
 
@@ -73,7 +73,7 @@ Tatami or, as it is also called, budo mat is a type of soft floor covering. Its 
 
 When it comes to flooring in the children's room, parents pay attention to everything: safety, practicality, ecology, comfort, shock resistance, amortization.
 
-And today 
+And today
 
 [Далее](<eva-floors-for-children.md>)
 
@@ -83,7 +83,7 @@ And today
 
 [01.09.2014](<laminate-underlay.md>)
 
-The substrate is made of polymeric material based on EVA (ethylene vinyl acetate), which performs the following functions: 
+The substrate is made of polymeric material based on EVA (ethylene vinyl acetate), which performs the following functions:
 
   * Depreciation All types of substrates un
 

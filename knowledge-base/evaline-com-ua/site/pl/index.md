@@ -11,7 +11,7 @@ og_image: https://eva-line.pl/theme/img/og-image.png
 file: pl/index.md
 ---
 
-# Producent arkuszy i wyrobów gotowych 
+# Producent arkuszy i wyrobów gotowych
 
 z pianki EVA
 
@@ -49,7 +49,7 @@ EvaLine oferuje wysokiej jakości ściółkę EVA dla twoich zwierząt, która z
 
 ### [Elementy obuwia](<b2b/kapcie-jednorazowe.md>)
 
-Nasze arkusze znajdują szerokie zastosowanie w produkcji obuwia, dając producentom obuwia możliwość wykorzystania ich w podeszwach zewnętrznych, środkowych i wkładkach. 
+Nasze arkusze znajdują szerokie zastosowanie w produkcji obuwia, dając producentom obuwia możliwość wykorzystania ich w podeszwach zewnętrznych, środkowych i wkładkach.
 
 ## O EVALINE
 

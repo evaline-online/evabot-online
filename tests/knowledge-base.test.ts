@@ -5,7 +5,7 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
   console.log('=== KnowledgeBasePlugin Tests ===\n');
   let passed = 0;
   let failed = 0;
-  
+
   async function test(name: string, fn: () => Promise<void> | void) {
     try {
       await fn();
@@ -16,14 +16,14 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
       failed++;
     }
   }
-  
+
   await test('Plugin has valid manifest', () => {
     const p = new KnowledgeBasePlugin();
     assert.equal(p.manifest.id, 'knowledge-base');
     assert.equal(p.manifest.name, 'EvaLine Knowledge Base');
     assert.equal(p.manifest.category, 'data');
   });
-  
+
   await test('Add document', () => {
     const p = new KnowledgeBasePlugin();
     const doc: KnowledgeDocument = {
@@ -39,7 +39,7 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     const stats = p.getStats();
     assert.equal(stats.totalDocuments, 1);
   });
-  
+
   await test('Search finds by title', () => {
     const p = new KnowledgeBasePlugin();
     p.addDocument({
@@ -55,7 +55,7 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     assert.ok(results.length > 0);
     assert.equal(results[0].id, 'eva-doc');
   });
-  
+
   await test('Search finds by content', () => {
     const p = new KnowledgeBasePlugin();
     p.addDocument({
@@ -70,7 +70,7 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     const results = p.search('material production');
     assert.ok(results.length > 0);
   });
-  
+
   await test('Search filters by language', () => {
     const p = new KnowledgeBasePlugin();
     p.addDocument({
@@ -95,7 +95,7 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     assert.equal(enResults.length, 1);
     assert.equal(enResults[0].language, 'en');
   });
-  
+
   await test('Search filters by category', () => {
     const p = new KnowledgeBasePlugin();
     p.addDocument({
@@ -120,7 +120,7 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     assert.equal(b2bResults.length, 1);
     assert.equal(b2bResults[0].id, 'b2b-doc');
   });
-  
+
   await test('Search respects limit', () => {
     const p = new KnowledgeBasePlugin();
     for (let i = 0; i < 10; i++) {
@@ -137,7 +137,7 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     const results = p.search('common', { limit: 3 });
     assert.equal(results.length, 3);
   });
-  
+
   await test('Search empty query returns empty', () => {
     const p = new KnowledgeBasePlugin();
     p.addDocument({
@@ -152,7 +152,7 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     const results = p.search('');
     assert.equal(results.length, 0);
   });
-  
+
   await test('Search by tag', () => {
     const p = new KnowledgeBasePlugin();
     p.addDocument({
@@ -167,7 +167,7 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     const results = p.search('production');
     assert.ok(results.length > 0);
   });
-  
+
   await test('List documents with filter', () => {
     const p = new KnowledgeBasePlugin();
     p.addDocument({
@@ -192,7 +192,7 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     assert.equal(filtered.length, 1);
     assert.equal(filtered[0].id, 'd1');
   });
-  
+
   await test('List documents by language', () => {
     const p = new KnowledgeBasePlugin();
     p.addDocument({
@@ -216,7 +216,7 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     const filtered = p.listDocuments({ language: 'ru' });
     assert.equal(filtered.length, 1);
   });
-  
+
   await test('Stats correct', () => {
     const p = new KnowledgeBasePlugin();
     p.addDocument({
@@ -242,7 +242,7 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     assert.equal(stats.languages.length, 2);
     assert.equal(stats.categories.length, 2);
   });
-  
+
   await test('Health check shows healthy with documents', async () => {
     const p = new KnowledgeBasePlugin();
     p.addDocument({
@@ -257,13 +257,13 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     const health = await p.healthCheck();
     assert.equal(health.status, 'healthy');
   });
-  
+
   await test('Health check shows degraded with no documents', async () => {
     const p = new KnowledgeBasePlugin();
     const health = await p.healthCheck();
     assert.equal(health.status, 'degraded');
   });
-  
+
   await test('Initialize registers routes', async () => {
     const p = new KnowledgeBasePlugin();
     await p.initialize({} as any);
@@ -273,14 +273,14 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     assert.ok(paths.includes('/api/kb/search'));
     assert.ok(paths.includes('/api/kb/list'));
   });
-  
+
   await test('Handle command help', async () => {
     const p = new KnowledgeBasePlugin();
     await p.initialize({} as any);
     const result = await p.handleCommand('help');
     assert.ok(result.includes('KB COMMANDS'));
   });
-  
+
   await test('Handle command status', async () => {
     const p = new KnowledgeBasePlugin();
     p.addDocument({
@@ -296,21 +296,21 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     const result = await p.handleCommand('status');
     assert.ok(result.includes('1'));
   });
-  
+
   await test('Handle command search requires query', async () => {
     const p = new KnowledgeBasePlugin();
     await p.initialize({} as any);
     const result = await p.handleCommand('search');
     assert.ok(result.includes('ERROR'));
   });
-  
+
   await test('Handle unknown command', async () => {
     const p = new KnowledgeBasePlugin();
     await p.initialize({} as any);
     const result = await p.handleCommand('unknowncmd');
     assert.ok(result.includes('ERROR'));
   });
-  
+
   await test('Shutdown clears documents', async () => {
     const p = new KnowledgeBasePlugin();
     p.addDocument({
@@ -326,7 +326,7 @@ export async function runKnowledgeBaseTests(): Promise<boolean> {
     const stats = p.getStats();
     assert.equal(stats.totalDocuments, 0);
   });
-  
+
   console.log(`\nKnowledgeBase: ${passed} passed, ${failed} failed\n`);
   return failed === 0;
 }

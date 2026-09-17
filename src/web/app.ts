@@ -32,7 +32,7 @@ interface TranslationStrings {
   inputLegend: string;
   welcomeHeading: string;
   welcomeNotice: string;
-  
+
   // Sections
   secDeckTitle: string;
   secProviders: string;

@@ -48,7 +48,7 @@ Nasza firma przedstawia Państwu nowy produkt - podkład do deski parkietowej lu
 
 Podkład pod laminat EVA warto kupić, gdy chcemy stworzyć idealne warunki do ułożenia podłogi z laminatu lub deski parkietowej. W odróżnieniu od zwykłego polietylenu i styropianu, podkład pod deski parkietowe i laminat EVA ma wysokie właściwości pochłaniające wilgoć, dźwięk i wstrząsy. Dzięki zamkniętej strukturze komórkowej takie podłoże nie wchłania wilgoci, nie gnije, nie pęcznieje i zachowuje właściwości amortyzujące nawet po dłuższym użytkowaniu. Co więcej, przy takim podłożu nie potrzebujesz dodatkowej hydroizolacji i paroizolacji.
 
-Główne cechy materiału: 
+Główne cechy materiału:
 
   * Materiał jest elastyczny - trwałe odkształcenie - 0%.
   * Posiada wysoką odporność na ścieranie - wytrzymałość na rozciąganie 1 MPa (1N / mm2).
@@ -64,7 +64,7 @@ Jeżeli poszukujesz podkładu pod ciepły laminat podłogowy to właśnie dzięk
 
 Specjalna struktura i właściwości materiału EVA pozwalają nam wyprodukować podłoże, które wypada korzystnie w porównaniu z innymi analogami na rynku.
 
-Zalety materiału: 
+Zalety materiału:
 
   * Wyrównanie nierówności - materiał posiada doskonałe właściwości tłumiące, dzięki czemu nasz podkład jest w stanie ukryć nierówności podłogi do 2 mm. To znacznie upraszcza proces układania deski parkietowej lub laminatu.
   * Prawidłowy rozkład obciążeń - dzięki dużej sprężystości i elastyczności podkładów pod laminat EVA absorbują i równomiernie rozkładają naprężenia mechaniczne występujące nie tylko podczas chodzenia, ale także podczas stawiania mebli. Dzięki temu parkiet czy panele podłogowe są mniej zużyte i wytrzymują dłużej.
@@ -77,8 +77,8 @@ Zalety materiału:
 
 Skontaktuj się z nami, a nasi eksperci odpowiedzą na wszystkie Twoje pytania i pomogą w zakupie podkładu pod laminat EVA.
 
-  
-  
+
+
 
 
 * * *
@@ -89,7 +89,7 @@ Skontaktuj się z nami, a nasi eksperci odpowiedzą na wszystkie Twoje pytania i
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#debba8bfb2b7b0bbf0bdb1b3f0abbf9eb9b3bfb7b2f0bdb1b3>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

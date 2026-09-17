@@ -48,8 +48,8 @@ Therefore, it is widely used in the manufacture of footwear, and so on. orthoped
 
 In such shoes, legs are less tired, it is comfortable and comfortable to walk in it. Such shoes serve for a long time. In addition, if orthopedic shoes, with a sole containing EVA material, are purchased on time, this can support health for many years.
 
-  
-  
+
+
 
 
 * * *
@@ -60,7 +60,7 @@ In such shoes, legs are less tired, it is comfortable and comfortable to walk in
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

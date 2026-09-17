@@ -230,8 +230,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-**Format:** [Keep a Changelog](https://keepachangelog.com/)  
-**Versioning:** [Semantic Versioning](https://semver.org/)  
+**Format:** [Keep a Changelog](https://keepachangelog.com/)
+**Versioning:** [Semantic Versioning](https://semver.org/)
 **Status:** Active development
 
 ## [v0.2.0] - 2026-09-08 — Modular Architecture & Security Hardening

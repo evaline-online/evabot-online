@@ -77,8 +77,8 @@ Innymi słowy, wybierając naszą listwę rozdzielającą EVA, masz pewność, �
 
 Oferujemy Państwu listwę rozdzielającą EVA wysokiej jakości w najlepszej cenie. Zapraszamy do kontaktu, a my zorganizujemy jej transport.
 
-  
-  
+
+
 
 
 * * *
@@ -89,7 +89,7 @@ Oferujemy Państwu listwę rozdzielającą EVA wysokiej jakości w najlepszej ce
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#4e2b382f2227202b602d2123603b2f0e29232f2722602d2123>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

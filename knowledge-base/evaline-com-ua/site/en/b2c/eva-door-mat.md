@@ -68,8 +68,8 @@ Our production facilities are equipped with the latest version of equipment. Thi
 
 Contact us and we will produce high quality EVA floor mat material at the best price. We take an individual approach to each order and strive to complete it as quickly as possible.
 
-  
-  
+
+
 
 
 * * *
@@ -80,7 +80,7 @@ Contact us and we will produce high quality EVA floor mat material at the best p
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

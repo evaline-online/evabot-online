@@ -19,5 +19,5 @@
 
 ---
 
-**Last Updated:** 2026-09-07  
+**Last Updated:** 2026-09-07
 **Total Models:** 78 (46 free + 32 paid)

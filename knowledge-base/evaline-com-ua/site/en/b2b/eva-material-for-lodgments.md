@@ -55,8 +55,8 @@ EVA-line is a Ukrainian manufacturer of EVA sheet material. You can order smooth
 
 Take care of good product packaging and its safety during transportation by creating high-quality cradles from EVA material from EVA-line.
 
-  
-  
+
+
 
 
 * * *
@@ -67,7 +67,7 @@ Take care of good product packaging and its safety during transportation by crea
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

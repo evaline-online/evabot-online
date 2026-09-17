@@ -21,7 +21,7 @@
     <p>Для премиум-голосов Google Cloud (Studio/WaveNet) нужен платный API-ключ. Этот прототип использует встроенные голоса вашего браузера (в Chrome это бесплатные голоса Google).</p>
 
     <select id="voiceSelect"></select>
-    
+
     <div id="chat"></div>
 
     <div style="display: flex; gap: 10px;">
@@ -66,7 +66,7 @@
 
         function speak(text) {
             if (synth.speaking) synth.cancel();
-            
+
             // Простая эмуляция ответа ИИ для демо
             let botReply = text;
             if(text.toLowerCase().includes('привет')) botReply = 'Привет! Я тестовый голос EvaBot.';

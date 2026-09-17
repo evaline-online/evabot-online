@@ -46,26 +46,26 @@ Ogromna gama kolorów i odcieni pozwala dobrać materiał tak, aby rozwiązać n
 
 Lekkość materiału pozwala nie obciążać finalnego produktu.
 
-### Prześcieradła kręcone mogą być również pokryte skórą, ekoskórą i tekstyliami. 
+### Prześcieradła kręcone mogą być również pokryte skórą, ekoskórą i tekstyliami.
 
 W dalszej kolejności taki materiał jest wykorzystywany na wkłady, w przemyśle obuwniczym - na wkładki do butów letnich otwartych, a także na nieprzemakalne kalosze i buty.
 
-![](https://eva-line.pl/images/listy-koja.jpg)  
-  
+![](https://eva-line.pl/images/listy-koja.jpg)
+
 
 
 ## W produkcji linii EVA istnieje możliwość wyboru krojów kręconych.
 
-![](https://eva-line.pl/images/proisvodstvo-one.jpg)![](https://eva-line.pl/images/proisvodstvo-three.jpg)![](https://eva-line.pl/images/proisvodstvo-two.jpg)  
-  
+![](https://eva-line.pl/images/proisvodstvo-one.jpg)![](https://eva-line.pl/images/proisvodstvo-three.jpg)![](https://eva-line.pl/images/proisvodstvo-two.jpg)
+
 
 
 Nasz zespół jest zawsze gotowy doradzić i znaleźć odpowiednią dla Ciebie opcję.
 
 Pracujemy na Ukrainie i jesteśmy gotowi wysłać towar za granicę.
 
-  
-  
+
+
 
 
 * * *
@@ -76,7 +76,7 @@ Pracujemy na Ukrainie i jesteśmy gotowi wysłać towar za granicę.
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#7b1e0d1a1712151e55181416550e1a3b1c161a121755181416>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

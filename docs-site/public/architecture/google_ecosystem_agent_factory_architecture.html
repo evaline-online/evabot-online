@@ -53,7 +53,7 @@
     Grounding --> VertexAI[Vertex AI europe-west3]
     VertexAI --> GoogleIndex[(Google Search Index)]
     GoogleIndex --> GroundedAnswer[Верифицированный ответ с ссылками]
-    
+
     Router -->|Глубокий парсинг URL| MCPFetch[MCP fetch / Puppeteer]
     MCPFetch --> DevTools[chrome-devtools TigerVNC :0]
     DevTools --> DomExtractor[DOM &amp; Text Content Extractor]

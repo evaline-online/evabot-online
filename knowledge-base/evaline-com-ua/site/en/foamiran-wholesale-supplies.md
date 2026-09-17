@@ -65,7 +65,7 @@ THICKESS
 
 ![](https://eva-line.com/theme/img/23-main/Floristics_Frame.svg)
 
-Floristics & Décor 
+Floristics & Décor
 
   * Artificial flowers
   * Elements of floral compositions
@@ -74,7 +74,7 @@ Floristics & Décor
 
 ![](https://eva-line.com/theme/img/23-main/Gaming_Frame.svg)
 
-Gaming Industry 
+Gaming Industry
 
   * Board games
   * Game boards
@@ -83,8 +83,8 @@ Gaming Industry
 
 ![](https://eva-line.com/theme/img/23-main/Education_Frame.svg)
 
-Education &  
-Development 
+Education &
+Development
 
   * Arts and crafts lessons
   * Educational toys
@@ -93,8 +93,8 @@ Development
 
 ![](https://eva-line.com/theme/img/23-main/Photo_Frame.svg)
 
-Stage &  
-Photography 
+Stage &
+Photography
 
   * Costumes and masks
   * Stage and holiday decorations
@@ -103,7 +103,7 @@ Photography
 
 ![](https://eva-line.com/theme/img/23-main/Handmade_Frame.svg)
 
-Handmade & Creativity 
+Handmade & Creativity
 
   * Toys, jewelry
   * Decorative panels
@@ -112,8 +112,8 @@ Handmade & Creativity
 
 ![](https://eva-line.com/theme/img/23-main/Packaging_Frame.svg)
 
-Packaging &  
-Advertising 
+Packaging &
+Advertising
 
   * Gift packaging elements
   * Promotional stands and brochures
@@ -121,7 +121,7 @@ Advertising
 
 ![](https://eva-line.com/theme/img/23-main/Model_Frame.svg)
 
-Model Making & Prototyping 
+Model Making & Prototyping
 
   * Layout components
   * Prototyping of lightweight parts
@@ -129,25 +129,25 @@ Model Making & Prototyping
 
 ![](https://eva-line.com/theme/img/23-main/Textile_Frame.svg)
 
-Textiles & Sewing 
+Textiles & Sewing
 
   * Insoles and bag linings
   * Decorative appliqués on clothing
 
 
-Advantages of EvaLine  
-Foamiran 
+Advantages of EvaLine
+Foamiran
 
 * * *
 
-  * ![](https://eva-line.com/theme/img/23-main/Frame_3.svg) Does not add weight to the product — a 2.5 × 1.45 m sheet with 2 mm thickness weighs only 480 g 
-  * ![](https://eva-line.com/theme/img/23-main/Frame_7.svg) Allows the addition of glitter and creation of surfaces with various textures 
-  * ![](https://eva-line.com/theme/img/23-main/Frame_6.svg) Repels dust, dirt, and microbes 
-  * ![](https://eva-line.com/theme/img/23-main/Frame_1.svg) Emits no toxic substances during processing 
-  * ![](https://eva-line.com/theme/img/23-main/Frame_4.svg) Can be shaped and returns to its original form without cracks or deformation 
-  * ![](https://eva-line.com/theme/img/23-main/Frame_2.svg) Resistant to moisture and humidity 
-  * ![](https://eva-line.com/theme/img/23-main/Frame_7.svg) Available in 40+ colors 
-  * ![](https://eva-line.com/theme/img/23-main/Frame_5.svg) Does not crumble, delaminate, or fade over time — maintains shape and color stability 
+  * ![](https://eva-line.com/theme/img/23-main/Frame_3.svg) Does not add weight to the product — a 2.5 × 1.45 m sheet with 2 mm thickness weighs only 480 g
+  * ![](https://eva-line.com/theme/img/23-main/Frame_7.svg) Allows the addition of glitter and creation of surfaces with various textures
+  * ![](https://eva-line.com/theme/img/23-main/Frame_6.svg) Repels dust, dirt, and microbes
+  * ![](https://eva-line.com/theme/img/23-main/Frame_1.svg) Emits no toxic substances during processing
+  * ![](https://eva-line.com/theme/img/23-main/Frame_4.svg) Can be shaped and returns to its original form without cracks or deformation
+  * ![](https://eva-line.com/theme/img/23-main/Frame_2.svg) Resistant to moisture and humidity
+  * ![](https://eva-line.com/theme/img/23-main/Frame_7.svg) Available in 40+ colors
+  * ![](https://eva-line.com/theme/img/23-main/Frame_5.svg) Does not crumble, delaminate, or fade over time — maintains shape and color stability
 
 
 ![](https://eva-line.com/theme/img/23-main/frand-ico.svg)
@@ -158,46 +158,46 @@ Leave a request and find out cooperation terms
 
 A 6-MONTH WARRANTY LETS YOU TEST AND CONFIRM EVALINE FOAMIRAN’S RELIABILITY IN REAL USE
 
-##  Who Will Benefit from EvaLine Foamiran Wholesale 
+##  Who Will Benefit from EvaLine Foamiran Wholesale
 
 ![Stationery and gift shops](https://eva-line.com/theme/img/23-main/Rectangle 1013.png)
 
-Stationery and gift shops 
+Stationery and gift shops
 
 ![Florists](https://eva-line.com/theme/img/23-main/Rectangle 30.png)
 
-Florists 
+Florists
 
 ![Stores for handmade goods and sewing supplies](https://eva-line.com/theme/img/23-main/Rectangle 29.png)
 
-Stores for handmade goods  
-and sewing supplies 
+Stores for handmade goods
+and sewing supplies
 
 ![Educational institutions for children](https://eva-line.com/theme/img/23-main/Rectangle 1012.png)
 
-Educational institutions  
-for children 
+Educational institutions
+for children
 
 ![Designers and decorators](https://eva-line.com/theme/img/23-main/Rectangle 1011.png)
 
-Designers and decorators 
+Designers and decorators
 
 ![Footwear manufacturers](https://eva-line.com/theme/img/23-main/Rectangle 1010.png)
 
-Footwear manufacturers 
+Footwear manufacturers
 
 ![Model-making studios](https://eva-line.com/theme/img/23-main/Rectangle 1014.png)
 
-Model-making studios 
+Model-making studios
 
 ![Individual crafters and artisans](https://eva-line.com/theme/img/23-main/Rectangle 1015.png)
 
-Individual crafters  
-and artisans 
+Individual crafters
+and artisans
 
 ![Game and toy manufacturers](https://eva-line.com/theme/img/23-main/Rectangle 27.png)
 
-Game and toy manufacturers 
+Game and toy manufacturers
 
 ![100](https://eva-line.com/theme/img/23-main/100-sheets.jpg)
 
@@ -205,13 +205,13 @@ Request a Wholesale Price List
 
 ![](https://eva-line.com/theme/img/Frame 210.png)
 
-##  Cooperation Options 
+##  Cooperation Options
 
 * * *
 
 ![Foamiran sheets](https://eva-line.com/theme/img/23-main/photo_5433606389831423141_w 3.png)
 
-### Custom  
+### Custom
 Production
 
 Available options:
@@ -221,7 +221,7 @@ Available options:
   * Manufacturing under the customer’s brand and logo, including custom packaging design
 
 
-### Sale of Finished  
+### Sale of Finished
 Products
 
 Includes:
@@ -239,46 +239,46 @@ We offer regular and reliable deliveries in both large and small volumes
 
 * * *
 
-Orders are shipped from our warehouse via any preferred carrier 
+Orders are shipped from our warehouse via any preferred carrier
 
 ![Step 1](https://eva-line.com/theme/img/23-main/work-1.svg)
 
-Contact with a manager 
+Contact with a manager
 
 ![Step 1](https://eva-line.com/theme/img/23-main/Vector 1.svg)
 
 ![Step 2](https://eva-line.com/theme/img/23-main/work-2.svg)
 
-Clarification of delivery details 
+Clarification of delivery details
 
 ![Step 2](https://eva-line.com/theme/img/23-main/Vector 3.svg)
 
 ![Step 3](https://eva-line.com/theme/img/23-main/work-3.svg)
 
-Receiving a commercial offer 
+Receiving a commercial offer
 
 ![Step 3](https://eva-line.com/theme/img/23-main/Vector 2.svg)
 
 ![Step 4](https://eva-line.com/theme/img/23-main/work-4.svg)
 
-Dispatch of a test batch or samples  
-(if needed) 
+Dispatch of a test batch or samples
+(if needed)
 
 ![Step 5](https://eva-line.com/theme/img/23-main/work-5.svg)
 
-Order confirmation 
+Order confirmation
 
 ![Step 6](https://eva-line.com/theme/img/23-main/Vector 3.svg)
 
 ![Step 6](https://eva-line.com/theme/img/23-main/work-6.svg)
 
-Invoice payment 
+Invoice payment
 
 ![Step 7](https://eva-line.com/theme/img/23-main/Vector 1.svg)
 
 ![Step 7](https://eva-line.com/theme/img/23-main/work-7.svg)
 
-Production and shipment 
+Production and shipment
 
 ##  Working with EvaLine is Convenient and Secure
 

@@ -1127,7 +1127,7 @@ ${stylesheet.join(`
           gtag('event', 'page_view', { page_title: document.title, page_location: location.href });
         });
       };
-      
+
       document.head.appendChild(gtagScript);
     `)}else if(cfg.analytics?.provider==="plausible"){let plausibleHost=cfg.analytics.host??"https://plausible.io";componentResources.afterDOMLoaded.push(`
       const plausibleScript = document.createElement('script');
@@ -1194,7 +1194,7 @@ ${stylesheet.join(`
           window.tinylytics.triggerUpdate();
         });
       };
-      
+
       document.head.appendChild(tinylyticsScript);
     `)}else cfg.analytics?.provider==="cabin"?componentResources.afterDOMLoaded.push(`
       const cabinScript = document.createElement("script")

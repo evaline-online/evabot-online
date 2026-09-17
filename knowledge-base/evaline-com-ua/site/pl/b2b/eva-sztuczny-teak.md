@@ -16,11 +16,11 @@ Teak z arkusza EVA do łodzi, kajaków, skuterów wodnych, desek surfingowych i 
 
 ## Teak z arkusza EVA do łodzi, kajaków, skuterów wodnych, desek surfingowych i SUP
 
-Miękki, trwały, nietoksyczny polimer EVA o zamkniętych komórkach jest coraz częściej spotykany na pokładach, ponieważ materiał zapewnia klasyczny wygląd drewna tekowego, ale jednocześnie nie wymaga kosztownej konserwacji. 
+Miękki, trwały, nietoksyczny polimer EVA o zamkniętych komórkach jest coraz częściej spotykany na pokładach, ponieważ materiał zapewnia klasyczny wygląd drewna tekowego, ale jednocześnie nie wymaga kosztownej konserwacji.
 
 Taka podłoga sprawi, że każda jednostka pływająca będzie wyglądać ekskluzywnie, schludnie, a pokład bezpiecznie.
 
-### Zalety sztucznego teku EVA z „EVA-line” 
+### Zalety sztucznego teku EVA z „EVA-line”
 
 ![](https://eva-line.pl/images/3_teak.png)
 
@@ -46,8 +46,8 @@ Później arkusze są obrabiane za pomocą frezu lub grawera - pozwala to wybra�
 
 Wyjątkowość materiału EVA na pokłady z EVA-line polega na tym, że nasz zespół jest w stanie wyprodukować arkusze o wymaganych właściwościach - gęstości, twardości, grubości i palecie kolorów. Właściwości użytkowe materiału z pewnością przypadną do gustu klientom.
 
-  
-![](https://eva-line.pl/images/6_teak.png)![](https://eva-line.pl/images/teak23.png)  
+
+![](https://eva-line.pl/images/6_teak.png)![](https://eva-line.pl/images/teak23.png)
 
 
 ## Kup pokładową powłokę EVA z „EVA-line”
@@ -56,8 +56,8 @@ Nasz zespół jest zawsze gotowy doradzić klientowi w sprawie sztucznego drewna
 
 Zostaw zapytanie, a my złożymy zamówienie na arkusz tekowy EVA - mocny, ekologiczny i wysokiej jakości materiał. Z naszych arkuszy EVA okażą się niepowtarzalne produkty, które przez długie lata będą prawdziwą ozdobą każdej jednostki pływającej.
 
-  
-  
+
+
 
 
 * * *
@@ -68,7 +68,7 @@ Zostaw zapytanie, a my złożymy zamówienie na arkusz tekowy EVA - mocny, ekolo
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#5d382b3c31343338733e323073283c1d3a303c3431733e3230>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

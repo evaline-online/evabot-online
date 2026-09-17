@@ -45,26 +45,26 @@ file: uk/b2b/listyi-eva-z-figurnoyu-rizkoyu.md
 
 Легкість матеріалу дозволяє не обтяжувати кінцевий виріб.
 
-### Фігурні листи також можна обтягувати шкірою, екошкірою та текстилем. 
+### Фігурні листи також можна обтягувати шкірою, екошкірою та текстилем.
 
 Згодом такий матеріал використовують для ложементів, у взуттєвій сфері - для устілок літнього відкритого взуття, а також для водонепроникних калош та чобітків.
 
-![](https://evaline.com.ua/images/xlisty-koja.jpg.pagespeed.ic.Rz1kQBjmE1.jpg)  
-  
+![](https://evaline.com.ua/images/xlisty-koja.jpg.pagespeed.ic.Rz1kQBjmE1.jpg)
+
 
 
 ## На виробництві EVA-line є вибір фігурної різки.
 
-![](https://evaline.com.ua/images/xproisvodstvo-one.jpg.pagespeed.ic.HyxF3ZDmlh.jpg)![](https://evaline.com.ua/images/xproisvodstvo-three.jpg.pagespeed.ic.X3sFPlU0jC.jpg)![](https://evaline.com.ua/images/xproisvodstvo-two.jpg.pagespeed.ic.kLErZ1GI2G.jpg)  
-  
+![](https://evaline.com.ua/images/xproisvodstvo-one.jpg.pagespeed.ic.HyxF3ZDmlh.jpg)![](https://evaline.com.ua/images/xproisvodstvo-three.jpg.pagespeed.ic.X3sFPlU0jC.jpg)![](https://evaline.com.ua/images/xproisvodstvo-two.jpg.pagespeed.ic.kLErZ1GI2G.jpg)
+
 
 
 Наша команда завжди готова проконсультувати і підібрати потрібний вам варіант.
 
 Працюємо в Україні та готові відправляти товар за кордон.
 
-  
-  
+
+
 
 
 * * *
@@ -75,7 +75,7 @@ file: uk/b2b/listyi-eva-z-figurnoyu-rizkoyu.md
 
 Менеджер по роботі з клієнтами відповість на них.
 
-Славуцькій Влад  
+Славуцькій Влад
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://evaline.com.ua/theme/img/icons8-phone-24.png.pagespeed.ce.ssaOdXpoJV.png)+38 (067) 156 14 96](<tel:+380671561496>)

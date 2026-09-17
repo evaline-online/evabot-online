@@ -1,8 +1,8 @@
 # Архитектурный Манифест: Превращение EvaBot в Автономную Фабрику Агентов на базе Экосистемы Google
 
-**Дата:** Сентябрь 2026  
-**Система:** EvaBot Multi-Agent Cluster (`evabot.online`, `evaline.network`)  
-**Окружение:** Compute Core (`evabot-agent-vm`, Frankfurt, GCP `europe-west3-a`) + Edge Ingress (`evaline-micro-vm`, Iowa, GCP `us-central1-a`)  
+**Дата:** Сентябрь 2026
+**Система:** EvaBot Multi-Agent Cluster (`evabot.online`, `evaline.network`)
+**Окружение:** Compute Core (`evabot-agent-vm`, Frankfurt, GCP `europe-west3-a`) + Edge Ingress (`evaline-micro-vm`, Iowa, GCP `us-central1-a`)
 **Статус:** Внедрено и активно
 
 ---
@@ -51,7 +51,7 @@ flowchart TD
     Grounding --> VertexAI[Vertex AI europe-west3]
     VertexAI --> GoogleIndex[(Google Search Index)]
     GoogleIndex --> GroundedAnswer[Верифицированный ответ с ссылками]
-    
+
     Router -->|Глубокий парсинг URL| MCPFetch[MCP fetch / Puppeteer]
     MCPFetch --> DevTools[chrome-devtools TigerVNC :0]
     DevTools --> DomExtractor[DOM & Text Content Extractor]

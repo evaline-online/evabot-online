@@ -41,7 +41,7 @@ file: uk/novini/index.md
 
 [10.04.2024](<yak-montuietsya-listova-eva-pidkladka-eva-line.md>)
 
-Підкладка з екологічного полімеру ЕВА від українського виробника EVA-line є універсальною і підходить під різні види підлогового покриття – ламінат, вінілові покриття LVT та 
+Підкладка з екологічного полімеру ЕВА від українського виробника EVA-line є універсальною і підходить під різні види підлогового покриття – ламінат, вінілові покриття LVT та
 
 [Далее](<yak-montuietsya-listova-eva-pidkladka-eva-line.md>)
 
@@ -105,8 +105,8 @@ file: uk/novini/index.md
 
 [Далее](<kilimok-pazl-z-eva-materialu.md>)
 
-  
-  
+
+
 
 
   * First

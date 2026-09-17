@@ -39,7 +39,7 @@ Maty modułowe mają dobrą izolację termiczną, podobnie jak w przypadku „ci
 
 Rodzice zwracają szczególną uwagę na wybór wykładziny podłogowej do pokoju dziecięcego. Dzieci uwielbiają bawić się na podłodze, dlatego należy stworzyć odpowiednie warunki do zabawy.
 
-Maty puzzle dla dzieci posiadają wszystkie niezbędne zalety: 
+Maty puzzle dla dzieci posiadają wszystkie niezbędne zalety:
 
   * ekologiczne i hipoalergiczne - nasze maty podłogowe dla dzieci są bezzapachowe i nie zawierają żadnych szkodliwych substancji;
   * mają doskonałe właściwości termoizolacyjne - dziecku będzie ciepło na podłodze nawet w okresie jesienno-zimowym;
@@ -50,7 +50,7 @@ Maty puzzle dla dzieci posiadają wszystkie niezbędne zalety:
 
 ## Miękka podłoga EVA do pokoi dziecięcych to idealne rozwiązanie
 
-Dzięki właściwościom materiału EVA, podłoga do pokoju dziecięcego jest lepsza od innych podłóg pod względem parametrów: 
+Dzięki właściwościom materiału EVA, podłoga do pokoju dziecięcego jest lepsza od innych podłóg pod względem parametrów:
 
   * maty EVA można zastosować w pomieszczeniach o dowolnej wielkości i kształcie - z wnękami, lub kolumnami, ponieważ metoda łączenia puzzli pozwoli stworzyć powierzchnie bez cięcia;
   * łatwość montażu - maty EVA dla dzieci są ze sobą połączone jak puzzle, więc nie trzeba zatrudniać fachowca do układania podłogi;
@@ -73,8 +73,8 @@ Skontaktuj się z nami, a stworzymy dla Państwa matę dla dzieci o dowolnej for
 
 Zapraszamy do kontaktu, a pomożemy Państwu zmienić każdy pokój dziecięcy w bajkową krainę.
 
-  
-  
+
+
 
 
 * * *
@@ -85,7 +85,7 @@ Zapraszamy do kontaktu, a pomożemy Państwu zmienić każdy pokój dziecięcy w
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#ef8a998e8386818ac18c8082c19a8eaf88828e8683c18c8082>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

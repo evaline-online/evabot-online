@@ -13,7 +13,7 @@ flowchart TD
     A[Markdown-архив сайта<br/>evaline-com-ua/site/] --> B[Семантический чанкер]
     B --> C[(Векторное хранилище ChromaDB<br/>chroma_db/)]
     B --> D[(Полнотекстовый поиск SQLite FTS5<br/>fts_index.db/)]
-    
+
     Q[Запрос пользователя / LLM-агента] --> E[Движок EvaLineKnowledgeBase]
     E -->|Плотный векторный поиск| C
     E -->|Точный поиск по ключевым словам| D

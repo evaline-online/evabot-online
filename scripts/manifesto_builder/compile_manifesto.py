@@ -145,12 +145,12 @@ head_html = """<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Манифест EvaLine // Фабрика автономных ИИ-агентов, система «Консилиум», Тетраксис ролей и производство полимеров EVA</title>
   <meta name="description" content="Технологический манифест EvaLine: фабрика автономных ИИ-агентов, система Консилиум, матрица из 94 LLM моделей, 10 ролей Тетраксиса и реальное производство полимеров EVA.">
-  
+
   <!-- Complete Roboto Font Family: Roboto, Roboto Mono, Roboto Condensed, Roboto Slab (All weights & styles) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Roboto+Slab:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
+
   <style id="main-manifesto-styles">
 """ + css_styles.CSS_CONTENT + BOOK_CSS + """
   </style>
@@ -185,13 +185,13 @@ def compile_clean_html(lang):
     helpers.set_render_lang(lang)
     helpers.set_include_mermaid(False)
     lang_models = models_renderer.get_prerendered_models()
-    
+
     titles = {
         'ru': "Манифест EvaLine // Фабрика ИИ-агентов, Консилиум и Завод полимеров EVA (Текстовая версия)",
         'uk': "Маніфест EvaLine // Фабрика ШІ-агентів, Консиліум та Завод полімерів EVA (Текстова версія)",
         'en': "EvaLine Manifesto // Autonomous AI Factory, Consilium Consensus & EVA Polymer Plant (Text Edition)"
     }
-    
+
     clean_head = f"""<!DOCTYPE html>
 <html lang="{lang}">
 <head>
@@ -212,7 +212,7 @@ def compile_clean_html(lang):
     c_s8 = section_08.get_section_08()
     c_s9 = section_09.get_section_09()
     c_foot = footer_and_scripts.get_footer()
-    
+
     clean_html = clean_head + c_nav + get_formula_html() + c_s1 + c_s2 + c_s3 + c_s4 + c_s5 + c_s6 + c_s7 + c_s8 + c_s9 + c_foot + "\n</body>\n</html>"
     clean_html = (clean_html
         .replace('position: sticky;', 'position: static;')

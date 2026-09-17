@@ -13,7 +13,7 @@ file: pl/b2c/fotele-turystyczne-dywaniki.md
 
 # Maty turystyczne do siedzenia
 
-Niezastąpione dla każdego turysty – wygodne lekkie, wytrzymałe. 
+Niezastąpione dla każdego turysty – wygodne lekkie, wytrzymałe.
 
 Mata EVA jest niezbędna dla podróżnika. Ona pozwala na wygodny i bezpieczny wypoczynek w każdym miejscu, niezależnie od warunków atmosferycznych.
 
@@ -72,8 +72,8 @@ Każdy z prezentowanych modeli może służyć jako siedzisko wędkarskie lub ma
 
 Aby kupić matę EVA, wystarczy złożyć zamówienie elektroniczne lub zadzwonić pod numery telefonów podanych na stronie.
 
-  
-  
+
+
 
 
 * * *
@@ -84,7 +84,7 @@ Aby kupić matę EVA, wystarczy złożyć zamówienie elektroniczne lub zadzwoni
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#b3d6c5d2dfdaddd69dd0dcde9dc6d2f3d4ded2dadf9dd0dcde>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

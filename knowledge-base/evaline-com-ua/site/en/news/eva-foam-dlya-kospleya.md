@@ -21,20 +21,20 @@ One of the main materials for creating images is the foamed polymer ethylene vin
 
 The photo shows the work of our clients.
 
-  
-  
-  
+
+
+
 
 
 ## Advantages of EVA material for cosplay costumes
 
 Due to the optimal combination of hardness, density, and flexibility, EVA is an excellent material for the realization of bold creative ideas.
 
-EVA foam has the following properties: 
+EVA foam has the following properties:
 
   * Lightness, flexibility and high tensile strength.
-  * The ability of EVA foam to acquire the desired shape under the influence of high temperature. 
-  * Water resistance and hypoallergenicity of the material. 
+  * The ability of EVA foam to acquire the desired shape under the influence of high temperature.
+  * Water resistance and hypoallergenicity of the material.
   * The ability to easily paint, glue and sew elements.
 
 
@@ -44,26 +44,26 @@ With the help of EVA material, you can make costumes of varying complexity and s
 
 The photo shows the work of our clients.
 
-  
-  
-  
+
+
+
 
 
 ## Characteristics of EVA sheets
 
-To create different elements of a costume, you may need a material of different hardness, density, and thickness. The ratio of these values can be seen in the table. 
+To create different elements of a costume, you may need a material of different hardness, density, and thickness. The ratio of these values can be seen in the table.
 
 ![EVA foam sheets characteristic](https://eva-line.com/images/news/157/kosplei-en.jpg)
 
-The minimum thickness of the sheet is 2 mm and the maximum is 35 mm. Cutting is carried out in 1 mm increments. 
+The minimum thickness of the sheet is 2 mm and the maximum is 35 mm. Cutting is carried out in 1 mm increments.
 
 ![EVA foam for cosplay](https://eva-line.com/images/news/157/kosplei-templ.jpg)
 
 he photo shows the work of our clients.
 
-  
-  
-  
+
+
+
 
 
 ## EVA foam from "EVA-line"

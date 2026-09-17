@@ -106,7 +106,7 @@ export class KnowledgeBaseCommand {
     if (!query) {
       return `[ERROR] Usage: /kb search <query>`;
     }
-    
+
     logger.info(LogCategory.USER, 'KB_SEARCH', `Searching: "${query}"`);
     const results = knowledgeBase.search(query, { limit: 5 });
     logger.info(LogCategory.USER, 'KB_SEARCH', `Found ${results.length} results`);
@@ -116,13 +116,13 @@ export class KnowledgeBaseCommand {
   private static handleList(args: string[]): string {
     const filterArg = args[0]?.toLowerCase();
     const filter: { language?: string; category?: string } = {};
-    
+
     if (filterArg && ['en', 'uk', 'ru', 'pl', 'ro', 'de'].includes(filterArg)) {
       filter.language = filterArg;
     } else if (filterArg) {
       filter.category = filterArg;
     }
-    
+
     const docs = knowledgeBase.listDocuments(filter);
     const lines: string[] = [];
     lines.push('');
@@ -131,7 +131,7 @@ export class KnowledgeBaseCommand {
     if (filter.language) lines.push(`  Filter: Language=${filter.language.toUpperCase()}`);
     if (filter.category) lines.push(`  Filter: Category=${filter.category}`);
     lines.push('═'.repeat(78));
-    
+
     if (docs.length === 0) {
       lines.push('  (No documents found)');
       lines.push('');
@@ -143,7 +143,7 @@ export class KnowledgeBaseCommand {
       lines.push(`    ${doc.category} | ${doc.tags.join(', ')}`);
       lines.push(`    ID: ${doc.id}`);
     }
-    
+
     if (docs.length > 30) {
       lines.push(`  ... and ${docs.length - 30} more`);
     }

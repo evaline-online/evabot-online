@@ -1,7 +1,7 @@
 /**
  * AnsiStreamEngine.ts
  * EvaBot Online v0.0.1 MVP — Reactive ANSI Terminal Stream Engine
- * 
+ *
  * Features:
  * - Line-by-line reactive streaming and chunk buffering
  * - Traffic light badges ([OK] [MED] [HIGH]) and status indicators
@@ -24,7 +24,7 @@ export const AnsiColors = {
   italic: '\x1b[3m',
   underline: '\x1b[4m',
   inverse: '\x1b[7m',
-  
+
   // Standard Foreground
   black: '\x1b[30m',
   red: '\x1b[31m',
@@ -34,7 +34,7 @@ export const AnsiColors = {
   magenta: '\x1b[35m',
   cyan: '\x1b[36m',
   white: '\x1b[37m',
-  
+
   // Bright / Zinc Foreground
   gray: '\x1b[90m',
   brightRed: '\x1b[91m',
@@ -44,7 +44,7 @@ export const AnsiColors = {
   brightMagenta: '\x1b[95m',
   brightCyan: '\x1b[96m',
   brightWhite: '\x1b[97m',
-  
+
   // Standard Background
   bgBlack: '\x1b[40m',
   bgRed: '\x1b[41m',

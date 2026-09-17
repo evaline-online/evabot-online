@@ -44,26 +44,26 @@ Wide range of colors and shades makes it possible to choose the material to solv
 
 The lightness of the material allows not to weigh down the final product.
 
-### Figured sheets can also be covered with leather, eco-leather and textile. 
+### Figured sheets can also be covered with leather, eco-leather and textile.
 
 Subsequently, such material is used for lodgments, in the shoe industry - for the insoles of summer open shoes, as well as for waterproof galoshes and boots.
 
-![](https://eva-line.com/images/listy-koja.jpg)  
-  
+![](https://eva-line.com/images/listy-koja.jpg)
+
 
 
 ## EVA-line has a choice of shaped cutters.
 
-![](https://eva-line.com/images/proisvodstvo-one.jpg)![](https://eva-line.com/images/proisvodstvo-three.jpg)![](https://eva-line.com/images/proisvodstvo-two.jpg)  
-  
+![](https://eva-line.com/images/proisvodstvo-one.jpg)![](https://eva-line.com/images/proisvodstvo-three.jpg)![](https://eva-line.com/images/proisvodstvo-two.jpg)
+
 
 
 Our team is always ready to advise and find the right option for you.
 
 We work in Ukraine and are ready to ship the goods abroad.
 
-  
-  
+
+
 
 
 * * *
@@ -74,7 +74,7 @@ We work in Ukraine and are ready to ship the goods abroad.
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

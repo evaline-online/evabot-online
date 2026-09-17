@@ -11,7 +11,7 @@ def get_role_hint(m):
     name = m['name'].lower()
     prov = m['provider'].lower()
     q = m['quality']
-    
+
     if '3.1 pro' in name or '2.5 pro' in name:
         return 'Главный системный архитектор и логический арбитр (Контекст 2M)'
     elif '3.8 flash' in name or '3.1 flash' in name:
@@ -95,12 +95,12 @@ for m in initial_free:
     rec_badge = f'<span class="metric-pill">{get_recency_badge(m["recency"])}</span>'
     ctx_badge = f'<span class="metric-pill">📚 {format_tokens(m["context"])}</span>'
     free_details = m.get("freeDetails") or "Google AI Studio 15 RPM / 1M TPM / 1500 RPD"
-    
+
     price_html = f'''<div class="model-pricing-box">
              <div><span class="price-tag free">100% Free Quota</span> • Себестоимость: $0.00</div>
              <div style="color: var(--fg-muted); font-size: 0.72rem;">{free_details}</div>
            </div>'''
-           
+
     card = f'''        <div class="model-card">
           <div class="model-card-header">
             <div class="model-name">{m['name']}</div>
@@ -140,17 +140,17 @@ html_template = f"""<!DOCTYPE html>
       --border: rgba(255, 255, 255, 0.08);
       --border-accent: rgba(0, 230, 118, 0.35);
       --border-cyan: rgba(0, 229, 255, 0.3);
-      
+
       --fg: #e6edf3;
       --fg-muted: #8b949e;
       --fg-subtle: #57606a;
-      
+
       --accent-green: #00e676;
       --accent-cyan: #00e5ff;
       --accent-blue: #38bdf8;
       --accent-amber: #ffd600;
       --accent-purple: #b388ff;
-      
+
       --font-display: 'Space Grotesk', sans-serif;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
@@ -165,7 +165,7 @@ html_template = f"""<!DOCTYPE html>
       font-size: 16px;
       line-height: 1.65;
       overflow-x: hidden;
-      background-image: 
+      background-image:
         radial-gradient(circle at 10% 10%, rgba(0, 230, 118, 0.04) 0%, transparent 40%),
         radial-gradient(circle at 90% 20%, rgba(0, 229, 255, 0.04) 0%, transparent 45%),
         radial-gradient(circle at 50% 85%, rgba(56, 189, 248, 0.03) 0%, transparent 50%);

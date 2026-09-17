@@ -23,5 +23,5 @@ Monorepo структура и Git workflow:
 
 ---
 
-**Last Updated:** 2026-09-07  
+**Last Updated:** 2026-09-07
 **Deployment Version:** v0.0.2

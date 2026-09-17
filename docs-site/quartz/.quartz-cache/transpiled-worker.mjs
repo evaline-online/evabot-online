@@ -1612,7 +1612,7 @@ function addGlobalPageResources(ctx, componentResources) {
           gtag('event', 'page_view', { page_title: document.title, page_location: location.href });
         });
       };
-      
+
       document.head.appendChild(gtagScript);
     `);
   } else if (cfg.analytics?.provider === "plausible") {
@@ -1691,7 +1691,7 @@ function addGlobalPageResources(ctx, componentResources) {
           window.tinylytics.triggerUpdate();
         });
       };
-      
+
       document.head.appendChild(tinylyticsScript);
     `);
   } else if (cfg.analytics?.provider === "cabin") {

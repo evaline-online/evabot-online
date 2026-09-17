@@ -11,9 +11,9 @@ cd /var/www/evabot-backend
 npm install && npm run build && npm run start
 ```
 
-**Production:** [https://evabot.online](https://evabot.online)  
-**Local:** http://localhost:3000  
-**External IP:** http://34.159.202.82:3000  
+**Production:** [https://evabot.online](https://evabot.online)
+**Local:** http://localhost:3000
+**External IP:** http://34.159.202.82:3000
 **Visualizer:** http://localhost:3000/visualize.html
 
 ---
@@ -191,5 +191,5 @@ npm test                # Run tests
 
 ---
 
-**© 2026 Evaline Corporation (Chernomorsk, Ukraine & Bratislava, Slovakia)**  
+**© 2026 Evaline Corporation (Chernomorsk, Ukraine & Bratislava, Slovakia)**
 **Status:** ✅ Production Ready

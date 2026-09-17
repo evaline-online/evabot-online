@@ -13,7 +13,7 @@ flowchart TD
     A[Markdown Site Archive<br/>evaline-com-ua/site/] --> B[Semantic Chunker]
     B --> C[(ChromaDB Vector Store<br/>chroma_db/)]
     B --> D[(SQLite FTS5 Full-Text<br/>fts_index.db/)]
-    
+
     Q[User / Agent Query] --> E[EvaLineKnowledgeBase Engine]
     E -->|Dense Semantic Match| C
     E -->|Exact Keyword / BM25| D

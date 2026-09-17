@@ -41,8 +41,8 @@ Most types of material used for the manufacture of backing are effective insulat
 
 ![](https://eva-line.com/images/podlozka-teploizolyacia.jpg)
 
-  
-  
+
+
 
 
 * * *
@@ -53,7 +53,7 @@ Most types of material used for the manufacture of backing are effective insulat
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

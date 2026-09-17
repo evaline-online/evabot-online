@@ -48,22 +48,22 @@ def chunk_markdown(meta: dict, body: str, file_path: Path) -> list[dict]:
     """
     chunks = []
     lines = body.split("\n")
-    
+
     current_header = meta.get("title", file_path.stem)
     current_lines = []
     chunk_index = 0
-    
+
     def flush_chunk():
         nonlocal chunk_index, current_lines
         content = "\n".join(current_lines).strip()
         if not content:
             return
-        
+
         # Build contextual text including document title and current section
         doc_title = meta.get("title", file_path.stem)
         context_prefix = f"Document: {doc_title}\nSection: {current_header}\n\n"
         full_text = context_prefix + content
-        
+
         chunk_id = f"{meta.get('language', 'uk')}_{file_path.stem}_{chunk_index}"
         chunks.append({
             "id": chunk_id,
@@ -97,7 +97,7 @@ def chunk_markdown(meta: dict, body: str, file_path: Path) -> list[dict]:
 
     if current_lines:
         flush_chunk()
-        
+
     return chunks
 
 
@@ -127,11 +127,11 @@ def main():
     print("=== Building EvaLine LLM Knowledge Base ===")
     KB_DIR.mkdir(parents=True, exist_ok=True)
     CHROMA_DIR.mkdir(parents=True, exist_ok=True)
-    
+
     # 1. Discover all Markdown files
     md_files = [f for f in SOURCE_SITE_DIR.rglob("*.md") if f.name != "SUMMARY.md"]
     print(f"Found {len(md_files)} Markdown source files in {SOURCE_SITE_DIR}")
-    
+
     # 2. Chunk all files
     all_chunks = []
     for f in md_files:
@@ -142,9 +142,9 @@ def main():
             all_chunks.extend(chunks)
         except Exception as e:
             print(f"Error chunking {f}: {e}")
-            
+
     print(f"Total semantic chunks created: {len(all_chunks)}")
-    
+
     # 3. Populate SQLite FTS5 Index
     print(f"Indexing chunks into SQLite FTS5 ({FTS_DB_PATH})...")
     conn = init_sqlite_fts(FTS_DB_PATH)
@@ -167,22 +167,22 @@ def main():
     conn.commit()
     conn.close()
     print("SQLite FTS5 indexing complete.")
-    
+
     # 4. Populate ChromaDB Vector Database
     print(f"Indexing chunks into ChromaDB ({CHROMA_DIR})...")
     client = chromadb.PersistentClient(path=str(CHROMA_DIR))
-    
+
     # Reset collection if exists
     try:
         client.delete_collection(COLLECTION_NAME)
     except Exception:
         pass
-        
+
     collection = client.create_collection(
         name=COLLECTION_NAME,
         metadata={"description": "EvaLine multilingual knowledge base for LLM agents"}
     )
-    
+
     # Batch add to ChromaDB
     batch_size = 100
     for i in range(0, len(all_chunks), batch_size):
@@ -193,7 +193,7 @@ def main():
             metadatas=[b["metadata"] for b in batch]
         )
         print(f"Indexed vector batch {i + len(batch)} / {len(all_chunks)}")
-        
+
     print(f"ChromaDB collection '{COLLECTION_NAME}' created with {collection.count()} vectors.")
     print("=== Knowledge Base Build Finished Successfully! ===")
 

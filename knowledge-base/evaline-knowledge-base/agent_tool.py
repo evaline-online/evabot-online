@@ -151,7 +151,7 @@ class EvaLineKnowledgeBase:
                 item_map[cid] = item
 
         sorted_ids = sorted(scores.keys(), key=lambda x: scores[x], reverse=True)[:n_results]
-        
+
         final_results = []
         for cid in sorted_ids:
             res = item_map[cid]
@@ -173,7 +173,7 @@ class EvaLineKnowledgeBase:
             url = m.get("url", "")
             lang = m.get("language", "")
             cat = m.get("category", "")
-            
+
             output.append(f"--- [Source {idx} | {title} | Section: {header} | Lang: {lang} | URL: {url}] ---")
             output.append(r["text"].strip())
             output.append("\n")

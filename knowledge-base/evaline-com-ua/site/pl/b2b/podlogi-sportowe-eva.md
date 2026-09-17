@@ -45,7 +45,7 @@ Produkujemy sportowe tatami o różnych wymiarach i grubościach, różnym stopn
 
 Maty sportowe EVA będą optymalnym rozwiązaniem dla osób ceniących bezpieczeństwo, niezawodność i wygodę.
 
-Główne cechy: 
+Główne cechy:
 
   * hipoalergiczne - wykonane z materiałów przyjaznych dla środowiska, są całkowicie nieszkodliwe i bezzapachowe;
   * sposób mocowania „jaskółczy ogon” - dzięki specjalnym haczykom takie maty można łatwo złożyć do żądanej konfiguracji, a także szybko zdemontować;
@@ -66,8 +66,8 @@ Chcą Państwo kupić maty sportowe, gimnastyczne, tatami EVA do obiektów sport
 
 Zapraszamy Państwo do kontaktu.
 
-  
-  
+
+
 
 
 * * *
@@ -78,7 +78,7 @@ Zapraszamy Państwo do kontaktu.
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#93f6e5f2fffafdf6bdf0fcfebde6f2d3f4fef2faffbdf0fcfe>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

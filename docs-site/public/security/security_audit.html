@@ -46,7 +46,7 @@
 <div class="table-container"><table><thead><tr><th>Параметр</th><th>Значение</th></tr></thead><tbody><tr><td><strong>IP источника</strong></td><td><code>45.148.10.9</code></td></tr><tr><td><strong>Страна</strong></td><td>🇳🇱 Нидерланды, Amsterdam</td></tr><tr><td><strong>ISP</strong></td><td>Techoff SRV Limited (AS48090)</td></tr><tr><td><strong>User-Agent</strong></td><td>Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0</td></tr><tr><td><strong>Время атаки</strong></td><td>15:04:45 - 15:08:00 (UTC), 7 сентября 2026</td></tr><tr><td><strong>Количество запросов</strong></td><td><strong>432 за ~3 минуты</strong> (~2.4 req/sec)</td></tr><tr><td><strong>Тип атаки</strong></td><td>WordPress CVE-2024-31210 (Batch Processing) + Gravity SMTP LFI</td></tr></tbody></table></div>
 <p><strong>Что пытались сделать:</strong></p>
 <pre><code>POST /wp-json/batch/v1            - WordPress Batch Processing RCE (CVE-2024-31210)
-POST /wp-json/Batch/v1            - Bypass uppercase 
+POST /wp-json/Batch/v1            - Bypass uppercase
 POST /wp-json/batch/v1/           - Bypass trailing slash
 POST /blog/wp-json/batch/v1       - Path traversal
 POST /wordpress/wp-json/batch/v1  - Path traversal

@@ -59,8 +59,8 @@ Firma EvaLine oferuje wałki do włosów zwane również papilotami dzięki któ
 
 Firma Evaline oferuje Państwu wałki EVA w różnych kolorach i w dowolnych ilościach w najlepszej cenie.
 
-  
-  
+
+
 
 
 * * *
@@ -71,7 +71,7 @@ Firma Evaline oferuje Państwu wałki EVA w różnych kolorach i w dowolnych ilo
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#a5c0d3c4c9cccbc08bc6cac88bd0c4e5c2c8c4ccc98bc6cac8>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

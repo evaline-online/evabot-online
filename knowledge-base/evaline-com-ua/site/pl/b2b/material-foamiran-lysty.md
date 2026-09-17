@@ -44,7 +44,7 @@ Szeroka gama kolorów umożliwia wybór materiału pasującego do różnych pomy
 
 ## Zastosowanie materiału Foamiran
 
-Ze względu na swoje właściwości techniczne pianka jest szeroko stosowana w różnych dziedzinach: 
+Ze względu na swoje właściwości techniczne pianka jest szeroko stosowana w różnych dziedzinach:
 
   * w produkcji sztucznych kwiatów o różnych rozmiarach
   * dekorowanie pocztówek, ramek i albumów, obrazów i paneli
@@ -63,8 +63,8 @@ Ze względu na swoje właściwości techniczne pianka jest szeroko stosowana w r
 
 Nasza firma oferuje foamiran w korzystnych cenach. Jesteśmy producentem, więc możesz zamówić materiał o wymaganym kolorze, gęstości, grubości i w odpowiedniej ilości. Zadzwoń do naszych menedżerów, aby omówić wszystkie warunki współpracy, zamów materiał i zrealizuj swoje odważne, kreatywne pomysły!
 
-  
-  
+
+
 
 
 * * *
@@ -75,7 +75,7 @@ Nasza firma oferuje foamiran w korzystnych cenach. Jesteśmy producentem, więc 
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#6f0a190e0306010a410c0002411a0e2f08020e0603410c0002>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

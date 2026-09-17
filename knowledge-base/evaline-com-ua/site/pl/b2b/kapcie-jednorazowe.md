@@ -54,7 +54,7 @@ Jednorazowe kapci dadzą klientom pewność, że dba się o ich komfort i zdrowi
 
 Dzięki temu, że nie jesteśmy pośrednikami, a bezpośrednio producentami, nasze jednorazowe klapki zaspokoją potrzeby nawet najbardziej wymagających klientów.
 
-Nasze kapcie pod prysznice, gabinety kosmetyczne, hotele, łaźnie, sauny czy SPA posiadają szereg zalet: 
+Nasze kapcie pod prysznice, gabinety kosmetyczne, hotele, łaźnie, sauny czy SPA posiadają szereg zalet:
 
   * dzięki specjalnej strukturze materiału posiadają unikalne tłoczenie, dzięki czemu dobrze trzymają się stóp;
   * hipoalergiczne - kapcie z pianki EVA są całkowicie bezpieczne dla zdrowia, nie powodują alergii;
@@ -64,7 +64,7 @@ Nasze kapcie pod prysznice, gabinety kosmetyczne, hotele, łaźnie, sauny czy SP
   * nasze kapcie do salonów są bardzo miękkie i przyjemne dla ciała, dzięki czemu nie obcierają i odczuwalne na stopach.
 
 
-Firma EvaLine zadbała o to, aby projektowanie kapci jednorazowych było jak najwygodniejsze zarówno dla klientów, jak i dla właścicieli salonów kosmetycznych. Ponadto, aby każdy mógł zamówić jednorazowe kapcie oferujemy trzy uniwersalne opcje: 
+Firma EvaLine zadbała o to, aby projektowanie kapci jednorazowych było jak najwygodniejsze zarówno dla klientów, jak i dla właścicieli salonów kosmetycznych. Ponadto, aby każdy mógł zamówić jednorazowe kapcie oferujemy trzy uniwersalne opcje:
 
   * męskie;
   * żeńskie;
@@ -85,8 +85,8 @@ Mogą Państwo hurtowo zamówić jednorazowe kapcie w najlepszych cenach. Oferuj
 
 Zadzwoń, nasi menadżerowie pomogą dokonać właściwego wyboru, podpowiedzą jaka grubość podeszwy będzie optymalna i zrealizują zamówienie.
 
-  
-  
+
+
 
 
 * * *
@@ -97,7 +97,7 @@ Zadzwoń, nasi menadżerowie pomogą dokonać właściwego wyboru, podpowiedzą 
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#fb9e8d9a9792959ed5989496d58e9abb9c969a9297d5989496>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

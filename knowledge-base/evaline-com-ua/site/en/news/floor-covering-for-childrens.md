@@ -14,13 +14,13 @@ file: en/news/floor-covering-for-childrens.md
 
 10.10.2023
 
-The preschool period is very important for the growth and development of every child. In kindergarten, kids play, learn, relax, and learn new things. The task of the child's parents and the management of the educational institution is to ensure maximum safety and comfortable conditions for classes and games. The floor should be soft, warm, non-marking and easy to clean. 
+The preschool period is very important for the growth and development of every child. In kindergarten, kids play, learn, relax, and learn new things. The task of the child's parents and the management of the educational institution is to ensure maximum safety and comfortable conditions for classes and games. The floor should be soft, warm, non-marking and easy to clean.
 
-## WHY A GOOD FLOOR IS IMPORTANT 
+## WHY A GOOD FLOOR IS IMPORTANT
 
-Most of the time, kids spend in their playroom. If they are just learning to walk, they will crawl a lot. This means that there are very strict requirements for the quality and safety of floor coverings, and they cannot be ignored. Pay attention to safety, environmental friendliness and, of course, visual appeal. The floor must meet sanitary and hygienic requirements and have sufficient resistance to moisture. 
+Most of the time, kids spend in their playroom. If they are just learning to walk, they will crawl a lot. This means that there are very strict requirements for the quality and safety of floor coverings, and they cannot be ignored. Pay attention to safety, environmental friendliness and, of course, visual appeal. The floor must meet sanitary and hygienic requirements and have sufficient resistance to moisture.
 
-During operation, the coating will be regularly subjected to wet cleaning, it is necessary that it retains its shape and color. It is desirable that the flooring is easy to clean (by all available means). It should not be too soft and fleecy, as this does not meet sanitary standards.   
+During operation, the coating will be regularly subjected to wet cleaning, it is necessary that it retains its shape and color. It is desirable that the flooring is easy to clean (by all available means). It should not be too soft and fleecy, as this does not meet sanitary standards.
 
 
 ## OUR OFFER
@@ -38,9 +38,9 @@ EVA-line produces [ puzzle mats based on EVA material ](<../b2c/for-kids.md>). T
   * have excellent noise insulation.
 
 
-Puzzle mats are ideal for children's active games in rooms of various sizes. They can be quickly laid and assembled if necessary. If an individual module fails, simply replace it. 
+Puzzle mats are ideal for children's active games in rooms of various sizes. They can be quickly laid and assembled if necessary. If an individual module fails, simply replace it.
 
-The coating does not attract or absorb dust, and can withstand temperature changes and contact with moisture. It is easy to maintain - just do regular wet cleaning. The range of colors is diverse, so there is an option for every taste. If you wish, you can assemble flooring blocks of different colors. 
+The coating does not attract or absorb dust, and can withstand temperature changes and contact with moisture. It is easy to maintain - just do regular wet cleaning. The range of colors is diverse, so there is an option for every taste. If you wish, you can assemble flooring blocks of different colors.
 
 ## WHERE TO ORDER?
 

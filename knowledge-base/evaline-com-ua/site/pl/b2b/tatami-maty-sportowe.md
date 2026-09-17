@@ -13,7 +13,7 @@ file: pl/b2b/tatami-maty-sportowe.md
 
 # Tatami, maty sportowe
 
-Powierzchnia dla treningów, zawodów w szkołach sportowych, studio fitness, szkołach gimnastycznych i klubach sztuk walki. 
+Powierzchnia dla treningów, zawodów w szkołach sportowych, studio fitness, szkołach gimnastycznych i klubach sztuk walki.
 
 Tatami i maty sportowe to niezbędny dodatek do gimnastyki, fitnessu, zapasów, jogi i wielu innych sportów. Przedstawiamy szeroką gamę mat sportowych oraz mat tatami wykonanych z elastycznego hipoalergicznego materiału EVA. Są doskonale w utrzymaniu, nie wchłaniają wilgoci, mają dobrą amortyzację i można je łatwo złożyć lub zdemontować nieskończoną liczbę razy, co jest niezbędne podczas treningu lub zawodów w terenie.
 
@@ -43,7 +43,7 @@ Maty pomagają zminimalizować obrażenia spowodowane uderzeniami i upadkami.
 
 ## Rodzaje mat i ich cechy
 
-Maty sportowe zazwyczaj dzieli się na kilka grup w zależności od ich przeznaczenia i dyscyplin, a mianowicie: 
+Maty sportowe zazwyczaj dzieli się na kilka grup w zależności od ich przeznaczenia i dyscyplin, a mianowicie:
 
   * gimnastyczne;
   * maty tatami;
@@ -64,7 +64,7 @@ Maty składane charakteryzują się kompaktowymi rozmiarami i niewielką wagą. 
 
 ## Rodzaje mat sportowych
 
-Obecnie na rynku dostępnych jest kilka opcji mat sportowych. Wszystkie mają swoje własne cechy. 
+Obecnie na rynku dostępnych jest kilka opcji mat sportowych. Wszystkie mają swoje własne cechy.
 
   * Wtórne maty piankowe z tego materiału zaczęto produkować w czasach Związku Radzieckiego. Dziś maty sportowe PVV nie są już tak popularne. Wynika to z faktu, że silnie chłoną wilgoć, kruszą się i szybko się łamią.
   * Pianka polietylenowa - maty wykonane z tego materiału są nietoksyczne i bezpieczne dla zdrowia. Takie maty i tatami są trwałe, elastyczne, nie wchłaniają wilgoci i mają dobrą amortyzację.
@@ -73,14 +73,14 @@ Obecnie na rynku dostępnych jest kilka opcji mat sportowych. Wszystkie mają sw
 
 ## Oferujemy maty i tatami
 
-Nasze maty tatami charakteryzują się wysoką jakością i trwałością. Gwarantujemy, że są one bezpieczne dla zdrowia dorosłych i dzieci. Nawet maluchy mogą na nich trenować. A co najważniejsze, dzięki doskonałej amortyzacji, ryzyko kontuzji podczas treningu czy zawodów jest zredukowane do minimum. 
+Nasze maty tatami charakteryzują się wysoką jakością i trwałością. Gwarantujemy, że są one bezpieczne dla zdrowia dorosłych i dzieci. Nawet maluchy mogą na nich trenować. A co najważniejsze, dzięki doskonałej amortyzacji, ryzyko kontuzji podczas treningu czy zawodów jest zredukowane do minimum.
 
 Jako pierwsi rozpoczęliśmy produkcję mat tatami EVA w Ukrainie. Znamy wszystkie cechy tego materiału i jesteśmy gotowi stworzyć tatami o wymaganej sztywności, rozmiarze, konfiguracji i kolorze.
 
 Zadzwoń do nas, a odpowiemy na wszystkie pytania, wykonamy zamówienie i dostarczymy je na czas.
 
-  
-  
+
+
 
 
 * * *
@@ -91,7 +91,7 @@ Zadzwoń do nas, a odpowiemy na wszystkie pytania, wykonamy zamówienie i dostar
 
 Napisz do naszego menadżera do spraw kluczowych klientów
 
-Sławucki Wład  
+Sławucki Wład
 [[email protected]](</cdn-cgi/l/email-protection#93f6e5f2fffafdf6bdf0fcfebde6f2d3f4fef2faffbdf0fcfe>)
 
 [![](https://eva-line.pl/theme/img/icons8-phone-24.png)+48 (732) 097 213](<tel:+48732097213>)

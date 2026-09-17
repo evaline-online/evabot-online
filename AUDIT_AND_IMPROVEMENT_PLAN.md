@@ -1,6 +1,6 @@
 # EvaBot Infrastructure — Полный аудит и план improvements
-**Дата аудита:** 2026-09-08  
-**Аудитор:** Kilo + 10 subagents  
+**Дата аудита:** 2026-09-08
+**Аудитор:** Kilo + 10 subagents
 **Объекты:** GCP, VMs, SSH, домены, сервисы, репозитории, MCP, агенты, Docker, зависимости
 
 ---
@@ -244,8 +244,8 @@ evaline-network → /home/evabot/evaline-network
 
 ### 8.1 module-repos (15 репозиториев)
 ```
-eva-brain, eva-db, eva-docs, eva-face, eva-history, 
-eva-kanban, eva-memory, eva-reports, eva-server, 
+eva-brain, eva-db, eva-docs, eva-face, eva-history,
+eva-kanban, eva-memory, eva-reports, eva-server,
 eva-voice, evabot-server, evaline-consilium, evaline-server
 ```
 

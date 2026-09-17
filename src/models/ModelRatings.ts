@@ -864,7 +864,7 @@ export class ModelCommand {
     } else {
       let prefs: Record<string, unknown> = {};
       try { prefs = JSON.parse(user.preferences); } catch { prefs = {}; }
-      
+
       lines.push(`  Имя            : ${user.name || '(не задано)'}`);
       lines.push(`  Статус         : ${user.status || '(не задан)'}`);
       lines.push(`  Сообщений      : ${user.message_count}`);

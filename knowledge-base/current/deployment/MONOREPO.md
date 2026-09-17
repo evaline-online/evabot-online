@@ -156,6 +156,6 @@ gh pr create --base main --title "New feature"
 
 ---
 
-**© 2026 EvaBot Ecosystem**  
-**GitHub:** `evaline-network/evabot-online`  
+**© 2026 EvaBot Ecosystem**
+**GitHub:** `evaline-network/evabot-online`
 **Status:** ✅ Production Ready

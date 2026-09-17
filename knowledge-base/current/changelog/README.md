@@ -20,7 +20,7 @@ docs/changelog/
 ### [CHANGELOG.md](./CHANGELOG.md)
 **Полная сводка:** все релизы + unreleased features
 
-**Текущая версия:** v0.0.2  
+**Текущая версия:** v0.0.2
 **Следующая:** v0.1.0 (Sept 2026)
 
 ---
@@ -52,5 +52,5 @@ docs/changelog/
 
 ---
 
-**Format:** [Keep a Changelog](https://keepachangelog.com/)  
+**Format:** [Keep a Changelog](https://keepachangelog.com/)
 **Versioning:** [Semantic Versioning](https://semver.org/)

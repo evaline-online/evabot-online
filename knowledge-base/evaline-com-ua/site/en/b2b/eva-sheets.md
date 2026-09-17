@@ -53,8 +53,8 @@ All positions have a wide range of colors that will allow you to perfectly choos
 
 Evaline has experience in delivering EVA foam to Europe. Leave your phone number and our manager will contact you shortly.
 
-  
-  
+
+
 
 
 * * *
@@ -65,7 +65,7 @@ Evaline has experience in delivering EVA foam to Europe. Leave your phone number
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

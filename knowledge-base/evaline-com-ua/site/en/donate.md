@@ -10,18 +10,18 @@ og_image: https://eva-line.com/theme/img/og-image.png
 file: en/donate.md
 ---
 
-# Sleeping pads to every soldier of Ukraine! 
+# Sleeping pads to every soldier of Ukraine!
 
-During the war, sleeping pads became an integral attribute for every soldier of the Ukrainian army, as they create conditions for sleep and help maintain health, as they have low thermal conductivity and moisture resistance. 
+During the war, sleeping pads became an integral attribute for every soldier of the Ukrainian army, as they create conditions for sleep and help maintain health, as they have low thermal conductivity and moisture resistance.
 
-Our company specializes in the production of EVA products. Therefore, from the first days of the war, we gave away sleeping bags and seats that were available for the army. During the first month, several thousand rolled mats were sent to the recipients. We have already received positive feedback and are determined to continue supplying our products to the army. 
+Our company specializes in the production of EVA products. Therefore, from the first days of the war, we gave away sleeping bags and seats that were available for the army. During the first month, several thousand rolled mats were sent to the recipients. We have already received positive feedback and are determined to continue supplying our products to the army.
 
 ![](https://eva-line.com/theme/img/donate-2army-photo.jpg)
 
-Funds are needed for the production of new batches of roll mats. Each order covers the cost of production of EVA mats - raw materials, resources, logistics and wages to workers. 
+Funds are needed for the production of new batches of roll mats. Each order covers the cost of production of EVA mats - raw materials, resources, logistics and wages to workers.
 
-  
-  
+
+
 
 
 ### We turn for help to all who care!

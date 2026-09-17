@@ -89,7 +89,7 @@ def render_infographic_panel(
     extra_html=""
 ):
     kpi_rows = "\n".join([render_kpi_row(*card) for card in kpi_cards])
-    
+
     ascii_html = ""
     if ascii_diagram:
         ascii_html = f'''      <!-- Text Monospace Diagram (ASCII / ANSI) -->
@@ -429,7 +429,7 @@ def get_infographic_03():
   participant RAG as База знаний RAG (ТУ/1С)
   participant Adam as Адам (Бэкенд / Производство / Безопасность)
   participant Eva as Ева (Фронтенд / Лицо компании)
-  
+
   User->>Arbiter: Запрос / Задача расчета сметы
   Arbiter->>RAG: Поиск регламентов (ГОСТ, остатки склада)
   RAG-->>Arbiter: Проверенные факты и лимиты
@@ -448,7 +448,7 @@ def get_infographic_03():
   participant RAG as База знань RAG (ТУ/1С)
   participant Adam as Адам (Бекенд / Виробництво / Безпека)
   participant Eva as Ева (Фронтенд / Обличчя компанії)
-  
+
   User->>Arbiter: Запит / Задача розрахунку кошторису
   Arbiter->>RAG: Пошук регламентів (ГОСТ, залишки складу)
   RAG-->>Arbiter: Перевірені факти та ліміти
@@ -467,7 +467,7 @@ def get_infographic_03():
   participant RAG as Knowledge RAG (Specs/ERP)
   participant Adam as Adam (Backend / Production / Security)
   participant Eva as Eva (Frontend / Company Face)
-  
+
   User->>Arbiter: Request / Complex Specification
   Arbiter->>RAG: Retrieve grounded context (ISO/Inventory)
   RAG-->>Arbiter: Verified grounding facts
@@ -751,12 +751,12 @@ def get_infographic_07():
 
     m_ru = """graph TD
   Mesh["🌐 ЕДИНАЯ СЕТЬ EVALINE NETWORK"]
-  
+
   Mesh --> D1["💻 evabot.online\\n(Рабочая станция ИИ, Консилиум & Голос)"]
   Mesh --> D2["📊 evaline.network\\n(TUI-Дашборд телеметрии 94 моделей)"]
   Mesh --> D3["📜 evaline.online\\n(Суверенный манифест & Завод ЭВА)"]
   Mesh --> D4["🧭 evaline.website\\n(Единый навигационный портал)"]
-  
+
   D1 --> API1["🎙️ evabot.online/voice/docs\\n(EvaVoice FastAPI :8000)"]
   D1 --> API2["📚 evabot.online/docs/\\n(База знаний Quartz: 360+ статей)"]
 
@@ -769,12 +769,12 @@ def get_infographic_07():
 
     m_uk = """graph TD
   Mesh["🌐 ЄДИНА МЕРЕЖА EVALINE NETWORK"]
-  
+
   Mesh --> D1["💻 evabot.online\\n(Робоча станція ШІ, Консиліум & Голос)"]
   Mesh --> D2["📊 evaline.network\\n(TUI-Дашборд телеметрії 94 моделей)"]
   Mesh --> D3["📜 evaline.online\\n(Суверенний маніфест & Завод ЕВА)"]
   Mesh --> D4["🧭 evaline.website\\n(Єдиний навігаційний портал)"]
-  
+
   D1 --> API1["🎙️ evabot.online/voice/docs\\n(EvaVoice FastAPI :8000)"]
   D1 --> API2["📚 evabot.online/docs/\\n(База знань Quartz: 360+ статей)"]
 
@@ -787,12 +787,12 @@ def get_infographic_07():
 
     m_en = """graph TD
   Mesh["🌐 UNIFIED EVALINE NETWORK MESH"]
-  
+
   Mesh --> D1["💻 evabot.online\\n(AI Workstation, Consilium & Voice)"]
   Mesh --> D2["📊 evaline.network\\n(TUI Telemetry Dashboard 94 LLMs)"]
   Mesh --> D3["📜 evaline.online\\n(Sovereign Manifesto & EVA Plant)"]
   Mesh --> D4["🧭 evaline.website\\n(Central Navigation Gateway)"]
-  
+
   D1 --> API1["🎙️ evabot.online/voice/docs\\n(EvaVoice FastAPI :8000)"]
   D1 --> API2["📚 evabot.online/docs/\\n(Quartz Knowledge Base: 360+ Articles)"]
 
@@ -953,58 +953,58 @@ def get_infographic_06():
 
     m_ru = """flowchart TD
   Client(["Клиент / Web / CLI / WhatsApp / SIP"]) -->|HTTPS HTTP/3 QUIC| Edge["Edge Node: evaline-micro-vm (Айова)"]
-  
+
   subgraph EdgeLayer["Пограничный шлюз (Iowa Edge)"]
     Edge --> Caddy["Caddy v2: SSL, DDoS фильтр, Early Response"]
   end
-  
+
   Caddy -->|"Шифрованный туннель WireGuard Mesh (129ms)"| Core["Compute Core: evabot-agent-vm (Франкфурт)"]
-  
+
   subgraph CoreLayer["Вычислительное ядро (Frankfurt Core)"]
     Core --> CoreServer["Node.js / TypeScript Server :3000"]
     CoreServer --> EngineConsilium["Движок Консилиума"]
     CoreServer --> MCPSuite["21 MCP Сервер (Docker, Bash, Git, DBs)"]
     CoreServer --> LocalRAG["Локальная память: ChromaDB + SQLite FTS5"]
   end
-  
+
   CoreLayer -.->|VPN канал| FactoryFloor["ЧПУ станки завода Черноморск"]
   CoreLayer -.->|API шлюз| EUWarehouse["Хаб Братислава (ЕС)"]"""
 
     m_uk = """flowchart TD
   Client(["Клієнт / Web / CLI / WhatsApp / SIP"]) -->|HTTPS HTTP/3 QUIC| Edge["Edge Node: evaline-micro-vm (Айова)"]
-  
+
   subgraph EdgeLayer["Пограничний шлюз (Iowa Edge)"]
     Edge --> Caddy["Caddy v2: SSL, DDoS фільтр, Early Response"]
   end
-  
+
   Caddy -->|"Шифрований тунель WireGuard Mesh (129ms)"| Core["Compute Core: evabot-agent-vm (Франкфурт)"]
-  
+
   subgraph CoreLayer["Обчислювальне ядро (Frankfurt Core)"]
     Core --> CoreServer["Node.js / TypeScript Server :3000"]
     CoreServer --> EngineConsilium["Двигун Консиліуму"]
     CoreServer --> MCPSuite["21 MCP Сервер (Docker, Bash, Git, DBs)"]
     CoreServer --> LocalRAG["Локальна пам'ять: ChromaDB + SQLite FTS5"]
   end
-  
+
   CoreLayer -.->|VPN канал| FactoryFloor["ЧПК верстати заводу Чорноморськ"]
   CoreLayer -.->|API шлюз| EUWarehouse["Хаб Братислава (ЄС)"]"""
 
     m_en = """flowchart TD
   Client(["Client / Web / CLI / WhatsApp / SIP"]) -->|HTTPS HTTP/3 QUIC| Edge["Edge Node: evaline-micro-vm (Iowa)"]
-  
+
   subgraph EdgeLayer["Edge Security Layer (Iowa Edge)"]
     Edge --> Caddy["Caddy v2: SSL, DDoS Mitigation, Early Response"]
   end
-  
+
   Caddy -->|"Encrypted WireGuard Mesh Tunnel (129ms)"| Core["Compute Core: evabot-agent-vm (Frankfurt)"]
-  
+
   subgraph CoreLayer["Dedicated Core (Frankfurt Compute Node)"]
     Core --> CoreServer["Node.js / TypeScript Server :3000"]
     CoreServer --> EngineConsilium["Consilium Multi-Agent Engine"]
     CoreServer --> MCPSuite["21 MCP Servers (Docker, Bash, Git, DBs)"]
     CoreServer --> LocalRAG["Sovereign RAG: ChromaDB + SQLite FTS5"]
   end
-  
+
   CoreLayer -.->|Encrypted VPN| FactoryFloor["CNC Plotters at Chornomorsk Plant"]
   CoreLayer -.->|API Gateway| EUWarehouse["Bratislava EU Warehouse"]"""
 
@@ -1161,12 +1161,12 @@ def get_infographic_08():
             <line x1="350" y1="60" x2="260" y2="170" stroke="url(#lineGrad)" stroke-width="2" stroke-dasharray="4,4"/>
             <line x1="350" y1="60" x2="440" y2="170" stroke="url(#lineGrad)" stroke-width="2" stroke-dasharray="4,4"/>
             <line x1="260" y1="170" x2="440" y2="170" stroke="url(#lineGrad)" stroke-width="1.5"/>
-            
+
             <line x1="260" y1="170" x2="180" y2="280" stroke="url(#lineGrad)" stroke-width="1.5"/>
             <line x1="260" y1="170" x2="350" y2="280" stroke="url(#lineGrad)" stroke-width="1.5"/>
             <line x1="440" y1="170" x2="350" y2="280" stroke="url(#lineGrad)" stroke-width="1.5"/>
             <line x1="440" y1="170" x2="520" y2="280" stroke="url(#lineGrad)" stroke-width="1.5"/>
-            
+
             <line x1="180" y1="280" x2="110" y2="390" stroke="url(#lineGrad)" stroke-width="1.5"/>
             <line x1="180" y1="280" x2="270" y2="390" stroke="url(#lineGrad)" stroke-width="1.5"/>
             <line x1="350" y1="280" x2="270" y2="390" stroke="url(#lineGrad)" stroke-width="1.5"/>

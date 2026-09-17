@@ -43,8 +43,8 @@ EVA (ЭВА) листы — это хороший материал для кос
   * Уточняйте наличие и размеры.
 
 
-  
-  
+
+
 
 
 * * *
@@ -55,7 +55,7 @@ EVA (ЭВА) листы — это хороший материал для кос
 
 Менеджер по работе с клиентами ответит на них.
 
-Славуцкий Влад   
+Славуцкий Влад
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://evaline.com.ua/theme/img/icons8-phone-24.png.pagespeed.ce.ssaOdXpoJV.png)+38 (067) 156 14 96](<tel:+380671561496>)

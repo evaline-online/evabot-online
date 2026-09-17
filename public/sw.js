@@ -51,7 +51,7 @@ function isHtmlRequest(request) {
 async function cacheFirstStrategy(request, cacheName, maxAge = null) {
   const cache = await caches.open(cacheName);
   const cachedResponse = await cache.match(request);
-  
+
   if (cachedResponse) {
     if (maxAge) {
       const cachedDate = new Date(cachedResponse.headers.get('date') || 0);
@@ -63,7 +63,7 @@ async function cacheFirstStrategy(request, cacheName, maxAge = null) {
       return cachedResponse;
     }
   }
-  
+
   try {
     const networkResponse = await fetch(request);
     if (networkResponse.ok) {
@@ -92,7 +92,7 @@ async function cacheFirstStrategy(request, cacheName, maxAge = null) {
 
 async function networkFirstStrategy(request, cacheName) {
   const cache = await caches.open(cacheName);
-  
+
   try {
     const networkResponse = await fetch(request);
     if (networkResponse.ok) {
@@ -104,7 +104,7 @@ async function networkFirstStrategy(request, cacheName) {
     if (cachedResponse) {
       return cachedResponse;
     }
-    
+
     if (isHtmlRequest(request)) {
       const offlineResponse = await cache.match(OFFLINE_URL);
       if (offlineResponse) {
@@ -118,14 +118,14 @@ async function networkFirstStrategy(request, cacheName) {
 async function staleWhileRevalidateStrategy(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cachedResponse = await cache.match(request);
-  
+
   const fetchPromise = fetch(request).then(networkResponse => {
     if (networkResponse.ok) {
       cache.put(request, networkResponse.clone());
     }
     return networkResponse;
   }).catch(() => cachedResponse);
-  
+
   return cachedResponse || fetchPromise;
 }
 
@@ -134,10 +134,10 @@ async function handleInstall(event) {
     (async () => {
       const cache = await caches.open(STATIC_CACHE);
       await cache.addAll(STATIC_ASSETS);
-      
+
       const offlineCache = await caches.open(HTML_CACHE);
       await offlineCache.add(OFFLINE_URL);
-      
+
       await self.skipWaiting();
       await self.clients.claim();
     })()
@@ -155,13 +155,13 @@ async function handleActivate(event) {
         FONT_CACHE,
         MANIFEST_CACHE,
       ];
-      
+
       await Promise.all(
         cacheNames
           .filter(name => !validCaches.includes(name))
           .map(name => caches.delete(name))
       );
-      
+
       await self.clients.claim();
     })()
   );
@@ -170,29 +170,29 @@ async function handleActivate(event) {
 async function handleFetch(event) {
   const { request } = event;
   const url = new URL(request.url);
-  
+
   if (request.method !== 'GET') {
     return;
   }
-  
+
   if (isApiRequest(url)) {
     return;
   }
-  
+
   if (url.origin !== location.origin && !url.href.startsWith('https://fonts.googleapis.com') && !url.href.startsWith('https://fonts.gstatic.com')) {
     return;
   }
-  
+
   if (isHtmlRequest(request)) {
     event.respondWith(networkFirstStrategy(request, HTML_CACHE));
     return;
   }
-  
+
   if (url.pathname === '/manifest.webmanifest') {
     event.respondWith(cacheFirstStrategy(request, MANIFEST_CACHE));
     return;
   }
-  
+
   if (isStaticAsset(url)) {
     if (url.href.startsWith('https://fonts.googleapis.com') || url.href.startsWith('https://fonts.gstatic.com')) {
       event.respondWith(cacheFirstStrategy(request, FONT_CACHE));
@@ -201,18 +201,18 @@ async function handleFetch(event) {
     }
     return;
   }
-  
+
   if (isImageRequest(url)) {
     event.respondWith(cacheFirstStrategy(request, IMAGE_CACHE, 30 * 24 * 60 * 60 * 1000));
     return;
   }
-  
+
   // Text files (manifesto.txt, etc.) - network first, no cache
   if (url.pathname.endsWith(".txt")) {
     event.respondWith(networkFirstStrategy(request, HTML_CACHE));
     return;
   }
-  
+
   event.respondWith(staleWhileRevalidateStrategy(request, STATIC_CACHE));
 }
 

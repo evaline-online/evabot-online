@@ -27,6 +27,6 @@ SSH Hardening — remediation of open firewall (0.0.0.0/0 → IAP-only), OS Logi
 
 ---
 
-**Last Audit:** 2026-09-09 (SSH Hardening — v0.0.3)  
-**Threats Detected:** 432 WP exploit attempts blocked  
+**Last Audit:** 2026-09-09 (SSH Hardening — v0.0.3)
+**Threats Detected:** 432 WP exploit attempts blocked
 **Status:** ✅ All threats mitigated

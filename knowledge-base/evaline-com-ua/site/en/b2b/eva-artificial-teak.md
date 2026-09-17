@@ -16,11 +16,11 @@ EVA decking for boats, kayaks, jet skis, surfboards and SUPs.
 
 ## EVA decking for boats, kayaks, jet skis, surfboards and SUPs
 
-Soft, durable, non-toxic closed cell EVA polymer is increasingly being used for deck coverings as it provides the classic teak look without requiring expensive maintenance. 
+Soft, durable, non-toxic closed cell EVA polymer is increasingly being used for deck coverings as it provides the classic teak look without requiring expensive maintenance.
 
 Such flooring makes the appearance of any watercraft exclusive, neat, and the deck is safe.
 
-### Benefits of EVA-line deck covering 
+### Benefits of EVA-line deck covering
 
 ![](https://eva-line.com/images/3_teak.png)
 
@@ -46,8 +46,8 @@ In the future, the sheets are processed with a cutter or engraver - this allows 
 
 The uniqueness of EVA decking material from EVA-line lies in the fact that our team can produce sheets of the required characteristics - density, hardness, thickness and color palette. The performance characteristics of the material will undoubtedly delight customers.
 
-  
-![](https://eva-line.com/images/6_teak.png)![](https://eva-line.com/images/teak23.png)  
+
+![](https://eva-line.com/images/6_teak.png)![](https://eva-line.com/images/teak23.png)
 
 
 ## Buy deck EVA coating from EVA-line
@@ -56,8 +56,8 @@ Our team is always ready to advise the customer on EVA artificial teak for decks
 
 Call us and we will place an order for EVA sheet teak - a durable, environmentally friendly and high-quality material. From our EVA sheets you will get unique products that will become a real decoration of any watercraft for many years to come.
 
-  
-  
+
+
 
 
 * * *
@@ -68,7 +68,7 @@ Call us and we will place an order for EVA sheet teak - a durable, environmental
 
 The account manager will answer them.
 
-Vlad Slavutsky   
+Vlad Slavutsky
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://eva-line.com/theme/img/icons8-phone-24.png)+38 (067) 156 14 96](<tel:+380671561496>)

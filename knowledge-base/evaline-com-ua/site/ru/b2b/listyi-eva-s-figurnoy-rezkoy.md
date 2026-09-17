@@ -47,26 +47,26 @@ file: ru/b2b/listyi-eva-s-figurnoy-rezkoy.md
 
 Легкость материала позволяет не утяжелять конечное изделие.
 
-### Фигурные листы также можно обтягивать кожей, экокожей и текстилем. 
+### Фигурные листы также можно обтягивать кожей, экокожей и текстилем.
 
 Впоследствии такой материал используют для ложементов, в обувной сфере -для стелек летней открытой обуви, а также для водонепроницаемых галош и сапожек.
 
-![](https://evaline.com.ua/images/listy-koja.jpg)  
-  
+![](https://evaline.com.ua/images/listy-koja.jpg)
+
 
 
 ## На производстве EVA-line есть выбор фигурных резок.
 
-![](https://evaline.com.ua/images/proisvodstvo-one.jpg)![](https://evaline.com.ua/images/proisvodstvo-three.jpg)![](https://evaline.com.ua/images/proisvodstvo-two.jpg)  
-  
+![](https://evaline.com.ua/images/proisvodstvo-one.jpg)![](https://evaline.com.ua/images/proisvodstvo-three.jpg)![](https://evaline.com.ua/images/proisvodstvo-two.jpg)
+
 
 
 Наша команда всегда готова проконсультировать и подобрать подходящий для вас вариант.
 
 Работаем в Украине и готовы отправлять товар за границу.
 
-  
-  
+
+
 
 
 * * *
@@ -77,7 +77,7 @@ file: ru/b2b/listyi-eva-s-figurnoy-rezkoy.md
 
 Менеджер по работе с клиентами ответит на них.
 
-Славуцкий Влад   
+Славуцкий Влад
 [evaline.com.ua@gmail.com](<mailto:evaline.com.ua@gmail.com>)
 
 [![](https://evaline.com.ua/theme/img/icons8-phone-24.png.pagespeed.ce.ssaOdXpoJV.png)+38 (067) 156 14 96](<tel:+380671561496>)

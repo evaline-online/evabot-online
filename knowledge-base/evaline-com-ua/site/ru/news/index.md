@@ -97,8 +97,8 @@ file: ru/news/index.md
 
 [Далее](<maty-tatami-dlja-doma-material-i-primenenie.md>)
 
-  
-  
+
+
 
 
   * Первая

@@ -28,13 +28,13 @@ We offer our customers high-quality[ EVA sheets for the production of car mats](
 
 ## TYPES OF CAR MATS
 
-Currently, car mats are made of textiles (car velour), rubber, polyurethane, and the innovative EVA material. All of them, regardless of the material from which they are made, are conditionally divided into two types. 
+Currently, car mats are made of textiles (car velour), rubber, polyurethane, and the innovative EVA material. All of them, regardless of the material from which they are made, are conditionally divided into two types.
 
   1. Universal - these mats are suitable for most machine models. At the same time, their shape and size often do not match the required ones, so they have to be adjusted to the car interior by yourself. The cost of such mats may be slightly lower, but the degree of protection against water and dirt will be lower.
   2. Model - these car mats are designed for a specific model and brand of car, taking into account all the features of the interior design. Thanks to this, they are securely fixed on the floor and do an excellent job of their protective functions.
 
 
-As for the material, until recently, rubber car mats were the most popular among motorists because they are much more practical than carpet and have a long service life. Today, however, car mats made from the innovative material ethylene vinyl acetate (EVA) have taken the lead. EvaLine specializes in the production of EVA sheets designed for the manufacture of EVA car mats. 
+As for the material, until recently, rubber car mats were the most popular among motorists because they are much more practical than carpet and have a long service life. Today, however, car mats made from the innovative material ethylene vinyl acetate (EVA) have taken the lead. EvaLine specializes in the production of EVA sheets designed for the manufacture of EVA car mats.
 
 ## ADVANTAGES OF EVA CAR MATS
 
@@ -43,7 +43,7 @@ As for the material, until recently, rubber car mats were the most popular among
   * Resistance to temperature extremes - the mats are designed to operate at air temperatures from -50°C to +50°C. This means that the mats will not deform, crack, become toxic, or emit odors.
   * Resistance to the negative effects of chemicals - in the autumn and winter, roads and sidewalks are treated with chemicals during icing, and while these agents have a destructive effect on rubber or textile products, EVA car mats remain in their original form. Moreover, due to the fact that all this dirt, slush and chemicals will drain into the cells, the driver's and passengers' shoes will have minimal contact with this destructive environment, which will significantly extend their service life.
   * Easy maintenance - to clean the mats, it is enough to shake them out thoroughly. This procedure takes no more than a minute, and the car mats are ready for use again. To keep them clean, they should be rinsed with a pressurized water jet from time to time. Here, too, EVA car mats have an advantage over other materials, as they are already dry after five minutes.
-  * Individual design - if you want your car interior to always look clean and beautiful, then EVA car mats are your option. 
+  * Individual design - if you want your car interior to always look clean and beautiful, then EVA car mats are your option.
 
 
 Choose cellular car mats, and the interior of your car will always be clean and beautiful.
