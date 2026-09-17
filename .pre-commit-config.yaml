@@ -1,0 +1,37 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=1024]
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.8
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        files: (^backend/.*\.py$)|(^[^/]+\.py$)
+      - id: ruff-format
+        files: (^backend/.*\.py$)|(^[^/]+\.py$)
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy backend
+        entry: backend/venv/bin/mypy backend/app
+        language: system
+        pass_filenames: false
+        files: ^backend/.*\.py$
+      - id: shellcheck
+        name: shellcheck
+        entry: shellcheck
+        language: system
+        types: [shell]
+      - id: hadolint
+        name: hadolint
+        entry: hadolint
+        language: system
+        files: Dockerfile

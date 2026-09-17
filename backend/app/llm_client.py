@@ -164,14 +164,16 @@ class GeminiClient:
                 json=payload,
             ) as response:
                 if response.status_code >= 400:
-                    err_text = await response.aread()
+                    err_text = (await response.aread()).decode(errors="replace")
                     try:
                         err_json = json.loads(err_text)
                         if err_json.get("error", {}).get("message"):
                             err_text = err_json["error"]["message"]
                     except Exception:
                         pass
-                    logger.error("GeminiClient", f"Stream HTTP Error {response.status_code}: {err_text}")
+                    logger.error(
+                        "GeminiClient", f"Stream HTTP Error {response.status_code}: {err_text}"
+                    )
                     raise RuntimeError(f"Google AI API Error ({response.status_code}): {err_text}")
 
                 full_text = ""
@@ -186,7 +188,9 @@ class GeminiClient:
                         parsed = json.loads(json_str)
                     except Exception:
                         continue
-                    parts = (parsed.get("candidates") or [{}])[0].get("content", {}).get("parts") or []
+                    parts = (parsed.get("candidates") or [{}])[0].get("content", {}).get(
+                        "parts"
+                    ) or []
                     for part in parts:
                         text = part.get("text")
                         if text:
@@ -242,9 +246,17 @@ class UniversalLlmClient:
                 or provider == "OpenRouter"
             ):
                 return "openrouter"
-            if category.startswith("OmniRoute") or tier == "OmniRoute Daemon" or provider == "OmniRoute":
+            if (
+                category.startswith("OmniRoute")
+                or tier == "OmniRoute Daemon"
+                or provider == "OmniRoute"
+            ):
                 return "omniroute"
-            if category.startswith("OpenCode") or tier == "OpenCode Platform" or provider == "OpenCode AI":
+            if (
+                category.startswith("OpenCode")
+                or tier == "OpenCode Platform"
+                or provider == "OpenCode AI"
+            ):
                 return "opencode"
             if provider == "Google DeepMind":
                 return "google"
@@ -346,7 +358,11 @@ class UniversalLlmClient:
         if effective_system:
             formatted.append({"role": "system", "content": effective_system})
         for msg in messages:
-            role = "assistant" if msg.role == "assistant" else ("system" if msg.role == "system" else "user")
+            role = (
+                "assistant"
+                if msg.role == "assistant"
+                else ("system" if msg.role == "system" else "user")
+            )
             formatted.append({"role": role, "content": msg.content})
         return formatted
 
@@ -363,7 +379,10 @@ class UniversalLlmClient:
     ) -> str:
         resolved_provider = self.resolve_provider(model, provider)
         universal_msgs = self.normalize_to_universal(messages)
-        logger.debug("UniversalLlmClient", f"Generating unary response via provider: {resolved_provider} [model: {model}]")
+        logger.debug(
+            "UniversalLlmClient",
+            f"Generating unary response via provider: {resolved_provider} [model: {model}]",
+        )
 
         if resolved_provider == "google":
             contents, sys_instr = self.to_gemini_format(
@@ -381,7 +400,14 @@ class UniversalLlmClient:
             )
 
         return await self._generate_openai_compatible(
-            resolved_provider, model, universal_msgs, temperature, max_output_tokens, system_instruction, api_key, signal
+            resolved_provider,
+            model,
+            universal_msgs,
+            temperature,
+            max_output_tokens,
+            system_instruction,
+            api_key,
+            signal,
         )
 
     async def stream_content(
@@ -398,7 +424,10 @@ class UniversalLlmClient:
     ) -> str:
         resolved_provider = self.resolve_provider(model, provider)
         universal_msgs = self.normalize_to_universal(messages)
-        logger.debug("UniversalLlmClient", f"Streaming response via provider: {resolved_provider} [model: {model}]")
+        logger.debug(
+            "UniversalLlmClient",
+            f"Streaming response via provider: {resolved_provider} [model: {model}]",
+        )
 
         if resolved_provider == "google":
             contents, sys_instr = self.to_gemini_format(
@@ -417,7 +446,15 @@ class UniversalLlmClient:
             )
 
         return await self._stream_openai_compatible(
-            resolved_provider, model, universal_msgs, on_chunk, temperature, max_output_tokens, system_instruction, api_key, signal
+            resolved_provider,
+            model,
+            universal_msgs,
+            on_chunk,
+            temperature,
+            max_output_tokens,
+            system_instruction,
+            api_key,
+            signal,
         )
 
     async def _generate_openai_compatible(
@@ -446,7 +483,9 @@ class UniversalLlmClient:
 
         if response.status_code >= 400:
             err_text = self._extract_openai_error(response)
-            logger.error("UniversalLlmClient", f"{provider} API Error {response.status_code}: {err_text}")
+            logger.error(
+                "UniversalLlmClient", f"{provider} API Error {response.status_code}: {err_text}"
+            )
             raise RuntimeError(f"{provider.upper()} API Error ({response.status_code}): {err_text}")
 
         data = response.json()
@@ -481,14 +520,21 @@ class UniversalLlmClient:
         async with httpx.AsyncClient(timeout=120.0) as client:
             async with client.stream("POST", url, headers=headers, json=payload) as response:
                 if response.status_code >= 400:
-                    err_text = await response.aread()
+                    err_text = (await response.aread()).decode(errors="replace")
                     try:
                         err_json = json.loads(err_text)
-                        err_text = err_json.get("error", {}).get("message") or err_json.get("message", err_text)
+                        err_text = err_json.get("error", {}).get("message") or err_json.get(
+                            "message", err_text
+                        )
                     except Exception:
                         pass
-                    logger.error("UniversalLlmClient", f"{provider} Stream Error {response.status_code}: {err_text}")
-                    raise RuntimeError(f"{provider.upper()} Stream Error ({response.status_code}): {err_text}")
+                    logger.error(
+                        "UniversalLlmClient",
+                        f"{provider} Stream Error {response.status_code}: {err_text}",
+                    )
+                    raise RuntimeError(
+                        f"{provider.upper()} Stream Error ({response.status_code}): {err_text}"
+                    )
 
                 async for line in response.aiter_lines():
                     line_text = line.strip()
@@ -513,7 +559,9 @@ class UniversalLlmClient:
         err_text = response.text
         try:
             err_json = response.json()
-            err_text = err_json.get("error", {}).get("message", "") or err_json.get("message", err_text)
+            err_text = err_json.get("error", {}).get("message", "") or err_json.get(
+                "message", err_text
+            )
         except Exception:
             pass
         return err_text

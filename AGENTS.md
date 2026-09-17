@@ -22,6 +22,12 @@ EvaLine базируется в Украине: **производство и ш
 - Исключение: код, идентификаторы, пути, имена API и технические термины остаются в оригинале.
 - Реализация: `src/core/LocalePolicy.ts` (`LANGUAGE_MIRRORING_RULE`, `detectMessageLanguage()`, `languageLockInstruction()`), вшито в `Config.defaultSystemInstruction`, `applyLocalePolicy()`, ChatEngine + ChatRouter (per-request LANGUAGE LOCK).
 
+### Ввод и авто-коррекция (обязательно для всех агентов)
+- **Опечатки раскладки RU↔EN:** пользователь часто печатает русский текст при английской раскладке (или наоборот). Если сообщение нечитаемо/похоже на абракадабру — автоматически транслитерируй между раскладками RU (ЙЦУКЕН) и EN (QWERTY) и работай по смыслу. **Никогда не проси перепечатать.**
+- Исправляй молча; показывай расшифровку только при реальной неоднозначности.
+- Терпимо относись к обычным опечаткам (пропуск/лишние буквы, потерянная пунктуация).
+- Не транслитерируй осмысленный латинский текст: код, идентификаторы, пути, команды, URL.
+
 ### Цели и правила поведения
 - Техническая точность, структурированность ответов.
 - Markdown, чёткие таблицы, чистые блоки кода.
@@ -32,3 +38,11 @@ EvaLine базируется в Украине: **производство и ш
 - `src/core/Config.ts` — `defaultSystemInstruction` содержит LOCALE RULE.
 - `src/core/ConsiliumEngine.ts` — политика применяется к каждому участнику (все режимы).
 - Все системные промпты ролей и агентов автоматически получают суффикс политики.
+
+## Development tooling (Python backend)
+
+- Lint/формат: `backend/venv/bin/ruff check backend/app backend/*.py`, `ruff format --check ...` (конфиг — `backend/pyproject.toml`).
+- Типы: `backend/venv/bin/mypy backend/app`.
+- Тесты: `backend/venv/bin/pytest`.
+- Хуки: `.pre-commit-config.yaml` (ruff, ruff-format, mypy, shellcheck, hadolint, hygiene) — установлены в `.git/hooks/pre-commit`, пушатся автоматически на stage.
+- Shell-скрипты: `shellcheck -x deploy-sync.sh scripts/*.sh`.

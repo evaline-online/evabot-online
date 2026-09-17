@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 import sys
 from enum import IntEnum
-from typing import Any
 
 
 class LogLevel(IntEnum):
@@ -24,7 +23,9 @@ class EvaBotLogger:
         if not self._logger.handlers:
             handler = logging.StreamHandler(sys.stdout)
             handler.setFormatter(
-                logging.Formatter("[%(asctime)s] [%(levelname)s] %(name)s: %(message)s", datefmt="%H:%M:%S")
+                logging.Formatter(
+                    "[%(asctime)s] [%(levelname)s] %(name)s: %(message)s", datefmt="%H:%M:%S"
+                )
             )
             self._logger.addHandler(handler)
 

@@ -34,7 +34,9 @@ class AuthCredentials:
 
 
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
-GCE_METADATA_URL = "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token"
+GCE_METADATA_URL = (
+    "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token"
+)
 
 
 class GoogleAuthProvider:
@@ -69,7 +71,9 @@ class GoogleAuthProvider:
                 account="evabot.online@gmail.com",
             )
             cls._expires_at = now + 50 * 60
-            logger.info("GoogleAuthProvider", "Authenticated automatically via Google ADC refresh token")
+            logger.info(
+                "GoogleAuthProvider", "Authenticated automatically via Google ADC refresh token"
+            )
             return cls._cached
 
         # 3. GCE metadata server
@@ -82,7 +86,9 @@ class GoogleAuthProvider:
                 account="evabot.online@gmail.com",
             )
             cls._expires_at = now + 50 * 60
-            logger.info("GoogleAuthProvider", "Authenticated automatically via GCE Metadata Service")
+            logger.info(
+                "GoogleAuthProvider", "Authenticated automatically via GCE Metadata Service"
+            )
             return cls._cached
 
         # 4. gcloud CLI
@@ -105,11 +111,8 @@ class GoogleAuthProvider:
         if httpx is None:
             return None
         try:
-            resp = await httpx.get(
-                GCE_METADATA_URL,
-                headers={"Metadata-Flavor": "Google"},
-                timeout=1.0,
-            )
+            async with httpx.AsyncClient(timeout=1.0) as client:
+                resp = await client.get(GCE_METADATA_URL, headers={"Metadata-Flavor": "Google"})
             if resp.status_code == 200:
                 data = resp.json()
                 return data.get("access_token")
@@ -144,16 +147,16 @@ class GoogleAuthProvider:
             return None
 
         try:
-            resp = await httpx.post(
-                GOOGLE_TOKEN_URL,
-                data={
-                    "client_id": client_id,
-                    "client_secret": client_secret,
-                    "refresh_token": refresh_token,
-                    "grant_type": "refresh_token",
-                },
-                timeout=5.0,
-            )
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                resp = await client.post(
+                    GOOGLE_TOKEN_URL,
+                    data={
+                        "client_id": client_id,
+                        "client_secret": client_secret,
+                        "refresh_token": refresh_token,
+                        "grant_type": "refresh_token",
+                    },
+                )
             if resp.status_code == 200:
                 return resp.json().get("access_token")
         except Exception:

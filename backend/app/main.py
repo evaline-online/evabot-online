@@ -8,18 +8,17 @@ from __future__ import annotations
 import asyncio
 import os
 import time
-import uuid
 from collections.abc import AsyncIterator
 from typing import Any
 
-from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse, Response, StreamingResponse
 
+from .ansi import boot_banner
 from .auth import GoogleAuthProvider
-from .ansi import boot_banner, status_bar as ansi_status_bar
 from .config import settings
-from .consilium import CONSILIUM_MODES, ConsiliumEngine, PERSONA_IDS
+from .consilium import CONSILIUM_MODES, PERSONA_IDS, ConsiliumEngine
 from .corporate_roles import CORPORATE_ROLES, list_corporate_roles
 from .diagnostics import run_diagnostics
 from .llm_client import UniversalLlmClient
@@ -34,7 +33,7 @@ app = FastAPI(
     description="Backend for EvaBot & Evaline Online (Chernomorsk, Ukraine & Bratislava, Slovakia). Backend: Python/FastAPI, Frontend: TypeScript.",
     # Root path behind the nginx /voice/ proxy prefix. Without it, the Swagger
     # UI at /voice/docs embeds absolute /openapi.json → 404 behind the proxy.
-    root_path=os.environ.get('FASTAPI_ROOT_PATH', ''),
+    root_path=os.environ.get("FASTAPI_ROOT_PATH", ""),
 )
 
 app.add_middleware(
@@ -68,7 +67,7 @@ def _unified_model(model: str) -> str:
     """Normalize frontend 'models/<id>' to catalog ids."""
     for prefix in ("models/",):
         if model.startswith(prefix):
-            return model[len(prefix):]
+            return model[len(prefix) :]
     if model.startswith("omniroute/"):
         return model
     return model
@@ -134,7 +133,10 @@ async def api_config() -> JSONResponse:
                 {"cmd": "/models [filter]", "desc": "Model catalog with USD/EUR pricing"},
                 {"cmd": "/compare", "desc": "Top-10 coding models comparison"},
                 {"cmd": "/model <id>", "desc": "Switch active model"},
-                {"cmd": "/mode <chat|dialog|interview|consilium>", "desc": "Switch operational mode"},
+                {
+                    "cmd": "/mode <chat|dialog|interview|consilium>",
+                    "desc": "Switch operational mode",
+                },
                 {"cmd": "/consilium <topic>", "desc": "Run multi-agent AI consilium deliberation"},
                 {"cmd": "/persona <eva|adam|dual>", "desc": "Switch co-pilot persona"},
                 {"cmd": "/db <hybrid|postgres|qdrant|ephemeral>", "desc": "Route knowledge base"},
@@ -317,9 +319,13 @@ async def api_voice_toggle(payload: dict[str, Any] | None = None) -> JSONRespons
 async def api_voice_persona(payload: dict[str, Any]) -> JSONResponse:
     persona = payload.get("persona")
     if persona not in ("eva", "adam", "auto"):
-        raise HTTPException(status_code=400, detail='Invalid persona. Expected: "eva", "adam", or "auto"')
+        raise HTTPException(
+            status_code=400, detail='Invalid persona. Expected: "eva", "adam", or "auto"'
+        )
     VoiceController.set_active_persona(persona)
-    return JSONResponse({"success": True, "activePersona": VoiceController.get_settings()["activePersona"]})
+    return JSONResponse(
+        {"success": True, "activePersona": VoiceController.get_settings()["activePersona"]}
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -367,10 +373,13 @@ async def api_chat(payload: dict[str, Any]) -> JSONResponse:
 
     prompt_tokens = ModelRegistry.estimate_tokens(
         " ".join(
-            m.get("parts", [{"text": m.get("content", "")}])[0]["text"] if m.get("parts") else m.get("content", "")
+            m.get("parts", [{"text": m.get("content", "")}])[0]["text"]
+            if m.get("parts")
+            else m.get("content", "")
             for m in messages
         )
-        + " " + str(system_instruction or "")
+        + " "
+        + str(system_instruction or "")
     )
     completion_tokens = ModelRegistry.estimate_tokens(response_text)
     cost = ModelRegistry.calculate_cost(target_model, prompt_tokens, completion_tokens)
@@ -391,7 +400,7 @@ async def api_chat(payload: dict[str, Any]) -> JSONResponse:
 
 
 @app.post("/api/chat/stream")
-async def api_chat_stream(payload: dict[str, Any]) -> StreamingResponse:
+async def api_chat_stream(payload: dict[str, Any]) -> Response:
     message = payload.get("message")
     if not isinstance(message, str) or not message:
         return JSONResponse({"error": 'Missing or invalid "message" parameter'}, status_code=400)
@@ -443,10 +452,13 @@ async def api_chat_stream(payload: dict[str, Any]) -> StreamingResponse:
         full_text = await task
         prompt_tokens = ModelRegistry.estimate_tokens(
             " ".join(
-                m.get("parts", [{"text": m.get("content", "")}])[0]["text"] if m.get("parts") else m.get("content", "")
+                m.get("parts", [{"text": m.get("content", "")}])[0]["text"]
+                if m.get("parts")
+                else m.get("content", "")
                 for m in messages
             )
-            + " " + str(system_instruction or "")
+            + " "
+            + str(system_instruction or "")
         )
         completion_tokens = ModelRegistry.estimate_tokens(full_text)
         cost = ModelRegistry.calculate_cost(target_model, prompt_tokens, completion_tokens)
@@ -478,7 +490,9 @@ async def api_consilium(payload: dict[str, Any]) -> JSONResponse:
 
     persona = payload.get("persona")
     if persona is not None and persona not in PERSONA_IDS:
-        raise HTTPException(status_code=400, detail='Invalid "persona". Expected: "eva", "adam", "dual"')
+        raise HTTPException(
+            status_code=400, detail='Invalid "persona". Expected: "eva", "adam", "dual"'
+        )
 
     engine = ConsiliumEngine(payload.get("apiKey") or settings.gemini_api_key or None)
 
@@ -556,8 +570,13 @@ def _json_dumps(data: Any) -> str:
 def start() -> None:
     import uvicorn
 
-    logger.info("Server", f"\u26a1 EvaBot FastAPI Server listening on http://{settings.server_host}:{settings.server_port}")
-    uvicorn.run("app.main:app", host=settings.server_host, port=settings.server_port, log_level="info")
+    logger.info(
+        "Server",
+        f"\u26a1 EvaBot FastAPI Server listening on http://{settings.server_host}:{settings.server_port}",
+    )
+    uvicorn.run(
+        "app.main:app", host=settings.server_host, port=settings.server_port, log_level="info"
+    )
 
 
 if __name__ == "__main__":
