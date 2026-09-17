@@ -29,6 +29,14 @@ export interface KnowledgeBackendInfo {
   sources: string[];
 }
 
+export interface VectorSearchOptions {
+  language?: string;
+  category?: string;
+  limit?: number;
+}
+
+export type EmbeddingFunction = (texts: string[]) => Promise<number[][]>;
+
 export class KnowledgeBase {
   private static instance: KnowledgeBase;
   private documents: Map<string, KnowledgeDocument> = new Map();
@@ -38,6 +46,12 @@ export class KnowledgeBase {
   private initialized: boolean = false;
   private sqliteDb: { prepare(sql: string): { get(...params: unknown[]): Record<string, unknown>; all(...params: unknown[]): Record<string, unknown>[]; run(...params: unknown[]): void } } | null = null;
   private ftsChunkCount: number = 0;
+  private vectorEnabled: boolean = process.env.KB_VECTOR_ENABLED === '1';
+  private vectorReady: boolean = false;
+  private vectorWarmup: Promise<boolean> | null = null;
+  private vectorIndex: Array<{ id: string; vec: Float32Array; doc: KnowledgeDocument }> = [];
+  private embeddingModel: string = process.env.KB_EMBEDDING_MODEL || 'Xenova/all-MiniLM-L6-v2';
+  private embeddingFn: EmbeddingFunction | null = null;
 
   private constructor() {
     const cwdKb = path.resolve(process.cwd(), 'knowledge-base');
@@ -66,6 +80,13 @@ export class KnowledgeBase {
     // 2. Load markdown documents from Desktop and backend knowledge directories
     await this.loadFromEvaLine();
     this.initialized = true;
+
+    // 3. Optional ChromaDB vector backend (opt-in via KB_VECTOR_ENABLED=1).
+    //    Non-blocking: chat keeps using SQLite FTS5 until the index is ready,
+    //    and any failure silently leaves the FTS5 backend active.
+    if (this.vectorEnabled && this.chromaCollectionPath()) {
+      void this.warmupVectorBackend();
+    }
 
     logger.info(LogCategory.KB, 'INIT', 'Knowledge Base initialized successfully', {
       memoryDocs: this.documents.size,
@@ -502,6 +523,271 @@ export class KnowledgeBase {
     }
 
     return merged.slice(0, limit);
+  }
+
+  private chromaCollectionPath(): string | null {
+    const candidates = [
+      path.join(this.knowledgeBasePath, 'evaline-knowledge-base', 'chroma_db', 'chroma.sqlite3'),
+      path.join(this.desktopPath, 'evaline-knowledge-base', 'chroma_db', 'chroma.sqlite3'),
+      '/var/www/evabot-backend/knowledge-base/evaline-knowledge-base/chroma_db/chroma.sqlite3',
+    ];
+    for (const candidate of candidates) {
+      if (fs.existsSync(candidate)) return candidate;
+    }
+    return null;
+  }
+
+  public isVectorEnabled(): boolean {
+    return this.vectorEnabled;
+  }
+
+  public isVectorReady(): boolean {
+    return this.vectorReady;
+  }
+
+  public getVectorIndexSize(): number {
+    return this.vectorIndex.length;
+  }
+
+  /**
+   * Reads the indexed chunks out of the ChromaDB SQLite metadata store.
+   * NOTE: ChromaDB keeps the actual vectors in its HNSW binary index
+   * (chroma_db/<uuid>/data_level0.bin), not in SQLite — those are re-embedded
+   * locally by getEmbeddingFunction() using the same model the collection was
+   * built with (Chroma's default all-MiniLM-L6-v2, 384 dims).
+   */
+  private readChromaDocuments(dbPath: string): KnowledgeDocument[] {
+    const sqliteModule = require('node:sqlite');
+    const DatabaseSync = sqliteModule?.DatabaseSync;
+    if (!DatabaseSync) throw new Error('node:sqlite is unavailable');
+    const db = new DatabaseSync(dbPath);
+    try {
+      const rows = db.prepare(`
+        SELECT e.embedding_id AS id,
+          MAX(CASE WHEN m.key='chroma:document' THEN m.string_value END) AS content,
+          MAX(CASE WHEN m.key='title' THEN m.string_value END) AS title,
+          MAX(CASE WHEN m.key='header' THEN m.string_value END) AS header,
+          MAX(CASE WHEN m.key='language' THEN m.string_value END) AS language,
+          MAX(CASE WHEN m.key='category' THEN m.string_value END) AS category,
+          MAX(CASE WHEN m.key='file' THEN m.string_value END) AS file,
+          MAX(CASE WHEN m.key='url' THEN m.string_value END) AS url
+        FROM embeddings e JOIN embedding_metadata m ON m.id = e.id
+        GROUP BY e.id
+      `).all();
+      return rows
+        .map((row: Record<string, unknown>) => ({
+          id: String(row.id),
+          title: String(row.title || row.id),
+          content: String(row.content || ''),
+          category: String(row.category || 'general'),
+          language: String(row.language || 'uk') as KnowledgeDocument['language'],
+          tags: ['chroma', 'vector', String(row.language || '')],
+          source: `evaline-knowledge-base/chroma_db [${row.file || 'chunk'}]`,
+          metadata: { header: row.header, url: row.url, file: row.file },
+        }))
+        .filter((doc: KnowledgeDocument) => doc.content.length > 0);
+    } finally {
+      db.close();
+    }
+  }
+
+  /**
+   * Configurable embedding function.
+   *  - KB_EMBEDDING_MODE=local (default): optional @huggingface/transformers
+   *    (Xenova/all-MiniLM-L6-v2) — no credentials, model cached by HF.
+   *  - KB_EMBEDDING_MODE=http: OpenAI-compatible /embeddings endpoint via
+   *    KB_EMBEDDING_URL + optional KB_EMBEDDING_API_KEY.
+   * Throws when the runtime is unavailable; callers always fall back to FTS5.
+   */
+  private async getEmbeddingFunction(): Promise<EmbeddingFunction> {
+    if (this.embeddingFn) return this.embeddingFn;
+    const mode = (process.env.KB_EMBEDDING_MODE || 'local').toLowerCase();
+
+    if (mode === 'http') {
+      const url = process.env.KB_EMBEDDING_URL;
+      if (!url) throw new Error('KB_EMBEDDING_MODE=http requires KB_EMBEDDING_URL');
+      const apiKey = process.env.KB_EMBEDDING_API_KEY || '';
+      this.embeddingFn = async (texts: string[]) => {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
+          },
+          body: JSON.stringify({ model: this.embeddingModel, input: texts }),
+        });
+        if (!response.ok) throw new Error(`Embedding endpoint ${response.status}`);
+        const json: any = await response.json();
+        const data = json.data || [];
+        return data.map((entry: any) => entry.embedding as number[]);
+      };
+      return this.embeddingFn;
+    }
+
+    const dynamicImport = new Function('specifier', 'return import(specifier)') as (s: string) => Promise<any>;
+    const transformers = await dynamicImport('@huggingface/transformers');
+    const extractor = await transformers.pipeline('feature-extraction', this.embeddingModel);
+    this.embeddingFn = async (texts: string[]) => {
+      const output = await extractor(texts, { pooling: 'mean', normalize: true });
+      const dims: number[] = output.dims;
+      const flat: Float32Array = output.data;
+      const dim = dims[dims.length - 1];
+      const vectors: number[][] = [];
+      for (let i = 0; i < texts.length; i++) {
+        vectors.push(Array.from(flat.subarray(i * dim, (i + 1) * dim)));
+      }
+      return vectors;
+    };
+    return this.embeddingFn;
+  }
+
+  private vectorCachePath(): string {
+    return path.join(this.knowledgeBasePath, 'evaline-knowledge-base', '.vector-cache.json');
+  }
+
+  private loadVectorCache(expected: number): Float32Array[] | null {
+    try {
+      const cachePath = this.vectorCachePath();
+      if (!fs.existsSync(cachePath)) return null;
+      const json = JSON.parse(fs.readFileSync(cachePath, 'utf8'));
+      if (json.model !== this.embeddingModel || json.count !== expected || !json.vectors) return null;
+      const buf = Buffer.from(json.vectors, 'base64');
+      const dim = Number(json.dim);
+      const vectors: Float32Array[] = [];
+      for (let i = 0; i < expected; i++) {
+        const vec = new Float32Array(dim);
+        for (let j = 0; j < dim; j++) vec[j] = buf.readFloatLE((i * dim + j) * 4);
+        vectors.push(vec);
+      }
+      return vectors;
+    } catch (err: unknown) {
+      logger.warn(LogCategory.KB, 'VECTOR', `Vector cache read skipped: ${err instanceof Error ? err.message : String(err)}`);
+      return null;
+    }
+  }
+
+  private saveVectorCache(vectors: Float32Array[]): void {
+    try {
+      const dim = vectors[0]?.length || 0;
+      const all = new Float32Array(vectors.length * dim);
+      for (let i = 0; i < vectors.length; i++) all.set(vectors[i], i * dim);
+      const payload = {
+        model: this.embeddingModel,
+        dim,
+        count: vectors.length,
+        vectors: Buffer.from(all.buffer, all.byteOffset, all.byteLength).toString('base64'),
+      };
+      fs.writeFileSync(this.vectorCachePath(), JSON.stringify(payload), 'utf8');
+    } catch (err: unknown) {
+      logger.warn(LogCategory.KB, 'VECTOR', `Vector cache write skipped: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
+  private async buildVectorIndex(): Promise<boolean> {
+    const dbPath = this.chromaCollectionPath();
+    if (!dbPath) return false;
+    const docs = this.readChromaDocuments(dbPath);
+    if (docs.length === 0) return false;
+
+    const embed = await this.getEmbeddingFunction();
+    let vectors = this.loadVectorCache(docs.length);
+    if (!vectors) {
+      vectors = [];
+      const batchSize = 64;
+      for (let i = 0; i < docs.length; i += batchSize) {
+        const batch = docs.slice(i, i + batchSize);
+        const batchVectors = await embed(batch.map((doc) => doc.content));
+        for (const vec of batchVectors) vectors.push(Float32Array.from(vec));
+        logger.debug(LogCategory.KB, 'VECTOR', `Embedded ${Math.min(i + batchSize, docs.length)}/${docs.length} chunks`);
+      }
+      this.saveVectorCache(vectors);
+    }
+
+    const index: Array<{ id: string; vec: Float32Array; doc: KnowledgeDocument }> = [];
+    for (let i = 0; i < docs.length; i++) {
+      const vec = vectors[i];
+      if (!vec) continue;
+      let norm = 0;
+      for (const value of vec) norm += value * value;
+      norm = Math.sqrt(norm) || 1;
+      const normalized = new Float32Array(vec.length);
+      for (let j = 0; j < vec.length; j++) normalized[j] = vec[j] / norm;
+      index.push({ id: docs[i].id, vec: normalized, doc: docs[i] });
+    }
+
+    this.vectorIndex = index;
+    this.vectorReady = index.length > 0;
+    if (this.vectorReady) {
+      this.activeBackend = 'vector';
+      logger.info(LogCategory.KB, 'VECTOR', 'ChromaDB vector backend ready', {
+        vectors: index.length,
+        model: this.embeddingModel,
+        dbPath,
+      });
+    }
+    return this.vectorReady;
+  }
+
+  public async warmupVectorBackend(): Promise<boolean> {
+    if (!this.vectorEnabled) return false;
+    if (this.vectorReady) return true;
+    if (this.vectorWarmup) return this.vectorWarmup;
+    this.vectorWarmup = this.buildVectorIndex().catch((err: unknown) => {
+      logger.warn(LogCategory.KB, 'VECTOR', `Vector warmup failed — staying on FTS5: ${err instanceof Error ? err.message : String(err)}`);
+      return false;
+    });
+    return this.vectorWarmup;
+  }
+
+  public async searchVector(queryText: string, k: number = 5, options?: VectorSearchOptions): Promise<KnowledgeDocument[]> {
+    if (!this.vectorReady) {
+      if (!this.vectorEnabled) throw new Error('Vector backend disabled (set KB_VECTOR_ENABLED=1)');
+      await this.warmupVectorBackend();
+      if (!this.vectorReady) throw new Error('Vector backend unavailable');
+    }
+
+    const embed = await this.getEmbeddingFunction();
+    const [raw] = await embed([queryText]);
+    if (!raw || raw.length === 0) return [];
+    let norm = 0;
+    for (const value of raw) norm += value * value;
+    norm = Math.sqrt(norm) || 1;
+    const query = new Float32Array(raw.length);
+    for (let i = 0; i < raw.length; i++) query[i] = raw[i] / norm;
+
+    const scored: Array<{ doc: KnowledgeDocument; score: number }> = [];
+    for (const entry of this.vectorIndex) {
+      if (options?.language && entry.doc.language !== options.language) continue;
+      if (options?.category && entry.doc.category !== options.category) continue;
+      let dot = 0;
+      const len = Math.min(query.length, entry.vec.length);
+      for (let i = 0; i < len; i++) dot += query[i] * entry.vec[i];
+      scored.push({ doc: entry.doc, score: dot });
+    }
+    scored.sort((a, b) => b.score - a.score);
+    return scored.slice(0, k).map((entry) => ({ ...entry.doc, relevanceScore: parseFloat(entry.score.toFixed(4)) }));
+  }
+
+  /**
+   * Vector-first search with a guaranteed FTS5/memory fallback. Any vector
+   * error is swallowed so chat can never break because of the vector backend.
+   */
+  public async searchWithVector(
+    query: string,
+    options?: { language?: string; category?: string; limit?: number; minScore?: number }
+  ): Promise<KnowledgeDocument[]> {
+    if (this.vectorEnabled && this.vectorReady) {
+      try {
+        const results = await this.searchVector(query, options?.limit || 5, {
+          language: options?.language,
+          category: options?.category,
+        });
+        if (results.length > 0) return results;
+      } catch (err: unknown) {
+        logger.warn(LogCategory.KB, 'VECTOR', `Vector search failed — falling back to FTS5: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+    return this.search(query, options);
   }
 
   public setBackend(backend: KnowledgeBackend): void {

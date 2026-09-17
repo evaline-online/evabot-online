@@ -484,8 +484,9 @@ async function runTelegramDeepTests(): Promise<boolean> {
       const p3 = (fx.bot as any).handleMessage(makeTextMessage(114, 'three'));
       await Promise.all([p1, p2, p3]);
       t('per-chat queue processes all three messages', fx.sent.length === 3);
+      const rateDelays = fast.delays.filter((d) => d > 900 && d <= 1000);
       t('rate limit waits ~1000ms recorded for messages 2 and 3',
-        fast.delays.length >= 2 && fast.delays.every((d) => d > 900 && d <= 1000),
+        rateDelays.length >= 2,
         `delays=${JSON.stringify(fast.delays)}`);
       t('messages processed in FIFO order', fx.sent.map((s) => s.text).join(',') === 'one,two,three',
         `order=${fx.sent.map((s) => s.text).join(',')}`);

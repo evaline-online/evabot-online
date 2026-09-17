@@ -1,9 +1,9 @@
-import { GeminiClient, ChatMessage, GenerationOptions } from './GeminiClient.js';
+import { GeminiClient, ChatMessage, GenerationOptions, ImageInput, stripBase64DataUrl } from './GeminiClient.js';
 import { Config } from './Config.js';
 import { logger } from './Logger.js';
 import { ModelRegistry } from '../models/ModelRegistry.js';
 import { ModelRatings } from '../models/ModelRatings.js';
-import { withTimeout, getBreaker, LLM_CALL_TIMEOUT_MS, ProviderFallbackChain } from './Resilience.js';
+import { withTimeout, getBreaker, LLM_CALL_TIMEOUT_MS, ProviderFallbackChain, isMappedExternalModel, mapToOmniRoute } from './Resilience.js';
 import { OpLog } from './OpLog.js';
 
 export type LlmProvider = 'google' | 'omniroute' | 'openrouter' | 'opencode';
@@ -60,6 +60,7 @@ export interface UniversalGenerationOptions {
   provider?: LlmProvider;
   apiKey?: string;
   signal?: AbortSignal;
+  images?: ImageInput[];
 }
 
 export class UniversalLlmClient {
@@ -85,14 +86,24 @@ export class UniversalLlmClient {
     if (m.startsWith('omniroute/') || m.startsWith('omni/')) {
       return 'omniroute';
     }
-    if (m.startsWith('opencode/')) {
-      return 'opencode';
-    }
+    // Genuine OpenRouter ids (incl. the real upstream 'openrouter/free'
+    // meta-router) keep their dedicated provider. Checked BEFORE the T-42
+    // external mapping so ':free' ids are never rerouted.
     if (
       m.startsWith('openrouter/') ||
       m.endsWith(':free')
     ) {
       return 'openrouter';
+    }
+    // T-42: raw provider ids fronted by the local OmniRoute gateway
+    // (groq/*, cloudflare/*, zai/*, mistral/*, hf/*, cerebras/* …) and the
+    // opencode/go-*/zen-* placeholders resolve through OmniRoute instead of
+    // silently falling through to Google.
+    if (isMappedExternalModel(m)) {
+      return 'omniroute';
+    }
+    if (m.startsWith('opencode/')) {
+      return 'opencode';
     }
 
     const modelInfo = ModelRegistry.getModelById(model);
@@ -189,8 +200,12 @@ export class UniversalLlmClient {
     // NOTE: the LiteLLM daemon serves ids WITH the omni/ prefix (verified
     // live 2026-09-08: /v1/models → 'omni/cf-gpt-oss-120b', …) — never strip
     // 'omni/'. Only the legacy 'omniroute/' alias prefix is stripped.
-    if (provider === 'omniroute' && model.startsWith('omniroute/')) {
-      return model.replace('omniroute/', '');
+    // T-42: translate external provider ids (groq/*, cloudflare/*, zai/*,
+    // mistral/*, hf/*, and the opencode placeholders) to the OmniRoute route
+    // that actually serves them.
+    if (provider === 'omniroute') {
+      const mapped = mapToOmniRoute(model);
+      return mapped.startsWith('omniroute/') ? mapped.replace('omniroute/', '') : mapped;
     }
     if (provider === 'opencode' && model.startsWith('opencode/')) {
       return model.replace('opencode/', '');
@@ -227,6 +242,7 @@ export class UniversalLlmClient {
         maxOutputTokens: options.maxOutputTokens,
         systemInstruction,
         signal: options.signal,
+        images: options.images,
       });
     }
 
@@ -326,6 +342,7 @@ export class UniversalLlmClient {
         maxOutputTokens: options.maxOutputTokens,
         systemInstruction,
         signal: options.signal,
+        images: options.images,
       });
     }
 
@@ -468,9 +485,10 @@ export class UniversalLlmClient {
 
   private buildOpenAiMessages(
     messages: UniversalMessage[],
-    systemInstruction?: string
-  ): { role: string; content: string }[] {
-    const formatted: { role: string; content: string }[] = [];
+    systemInstruction?: string,
+    images?: ImageInput[]
+  ): { role: string; content: string | Array<Record<string, unknown>> }[] {
+    const formatted: { role: string; content: string | Array<Record<string, unknown>> }[] = [];
     const effectiveSystem = systemInstruction || Config.defaultSystemInstruction;
 
     if (effectiveSystem) {
@@ -482,6 +500,27 @@ export class UniversalLlmClient {
         role: msg.role === 'assistant' ? 'assistant' : msg.role === 'system' ? 'system' : 'user',
         content: msg.content,
       });
+    }
+
+    if (images && images.length > 0) {
+      const imageParts: Array<Record<string, unknown>> = [];
+      for (const image of images) {
+        if (!image || !image.dataBase64) continue;
+        const stripped = stripBase64DataUrl(image.dataBase64);
+        const mimeType = (image.mimeType || stripped.mimeType || 'image/png').trim();
+        imageParts.push({ type: 'image_url', image_url: { url: `data:${mimeType};base64,${stripped.data}` } });
+      }
+      if (imageParts.length > 0) {
+        for (let i = formatted.length - 1; i >= 0; i--) {
+          if (formatted[i].role === 'user') {
+            formatted[i] = {
+              role: 'user',
+              content: [{ type: 'text', text: String(formatted[i].content) }, ...imageParts],
+            };
+            break;
+          }
+        }
+      }
     }
 
     return formatted;
@@ -497,7 +536,7 @@ export class UniversalLlmClient {
     const targetModel = this.cleanModelId(model, provider);
     const payload = {
       model: targetModel,
-      messages: this.buildOpenAiMessages(messages, options.systemInstruction),
+      messages: this.buildOpenAiMessages(messages, options.systemInstruction, options.images),
       temperature: options.temperature ?? 0.7,
       max_tokens: options.maxOutputTokens ?? 4096,
       stream: false,
@@ -547,7 +586,7 @@ export class UniversalLlmClient {
     const targetModel = this.cleanModelId(model, provider);
     const payload = {
       model: targetModel,
-      messages: this.buildOpenAiMessages(messages, options.systemInstruction),
+      messages: this.buildOpenAiMessages(messages, options.systemInstruction, options.images),
       temperature: options.temperature ?? 0.7,
       max_tokens: options.maxOutputTokens ?? 4096,
       stream: true,

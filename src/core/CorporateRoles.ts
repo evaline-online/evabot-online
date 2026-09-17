@@ -460,7 +460,7 @@ export class KnowledgeBaseConnector {
     // 1. Search real EvaLine knowledge base documents
     const kb = KnowledgeBase.getInstance();
     await kb.initialize();
-    const kbDocs = kb.search(query, {
+    const kbDocs = await kb.searchWithVector(query, {
       limit,
       category: options.category,
       language: options.language,

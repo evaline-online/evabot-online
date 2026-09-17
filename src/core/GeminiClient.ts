@@ -2,8 +2,19 @@ import { logger } from './Logger.js';
 import { GoogleAuthProvider, DEFAULT_GEMINI_API_KEY } from './GoogleAuthProvider.js';
 import { Config } from './Config.js';
 
+export interface GeminiInlineData {
+  mimeType: string;
+  data: string;
+}
+
 export interface ChatMessagePart {
-  text: string;
+  text?: string;
+  inlineData?: GeminiInlineData;
+}
+
+export interface ImageInput {
+  mimeType: string;
+  dataBase64: string;
 }
 
 export interface ChatMessage {
@@ -16,6 +27,51 @@ export interface GenerationOptions {
   maxOutputTokens?: number;
   systemInstruction?: string;
   signal?: AbortSignal;
+  images?: ImageInput[];
+}
+
+const DATA_URL_PATTERN = /^data:([^;]+);base64,/i;
+
+/** Accepts either a raw base64 string or a full `data:<mime>;base64,` URL. */
+export function stripBase64DataUrl(value: string): { mimeType?: string; data: string } {
+  const match = value.match(DATA_URL_PATTERN);
+  if (match) return { mimeType: match[1], data: value.slice(match[0].length) };
+  return { data: value };
+}
+
+export function toInlineDataParts(images?: ImageInput[]): ChatMessagePart[] {
+  if (!images || images.length === 0) return [];
+  const parts: ChatMessagePart[] = [];
+  for (const image of images) {
+    if (!image || !image.dataBase64) continue;
+    const stripped = stripBase64DataUrl(image.dataBase64);
+    parts.push({
+      inlineData: {
+        mimeType: (image.mimeType || stripped.mimeType || 'image/png').trim(),
+        data: stripped.data,
+      },
+    });
+  }
+  return parts;
+}
+
+/**
+ * Appends inline image parts to the LAST user turn of a Gemini content list,
+ * leaving the original array untouched. Text-only calls are unaffected.
+ */
+export function withImages(contents: ChatMessage[], images?: ImageInput[]): ChatMessage[] {
+  const imageParts = toInlineDataParts(images);
+  if (imageParts.length === 0) return contents;
+
+  const cloned: ChatMessage[] = contents.map((c) => ({ role: c.role, parts: [...c.parts] }));
+  for (let i = cloned.length - 1; i >= 0; i--) {
+    if (cloned[i].role === 'user') {
+      cloned[i].parts.push(...imageParts);
+      return cloned;
+    }
+  }
+  cloned.push({ role: 'user', parts: imageParts });
+  return cloned;
 }
 
 /**
@@ -161,7 +217,7 @@ export class GeminiClient {
     const cleanModel = model.replace(/^models\//, '');
 
     const payload: any = {
-      contents,
+      contents: withImages(contents, options.images),
       generationConfig: {
         temperature: options.temperature ?? 0.7,
         maxOutputTokens: options.maxOutputTokens ?? 4096,
@@ -288,7 +344,7 @@ export class GeminiClient {
     const cleanModel = model.replace(/^models\//, '');
 
     const payload: any = {
-      contents,
+      contents: withImages(contents, options.images),
       generationConfig: {
         temperature: options.temperature ?? 0.7,
         maxOutputTokens: options.maxOutputTokens ?? 4096,

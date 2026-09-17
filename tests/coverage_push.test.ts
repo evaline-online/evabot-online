@@ -290,6 +290,15 @@ export async function runCoveragePushTests(): Promise<boolean> {
     assert(client.resolveProvider('cohere/command-r') === 'openrouter', 'cohere/ prefix routes to openrouter');
     assert(client.resolveProvider('cov-unknown-vendor-model') === 'google', 'unrecognized model falls back to google');
 
+    // T-42: raw provider prefixes are fronted by the local OmniRoute gateway
+    // and must resolve there (they used to fall through to Google / error).
+    assert(client.resolveProvider('groq/openai/gpt-oss-120b') === 'omniroute', 'groq/ prefix routes to omniroute');
+    assert(client.resolveProvider('cloudflare/@cf/openai/gpt-oss-120b') === 'omniroute', 'cloudflare/ prefix routes to omniroute');
+    assert(client.resolveProvider('zai/glm-4.5-air') === 'omniroute', 'zai/ prefix routes to omniroute');
+    assert(client.resolveProvider('mistral/codestral-latest') === 'omniroute', 'mistral/ prefix routes to omniroute');
+    assert(client.resolveProvider('hf/any-model') === 'omniroute', 'hf/ prefix routes to omniroute');
+    assert(client.resolveProvider('mistralai/mistral-7b-instruct:free') === 'openrouter', ':free suffix wins over mistralai/ mapping');
+
     const allModels = ModelRegistry.getAllModels();
     const orModel = allModels.find(m => m.provider === 'OpenRouter');
     const omniModel = allModels.find(m => m.provider === 'OmniRoute');
@@ -297,7 +306,9 @@ export async function runCoveragePushTests(): Promise<boolean> {
     const gModel = allModels.find(m => m.provider === 'Google DeepMind');
     assert(!orModel || client.resolveProvider(orModel.id) === 'openrouter', `registry OpenRouter model routes to openrouter (${orModel?.id ?? 'none'})`);
     assert(!omniModel || client.resolveProvider(omniModel.id) === 'omniroute', `registry OmniRoute model routes to omniroute (${omniModel?.id ?? 'none'})`);
-    assert(!ocModel || client.resolveProvider(ocModel.id) === 'opencode', `registry OpenCode model routes to opencode (${ocModel?.id ?? 'none'})`);
+    // T-42: the opencode/go-*/zen-* entries are placeholders with no upstream
+    // route; they are mapped through OmniRoute so they resolve at runtime.
+    assert(!ocModel || client.resolveProvider(ocModel.id) === 'omniroute', `registry OpenCode placeholder routes via omniroute (${ocModel?.id ?? 'none'})`);
     assert(!gModel || client.resolveProvider(gModel.id) === 'google', `registry Google DeepMind model routes to google (${gModel?.id ?? 'none'})`);
 
     assert(client.normalizeToUniversal([]).length === 0, 'normalizeToUniversal empty array -> []');

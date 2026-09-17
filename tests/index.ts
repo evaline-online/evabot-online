@@ -32,87 +32,58 @@ import { runAutoModelRouterTests } from './auto_model_router.test.js';
 import { runCoveragePushTests } from './coverage_push.test.js';
 import { runAddCommandTests } from './add_command.test.js';
 import { runReportsCommandsTests } from './reports_commands.test.js';
+import { runGeminiVisionTests } from './gemini_vision.test.js';
 
 async function runAllTests(): Promise<void> {
+  const suiteRunners: Array<[string, () => Promise<boolean>]> = [
+    ['ModelTests', runModelTests],
+    ['ChatTests', runChatTests],
+    ['ServerTests', runServerTests],
+    ['CoreEngineTests', runCoreEngineTests],
+    ['UniversalClientTests', runUniversalClientTests],
+    ['ConsiliumTests', runConsiliumTests],
+    ['RolesTests', runRolesTests],
+    ['AnsiStreamEngineTests', runAnsiStreamEngineTests],
+    ['PluginManagerTests', runPluginManagerTests],
+    ['EventBusTests', runEventBusTests],
+    ['LLMProvidersTests', runLLMProvidersTests],
+    ['KnowledgeBaseTests', runKnowledgeBaseTests],
+    ['ConsiliumNewTests', runPluginConsiliumTests],
+    ['AccountingAndBuilderTests', runAccountingAndBuilderTests],
+    ['CommandsAndHistoryTests', runCommandsAndHistoryTests],
+    ['ProductsTests', runProductsTests],
+    ['TelegramTests', runTelegramTests],
+    ['ResilienceTests', runResilienceTests],
+    ['DebugLogTests', runDebugLogTests],
+    ['TranslateTests', runTranslateTests],
+    ['CloudTtsTests', runCloudTtsTests],
+    ['CloudSttTests', runCloudSttTests],
+    ['DeveloperModeTests', runDeveloperModeTests],
+    ['UiParityTests', runUiParityTests],
+    ['GeminiRoutingTests', runGeminiRoutingTests],
+    ['CliTuiTests', runCliTuiTests],
+    ['TelegramDeepTests', runTelegramDeepTests],
+    ['RouterTests', runRouterTests],
+    ['SubagentEngineTests', runSubagentEngineTests],
+    ['LanguagePolicyTests', runLanguagePolicyTests],
+    ['EdgeTtsTests', runEdgeTtsTests],
+    ['AutoModelRouterTests', runAutoModelRouterTests],
+    ['CoveragePushTests', runCoveragePushTests],
+    ['AddCommandTests', runAddCommandTests],
+    ['ReportsCommandsTests', runReportsCommandsTests],
+    ['GeminiVisionTests', runGeminiVisionTests],
+  ];
+
   console.log('================================================================');
-  console.log('⚡ EVABOT v0.1.0 — FULL TEST SUITE (29 test suites)');
+  console.log(`⚡ EVABOT v0.1.0 — FULL TEST SUITE (${suiteRunners.length} test suites)`);
   console.log('================================================================\n');
 
-  const results = [
-    await runModelTests(),
-    await runChatTests(),
-    await runServerTests(),
-    await runCoreEngineTests(),
-    await runUniversalClientTests(),
-    await runConsiliumTests(),
-    await runRolesTests(),
-    await runAnsiStreamEngineTests(),
-    await runPluginManagerTests(),
-    await runEventBusTests(),
-    await runLLMProvidersTests(),
-    await runKnowledgeBaseTests(),
-    await runPluginConsiliumTests(),
-    await runAccountingAndBuilderTests(),
-    await runCommandsAndHistoryTests(),
-    await runProductsTests(),
-    await runTelegramTests(),
-    await runResilienceTests(),
-    await runDebugLogTests(),
-    await runTranslateTests(),
-    await runCloudTtsTests(),
-    await runCloudSttTests(),
-    await runDeveloperModeTests(),
-    await runUiParityTests(),
-    await runGeminiRoutingTests(),
-    await runCliTuiTests(),
-    await runTelegramDeepTests(),
-    await runRouterTests(),
-    await runSubagentEngineTests(),
-    await runLanguagePolicyTests(),
-    await runEdgeTtsTests(),
-    runAutoModelRouterTests(),
-    await runCoveragePushTests(),
-    await runAddCommandTests(),
-    await runReportsCommandsTests(),
-  ];
-
-  const testNames = [
-    'ModelTests',
-    'ChatTests',
-    'ServerTests',
-    'CoreEngineTests',
-    'UniversalClientTests',
-    'ConsiliumTests',
-    'RolesTests',
-    'AnsiStreamEngineTests',
-    'PluginManagerTests',
-    'EventBusTests',
-    'LLMProvidersTests',
-    'KnowledgeBaseTests',
-    'ConsiliumNewTests',
-    'AccountingAndBuilderTests',
-    'CommandsAndHistoryTests',
-    'ProductsTests',
-    'TelegramTests',
-    'ResilienceTests',
-    'DebugLogTests',
-    'TranslateTests',
-    'CloudTtsTests',
-    'CloudSttTests',
-    'DeveloperModeTests',
-    'UiParityTests',
-    'GeminiRoutingTests',
-    'CliTuiTests',
-    'TelegramDeepTests',
-    'RouterTests',
-    'SubagentEngineTests',
-    'LanguagePolicyTests',
-    'EdgeTtsTests',
-    'AutoModelRouterTests',
-    'CoveragePushTests',
-    'AddCommandTests',
-    'ReportsCommandsTests',
-  ];
+  const results: boolean[] = [];
+  const testNames: string[] = [];
+  for (const [name, run] of suiteRunners) {
+    testNames.push(name);
+    results.push(await run());
+  }
 
   let allPassed = true;
   console.log('\n================================================================');
@@ -127,7 +98,7 @@ async function runAllTests(): Promise<void> {
 
   console.log('\n================================================================');
   if (allPassed) {
-    console.log('✅ ALL 29 TEST SUITES (100% OF TESTS) PASSED SUCCESSFULLY!');
+    console.log(`✅ ALL ${testNames.length} TEST SUITES (100% OF TESTS) PASSED SUCCESSFULLY!`);
     console.log('================================================================\n');
     process.exit(0);
   } else {

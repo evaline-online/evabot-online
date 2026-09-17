@@ -160,6 +160,91 @@ export const BREAKER_PROVIDER_NAMES = [
   'opencode',
 ] as const;
 
+/**
+ * T-42: External provider model ids → OmniRoute route ids.
+ *
+ * The backend is a pure client of the local OmniRoute/LiteLLM gateway
+ * (:20128), which already fronts Groq, Cloudflare Workers AI, Z.AI, Mistral
+ * and OpenRouter. Model ids carrying these raw provider prefixes used to fall
+ * through to Google in resolveProvider() and become dead branches. They are
+ * mapped here onto the closest registered `omni/*` route so they resolve and
+ * never error at runtime. No mapping is circular: backend → OmniRoute only.
+ *
+ * Built from the ACTUAL routes declared in /opt/omniroute/config.yaml
+ * (model_list, verified 2026-09-15). Exact matches are preferred; the
+ * prefix table below is the fallback for any variant not listed.
+ */
+export const EXTERNAL_MODEL_TO_OMNI_ROUTE: Record<string, string> = {
+  // --- Groq (omni/groq-*) ---
+  'groq/openai/gpt-oss-120b': 'omni/groq-gpt-oss-120b',
+  'groq/openai/gpt-oss-20b': 'omni/groq-gpt-oss-20b',
+  'groq/groq/compound': 'omni/groq-compound',
+  'groq/groq/compound-mini': 'omni/groq-compound-mini',
+  'groq/qwen/qwen3.8-27b': 'omni/groq-qwen3.8-27b',
+  'groq/qwen/qwen3.6-27b': 'omni/groq-qwen3.6-27b',
+  // --- Cloudflare Workers AI (omni/cf-*) ---
+  'cloudflare/@cf/openai/gpt-oss-120b': 'omni/cf-gpt-oss-120b',
+  'cloudflare/@cf/openai/gpt-oss-20b': 'omni/cf-gpt-oss-20b',
+  'cloudflare/@cf/meta/llama-3.3-70b-instruct-fp8-fast': 'omni/cf-llama-3.3-70b',
+  'cloudflare/@cf/google/gemma-4-26b-a4b-it': 'omni/cf-gemma-4-26b',
+  'cloudflare/@cf/nvidia/nemotron-3-120b-a12b': 'omni/cf-nemotron-3-120b',
+  'cloudflare/@cf/meta/llama-4-scout-17b-16e-instruct': 'omni/cf-llama-4-scout',
+  'cloudflare/@cf/qwen/qwen2.5-coder-32b-instruct': 'omni/cf-qwen2.5-coder-32b',
+  'cloudflare/@cf/mistralai/mistral-small-3.1-24b-instruct': 'omni/cf-mistral-small-3.1',
+  // --- Z.AI (omni/zai-*) ---
+  'zai/glm-5.3-flash': 'omni/zai-glm-5.3-flash',
+  'zai/glm-4.5-air': 'omni/zai-glm-4.5-air',
+  // --- Mistral (omni/mistral-*) ---
+  'mistral/codestral-latest': 'omni/mistral-codestral',
+  'mistralai/codestral-latest': 'omni/mistral-codestral',
+  // --- OpenCode Go / Zen placeholders → closest working OmniRoute route ---
+  'opencode/go-coder-32b': 'omni/cf-qwen2.5-coder-32b',
+  'opencode/go-fast': 'omni/groq-gpt-oss-20b',
+  'opencode/zen-coder-pro': 'omni/cf-qwen2.5-coder-32b',
+  'opencode/zen-fast-7b': 'omni/or-lfm-2.5',
+  'opencode/zen-reasoner-32b': 'omni/groq-qwen3.6-27b',
+  'opencode/zen-multi-lang-70b': 'omni/cf-llama-3.3-70b',
+  'opencode/zen-security-auditor': 'omni/groq-compound',
+  'opencode/zen-test-gen': 'omni/cf-qwen2.5-coder-32b',
+  'opencode/zen-docs-writer': 'omni/mistral-codestral',
+  'opencode/zen-frontend-react': 'omni/cf-qwen2.5-coder-32b',
+  'opencode/zen-backend-go': 'omni/cf-qwen2.5-coder-32b',
+  'opencode/zen-devops-k8s': 'omni/groq-compound',
+};
+
+/**
+ * Prefix fallbacks for provider families fronted by OmniRoute. `hf/` and
+ * `cerebras/` have no dedicated OmniRoute route, so they are mapped to a
+ * working free route to avoid runtime errors (reported in T-42).
+ */
+const EXTERNAL_MODEL_PREFIX_TO_OMNI_ROUTE: Array<[string, string]> = [
+  ['groq/', 'omni/groq-gpt-oss-120b'],
+  ['cloudflare/', 'omni/cf-gpt-oss-120b'],
+  ['zai/', 'omni/zai-glm-5.3-flash'],
+  ['mistralai/', 'omni/mistral-codestral'],
+  ['mistral/', 'omni/mistral-codestral'],
+  ['hf/', 'omni/or-nemotron-3.5-lightning'],
+  ['cerebras/', 'omni/or-nemotron-3.5-lightning'],
+];
+
+/** True when `model` is an external provider id that OmniRoute fronts. */
+export function isMappedExternalModel(model: string): boolean {
+  const m = model.toLowerCase();
+  if (EXTERNAL_MODEL_TO_OMNI_ROUTE[m]) return true;
+  return EXTERNAL_MODEL_PREFIX_TO_OMNI_ROUTE.some(([prefix]) => m.startsWith(prefix));
+}
+
+/** Resolves an external provider id to its OmniRoute route (identity if none). */
+export function mapToOmniRoute(model: string): string {
+  const m = model.toLowerCase();
+  const exact = EXTERNAL_MODEL_TO_OMNI_ROUTE[m];
+  if (exact) return exact;
+  for (const [prefix, route] of EXTERNAL_MODEL_PREFIX_TO_OMNI_ROUTE) {
+    if (m.startsWith(prefix)) return route;
+  }
+  return model;
+}
+
 const breakers = new Map<string, CircuitBreaker>();
 
 export function getBreaker(provider: string): CircuitBreaker {
@@ -176,18 +261,21 @@ export const BREAKERS: Record<string, CircuitBreaker> = Object.fromEntries(
   BREAKER_PROVIDER_NAMES.map((p) => [p, getBreaker(p)])
 );
 
-/** Maps a model id to its logical provider/breaker key. */
+/**
+ * Maps a model id to its logical provider/breaker key.
+ *
+ * T-42: raw external provider ids (groq/*, cloudflare/*, zai/*, mistral/*,
+ * hf/*, cerebras/* …) are now served THROUGH OmniRoute, so they share the
+ * `omniroute` breaker. The `:free` / openrouter check stays first so genuine
+ * OpenRouter free ids (e.g. mistralai/mistral-7b-instruct:free) keep their
+ * own breaker. Ordering mirrors UniversalLlmClient.resolveProvider().
+ */
 export function providerOfModel(model: string): string {
   const m = model.toLowerCase();
   if (m.startsWith('omniroute/') || m.startsWith('omni/')) return 'omniroute';
-  if (m.startsWith('opencode/')) return 'opencode';
-  if (m.startsWith('hf/')) return 'hf';
-  if (m.startsWith('zai/')) return 'zai';
-  if (m.startsWith('groq/')) return 'groq';
-  if (m.startsWith('cerebras/')) return 'cerebras';
-  if (m.startsWith('cloudflare/')) return 'cloudflare';
-  if (m.startsWith('mistralai/') || m.startsWith('mistral/')) return 'mistral';
   if (m.startsWith('openrouter/') || m.endsWith(':free')) return 'openrouter';
+  if (isMappedExternalModel(m)) return 'omniroute';
+  if (m.startsWith('opencode/')) return 'opencode';
   return 'google';
 }
 

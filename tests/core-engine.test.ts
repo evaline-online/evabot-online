@@ -21,7 +21,9 @@ export async function runCoreEngineTests(): Promise<boolean> {
   assert(client.resolveProvider('gemini-2.5-flash') === 'google', 'Resolves gemini-2.5-flash to google');
   assert(client.resolveProvider('omniroute/deepseek-r1') === 'omniroute', 'Resolves omniroute model to omniroute');
   assert(client.resolveProvider('deepseek/deepseek-r1:free') === 'openrouter', 'Resolves openrouter free model to openrouter');
-  assert(client.resolveProvider('opencode/go-coder-32b') === 'opencode', 'Resolves opencode model to opencode');
+  // T-42: 'opencode/go-coder-32b' is a placeholder with no upstream route; it
+  // is mapped through OmniRoute so it resolves instead of erroring.
+  assert(client.resolveProvider('opencode/go-coder-32b') === 'omniroute', 'Resolves opencode placeholder via omniroute');
   assert(client.resolveProvider('any-model', 'omniroute') === 'omniroute', 'Explicit provider overrides default');
 
   // Message normalization
