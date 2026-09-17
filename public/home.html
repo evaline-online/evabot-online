@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>Eva Bot 001 MVP</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23000'/%3E%3Crect x='3' y='7' width='10' height='2' fill='%2300e676'/%3E%3C/svg%3E">
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/JetBrainsMono-Regular.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/JetBrainsMono-Bold.woff2" crossorigin>
+  <style>
+    @font-face{
+      font-family:'JetBrains Mono';
+      src:url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+      font-weight:400;font-style:normal;font-display:swap;
+    }
+    @font-face{
+      font-family:'JetBrains Mono';
+      src:url('/fonts/JetBrainsMono-Bold.woff2') format('woff2');
+      font-weight:700;font-style:normal;font-display:swap;
+    }
+    :root{
+      --bg:#000000;
+      --fg:#ffffff;
+      --dim:#5a5a5a;
+      --accent:#00e676;
+      --ok:#00e676;
+      --warn:#ffcc66;
+      --err:#ff6b6b;
+      --sys:#8b949e;
+      --link:#4dabf7;
+      --info:#4dabf7;
+      --code:#161b22;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--fg);
+      font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:clamp(14px,2vw,18px);
+      line-height:1.6;
+      overflow:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+    #term{
+      height:100%;
+      width:100%;
+      padding:clamp(16px,4vw,40px);
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+    }
+    .banner{
+      color:var(--accent);
+      font-weight:700;
+      font-size:1em;
+      line-height:1.6;
+      margin:0 0 .4em 0;
+      user-select:none;
+      flex:0 0 auto;
+    }
+    #out{
+      width:100%;
+      flex:1 1 auto;
+      overflow-y:auto;
+      white-space:pre-wrap;
+      word-break:break-word;
+      padding-right:6px;
+    }
+    #out::-webkit-scrollbar{width:8px}
+    #out::-webkit-scrollbar-thumb{background:#222;border-radius:4px}
+    .row{white-space:pre-wrap;word-break:break-word;min-height:1.6em}
+    .row.echo{color:var(--fg)}
+    .row.bot{color:var(--fg)}
+    .row.sys{color:var(--sys)}
+    .row.err{color:var(--err)}
+    .row.dim{color:var(--dim)}
+    .row.status,.row.metrics{color:var(--sys)}
+    /* traffic-light indicator: gray system text + 3-colour severity dot */
+    .tl{display:inline-block;width:.62em;height:.62em;border-radius:50%;margin-right:.5em;vertical-align:baseline;background:var(--sys)}
+    .tl.ok{background:var(--ok);box-shadow:0 0 5px var(--ok)}
+    .tl.warn{background:var(--warn);box-shadow:0 0 5px var(--warn)}
+    .tl.err{background:var(--err);box-shadow:0 0 5px var(--err)}
+    .tl.info{background:var(--info)}
+    .spinner{display:inline-block;width:1.2em;color:var(--accent)}
+    .metrics .mtx{color:var(--accent)}
+    .metrics .msep{color:var(--dim);margin:0 .45em}
+    /* markdown */
+    .md-p{margin:0}
+    .md-h{font-weight:700;color:var(--fg);margin:.35em 0 .1em}
+    .md-h1{font-size:1.15em;color:var(--accent)}
+    .md-h2{font-size:1.08em}
+    .md-h3,.md-h4,.md-h5,.md-h6{font-size:1em}
+    .md-code{background:var(--code);border:1px solid #21262d;border-radius:3px;padding:0 .3em;color:#e6edf3}
+    .md-pre{background:var(--code);border:1px solid #21262d;border-radius:4px;padding:.5em .7em;margin:.3em 0;overflow-x:auto;white-space:pre}
+    .md-pre code{background:none;border:0;padding:0}
+    .md-link{color:var(--link);text-decoration:none;border-bottom:1px solid rgba(77,171,247,.4)}
+    .md-link:hover{border-bottom-color:var(--link)}
+    .md-ul,.md-ol{margin:.15em 0;padding-left:1.4em}
+    .md-quote{border-left:2px solid var(--dim);margin:.2em 0;padding:.1em .7em;color:var(--sys)}
+    .md-hr{border:0;border-top:1px solid #21262d;margin:.4em 0}
+    .md-table{border-collapse:collapse;margin:.3em 0;font-size:.95em}
+    .md-table th,.md-table td{border:1px solid #21262d;padding:.15em .55em;text-align:left}
+    .md-table th{color:var(--accent);font-weight:700}
+    .line{
+      display:flex;
+      align-items:center;
+      width:100%;
+      min-height:1.6em;
+      flex:0 0 auto;
+      white-space:pre;
+    }
+    .prompt{color:var(--accent);flex:0 0 auto;white-space:pre}
+    #typed{white-space:pre-wrap;word-break:break-all}
+    .ghost{color:var(--dim)}
+    .cursor{
+      display:inline-block;
+      width:.6em;
+      height:1.15em;
+      background:var(--fg);
+      vertical-align:-.2em;
+      margin-left:3px;
+      flex:0 0 auto;
+      animation:blink 1s steps(1) infinite;
+      will-change:opacity;
+    }
+    @keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+    #input{
+      position:fixed;left:-9999px;top:0;opacity:0;width:1px;height:1px;
+      border:0;outline:0;background:transparent;color:transparent;
+    }
+  </style>
+</head>
+<body>
+  <div id="term" role="application" aria-label="EvaBot terminal">
+    <div class="banner">Eva Bot 001 MVP</div>
+    <div id="out"></div>
+    <div class="line" id="line">
+      <span class="prompt" id="prompt">&gt; </span><span id="typed"></span><span class="ghost" id="ghost"></span><span class="cursor" id="cursor" aria-hidden="true"></span>
+    </div>
+  </div>
+  <input id="input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" autofocus aria-label="Command input">
+
+  <script>
+    (function () {
+      "use strict";
+
+      var input = document.getElementById("input");
+      var typed = document.getElementById("typed");
+      var ghost = document.getElementById("ghost");
+      var out = document.getElementById("out");
+
+      // ---- command surface: full backend API, grouped by logic --------------
+      var CMD_GROUPS = [
+        { id: "system",    cmds: ["/help", "/clear", "/status", "/version", "/lang", "/history"] },
+        { id: "models",    cmds: ["/model", "/models", "/models/top", "/models/free", "/models/paid"] },
+        { id: "runtime",   cmds: ["/health", "/stack", "/services", "/billing", "/live"] },
+        { id: "knowledge", cmds: ["/kb", "/kb/list", "/kb/status"] },
+        { id: "observe",   cmds: ["/logs", "/logs/recent", "/logs/files", "/alerts", "/alerts/stats"] },
+        { id: "control",   cmds: ["/roles", "/rules", "/security", "/security/status", "/plugins"] },
+        { id: "voice",     cmds: ["/tts"] }
+      ];
+      var API_CMDS = {
+        "/health": "/api/health",
+        "/stack": "/api/stack/status",
+        "/services": "/api/services/health",
+        "/billing": "/api/billing",
+        "/plugins": "/api/plugins",
+        "/alerts": "/api/alerts",
+        "/alerts/stats": "/api/alerts/stats",
+        "/roles": "/api/roles",
+        "/rules": "/api/rules",
+        "/logs": "/api/logs/recent",
+        "/logs/recent": "/api/logs/recent",
+        "/logs/files": "/api/logs/files",
+        "/security": "/api/security/status",
+        "/security/status": "/api/security/status",
+        "/kb": "/api/kb/search?q=",
+        "/kb/list": "/api/kb/list",
+        "/kb/status": "/api/kb/status",
+        "/models/top": "/api/models/top",
+        "/models/free": "/api/models/free",
+        "/models/paid": "/api/models/paid",
+        "/tts": "/api/tts/status"
+      };
+      var TERMINAL_CMDS = ["/help", "/clear", "/status", "/version", "/lang", "/history", "/model", "/models", "/live"];
+      var COMMANDS = [];
+      CMD_GROUPS.forEach(function (g) {
+        g.cmds.forEach(function (c) { if (COMMANDS.indexOf(c) < 0) COMMANDS.push(c); });
+      });
+      function helpLines() {
+        var lines = [];
+        CMD_GROUPS.forEach(function (g) {
+          lines.push(g.id + ": " + g.cmds.join(" "));
+        });
+        return lines;
+      }
+      var HISTORY_KEY = "evabot.history.v1";
+      var CORR_KEY = "evabot.corr.v1";
+      var LANG_KEY = "evabot.lang.v1";
+      var LANGS = ["ru", "en", "uk", "pl", "de", "ro"];
+
+      function lexKey(code) { return "evabot.lex." + code + ".v1"; }
+
+      var initialLang = load(LANG_KEY, null);
+      if (LANGS.indexOf(initialLang) < 0) {
+        var nav = (navigator.language || "ru").slice(0, 2).toLowerCase();
+        initialLang = LANGS.indexOf(nav) >= 0 ? nav : "ru";
+      }
+
+      var state = {
+        history: load(HISTORY_KEY, []),
+        histIdx: -1,
+        model: "",
+        sessionId: "web-terminal",
+        lang: initialLang,
+        lex: load(lexKey(initialLang), {}),
+        corr: load(CORR_KEY, {}),
+        busy: false,
+        booting: true
+      };
+
+      // Pre-seeded vocabulary for instant autocomplete across all 6 languages
+      var SEED_LEX = {
+        ru: {
+          "evaline": 1, "evabot": 1, "привет": 1, "здравствуйте": 1, "каталог": 1, "продукция": 1,
+          "материалы": 1, "консилиум": 1, "доставка": 1, "производство": 1, "стоимость": 1,
+          "характеристики": 1, "толщина": 1, "плотность": 1, "рулоны": 1, "листы": 1,
+          "помощь": 1, "статус": 1, "модели": 1, "заказ": 1, "цена": 1, "пена": 1
+        },
+        uk: {
+          "evaline": 1, "evabot": 1, "привіт": 1, "добрий": 1, "каталог": 1, "продукція": 1,
+          "матеріали": 1, "консиліум": 1, "доставка": 1, "виробництво": 1, "вартість": 1,
+          "характеристики": 1, "товщина": 1, "щільність": 1, "рулони": 1, "листи": 1,
+          "допомога": 1, "статус": 1, "моделі": 1, "замовлення": 1, "ціна": 1, "піна": 1
+        },
+        en: {
+          "evaline": 1, "evabot": 1, "hello": 1, "catalog": 1, "products": 1, "materials": 1,
+          "consilium": 1, "delivery": 1, "production": 1, "pricing": 1, "specifications": 1,
+          "thickness": 1, "density": 1, "rolls": 1, "sheets": 1, "foam": 1,
+          "help": 1, "status": 1, "models": 1, "order": 1, "price": 1
+        },
+        pl: {
+          "evaline": 1, "evabot": 1, "cześć": 1, "dzień": 1, "katalog": 1, "produkty": 1,
+          "materiały": 1, "konsylium": 1, "dostawa": 1, "produkcja": 1, "cennik": 1,
+          "specyfikacja": 1, "grubość": 1, "gęstość": 1, "rolki": 1, "arkusze": 1, "pianka": 1,
+          "pomoc": 1, "status": 1, "modele": 1, "zamówienie": 1, "cena": 1
+        },
+        de: {
+          "evaline": 1, "evabot": 1, "hallo": 1, "katalog": 1, "produkte": 1, "materialien": 1,
+          "consilium": 1, "lieferung": 1, "produktion": 1, "preise": 1, "spezifikation": 1,
+          "dicke": 1, "dichte": 1, "rollen": 1, "platten": 1, "schaum": 1,
+          "hilfe": 1, "status": 1, "modelle": 1, "bestellung": 1, "preis": 1
+        },
+        ro: {
+          "evaline": 1, "evabot": 1, "salut": 1, "catalog": 1, "produse": 1, "materiale": 1,
+          "consilium": 1, "livrare": 1, "producție": 1, "prețuri": 1, "specificație": 1,
+          "grosime": 1, "densitate": 1, "role": 1, "foi": 1, "spumă": 1,
+          "ajutor": 1, "status": 1, "modele": 1, "comandă": 1, "preț": 1
+        }
+      };
+
+      // Seed corrections per language (ru/uk/pl typo + EN-layout). Learned words extend this.
+      var SEED_CORR = {
+        ru: {
+          "evaoline": "evaline", "evalin": "evaline", "evabot": "evabot",
+          "теьу": "тема", "превет": "привет", "привте": "привет",
+          "првиет": "привет", "привт": "привет", "спасиба": "спасибо", "пажалуста": "пожалуйста",
+          "пожалуста": "пожалуйста", "пажалуйста": "пожалуйста",
+          "здраствуй": "здравствуй", "здраствуйте": "здравствуйте", "здрасте": "здравствуйте",
+          "сеодня": "сегодня", "щас": "сейчас", "каталаг": "каталог", "коталог": "каталог",
+          "прадукция": "продукция", "продукцыя": "продукция", "достафка": "доставка",
+          "матерьял": "материал", "матерьялы": "материалы", "памаги": "помоги",
+          "скоко": "сколько", "скока": "сколько"
+        },
+        en: {
+          "evaoline": "evaline", "evalin": "evaline", "evabot": "evabot",
+          "teh": "the", "recieve": "receive", "adress": "address",
+          "seperate": "separate", "definately": "definitely", "wich": "which",
+          "tomorow": "tomorrow", "occured": "occurred", "enviroment": "environment",
+          "succsess": "success", "catlog": "catalog", "catalouge": "catalog",
+          "prodcut": "product", "produtcs": "products", "materail": "material",
+          "materilas": "materials", "delivry": "delivery", "delvery": "delivery"
+        },
+        uk: {
+          "evaoline": "evaline", "evalin": "evaline", "evabot": "evabot",
+          "прівіт": "привіт", "првіт": "привіт", "привт": "привіт",
+          "дякуб": "дякую", "дякуюю": "дякую", "будласка": "будь ласка", "будьласка": "будь ласка",
+          "здрастуйте": "добрий день", "добридень": "добрий день", "добрийдень": "добрий день",
+          "допоможіт": "допоможіть", "сьогодні": "сьогодні",
+          "каталаг": "каталог", "коталог": "каталог", "продукція": "продукція",
+          "матеріали": "матеріали", "скількі": "скільки", "скіки": "скільки", "скікі": "скільки"
+        },
+        pl: {
+          "evaoline": "evaline", "evalin": "evaline", "evabot": "evabot",
+          "dzienki": "dziękuję", "dzienkuje": "dziękuję", "prosze": "proszę",
+          "przepraszm": "przepraszam", "czesc": "cześć", "witam": "witam",
+          "dzien": "dzień", "jak": "jak", "katolog": "katalog", "katlog": "katalog",
+          "produty": "produkty", "produtki": "produkty", "materaly": "materiały",
+          "materjały": "materiały", "dostwaca": "dostawa"
+        },
+        de: {
+          "evaoline": "evaline", "evalin": "evaline", "evabot": "evabot",
+          "danek": "danke", "bestelung": "bestellung", "mozlich": "möglich",
+          "uber": "über", "fur": "für", "tchuss": "tschüss", "wolen": "wollen",
+          "mochte": "möchte", "grus": "gruß", "katlog": "katalog", "katolog": "katalog"
+        },
+        ro: {
+          "evaoline": "evaline", "evalin": "evaline", "evabot": "evabot",
+          "multumesc": "mulțumesc", "buna": "bună", "produktie": "producție",
+          "comanda": "comandă", "intrebare": "întrebare", "raspuns": "răspuns",
+          "sti": "știi", "salut": "salut", "katlog": "catalog", "catlog": "catalog"
+        }
+      };
+
+      // UI + reply language. Keep in sync with server HOME_TEXT (browser vs curl identity).
+      var I18N = {
+        ru: {
+          boot: ["[ ok ] ядро", "[ ok ] база знаний", "[ ok ] модели", "[ ok ] каналы связи", "готово"],
+          greeting: "Привет, я Ева. Чем я могу помочь?",
+          help: "команды: /help /clear /model <id> /models /status /lang",
+          hint: "текст: Enter — отправить · Tab — дополнить · ↑/↓ — история",
+          helpApi: "api: ",
+          version: "версия: ",
+          history: "история (последние 10): ",
+          emptyHistory: "пусто",
+          unknown: "неизвестная команда: ",
+          unknownTail: " (введите /help)",
+          modelSet: "модель = ",
+          modelCur: "текущая модель: ",
+          loading: "загружаю модели…",
+          noModels: "нет моделей",
+          autocorrect: "↳ автокоррекция: ",
+          langSet: "язык = ",
+          langList: "языки: ru en uk pl de ro · текущий: ",
+          status: "сессия=",
+          reply: "Всегда отвечай только на русском языке."
+        },
+        en: {
+          boot: ["[ ok ] core", "[ ok ] knowledge base", "[ ok ] models", "[ ok ] channels", "ready"],
+          greeting: "Hi, I'm Eva. How can I help you?",
+          help: "commands: /help /clear /model <id> /models /status /lang",
+          hint: "text: Enter to send · Tab to complete · ↑/↓ history",
+          helpApi: "api: ",
+          version: "version: ",
+          history: "history (last 10): ",
+          emptyHistory: "empty",
+          unknown: "unknown command: ",
+          unknownTail: " (try /help)",
+          modelSet: "model = ",
+          modelCur: "current model: ",
+          loading: "loading models…",
+          noModels: "no models",
+          autocorrect: "↳ autocorrect: ",
+          langSet: "language = ",
+          langList: "languages: ru en uk pl de ro · current: ",
+          status: "session=",
+          reply: "Always answer only in English."
+        },
+        uk: {
+          boot: ["[ ok ] ядро", "[ ok ] база знань", "[ ok ] моделі", "[ ok ] канали зв'язку", "готово"],
+          greeting: "Привіт, я Єва. Чим я можу допомогти?",
+          help: "команди: /help /clear /model <id> /models /status /lang",
+          hint: "текст: Enter — надіслати · Tab — доповнити · ↑/↓ — історія",
+          helpApi: "api: ",
+          version: "версія: ",
+          history: "історія (останні 10): ",
+          emptyHistory: "порожньо",
+          unknown: "невідома команда: ",
+          unknownTail: " (введіть /help)",
+          modelSet: "модель = ",
+          modelCur: "поточна модель: ",
+          loading: "завантажую моделі…",
+          noModels: "немає моделей",
+          autocorrect: "↳ автокорекція: ",
+          langSet: "мова = ",
+          langList: "мови: ru en uk pl de ro · поточна: ",
+          status: "сесія=",
+          reply: "Завжди відповідай лише українською мовою."
+        },
+        pl: {
+          boot: ["[ ok ] rdzeń", "[ ok ] baza wiedzy", "[ ok ] modele", "[ ok ] kanały", "gotowe"],
+          greeting: "Cześć, jestem Ewa. Jak mogę pomóc?",
+          help: "komendy: /help /clear /model <id> /models /status /lang",
+          hint: "tekst: Enter — wyślij · Tab — uzupełnij · ↑/↓ — historia",
+          helpApi: "api: ",
+          version: "wersja: ",
+          history: "historia (ostatnie 10): ",
+          emptyHistory: "pusto",
+          unknown: "nieznana komenda: ",
+          unknownTail: " (wpisz /help)",
+          modelSet: "model = ",
+          modelCur: "aktualny model: ",
+          loading: "wczytuję modele…",
+          noModels: "brak modeli",
+          autocorrect: "↳ autokorekta: ",
+          langSet: "język = ",
+          langList: "języki: ru en uk pl de ro · aktualny: ",
+          status: "sesja=",
+          reply: "Zawsze odpowiadaj tylko po polsku."
+        },
+        de: {
+          boot: ["[ ok ] Kern", "[ ok ] Wissensbasis", "[ ok ] Modelle", "[ ok ] Kanäle", "bereit"],
+          greeting: "Hallo, ich bin Eva. Wie kann ich helfen?",
+          help: "Befehle: /help /clear /model <id> /models /status /lang",
+          hint: "Text: Enter — senden · Tab — vervollständigen · ↑/↓ — Verlauf",
+          helpApi: "api: ",
+          version: "Version: ",
+          history: "Verlauf (letzte 10): ",
+          emptyHistory: "leer",
+          unknown: "unbekannter Befehl: ",
+          unknownTail: " (/help eingeben)",
+          modelSet: "Modell = ",
+          modelCur: "aktuelles Modell: ",
+          loading: "Modelle werden geladen…",
+          noModels: "keine Modelle",
+          autocorrect: "↳ Autokorrektur: ",
+          langSet: "Sprache = ",
+          langList: "Sprachen: ru en uk pl de ro · aktuell: ",
+          status: "Sitzung=",
+          reply: "Antworte immer ausschließlich auf Deutsch."
+        },
+        ro: {
+          boot: ["[ ok ] nucleu", "[ ok ] baza de cunoștințe", "[ ok ] modele", "[ ok ] canale", "gata"],
+          greeting: "Bună, sunt Eva. Cu ce te pot ajuta?",
+          help: "comenzi: /help /clear /model <id> /models /status /lang",
+          hint: "text: Enter — trimite · Tab — completează · ↑/↓ — istoric",
+          helpApi: "api: ",
+          version: "versiune: ",
+          history: "istoric (ultimele 10): ",
+          emptyHistory: "gol",
+          unknown: "comandă necunoscută: ",
+          unknownTail: " (scrie /help)",
+          modelSet: "model = ",
+          modelCur: "model curent: ",
+          loading: "se încarcă modelele…",
+          noModels: "niciun model",
+          autocorrect: "↳ autocorectare: ",
+          langSet: "limbă = ",
+          langList: "limbi: ru en uk pl de ro · curentă: ",
+          status: "sesiune=",
+          reply: "Răspunde întotdeauna doar în română."
+        }
+      };
+
+      function T() { return I18N[state.lang] || I18N.ru; }
+
+      function loadLexicon(code) {
+        fetch("/lexicon-" + code + ".json")
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (data) {
+            if (data) {
+              state.lex = Object.assign({}, data, state.lex);
+              render();
+            }
+          })
+          .catch(function () {});
+      }
+
+      function setLang(code) {
+        if (LANGS.indexOf(code) < 0) return false;
+        state.lang = code;
+        state.lex = load(lexKey(code), {});
+        save(LANG_KEY, code);
+        document.documentElement.lang = code;
+        loadLexicon(code);
+        return true;
+      }
+
+      function load(key, fallback) {
+        try { var v = JSON.parse(localStorage.getItem(key) || "null"); return v == null ? fallback : v; }
+        catch (_) { return fallback; }
+      }
+      function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (_) {} }
+
+      function render() {
+        typed.textContent = input.value;
+        var sug = suggest();
+        ghost.textContent = sug && sug.length > input.value.length ? sug.slice(input.value.length) : "";
+      }
+
+      function addRow(text, cls) {
+        var el = document.createElement("div");
+        el.className = "row " + (cls || "bot");
+        el.textContent = text;
+        out.appendChild(el);
+        out.scrollTop = out.scrollHeight;
+        return el;
+      }
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+
+      // system line: gray text + traffic-light severity dot (ok/warn/err/info)
+      function sysRow(text, level) {
+        var row = addRow("", "sys");
+        row.innerHTML = '<span class="tl ' + (level || "info") + '"></span>' + escapeHtml(text);
+        out.scrollTop = out.scrollHeight;
+        return row;
+      }
+
+      // ---- inline + block markdown -----------------------------------------
+      function renderInline(s) {
+        var codes = [];
+        s = escapeHtml(s);
+        s = s.replace(/`([^`]+)`/g, function (_, c) { codes.push(c); return "\u0000" + (codes.length - 1) + "\u0000"; });
+        s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+|\/[^)\s]*)\)/g, function (_, t, u) {
+          return '<a class="md-link" href="' + u + '" target="_blank" rel="noopener">' + t + "</a>";
+        });
+        s = s.replace(/(^|[\s(])((?:https?:\/\/)[^\s<)]+)/g, function (_, p, u) {
+          return p + '<a class="md-link" href="' + u + '" target="_blank" rel="noopener">' + u + "</a>";
+        });
+        s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+        s = s.replace(/(^|[^*])\*([^*]+)\*/g, "$1<em>$2</em>");
+        s = s.replace(/~~([^~]+)~~/g, "<s>$1</s>");
+        s = s.replace(/\u0000(\d+)\u0000/g, function (_, n) { return '<code class="md-code">' + codes[n] + "</code>"; });
+        return s;
+      }
+
+      function mdSplitRow(l) {
+        return l.trim().replace(/^\||\|$/g, "").split("|");
+      }
+
+      function mdToHtml(src) {
+        var lines = String(src).replace(/\r\n?/g, "\n").split("\n");
+        var html = [], i = 0, list = null;
+        function closeList() { if (list) { html.push("</" + list + ">"); list = null; } }
+        while (i < lines.length) {
+          var line = lines[i];
+          if (/^```(\w*)\s*$/.test(line)) {
+            closeList();
+            var buf = []; i++;
+            while (i < lines.length && !/^```\s*$/.test(lines[i])) { buf.push(lines[i]); i++; }
+            i++;
+            html.push('<pre class="md-pre"><code>' + escapeHtml(buf.join("\n")) + "</code></pre>");
+            continue;
+          }
+          if (/^\s*\|(.+)\|\s*$/.test(line) && i + 1 < lines.length && /^\s*\|[\s:|-]+\|\s*$/.test(lines[i + 1])) {
+            closeList();
+            var head = mdSplitRow(line); i += 2; var rows = [];
+            while (i < lines.length && /^\s*\|(.+)\|\s*$/.test(lines[i])) { rows.push(mdSplitRow(lines[i])); i++; }
+            html.push('<table class="md-table"><thead><tr>' + head.map(function (c) { return "<th>" + renderInline(c.trim()) + "</th>"; }).join("") +
+              "</tr></thead><tbody>" + rows.map(function (r) {
+                return "<tr>" + r.map(function (c) { return "<td>" + renderInline(c.trim()) + "</td>"; }).join("") + "</tr>";
+              }).join("") + "</tbody></table>");
+            continue;
+          }
+          var h = line.match(/^(#{1,6})\s+(.*)$/);
+          if (h) { closeList(); var lvl = h[1].length; html.push('<div class="md-h md-h' + lvl + '">' + renderInline(h[2]) + "</div>"); i++; continue; }
+          if (/^\s*(-{3,}|\*{3,})\s*$/.test(line)) { closeList(); html.push('<hr class="md-hr">'); i++; continue; }
+          if (/^>\s?/.test(line)) {
+            closeList(); var q = [];
+            while (i < lines.length && /^>\s?/.test(lines[i])) { q.push(lines[i].replace(/^>\s?/, "")); i++; }
+            html.push('<blockquote class="md-quote">' + renderInline(q.join(" ")) + "</blockquote>");
+            continue;
+          }
+          var ul = line.match(/^\s*[-*+]\s+(.*)$/);
+          if (ul) { if (list !== "ul") { closeList(); html.push('<ul class="md-ul">'); list = "ul"; } html.push("<li>" + renderInline(ul[1]) + "</li>"); i++; continue; }
+          var ol = line.match(/^\s*\d+[.)]\s+(.*)$/);
+          if (ol) { if (list !== "ol") { closeList(); html.push('<ol class="md-ol">'); list = "ol"; } html.push("<li>" + renderInline(ol[1]) + "</li>"); i++; continue; }
+          if (/^\s*$/.test(line)) { closeList(); i++; continue; }
+          closeList(); html.push('<div class="md-p">' + renderInline(line) + "</div>"); i++;
+        }
+        closeList();
+        return html.join("");
+      }
+
+      function addMdRow() {
+        var el = document.createElement("div");
+        el.className = "row bot md";
+        out.appendChild(el);
+        out.scrollTop = out.scrollHeight;
+        return el;
+      }
+      function renderMdRow(el, text) {
+        el.innerHTML = mdToHtml(text);
+        out.scrollTop = out.scrollHeight;
+      }
+
+      // ---- live status line: spinner + stopwatch + stage + counters ----------
+      var SPIN_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+      var live = { row: null, timer: null, t0: 0, frame: 0, stage: "", level: "info", sys: 0 };
+
+      function paintLive() {
+        if (!live.row || !live.row.parentNode) return;
+        var el = ((Date.now() - live.t0) / 1000).toFixed(1) + "s";
+        live.row.innerHTML = '<span class="spinner">' + SPIN_FRAMES[live.frame++ % SPIN_FRAMES.length] + "</span> " +
+          '<span class="tl ' + live.level + '"></span>' + escapeHtml(live.stage) +
+          '<span class="msep">·</span>' + el +
+          (live.sys ? '<span class="msep">·</span>' + live.sys + " sys" : "");
+        out.scrollTop = out.scrollHeight;
+      }
+      function startLive(stage) {
+        stopLive();
+        live.t0 = Date.now(); live.frame = 0; live.sys = 0; live.stage = stage || "…"; live.level = "info";
+        live.row = addRow("", "status");
+        paintLive();
+        live.timer = setInterval(paintLive, 100);
+      }
+      function setLive(stage, level) {
+        if (stage) live.stage = stage;
+        if (level) live.level = level;
+        paintLive();
+      }
+      function stopLive() {
+        if (live.timer) clearInterval(live.timer);
+        live.timer = null;
+        if (live.row && live.row.parentNode) live.row.parentNode.removeChild(live.row);
+        live.row = null;
+      }
+      function finishLive(level, parts) {
+        var el = ((Date.now() - live.t0) / 1000).toFixed(1) + "s";
+        stopLive();
+        var row = addRow("", "metrics " + (level || "ok"));
+        row.innerHTML = '<span class="tl ' + (level || "ok") + '"></span><span class="mtx">done</span>' +
+          (parts && parts.length ? '<span class="msep">·</span>' + parts.map(escapeHtml).join('<span class="msep">·</span>') : "") +
+          '<span class="msep">·</span>' + el;
+        out.scrollTop = out.scrollHeight;
+        return row;
+      }
+
+      function tokenize(s) {
+        return String(s).toLowerCase().match(/[\p{L}\p{N}_/.-]+/gu) || [];
+      }
+
+      function learn(text) {
+        tokenize(text).forEach(function (w) {
+          if (w.length < 3) return;
+          state.lex[w] = (state.lex[w] || 0) + 1;
+        });
+        save(lexKey(state.lang), state.lex);
+      }
+
+      function applyCorrections(text) {
+        var map = Object.assign({}, SEED_CORR[state.lang] || {}, state.corr);
+        return text.replace(/[\p{L}]+/gu, function (w) {
+          var hit = map[w.toLowerCase()];
+          if (!hit) return w;
+          if (w[0] === w[0].toUpperCase() && w[0] !== w[0].toLowerCase()) {
+            return hit.charAt(0).toUpperCase() + hit.slice(1);
+          }
+          return hit;
+        });
+      }
+
+      function lastWord(s) {
+        var m = s.match(/[\p{L}\p{N}_-]+$/u);
+        return m ? m[0] : "";
+      }
+
+      function suggest() {
+        var val = input.value;
+        if (state.busy) return "";
+        if (val.charAt(0) === "/") {
+          var hits = COMMANDS.filter(function (c) { return c.indexOf(val) === 0 && c !== val; });
+          return hits.length ? hits[0] : "";
+        }
+        var w = lastWord(val);
+        if (w.length < 2) return "";
+        var lower = w.toLowerCase();
+        var best = "";
+        var bestScore = -Infinity;
+        var dict = Object.assign({}, SEED_LEX[state.lang] || {}, state.lex);
+        for (var k in dict) {
+          if (k.length > w.length && k.indexOf(lower) === 0) {
+            var score = (dict[k] || 1) * 1000 - k.length;
+            if (score > bestScore) {
+              bestScore = score;
+              best = k;
+            }
+          }
+        }
+        return best ? val.slice(0, val.length - w.length) + best : "";
+      }
+
+      function acceptSuggestion() {
+        var sug = suggest();
+        if (!sug) return false;
+        input.value = sug;
+        render();
+        return true;
+      }
+
+      async function handleCommand(cmd) {
+        var parts = cmd.trim().split(/\s+/);
+        var t = T();
+        switch (parts[0]) {
+          case "/help":
+            helpLines().forEach(function (l) { sysRow(l, "info"); });
+            sysRow(t.hint, "info");
+            break;
+          case "/clear":
+            out.textContent = "";
+            break;
+          case "/lang":
+            if (parts[1] && setLang(parts[1].toLowerCase())) addRow(T().langSet + state.lang, "sys");
+            else addRow(T().langList + state.lang, "sys");
+            break;
+          case "/version":
+            addRow(t.version + "EvaBot v0.0.1 MVP", "sys");
+            break;
+          case "/history":
+            var hist = state.history.slice(-10);
+            addRow(hist.length ? t.history + "\n" + hist.join("\n") : t.emptyHistory, "sys");
+            break;
+          case "/model":
+            if (parts[1]) { state.model = parts[1]; addRow(t.modelSet + parts[1], "sys"); }
+            else addRow(t.modelCur + (state.model || "(default)"), "sys");
+            break;
+          case "/models":
+            addRow(t.loading, "dim");
+            try {
+              var r = await fetch("/api/models");
+              var d = await r.json();
+              var list = Array.isArray(d) ? d : (d.models || d.data || []);
+              addRow(list.slice(0, 12).map(function (m) { return m.id || m.name || m; }).join("\n") || t.noModels, "sys");
+            } catch (e) { addRow("[error] " + e.message, "err"); }
+            break;
+          case "/live":
+            try {
+              var ls = await fetch("/api/live/state");
+              var ld = await ls.json();
+              sysRow("live: " + ld.events + " events · " + ld.viewers + " viewers · https://live.evabot.online", "ok");
+            } catch (e) { sysRow("[error] " + e.message, "err"); }
+            break;
+          case "/status":
+            addRow(t.status + state.sessionId + " model=" + (state.model || "default") + " lang=" + state.lang + " lex=" + Object.keys(state.lex).length + " words", "sys");
+            break;
+          default:
+            if (API_CMDS[parts[0]]) {
+              addRow(t.loading, "dim");
+              try {
+                var apiRes = await fetch(API_CMDS[parts[0]] + parts.slice(1).join(" "));
+                var apiData = await apiRes.json();
+                addRow(JSON.stringify(apiData, null, 1).slice(0, 4000), "sys");
+              } catch (e) { addRow("[error] " + e.message, "err"); }
+            } else {
+              addRow(t.unknown + parts[0] + t.unknownTail, "err");
+            }
+        }
+      }
+
+      async function send(raw) {
+        var corrected = applyCorrections(raw);
+        if (corrected !== raw) addRow("  " + T().autocorrect + corrected, "dim");
+        var text = corrected.trim();
+        if (!text) return;
+
+        state.history.push(text);
+        if (state.history.length > 200) state.history = state.history.slice(-200);
+        save(HISTORY_KEY, state.history);
+        learn(text);
+
+        if (text.charAt(0) === "/") { await handleCommand(text); return; }
+
+        var row = addMdRow();
+        state.busy = true;
+        render();
+        startLive("запрос принят");
+        try {
+          var res = await fetch("/api/chat/stream", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              message: text,
+              model: state.model || undefined,
+              history: state.history.slice(0, -1).slice(-12).map(function (h) { return { role: "user", content: h }; }),
+              sessionId: state.sessionId,
+              systemInstruction: T().reply
+            })
+          });
+          if (!res.ok) { stopLive(); row.className = "row err"; row.textContent = "[error] HTTP " + res.status + " " + res.statusText; return; }
+          var reader = res.body.getReader();
+          var dec = new TextDecoder();
+          var buf = "";
+          while (true) {
+            var chunk = await reader.read();
+            if (chunk.done) break;
+            buf += dec.decode(chunk.value, { stream: true });
+            var parts = buf.split("\n\n");
+            buf = parts.pop();
+            for (var i = 0; i < parts.length; i++) {
+              var m = parts[i].match(/^data:\s?(.*)$/m);
+              if (!m) continue;
+              var d; try { d = JSON.parse(m[1]); } catch (_) { continue; }
+              if (d.sys) { live.sys++; setLive(d.sys.text, d.sys.level); }
+              if (d.chunk) { row.dataset.raw = (row.dataset.raw || "") + d.chunk; renderMdRow(row, row.dataset.raw); }
+              if (d.done) {
+                if (row.dataset.raw) learn(row.dataset.raw);
+                var partsArr = [
+                  d.usage ? ("tok " + d.usage.promptTokens + "→" + d.usage.completionTokens + "=" + d.usage.totalTokens) : "",
+                  d.tps ? d.tps + " tok/s" : ""
+                ].filter(Boolean);
+                finishLive("ok", partsArr);
+              }
+              if (d.error) { stopLive(); row.className = "row err"; row.textContent = "[error] " + d.error; }
+            }
+          }
+          if (!row.textContent && !row.innerHTML) row.textContent = "(empty response)";
+          state.history.push(row.dataset.raw || row.textContent || "");
+        } catch (e) {
+          stopLive();
+          row.className = "row err";
+          row.textContent = "[error] " + e.message;
+        } finally {
+          state.busy = false;
+          render();
+          out.scrollTop = out.scrollHeight;
+        }
+      }
+
+      input.addEventListener("input", render);
+
+      input.addEventListener("keydown", function (e) {
+        if (state.booting) skipBoot();
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (state.busy) return;
+          var v = input.value;
+          input.value = "";
+          render();
+          addRow("> " + v, "echo");
+          send(v);
+        } else if (e.key === "Tab") {
+          if (acceptSuggestion()) e.preventDefault();
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          if (!state.history.length) return;
+          state.histIdx = state.histIdx < 0 ? state.history.length - 1 : Math.max(0, state.histIdx - 1);
+          input.value = state.history[state.histIdx] || "";
+          render();
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (state.histIdx < 0) return;
+          state.histIdx += 1;
+          if (state.histIdx >= state.history.length) { state.histIdx = -1; input.value = ""; }
+          else input.value = state.history[state.histIdx];
+          render();
+        } else if (e.key === "Escape") {
+          input.value = "";
+          render();
+        }
+      });
+
+      function focusInput() { try { input.focus(); } catch (_) {} }
+
+      var bootTimer = null;
+      var typeTimer = null;
+      var typeToken = 0;
+      var REDUCED = false;
+      try { REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (_) {}
+
+      // Typewriter: print `text` character by character into a new row.
+      // Aborted instantly when typeToken changes (skip) or booting ends.
+      function typeRow(text, cls, charMs, done) {
+        var myToken = ++typeToken;
+        var el = addRow("", cls);
+        var i = 0;
+        function tick() {
+          if (myToken !== typeToken) return;
+          if (!state.booting || REDUCED || charMs <= 0) {
+            el.textContent = text;
+            out.scrollTop = out.scrollHeight;
+            if (done) done();
+            return;
+          }
+          el.textContent = text.slice(0, ++i);
+          out.scrollTop = out.scrollHeight;
+          if (i < text.length) typeTimer = setTimeout(tick, charMs);
+          else if (done) done();
+        }
+        tick();
+      }
+
+      function boot() {
+        var lines = T().boot.slice();
+        var charMs = 14;
+        var i = 0;
+
+        function finalLines() {
+          var arr = [[T().greeting, "bot"]];
+          helpLines().forEach(function (l) { arr.push([l, "sys"]); });
+          return arr;
+        }
+
+        function stepFinal(queue) {
+          if (!state.booting) return;
+          if (!queue.length) {
+            state.booting = false;
+            typeToken++;
+            render();
+            focusInput();
+            return;
+          }
+          var item = queue.shift();
+          typeRow(item[0], item[1], charMs, function () {
+            bootTimer = setTimeout(function () { stepFinal(queue); }, 120);
+          });
+        }
+
+        function step() {
+          if (!state.booting) return;
+          if (i < lines.length) {
+            typeRow(lines[i], "sys", charMs, function () {
+              i++;
+              bootTimer = setTimeout(step, 130);
+            });
+          } else {
+            stepFinal(finalLines());
+          }
+        }
+        step();
+      }
+
+      function skipBoot() {
+        if (!state.booting) return;
+        state.booting = false;
+        typeToken++;
+        if (bootTimer) clearTimeout(bootTimer);
+        if (typeTimer) clearTimeout(typeTimer);
+        bootTimer = null; typeTimer = null;
+        out.textContent = "";
+        T().boot.forEach(function (l) { addRow(l, "sys"); });
+        addRow(T().greeting, "bot");
+        addRow(T().help, "sys");
+        addRow(T().helpApi + Object.keys(API_CMDS).join(" "), "sys");
+        render();
+      }
+
+      document.addEventListener("click", function () { skipBoot(); focusInput(); });
+      document.addEventListener("touchstart", function () { skipBoot(); focusInput(); }, { passive: true });
+      document.addEventListener("keydown", function () { if (state.booting) { skipBoot(); focusInput(); } });
+      window.addEventListener("focus", focusInput);
+
+      document.documentElement.lang = state.lang;
+      loadLexicon(state.lang);
+      focusInput();
+      render();
+      boot();
+    })();
+  </script>
+</body>
+</html>

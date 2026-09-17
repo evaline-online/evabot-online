@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EvaBot Excalidraw</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html { height: 100%; width: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    #app { height: 100vh; display: flex; flex-direction: column; }
+    .toolbar { 
+      display: flex; gap: 8px; padding: 12px; 
+      background: #1e1e1e; border-bottom: 1px solid #333; 
+      flex-wrap: wrap; align-items: center;
+    }
+    .toolbar button { 
+      padding: 8px 16px; background: #2d2d2d; border: 1px solid #444; 
+      color: #fff; border-radius: 6px; cursor: pointer; font-size: 13px;
+      transition: all 0.15s; font-weight: 500;
+    }
+    .toolbar button:hover { background: #3a3a3a; border-color: #555; }
+    .toolbar button:active { background: #444; }
+    .toolbar button.primary { background: #0066cc; border-color: #0055aa; }
+    .toolbar button.primary:hover { background: #0055aa; }
+    .toolbar select { 
+      padding: 8px 12px; background: #2d2d2d; border: 1px solid #444; 
+      color: #fff; border-radius: 6px; cursor: pointer; font-size: 13px;
+    }
+    .toolbar .spacer { flex: 1; }
+    .toolbar .status { color: #888; font-size: 12px; padding: 0 8px; }
+    #iframe-container { flex: 1; background: #fff; position: relative; }
+    #excalidraw-iframe { width: 100%; height: 100%; border: none; background: #fff; }
+    @media (max-width: 768px) {
+      .toolbar { padding: 8px; gap: 6px; }
+      .toolbar button { padding: 6px 12px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="toolbar" role="toolbar" aria-label="Excalidraw tools">
+      <button id="btn-new" title="New drawing">➕ New</button>
+      <button id="btn-save" title="Save scene to file (Ctrl+S)">💾 Save JSON</button>
+      <button id="btn-load" title="Load scene from file (Ctrl+O)">📂 Load JSON</button>
+      <button id="btn-export-png" title="Export as PNG">🖼 PNG</button>
+      <button id="btn-export-svg" title="Export as SVG">📐 SVG</button>
+      <div class="spacer"></div>
+      <select id="theme-select" title="Theme">
+        <option value="light">☀️ Light</option>
+        <option value="dark" selected>🌙 Dark</option>
+      </select>
+      <span class="status" id="status">Ready — using Excalidraw embed</span>
+    </div>
+    <div id="iframe-container">
+      <iframe id="excalidraw-iframe" src="https://excalidraw.com/" allow="clipboard-read; clipboard-write" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads"></iframe>
+    </div>
+  </div>
+
+  <script>
+    const iframe = document.getElementById('excalidraw-iframe');
+    const status = document.getElementById('status');
+    const themeSelect = document.getElementById('theme-select');
+    
+    function setStatus(msg) { status.textContent = msg; }
+    function post(msg) { iframe.contentWindow?.postMessage(msg, 'https://excalidraw.com'); }
+
+    // Wait for iframe to load
+    iframe.onload = () => {
+      setStatus('Loaded — draw architecture, wireframes, flowcharts');
+      
+      // Apply theme
+      post({ type: 'theme', theme: themeSelect.value });
+    };
+
+    // Listen for messages from Excalidraw
+    window.addEventListener('message', (event) => {
+      if (event.origin !== 'https://excalidraw.com') return;
+      
+      if (event.data?.type === 'scene-change') {
+        // Auto-save to localStorage
+        localStorage.setItem('evabot-excalidraw', JSON.stringify(event.data.scene));
+      }
+    });
+
+    // Toolbar handlers
+    document.getElementById('btn-new').onclick = () => {
+      if (confirm('Clear canvas?')) {
+        post({ type: 'clear-canvas' });
+        setStatus('New canvas');
+      }
+    };
+
+    document.getElementById('btn-save').onclick = () => {
+      post({ type: 'export', format: 'excalidraw' });
+      setStatus('Save requested...');
+    };
+
+    document.getElementById('btn-load').onclick = () => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const data = JSON.parse(ev.target.result);
+            post({ type: 'load-scene', scene: data });
+            setStatus('Scene loaded');
+          } catch (err) {
+            setStatus('Load failed: ' + err.message);
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    };
+
+    document.getElementById('btn-export-png').onclick = () => {
+      post({ type: 'export', format: 'png' });
+      setStatus('PNG export requested...');
+    };
+
+    document.getElementById('btn-export-svg').onclick = () => {
+      post({ type: 'export', format: 'svg' });
+      setStatus('SVG export requested...');
+    };
+
+    themeSelect.onchange = () => {
+      post({ type: 'theme', theme: themeSelect.value });
+      setStatus('Theme: ' + themeSelect.value);
+    };
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        document.getElementById('btn-save').click();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'o') {
+        e.preventDefault();
+        document.getElementById('btn-load').click();
+      }
+    });
+
+    // Try to load saved scene on startup
+    const saved = localStorage.getItem('evabot-excalidraw');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        // Wait for iframe to be ready
+        setTimeout(() => {
+          post({ type: 'load-scene', scene: data });
+        }, 1000);
+      } catch (e) { console.warn('Failed to load saved scene:', e); }
+    }
+  </script>
+</body>
+</html>

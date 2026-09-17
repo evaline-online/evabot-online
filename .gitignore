@@ -58,3 +58,7 @@ backups/
 # Agent backups / caches (local only)
 .codex-backups/
 .vector-cache.json
+
+# Runtime secrets & sessions (never commit)
+services/userbot/config.json
+*.session

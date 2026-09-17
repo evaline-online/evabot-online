@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>EvaBot LIVE v0.0.1</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23000'/%3E%3Ccircle cx='8' cy='8' r='3' fill='%2300e676'/%3E%3C/svg%3E">
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/JetBrainsMono-Regular.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/JetBrainsMono-Bold.woff2" crossorigin>
+  <style>
+    @font-face{font-family:'JetBrains Mono';src:url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+    @font-face{font-family:'JetBrains Mono';src:url('/fonts/JetBrainsMono-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+    :root{
+      --bg:#000000; --fg:#e8e8e8; --dim:#5a5a5a;
+      --accent:#00e676; --info:#89b4fa; --warn:#ffcc66; --err:#ff6b6b;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;background:var(--bg);color:var(--fg);
+      font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:clamp(14px,2vw,18px);line-height:1.6;overflow:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+    #term{height:100%;width:100%;padding:clamp(16px,4vw,40px);display:flex;flex-direction:column;align-items:flex-start}
+    .banner{color:var(--accent);font-weight:700;font-size:1em;line-height:1.6;margin:0 0 .2em 0;user-select:none;flex:0 0 auto}
+    .status{color:var(--dim);margin:0 0 .6em 0;flex:0 0 auto}
+    .status .dot{display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--dim);vertical-align:middle;margin-right:.5em}
+    .status.on .dot{background:var(--accent);box-shadow:0 0 6px var(--accent)}
+    .status.off .dot{background:var(--err)}
+    #out{width:100%;flex:1 1 auto;overflow-y:auto;white-space:pre-wrap;word-break:break-word;padding-right:6px}
+    #out::-webkit-scrollbar{width:8px}
+    #out::-webkit-scrollbar-thumb{background:#222;border-radius:4px}
+    .row{white-space:pre-wrap;word-break:break-word;min-height:1.6em}
+    .row.bot{color:var(--fg)}
+    .row.sys{color:var(--info)}
+    .row.cmd{color:var(--accent)}
+    .row.dim{color:var(--dim)}
+    .row.warn{color:var(--warn)}
+    .row.err{color:var(--err)}
+    .row .ts{color:var(--dim);margin-right:.6em;user-select:none}
+    .caret{display:inline-block;width:.6em;height:1.05em;background:var(--fg);vertical-align:-.15em;margin-left:3px;animation:blink 1s steps(1) infinite}
+    @keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+    footer{flex:0 0 auto;color:var(--dim);margin-top:.6em}
+    footer a{color:var(--accent);text-decoration:none}
+    footer a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div id="term">
+    <div class="banner">EvaBot LIVE v0.0.1</div>
+    <div class="status" id="status"><span class="dot"></span><span id="statusText">connecting…</span></div>
+    <div id="out" aria-live="polite"></div>
+    <footer>read-only realtime stream &middot; <a href="/">open terminal</a></footer>
+  </div>
+
+  <script>
+    (function () {
+      var out = document.getElementById("out");
+      var statusEl = document.getElementById("status");
+      var statusText = document.getElementById("statusText");
+
+      var REDUCED = false;
+      try { REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (_) {}
+
+      var queue = [];
+      var typing = false;
+      var count = 0;
+
+      function setStatus(state, text) {
+        statusEl.className = "status " + state;
+        statusText.textContent = text;
+      }
+
+      function fmtTime(ts) {
+        try {
+          var d = new Date(ts);
+          return d.toTimeString().slice(0, 8);
+        } catch (_) { return ""; }
+      }
+
+      function makeRow(ev) {
+        var el = document.createElement("div");
+        el.className = "row " + (ev.cls || "bot");
+        var ts = document.createElement("span");
+        ts.className = "ts";
+        ts.textContent = fmtTime(ev.ts);
+        el.appendChild(ts);
+        var body = document.createElement("span");
+        el.appendChild(body);
+        out.appendChild(el);
+        return { row: el, body: body };
+      }
+
+      function atBottom() {
+        return out.scrollHeight - out.scrollTop - out.clientHeight < 40;
+      }
+
+      function pump() {
+        if (typing || !queue.length) return;
+        typing = true;
+        var ev = queue.shift();
+        var ref = makeRow(ev);
+        var text = String(ev.text || "");
+        var stick = atBottom();
+        if (REDUCED || queue.length > 6) {
+          ref.body.textContent = text;
+          if (stick) out.scrollTop = out.scrollHeight;
+          typing = false;
+          return pump();
+        }
+        var caret = document.createElement("span");
+        caret.className = "caret";
+        ref.row.appendChild(caret);
+        var i = 0;
+        var charMs = Math.max(6, Math.min(16, Math.round(900 / Math.max(20, text.length))));
+        (function typeChar() {
+          ref.body.textContent = text.slice(0, ++i);
+          if (stick) out.scrollTop = out.scrollHeight;
+          if (i < text.length) {
+            setTimeout(typeChar, charMs);
+          } else {
+            caret.remove();
+            typing = false;
+            setTimeout(pump, 60);
+          }
+        })();
+      }
+
+      function enqueue(ev) {
+        queue.push(ev);
+        count++;
+        setStatus("on", "live · " + count + " events · " + LiveState.viewers + " viewers");
+        pump();
+      }
+
+      var LiveState = { viewers: 0 };
+
+      function connect() {
+        var es = new EventSource("/api/live/stream");
+
+        es.onopen = function () { setStatus("on", "connected · waiting for events"); };
+
+        es.addEventListener("ready", function (e) {
+          try {
+            var d = JSON.parse(e.data);
+            if (d && typeof d.count === "number" && d.count > 0) {
+              setStatus("on", "live · replaying " + d.count + " events");
+            }
+          } catch (_) {}
+        });
+
+        es.onmessage = function (e) {
+          var ev;
+          try { ev = JSON.parse(e.data); } catch (_) { return; }
+          if (!ev || typeof ev.text !== "string") return;
+          enqueue(ev);
+        };
+
+        es.onerror = function () {
+          setStatus("off", "reconnecting…");
+        };
+      }
+
+      // Refresh viewer count opportunistically.
+      setInterval(function () {
+        fetch("/api/live/state").then(function (r) { return r.json(); }).then(function (d) {
+          LiveState.viewers = d.viewers || 0;
+          if (statusEl.className.indexOf("off") === -1) {
+            setStatus("on", "live · " + count + " events · " + LiveState.viewers + " viewers");
+          }
+        }).catch(function () {});
+      }, 10000);
+
+      connect();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,3914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#000000">
+  <title>EvaBot // Cyber-Terminal TUI</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' fill='%2300e676'/%3E%3C/svg%3E">
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/Roboto-Variable.woff2" crossorigin>
+  <style>
+    /* Self-hosted Roboto (variable, wght 100-900) — no external font CDN dependency */
+    @font-face {
+      font-family: 'Roboto';
+      src: url('/fonts/Roboto-Variable.woff2') format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Roboto';
+      src: url('/fonts/Roboto-Italic-Variable.woff2') format('woff2');
+      font-weight: 100 900;
+      font-style: italic;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #000000;
+      --bg-panel: #05080e;
+      --surface: #0a0e17;
+      --surface-card: #0f1522;
+      --surface-hover: #141c2c;
+      --border: #1c2738;
+      --border-subtle: #141d2a;
+      --border-light: #223044;
+      --border-green: rgba(0, 230, 118, 0.4);
+      --fg: #e2e8f0;
+      --fg-bright: #ffffff;
+      --dim: #64748b;
+      --faint: #334155;
+      --green: #00e676;
+      --green-dim: rgba(0, 230, 118, 0.12);
+      --yellow: #ffd600;
+      --yellow-dim: rgba(255, 214, 0, 0.12);
+      --red: #ff1744;
+      --red-dim: rgba(255, 23, 68, 0.12);
+      --cyan: #00d8ff;
+      --cyan-dim: rgba(0, 216, 255, 0.12);
+      --font-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+      --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+    }
+
+    html {
+      font-size: 16px;
+      min-height: 100%;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      overflow-y: auto;
+      background: var(--bg);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button, input, textarea, select {
+      font-family: inherit;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      overflow-x: hidden;
+      overflow-y: visible;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .chat-screen-wrapper {
+      height: 100vh;
+      height: 100dvh;
+      max-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 6px 12px;
+      padding-top: max(6px, var(--safe-top));
+      padding-bottom: max(4px, var(--safe-bottom));
+      padding-left: max(8px, var(--safe-left));
+      padding-right: max(8px, var(--safe-right));
+      flex-shrink: 0;
+    }
+
+    /* All surfaces strictly share Roboto Mono / monospace */
+    .header-block, .chat-container, .input-line, pre, .code-block,
+    code, .ac-box, .toast, .tui-line {
+      font-family: var(--font-mono);
+    }
+
+    .c-ok { color: var(--green); }
+    .c-wrn { color: var(--yellow); }
+    .c-err { color: var(--red); }
+    .c-cyan { color: var(--cyan); }
+    .c-dim { color: var(--dim); }
+    .bold { font-weight: 700; }
+
+    /* Header frame */
+    .header-block {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-bottom: 6px;
+      padding: 6px 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-panel);
+      flex-shrink: 0;
+      border-radius: 2px;
+    }
+
+    .tui-line {
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.35;
+      margin: 0;
+      padding: 1px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tui-top-row {
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      gap: 8px;
+    }
+
+    .tui-status-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .tui-actions-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .tui-tab {
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .tui-tab.active {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .tui-meta-row {
+      font-size: 0.8rem;
+      color: var(--dim);
+    }
+
+    .tui-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-dot {
+      display: inline-block;
+      color: var(--green);
+      transition: color 0.2s ease;
+      font-size: 0.75rem;
+    }
+
+    .status-dot.pulse {
+      animation: blink 1.6s infinite ease-in-out;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    .interactive-link {
+      color: var(--fg);
+      text-decoration: underline;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .interactive-link:hover {
+      color: var(--green);
+    }
+
+    .cmd-link {
+      color: var(--fg);
+      cursor: pointer;
+      text-decoration: underline;
+      touch-action: manipulation;
+    }
+
+    .cmd-link:hover {
+      color: var(--green);
+    }
+
+    /* Swipeable horizontal command ribbon */
+    .tui-cmd-strip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 0;
+      overflow: hidden;
+    }
+
+    .tui-cmd-scroll {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding: 1px 0;
+      flex: 1;
+    }
+
+    .tui-cmd-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tui-cmd-scroll .cmd-link {
+      background: #080d14;
+      border: 1px solid #1c2738;
+      padding: 2px 7px;
+      border-radius: 2px;
+      text-decoration: none;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      touch-action: manipulation;
+      transition: border-color 0.12s, color 0.12s, background 0.12s;
+    }
+
+    .tui-cmd-scroll .cmd-link:hover,
+    .tui-cmd-scroll .cmd-link:active {
+      border-color: var(--green);
+      color: var(--green);
+      background: #0d1a12;
+    }
+
+    /* Message stream */
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px 2px 12px 2px;
+      min-height: 0;
+    }
+
+    .msg {
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      line-height: 1.4;
+      padding: 2px 0;
+      font-size: 0.875rem;
+    }
+
+    .msg-time {
+      color: var(--dim);
+      margin-right: 6px;
+      font-size: 0.75rem;
+      user-select: none;
+    }
+
+    .msg-sender {
+      font-weight: 700;
+      margin-right: 8px;
+    }
+
+    .msg-sender.user { color: var(--fg-bright); }
+    .msg-sender.evabot { color: var(--green); }
+    .msg-sender.system { color: var(--yellow); }
+    .msg-sender.error { color: var(--red); }
+
+    .msg-body {
+      color: var(--fg);
+    }
+
+    /* Command prompt input row */
+    .input-line {
+      position: sticky;
+      bottom: 0;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 0 max(4px, var(--safe-bottom)) 0;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+      z-index: 50;
+      flex-shrink: 0;
+    }
+
+    .prompt-prefix {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .prompt-char {
+      color: var(--green);
+      user-select: none;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    textarea#user-input {
+      flex: 1;
+      background: #070a10;
+      color: var(--fg);
+      border: 1px solid var(--border);
+      outline: none;
+      resize: none;
+      min-height: 38px;
+      max-height: 140px;
+      padding: 8px 10px;
+      font-size: 0.875rem;
+      line-height: 1.35;
+      font-family: var(--font-mono);
+      border-radius: 2px;
+      transition: border-color 0.15s ease;
+    }
+
+    textarea#user-input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 1px rgba(0, 230, 118, 0.2);
+    }
+
+    textarea#user-input::placeholder {
+      color: var(--dim);
+    }
+
+    .input-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    /* Modal - Minimal Cyber-TUI Overlay */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.94);
+      padding: 24px;
+      overflow-y: auto;
+      z-index: 100;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .modal-content {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: #05080e;
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 3px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      margin: 4px 0;
+    }
+
+    .filter-btn {
+      background: #080d14;
+      border: 1px solid var(--border);
+      color: var(--dim);
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 3px 10px;
+      border-radius: 2px;
+      touch-action: manipulation;
+      transition: all 0.12s ease;
+    }
+
+    .filter-btn.active {
+      color: var(--green);
+      border-color: var(--green);
+      background: var(--green-dim);
+      font-weight: 700;
+    }
+
+    .model-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+
+    .model-row {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 10px;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      transition: background 0.12s, border-color 0.12s;
+    }
+
+    .model-row:hover {
+      background: #0c121d;
+      border-color: var(--border-light);
+    }
+
+    .model-row.active {
+      color: var(--green);
+      border-color: var(--border-green);
+      background: var(--green-dim);
+      font-weight: 700;
+    }
+
+    pre {
+      font-family: inherit;
+      white-space: pre-wrap;
+    }
+
+    /* Minimalist Markdown Styles */
+    .code-block {
+      background: #06090e;
+      border: 1px solid #1c2738;
+      border-left: 3px solid var(--green);
+      margin: 6px 0;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0b1017;
+      padding: 3px 8px;
+      border-bottom: 1px solid #1c2738;
+      font-size: 0.72rem;
+      color: var(--dim);
+      user-select: none;
+    }
+
+    .code-copy-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 1px 6px;
+      cursor: pointer;
+      border-radius: 2px;
+      touch-action: manipulation;
+      transition: all 0.12s ease;
+    }
+
+    .code-copy-btn:hover, .code-copy-btn:active {
+      color: var(--green);
+      border-color: var(--green);
+    }
+
+    .code-content {
+      padding: 8px 10px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      line-height: 1.45;
+    }
+
+    .code-lang {
+      color: var(--dim);
+      font-size: 0.72rem;
+    }
+
+    code.inline-code {
+      background: #0f1522;
+      border: 1px solid #1e293b;
+      padding: 1px 5px;
+      color: var(--green);
+      border-radius: 2px;
+      font-size: 0.82rem;
+    }
+
+    .md-heading {
+      margin: 10px 0 4px 0;
+    }
+
+    .md-quote {
+      border-left: 2px solid var(--dim);
+      padding-left: 10px;
+      margin: 6px 0;
+      color: var(--dim);
+    }
+
+    .md-bullet {
+      padding-left: 12px;
+      margin: 2px 0;
+    }
+
+    /* ===== SmartInput: autocomplete dropdown ===== */
+    .ac-box {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      max-height: 220px;
+      overflow-y: auto;
+      background: #05080e;
+      border: 1px solid var(--green);
+      box-shadow: 0 -4px 18px rgba(0, 230, 118, 0.15);
+      z-index: 60;
+      border-radius: 2px;
+    }
+
+    .ac-box.open {
+      display: block;
+    }
+
+    .ac-item {
+      padding: 7px 10px;
+      cursor: pointer;
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      white-space: nowrap;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    .ac-item.active,
+    .ac-item:hover {
+      background: #0d1a12;
+    }
+
+    .ac-badge {
+      font-size: 0.625rem;
+      border: 1px solid var(--dim);
+      padding: 0 4px;
+      color: var(--dim);
+      user-select: none;
+      flex: none;
+    }
+
+    .ac-badge.cmd {
+      color: var(--green);
+      border-color: var(--green);
+    }
+
+    .ac-badge.mem {
+      color: var(--yellow);
+      border-color: var(--yellow);
+    }
+
+    .ac-text {
+      color: var(--fg);
+      flex: none;
+    }
+
+    .ac-desc {
+      color: var(--dim);
+      font-size: 0.75rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ac-item.active .ac-desc {
+      color: var(--fg);
+    }
+
+    /* ===== Voice & Action buttons ===== */
+    .mic-btn {
+      background: #080d14;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1;
+      padding: 0 8px;
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      flex: none;
+      border-radius: 2px;
+      touch-action: manipulation;
+      transition: border-color 0.12s, color 0.12s, background 0.12s;
+    }
+
+    .mic-btn:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .mic-btn:active {
+      background: var(--green);
+      color: #000;
+    }
+
+    .mic-btn.send-btn {
+      color: var(--green);
+      border-color: var(--border-green);
+      font-weight: 700;
+    }
+
+    .mic-btn.recording {
+      border-color: var(--red);
+      color: var(--red);
+      background: var(--red-dim);
+      animation: mic-pulse 1s infinite ease-in-out;
+    }
+
+    @keyframes mic-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 23, 68, 0.55); }
+      50% { box-shadow: 0 0 0 7px rgba(255, 23, 68, 0); }
+    }
+
+    /* Burger button & Minimal Header */
+    .burger-btn {
+      background: #080d14;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1;
+      padding: 0 9px;
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      flex: none;
+      border-radius: 2px;
+      touch-action: manipulation;
+      transition: border-color 0.12s, color 0.12s, background 0.12s;
+    }
+
+    .burger-btn:hover {
+      border-color: var(--green);
+      color: var(--green);
+      background: rgba(0, 255, 65, 0.08);
+    }
+
+    .header-minimal {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 12px;
+      margin-bottom: 6px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      flex-shrink: 0;
+      text-align: center;
+    }
+
+    .header-minimal-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.82rem;
+    }
+
+    .logo-title {
+      letter-spacing: 0.05em;
+    }
+
+    .logo-subtitle {
+      font-size: 0.72rem;
+    }
+
+    .logo-badge {
+      font-size: 0.72rem;
+    }
+
+    /* Burger Drawer */
+    .burger-drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 1001;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .burger-drawer-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .burger-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 290px;
+      max-width: 85vw;
+      background: #06090e;
+      border-right: 1px solid var(--border);
+      z-index: 1002;
+      transform: translateX(-100%);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.8);
+      font-family: var(--font-mono);
+    }
+
+    .burger-drawer.open {
+      transform: translateX(0);
+    }
+
+    .burger-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .burger-drawer-content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .burger-nav-btn {
+      width: 100%;
+      padding: 10px;
+      background: rgba(0, 255, 65, 0.05);
+      border: 1px solid var(--green);
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      border-radius: 2px;
+      transition: all 0.15s ease;
+    }
+
+    .burger-nav-btn:hover {
+      background: rgba(0, 255, 65, 0.15);
+    }
+
+    .burger-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .burger-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .burger-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Screen 2: Settings & Telemetry */
+    .screen-settings-wrapper {
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 14px 12px 32px 12px;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-shrink: 0;
+      border-top: 2px solid var(--border);
+    }
+
+    .settings-header-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .back-btn {
+      background: rgba(0, 255, 65, 0.05);
+      border: 1px solid var(--green);
+      color: var(--green);
+      padding: 6px 14px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      border-radius: 2px;
+      transition: all 0.15s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(0, 255, 65, 0.15);
+    }
+
+    /* Message Voice Bar & Visualizer */
+    .msg-voice-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      padding-top: 4px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.08);
+      font-size: 0.78rem;
+      flex-wrap: wrap;
+    }
+
+    .voice-btn {
+      background: #080d14;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 2px 7px;
+      cursor: pointer;
+      border-radius: 2px;
+      line-height: 1.3;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .voice-btn:hover {
+      border-color: var(--green);
+      color: var(--green);
+      background: rgba(0, 255, 65, 0.08);
+    }
+
+    .voice-btn-play {
+      color: var(--green);
+      border-color: rgba(0, 255, 65, 0.4);
+    }
+
+    .voice-btn-pause {
+      color: var(--yellow);
+      border-color: rgba(255, 215, 0, 0.4);
+    }
+
+    .voice-btn-stop {
+      color: var(--red);
+      border-color: rgba(255, 75, 75, 0.4);
+    }
+
+    .voice-visualizer {
+      font-family: var(--font-mono);
+      color: var(--green);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      font-size: 0.8rem;
+      animation: pulse-glow 1.2s infinite ease-in-out;
+    }
+
+
+    /* ===== Toast notifications ===== */
+    .toast-wrap {
+      position: fixed;
+      right: 14px;
+      bottom: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      z-index: 200;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: #05080e;
+      border: 1px solid var(--green);
+      color: var(--green);
+      padding: 5px 12px;
+      font-size: 0.75rem;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      max-width: 340px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive media queries for smartphones */
+    @media (max-width: 640px) {
+      body {
+        padding: 4px 6px;
+        padding-top: max(4px, var(--safe-top));
+        padding-bottom: max(4px, var(--safe-bottom));
+        padding-left: max(6px, var(--safe-left));
+        padding-right: max(6px, var(--safe-right));
+      }
+
+      .desk-only {
+        display: none !important;
+      }
+
+      .header-block {
+        padding: 4px 6px;
+        gap: 2px;
+      }
+
+      .tui-top-row {
+        gap: 4px;
+      }
+
+      .tui-meta-row {
+        font-size: 0.74rem;
+        gap: 4px;
+      }
+
+      .tui-cmd-scroll .cmd-link {
+        padding: 3px 8px;
+        font-size: 0.78rem;
+      }
+
+      textarea#user-input {
+        font-size: 16px !important; /* Eliminates mobile Safari auto-zoom */
+        min-height: 40px;
+        height: 40px;
+        padding: 9px 8px;
+        line-height: 20px;
+        overflow-x: auto;
+      }
+
+      textarea#user-input::placeholder {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .mic-btn {
+        min-height: 40px;
+        min-width: 42px;
+        padding: 0 6px;
+        font-size: 0.75rem;
+      }
+
+      .modal {
+        padding: 0;
+      }
+
+      .modal-content {
+        min-height: 100dvh;
+        max-height: 100dvh;
+        padding: 12px 10px;
+        border-radius: 0;
+        border: none;
+      }
+
+      .model-row {
+        min-height: 44px;
+        padding: 10px 4px;
+      }
+    }
+
+    html:not([data-nocss])[data-locale-pending] body { visibility: hidden; }
+  </style>
+  <style id="web-layer">
+    /* Web-enhancement layer — active only in display mode 'web' (data-mode="web").
+       Terminal styles stay fully on; this adds readability cards & smooth UI. */
+    html[data-mode='web'] body {
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    html[data-mode='web'] .header-block,
+    html[data-mode='web'] .chat-container,
+    html[data-mode='web'] .input-line {
+      max-width: 90ch;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    html[data-mode='web'] .chat-container {
+      padding: 12px 10px 24px 10px;
+    }
+
+    html[data-mode='web'] .msg {
+      background: #0a0a0a;
+      border: 1px solid #1e1e1e;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin: 2px 0;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    html[data-mode='web'] .msg:hover {
+      border-color: #2b2b2b;
+    }
+
+    html[data-mode='web'] .msg-body {
+      display: block;
+      max-width: 90ch;
+    }
+
+    html[data-mode='web'] .code-block {
+      background: #101010;
+      border-radius: 8px;
+      border-left: 2px solid var(--green);
+      overflow-x: auto;
+    }
+
+    html[data-mode='web'] .code-block pre {
+      overflow-x: auto;
+    }
+
+    html[data-mode='web'] .interactive-link {
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    html[data-mode='web'] .interactive-link:hover {
+      text-decoration: underline;
+    }
+
+    html[data-mode='web'] .web-fold {
+      max-height: 150px;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+
+    html[data-mode='web'] .web-fold.open {
+      max-height: none;
+    }
+
+    html[data-mode='web'] .web-fold-toggle {
+      color: var(--green);
+      cursor: pointer;
+      user-select: none;
+      font-size: 0.75rem;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    /* ── eva-tui skin (universal terminal interface) ───────────────────── */
+    :root{
+      --tui-bg:#0d1117; --tui-fg:#c0caf4; --tui-accent:#ffcc66;
+      --tui-muted:#888888; --tui-success:#a6e3a1; --tui-info:#89b4fa;
+    }
+    .eva-tui-topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      background:var(--tui-accent); color:var(--tui-bg);
+      font-family:'Roboto',ui-monospace,monospace; font-weight:700;
+      font-size:0.72rem; letter-spacing:0.5px; padding:2px 10px; flex:0 0 auto;
+    }
+    .eva-tui-topbar .eva-tui-title{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .eva-tui-topbar .eva-tui-live{white-space:nowrap; font-weight:700}
+    .eva-tui-banner{
+      flex:0 0 auto; margin:0; padding:6px 0 2px; text-align:center;
+      color:var(--tui-accent); font-family:ui-monospace,monospace;
+      font-size:6px; line-height:1.05; white-space:pre;
+      overflow:hidden; user-select:none;
+    }
+    .eva-tui-statusbar{
+      flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:8px;
+      background:var(--tui-accent); color:var(--tui-bg);
+      font-family:ui-monospace,monospace; font-weight:700; font-size:0.64rem;
+      padding:2px 10px;
+    }
+    .eva-tui-statusbar .eva-tui-hint{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    @media(max-width:520px){
+      .eva-tui-banner{font-size:5px}
+      .eva-tui-statusbar .eva-tui-hint{max-width:72%; letter-spacing:-0.2px}
+    }
+  </style>
+  <script>
+    (function () {
+      try {
+        var lang = localStorage.getItem('evabot_lang');
+        if (lang === 'uk' || lang === 'ru') {
+          document.documentElement.lang = lang;
+          document.documentElement.setAttribute('data-locale-pending', '1');
+          // Safety: never keep the page hidden longer than 3s (app failure guard)
+          setTimeout(function () { document.documentElement.removeAttribute('data-locale-pending'); }, 3000);
+        } else {
+          document.documentElement.lang = 'en';
+        }
+        // Display-mode pre-paint state: all <style>/<link rel=stylesheet>
+        // already exist in <head> at this point — disable them before first
+        // paint when mode is 'off'. Modes: 'off' | 'term' | 'web'
+        // (legacy value 'on' migrates to 'term'; default 'term').
+        var cssMode = localStorage.getItem('evabot_css');
+        if (cssMode === 'on') {
+          cssMode = 'term';
+          try { localStorage.setItem('evabot_css', 'term'); } catch (e2) { /* private mode */ }
+        }
+        if (cssMode === 'off') {
+          document.documentElement.setAttribute('data-nocss', '1');
+          var els = document.querySelectorAll('style, link[rel="stylesheet"]');
+          for (var i = 0; i < els.length; i++) {
+            els[i].setAttribute('data-css-media', els[i].getAttribute('media') || 'all');
+            els[i].setAttribute('media', 'not all');
+          }
+        } else {
+          document.documentElement.setAttribute('data-mode', cssMode === 'web' ? 'web' : 'term');
+        }
+      } catch (e) { document.documentElement.lang = 'en'; }
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- SCREEN 1: Minimalist Chat Interface -->
+  <div class="chat-screen-wrapper" id="screen-chat">
+    <!-- eva-tui chrome -->
+    <div class="eva-tui-topbar">
+      <span class="eva-tui-title">◈ EVABOT // UNIVERSAL TERMINAL INTERFACE</span>
+      <span class="eva-tui-live">● LIVE · v1.0</span>
+    </div>
+    <pre class="eva-tui-banner" aria-hidden="true">███████╗ ██╗   ██╗  █████╗  ██████╗   ██████╗  ████████╗
+██╔════╝ ██║   ██║ ██╔══██╗ ██╔══██╗ ██╔═══██╗ ╚══██╔══╝
+█████╗   ██║   ██║ ███████║ ██████╔╝ ██║   ██║    ██║
+██╔══╝   ╚██╗ ██╔╝ ██╔══██║ ██╔══██╗ ██║   ██║    ██║
+███████╗  ╚████╔╝  ██║  ██║ ██████╔╝ ╚██████╔╝    ██║
+╚══════╝   ╚═══╝   ╚═╝  ╚═╝ ╚═════╝   ╚═════╝     ╚═╝   </pre>
+    <!-- Minimal Header: Logo Only -->
+    <header class="header-minimal">
+      <div class="header-minimal-content">
+        <span class="status-dot pulse" id="status-light">●</span>
+        <span class="bold c-fg logo-title">EVABOT.ONLINE</span>
+        <span class="c-dim font-mono logo-subtitle">// NEURAL CORE</span>
+        <span class="c-ok bold logo-badge" id="status-text">[ONLINE]</span>
+      </div>
+    </header>
+
+    <!-- Chat Stream & Input -->
+    <div id="chat-panel" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0;">
+      <!-- Messages stream -->
+      <div class="chat-container" id="chat-container">
+        <div class="msg">
+          <span class="msg-time" id="boot-time">[19:10:00]</span><span class="msg-sender system">system :</span><span class="msg-body" id="boot-msg">Connecting to evabot.online ...</span>
+        </div>
+      </div>
+
+      <!-- Input Row: [≡] Menu | > Textarea | [↵] Send | [🎙] Voice -->
+      <div class="input-line">
+        <div class="ac-box" id="ac-box"></div>
+        <button type="button" class="burger-btn" id="burger-btn" onclick="toggleBurgerMenu()" title="Menu / Settings [≡]">[≡]</button>
+        <div class="prompt-prefix">
+          <span class="prompt-char">&gt;</span>
+        </div>
+        <textarea id="user-input" placeholder="Type a message or command (/help)..." autofocus rows="1"></textarea>
+        <div class="input-actions">
+          <button type="button" class="mic-btn send-btn" id="send-btn" title="Send message [↵]" onclick="sendMessage()">[↵]</button>
+          <button type="button" class="mic-btn audio-stt-btn" id="mic-btn" title="Voice input [🎙]" onclick="VoiceEngine.toggle()">[🎙]</button>
+        </div>
+      </div>
+    </div>
+    <div class="eva-tui-statusbar">
+      <span class="eva-tui-hint">[Space] palette  [↑↓] scroll  [1-4] tabs  [L] lang</span>
+      <span>eva-tui SSR · 0 JS</span>
+    </div>
+  </div>
+
+  <!-- Burger Menu Drawer -->
+  <div class="burger-drawer-backdrop" id="burger-backdrop" onclick="closeBurgerMenu()"></div>
+  <div class="burger-drawer" id="burger-drawer">
+    <div class="burger-drawer-header">
+      <div class="bold c-fg">[≡] EVABOT CONTROL</div>
+      <div class="interactive-link c-dim" onclick="closeBurgerMenu()">[× CLOSE]</div>
+    </div>
+    <div class="burger-drawer-content">
+      <button type="button" class="burger-nav-btn bold c-ok" onclick="scrollToSettings()">[⚙ SETTINGS & TELEMETRY ⇓]</button>
+      <div class="burger-section">
+        <div class="c-dim burger-label">CORE MODEL:</div>
+        <div class="interactive-link bold c-ok" onclick="closeBurgerMenu(); openModelModal();" id="drawer-model-pill">...</div>
+      </div>
+      <div class="burger-section">
+        <div class="c-dim burger-label">MODE:</div>
+        <div class="interactive-link" onclick="toggleMode(); syncDrawerState();" id="drawer-current-mode">solo</div>
+      </div>
+      <div class="burger-section">
+        <div class="c-dim burger-label">LANGUAGE:</div>
+        <div class="burger-row">
+          <span class="cmd-link" id="drawer-lang-en" onclick="setLanguage('en'); syncDrawerState();">[EN]</span>
+          <span class="cmd-link" id="drawer-lang-uk" onclick="setLanguage('uk'); syncDrawerState();">UK</span>
+          <span class="cmd-link" id="drawer-lang-ru" onclick="setLanguage('ru'); syncDrawerState();">RU</span>
+        </div>
+      </div>
+      <div class="burger-section">
+        <div class="c-dim burger-label">VOICE PERSONA:</div>
+        <div class="burger-row">
+          <span class="cmd-link" id="drawer-persona-eva" onclick="VoiceEngine.setPersona('eva'); syncDrawerState();">[Eva]</span>
+          <span class="cmd-link" id="drawer-persona-adam" onclick="VoiceEngine.setPersona('adam'); syncDrawerState();">[Adam]</span>
+        </div>
+      </div>
+      <div class="burger-section">
+        <div class="c-dim burger-label">QUICK COMMANDS:</div>
+        <div class="burger-row" style="flex-direction: column; gap: 4px;">
+          <span class="cmd-link" onclick="closeBurgerMenu(); handleCommand('/help');">/help - Manual & commands</span>
+          <span class="cmd-link" onclick="closeBurgerMenu(); openModelModal();">/models - Select AI model</span>
+          <span class="cmd-link" onclick="closeBurgerMenu(); handleCommand('/consilium');">/consilium - Multi-agent consensus</span>
+          <span class="cmd-link" onclick="closeBurgerMenu(); handleCommand('/clear');">/clear - Clear chat</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: Settings & Telemetry -->
+  <div class="screen-settings-wrapper" id="screen-settings">
+    <div class="settings-header-nav">
+      <button type="button" class="back-btn bold c-ok" onclick="scrollToChat()">[⇑ BACK TO CHAT / НАВЕРХ В ЧАТ]</button>
+      <span class="bold c-fg">// EVABOT SYSTEM SETTINGS & TELEMETRY</span>
+    </div>
+
+    <!-- TUI Frame Header with exact CLI parity labels -->
+    <header class="header-block">
+      <!-- Top Status Row -->
+      <div class="tui-line tui-top-row">
+        <div class="tui-status-group">
+          <span class="c-dim"><span id="lbl-ping">Ping:</span></span> <span class="c-ok bold" id="ping-text">...</span>
+          <span class="c-dim desk-only">│</span>
+          <span class="desk-only c-dim">Mesh:</span> <span class="c-ok desk-only" id="mesh-ping">122ms</span>
+          <span class="c-dim desk-only">│</span>
+          <span class="desk-only c-dim">Live:</span> <span class="c-ok desk-only" id="pulse-indicator"></span>
+        </div>
+
+        <div class="tui-actions-group">
+          <span class="cmd-link bold c-ok tui-tab" id="tab-terminal" onclick="switchTab('terminal')" style="font-size: 0.78rem;">[ TERMINAL ]</span>
+          <span class="cmd-link tui-tab" id="tab-metrics" onclick="switchTab('metrics')" style="font-size: 0.78rem;">[ METRICS ]</span>
+          <span class="c-dim">│</span>
+          <span class="c-dim"><span id="lbl-lang">Lang:</span></span>
+          <span class="cmd-link bold c-ok" id="lang-en" onclick="setLanguage('en')">[EN]</span>
+          <span class="cmd-link" id="lang-uk" onclick="setLanguage('uk')">UK</span>
+          <span class="cmd-link" id="lang-ru" onclick="setLanguage('ru')">RU</span>
+          <span class="cmd-link desk-only" id="css-toggle" onclick="toggleCss()" title="Display mode: off / term / web (click to cycle)">[CSS:TERM]</span>
+          <span class="c-dim">│</span>
+          <span class="mic-btn" id="tts-toggle" onclick="VoiceEngine.toggleTtsMute()" title="TTS on/off">[ TTS:ON ]</span>
+        </div>
+      </div>
+
+      <!-- Meta Info Row -->
+      <div class="tui-line tui-meta-row">
+        <div class="tui-meta-item">
+          <span class="c-dim"><span id="lbl-model">Model:</span></span>
+          <span class="interactive-link bold c-ok" id="model-pill" onclick="openModelModal()">...</span>
+        </div>
+        <span class="c-dim">│</span>
+        <div class="tui-meta-item">
+          <span class="c-dim"><span id="lbl-mode">Mode:</span></span>
+          <span class="interactive-link" id="current-mode" onclick="toggleMode()">solo</span>
+        </div>
+        <span class="c-dim desk-only">│</span>
+        <div class="tui-meta-item desk-only">
+          <span class="c-dim"><span id="lbl-pool">Pool:</span></span>
+          <span class="interactive-link" id="models-link" onclick="openModelModal()">94 models (/models)</span>
+        </div>
+        <span class="c-dim desk-only">│</span>
+        <div class="tui-meta-item desk-only" id="db-line">
+          <span class="c-dim"><span id="lbl-databases">Databases:</span></span>
+          <span class="c-ok" id="db-values">checking ...</span>
+        </div>
+      </div>
+
+      <!-- Horizontal Swipeable Command Strip -->
+      <div class="tui-cmd-strip" id="cmd-strip-line">
+        <span class="c-dim" style="font-size: 0.75rem; flex-shrink: 0; font-weight: 700;"><span id="lbl-commands">Commands:</span></span>
+        <div class="tui-cmd-scroll" id="cmd-scroll">
+          <span class="cmd-link" onclick="handleCommand('/help'); scrollToChat();">/help</span>
+          <span class="cmd-link" onclick="handleCommand('/?'); scrollToChat();">/?</span>
+          <span class="cmd-link" onclick="openModelModal()">/models</span>
+          <span class="cmd-link" onclick="toggleMode()">/mode</span>
+          <span class="cmd-link" onclick="handleCommand('/consilium'); scrollToChat();">/consilium</span>
+          <span class="cmd-link" onclick="handleCommand('/top'); scrollToChat();">/top</span>
+          <span class="cmd-link" onclick="handleCommand('/cost'); scrollToChat();">/cost</span>
+          <span class="cmd-link" onclick="handleCommand('/company'); scrollToChat();">/company</span>
+          <span class="cmd-link" onclick="handleCommand('/evaline'); scrollToChat();">/evaline</span>
+          <span class="cmd-link" onclick="handleCommand('/products'); scrollToChat();">/products</span>
+          <span class="cmd-link" onclick="handleCommand('/who'); scrollToChat();">/who</span>
+          <span class="cmd-link" onclick="setLanguage(state.lang)">/lang</span>
+          <span class="cmd-link" onclick="handleCommand('/sephirot'); scrollToChat();">/sephirot</span>
+          <span class="cmd-link" onclick="handleCommand('/mcp'); scrollToChat();">/mcp</span>
+          <span class="cmd-link" onclick="handleCommand('/lsp'); scrollToChat();">/lsp</span>
+          <span class="cmd-link" onclick="handleCommand('/history'); scrollToChat();">/history</span>
+          <span class="cmd-link" onclick="handleCommand('/memory'); scrollToChat();">/memory</span>
+          <span class="cmd-link" onclick="handleCommand('/add'); scrollToChat();">/add</span>
+          <span class="cmd-link" onclick="handleCommand('/file'); scrollToChat();">/file</span>
+          <span class="cmd-link" onclick="handleCommand('/idea'); scrollToChat();">/idea</span>
+          <span class="cmd-link" onclick="handleCommand('/error'); scrollToChat();">/error</span>
+          <span class="cmd-link" onclick="handleCommand('/bug'); scrollToChat();">/bug</span>
+          <span class="cmd-link" onclick="handleCommand('/errors'); scrollToChat();">/errors</span>
+          <span class="cmd-link" onclick="handleCommand('/search'); scrollToChat();">/search</span>
+          <span class="cmd-link" onclick="handleCommand('/services'); scrollToChat();">/services</span>
+          <span class="cmd-link" onclick="handleCommand('/servers'); scrollToChat();">/servers</span>
+          <span class="cmd-link" onclick="handleCommand('/clear'); scrollToChat();">/clear</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Metrics Panel -->
+    <div id="metrics-panel" style="display: flex; flex-direction: column; overflow: hidden; min-height: 280px;">
+      <div class="tui-line" id="metrics-line" style="padding: 4px 0; border-bottom: 1px solid var(--border); font-size: 0.8rem;">
+        <span class="c-dim"><span id="lbl-load">Load:</span></span> <span id="metrics-frankfurt">Brain(Frankfurt) CPU <span class="c-ok">25%</span> · RAM <span class="c-ok">15%</span> 4.7/31GB</span> │ <span id="metrics-iowa">Face(Iowa) CPU <span class="c-ok">2%</span> · RAM <span class="c-ok">46%</span> 440MB</span> │ <span id="heartbeat-indicator" class="c-ok"><span style="color:var(--red)">*</span> 72bpm</span>
+      </div>
+      <div class="tui-line desk-only" id="network-strip" style="padding: 4px 0; font-size: 0.78rem;">
+        <span class="c-dim">Cluster:</span> <span class="cmd-link bold c-ok">[evabot.online]</span><a href="https://evaline.network" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.network ↗</a><a href="https://evaline.online" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.online ↗</a><a href="https://evaline.website" class="cmd-link" target="_blank" style="color:var(--fg); text-decoration:underline;">evaline.website ↗</a><a href="/stack" class="cmd-link" style="color:var(--fg); text-decoration:underline;">stack ↗</a><a href="/pitch" class="cmd-link" style="color:var(--fg); text-decoration:underline;">pitch ↗</a><span class="c-dim">│</span> <a href="https://github.com/evaline-online" class="cmd-link" target="_blank" style="color:var(--yellow); font-weight:700; text-decoration:underline;">GitHub @evaline-online ↗</a>
+      </div>
+      <div class="chat-container" id="metrics-container" style="flex: 1; overflow-y: auto; max-height: 480px;">
+        <div class="msg" style="color: var(--dim);">Loading live metrics...</div>
+      </div>
+    </div>
+
+    <div style="padding: 12px 0; text-align: center;">
+      <button type="button" class="back-btn bold c-ok" onclick="scrollToChat()">[⇑ BACK TO CHAT / НАВЕРХ В ЧАТ]</button>
+    </div>
+  </div>
+
+  <!-- Models Modal -->
+  <div class="modal" id="model-modal" onclick="if(event.target===this)closeModelModal()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div><span class="c-ok">●</span> <span id="modal-title">MODEL CATALOG</span></div>
+        <div class="interactive-link" id="modal-close" onclick="closeModelModal()">[CLOSE]</div>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-btn active" id="filter-all" data-filter="all" onclick="filterModels('all')">All</button>
+        <button class="filter-btn" id="filter-free" data-filter="free" onclick="filterModels('free')">Free</button>
+        <button class="filter-btn" id="filter-paid" data-filter="paid" onclick="filterModels('paid')">Paid</button>
+      </div>
+      <div class="model-list" id="model-list">
+        <div class="c-dim" id="model-list-loading">Loading models...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-wrap" id="toast-wrap"></div>
+
+  <!-- Hidden file picker for /add file, /add media, /file (multipart → /api/upload) -->
+  <input type="file" id="file-input" multiple hidden>
+
+  <script>
+    const initialLang = localStorage.getItem('evabot_lang') ||
+      (typeof navigator !== 'undefined' && navigator.language && navigator.language.toLowerCase().startsWith('ru') ? 'ru' :
+       typeof navigator !== 'undefined' && navigator.language && (navigator.language.toLowerCase().startsWith('uk') || navigator.language.toLowerCase().startsWith('ua')) ? 'uk' : 'en');
+    const state = {
+      lang: initialLang,
+      currentModel: 'openrouter/free',
+      currentProvider: 'google',
+      currentMode: 'solo',
+      isGenerating: false,
+      history: [],
+      models: [],
+      filteredModels: [],
+      currentFilter: 'all',
+    };
+
+    const statusLight = document.getElementById('status-light');
+    const statusText = document.getElementById('status-text');
+    const pingText = document.getElementById('ping-text');
+    const modelPill = document.getElementById('model-pill');
+    const modelsLink = document.getElementById('models-link');
+    const currentModeEl = document.getElementById('current-mode');
+    const chatContainer = document.getElementById('chat-container');
+    const userInput = document.getElementById('user-input');
+    const modelModal = document.getElementById('model-modal');
+    const modelList = document.getElementById('model-list');
+
+    // =======================================================================
+    // SmartInput — pure lexicon / fuzzy-match / auto-correct engine.
+    // Kept as a const object with pure functions so it can be mirrored in TS.
+    // Storage: 'evabot_vocab' (learned words, freq+recency), 'evabot_lexicon'
+    // (learned corrections), 'evabot_autocorrect' (on|off toggle).
+    // =======================================================================
+    const SmartInput = {
+      VOCAB_KEY: 'evabot_vocab',
+      LEXICON_KEY: 'evabot_lexicon',
+      AC_KEY: 'evabot_autocorrect',
+      VOCAB_CAP: 500,
+
+      // All slash commands recognized locally or proxied via /api/models/command
+      COMMANDS: ['help', '?', 'top', 'models', 'info', 'company', 'evaline', 'products', 'who', 'cost', 'lang', 'mcp', 'lsp', 'free', 'paid', 'mode', 'consilium', 'clear', 'history', 'memory', 'add', 'file', 'idea', 'error', 'bug', 'errors', 'search', 'find', 'services', 'servers', 'health', 'debug', 'log', 'monitor', 'translate', 'news', 'autocorrect', 'voice', 'tts', 'voices', 'settings', 'agents', 'emoji'],
+
+      // Short localized descriptions (condensed from the I18N help blocks)
+      CMD_DESC: {
+    "/room": "Create/join room",
+    "/rooms": "List rooms",
+        top: { en: 'Top models leaderboard', uk: 'Рейтинг моделей', ru: 'Топ моделей' },
+        models: { en: 'Full model catalog', uk: 'Повний каталог моделей', ru: 'Полный каталог моделей' },
+        info: { en: 'Model passport & pricing', uk: 'Паспорт моделі та ціни', ru: 'Паспорт модели и цены' },
+        company: { en: 'AI company roster', uk: 'Ростер ШІ-агентів', ru: 'Ростер ИИ-агентов' },
+        evaline: { en: 'EvaLine business swarm', uk: 'Бізнес-система EvaLine', ru: 'Бизнес-система EvaLine' },
+        cost: { en: 'Financial ledger & OpEx', uk: 'Бухгалтерія та витрати', ru: 'Бухгалтерия и расходы' },
+        lang: { en: 'Switch language en|uk|ru', uk: 'Зміна мови en|uk|ru', ru: 'Смена языка en|uk|ru' },
+        mcp: { en: '21 MCP servers status', uk: 'Статус 21 MCP-сервера', ru: 'Статус 21 MCP-сервера' },
+        lsp: { en: '4 LSP daemons status', uk: 'Статус 4 LSP-демонів', ru: 'Статус 4 LSP-демонов' },
+        free: { en: 'Filter free models', uk: 'Фільтр безкоштовних', ru: 'Фильтр бесплатных' },
+        paid: { en: 'Filter paid models', uk: 'Фільтр платних', ru: 'Фильтр платных' },
+        mode: { en: 'solo / consilium mode', uk: 'Режим solo / консиліум', ru: 'Режим solo / консилиум' },
+        consilium: { en: 'Multi-agent deliberation', uk: 'Колегіальний аналіз', ru: 'Коллегиальный анализ' },
+        clear: { en: 'Clear terminal screen', uk: 'Очистити екран', ru: 'Очистить экран' },
+        history: { en: 'Recent conversation history', uk: 'Історія діалогу', ru: 'История диалога' },
+        memory: { en: 'Memory stats (KB, FTS, chat DB)', uk: 'Статистика памʼяті (KB, FTS, БД)', ru: 'Статистика памяти (KB, FTS, БД)' },
+        add: { en: 'Ingest: db | link | context | bot | human | agent | file', uk: 'Додавання: db | link | context | bot | human | agent | file', ru: 'Добавление: db | link | context | bot | human | agent | file' },
+        file: { en: 'Upload files to knowledge base', uk: 'Завантажити файли в базу знань', ru: 'Загрузить файлы в базу знаний' },
+        idea: { en: 'AI consilium brainstorm: /idea <topic>', uk: 'ШІ-консиліум-штурм: /idea <тема>', ru: 'ИИ-консилиум-штурм: /idea <тема>' },
+        error: { en: 'Report an error: /error <desc>', uk: 'Звіт про помилку: /error <опис>', ru: 'Сообщить об ошибке: /error <опис>' },
+        bug: { en: 'Report a bug: /bug <desc>', uk: 'Звіт про баг: /bug <опис>', ru: 'Сообщить о баге: /bug <опис>' },
+        errors: { en: 'List recent system errors', uk: 'Останні системні помилки', ru: 'Последние системные ошибки' },
+        search: { en: 'Full-text search <query>', uk: 'Пошук по базі знань <запит>', ru: 'Поиск по базе знаний <запрос>' },
+        find: { en: 'Alias of /search', uk: 'Синонім /search', ru: 'Синоним /search' },
+        services: { en: 'Services & DB backends status', uk: 'Статус сервісів і бекендів БД', ru: 'Статус сервисов и бекендов БД' },
+        servers: { en: 'Cluster: evabot-agent-vm + evaline-micro-vm', uk: 'Кластер: evabot-agent-vm + evaline-micro-vm', ru: 'Кластер: evabot-agent-vm + evaline-micro-vm' },
+        products: { en: 'EvaLine product catalog: stats, categories, search', uk: 'Каталог продукції EvaLine: статистика, категорії, пошук', ru: 'Каталог продукции EvaLine: статистика, категории, поиск' },
+        who: { en: 'Corporate knowledge matrix: who knows what', uk: 'Матриця знань компанії: хто що знає', ru: 'Матрица знаний компании: кто что знает' },
+        health: { en: 'LLM provider health (breakers)', uk: 'Здоров’я LLM-провайдерів (breakers)', ru: 'Здоровье LLM-провайдеров (breakers)' },
+        debug: { en: 'Debug mode: footer & diagnostics', uk: 'Режим налагодження: футер і діагностика', ru: 'Режим отладки: футер и диагностика' },
+        log: { en: 'Operation log tail [N] [filter]', uk: 'Журнал операцій [N] [фільтр]', ru: 'Журнал операций [N] [фильтр]' },
+        monitor: { en: 'Model monitor TOP-10', uk: 'Модельний монітор ТОП-10', ru: 'Модельный монитор ТОП-10' },
+        autocorrect: { en: 'Toggle typo auto-correction', uk: 'Автокорекція описок', ru: 'Автокоррекция опечаток' },
+        voice: { en: 'Voice input & persona', uk: 'Голосовий ввід і персона', ru: 'Голосовой ввод и персона' },
+        tts: { en: 'Text-to-speech on/off', uk: 'Озвучення відповідей', ru: 'Озвучивание ответов' },
+        voices: { en: 'TTS voice catalog & set eva|adam', uk: 'Каталог голосів TTS, /voices set eva|adam', ru: 'Каталог голосов TTS, /voices set eva|adam' },
+        settings: { en: 'Current settings table', uk: 'Таблиця поточних налаштувань', ru: 'Таблица текущих настроек' },
+        agents: { en: 'Roster: 18 roles + 10 Sephirot', uk: 'Ростер: 18 ролей + 10 Сефірот', ru: 'Ростер: 18 ролей + 10 Сфирот' },
+        emoji: { en: 'Emoji rendering on/off', uk: 'Емодзі у виводі on/off', ru: 'Эмодзи в выводе on/off' },
+        help: { en: 'Show this guide', uk: 'Показати довідку', ru: 'Показать справку' },
+        '?': { en: 'Show this guide', uk: 'Показати довідку', ru: 'Показать справку' },
+      },
+
+      // Cyrillic-typed command fragments → canonical command (e.g. '/модел' → '/models')
+      TRANSLIT: {
+        'топ': 'top', 'топмоделей': 'top',
+        'модели': 'models', 'моделі': 'models', 'модел': 'models', 'модель': 'models', 'каталог': 'models',
+        'история': 'history', 'історія': 'history', 'істор': 'history', 'историю': 'history',
+        'очистить': 'clear', 'очистити': 'clear', 'очисти': 'clear', 'очист': 'clear',
+        'помощь': 'help', 'справка': 'help', 'довідка': 'help', 'помоги': 'help', 'допоможи': 'help',
+        'консилиум': 'consilium', 'консиліум': 'consilium', 'консил': 'consilium',
+        'язык': 'lang', 'мова': 'lang',
+        'стоимость': 'cost', 'вартість': 'cost', 'цена': 'cost', 'ціна': 'cost',
+        'режим': 'mode', 'інфо': 'info', 'инфо': 'info',
+      },
+
+      // Seed lexicon: observed frequent terms of this bot (en/ru/uk chat vocabulary)
+      BUILTIN_LEXICON: [
+        'omniroute', 'openrouter', 'litellm', 'gemini', 'qwen', 'glm', 'evabot', 'evaline',
+        'consilium', 'terminal', 'models', 'history', 'server', 'servers', 'health', 'status',
+        'tokens', 'budget', 'frontend', 'backend', 'github', 'docker', 'deploy', 'release',
+        'sprint', 'report', 'please', 'thanks', 'hello', 'python', 'typescript', 'javascript',
+        'neural', 'latency', 'quota', 'pricing', 'provider', 'embedding', 'vector', 'agent',
+        'привет', 'спасибо', 'пожалуйста', 'проверь', 'модель', 'модели', 'моделей', 'моделью',
+        'сервер', 'сервера', 'серверы', 'консилиум', 'нейросеть', 'история', 'статус', 'ошибка',
+        'ошибки', 'токены', 'бюджет', 'помоги', 'напиши', 'скажи', 'покажи', 'сделай', 'задача',
+        'отчет', 'проект', 'команда', 'параметры', 'проверка', 'вопрос', 'ответ',
+        'коврики', 'коврик', 'заказ', 'заказать', 'производство', 'производитель', 'цена',
+        'сколько', 'стоит', 'оплата', 'оплатить', 'доставка', 'доставить', 'срок', 'неделя',
+        'дней', 'размер', 'толщина', 'цвет', 'черный', 'серый', 'материал', 'евалайн',
+        'качество', 'гарантия', 'рекламация', 'возврат', 'обмен', 'отправка', 'почта',
+        'счет', 'чек', 'скидка', 'акция', 'товар', 'товары', 'наличие', 'образец',
+        'звоните', 'телефон', 'адрес', 'автомобиль', 'салон', 'багажник', 'пол',
+        'привіт', 'дякую', 'будь', 'ласка', 'перевір', 'моделі', 'сервери', 'консиліум',
+        'нейромережа', 'історія', 'статус', 'помилка', 'помилки', 'токени', 'бюджет',
+        'допоможи', 'напиши', 'скажи', 'покажи', 'зроби', 'задача', 'звіт', 'проєкт',
+        'команда', 'параметри', 'питання', 'відповідь',
+        'килимки', 'килимок', 'замовлення', 'замовити', 'виробництво', 'виробник', 'ціна',
+        'скільки', 'коштує', 'оплата', 'оплатити', 'доставка', 'доставити', 'термін',
+        'тиждень', 'розмір', 'товщина', 'колір', 'чорний', 'сірий', 'матеріал', 'евалайн',
+        'EvaLine', 'якість', 'гарантія', 'рекламація', 'повернення', 'обмін', 'відправка',
+        'пошта', 'рахунок', 'чек', 'знижка', 'акція', 'товар', 'товари', 'наявність',
+        'зразок', 'телефон', 'адреса', 'автомобіль', 'салон', 'багажник', 'підлога', 'добре',
+      ],
+
+      // ---------- pure fuzzy primitives ----------
+      levenshtein(a, b) {
+        if (a === b) return 0;
+        const m = a.length;
+        const n = b.length;
+        if (!m) return n;
+        if (!n) return m;
+        let prev = new Array(n + 1);
+        let cur = new Array(n + 1);
+        for (let j = 0; j <= n; j++) prev[j] = j;
+        for (let i = 1; i <= m; i++) {
+          cur[0] = i;
+          for (let j = 1; j <= n; j++) {
+            const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+            cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
+          }
+          [prev, cur] = [cur, prev];
+        }
+        return prev[n];
+      },
+
+      // Simple subsequence scorer: 0 = no match, higher = better (prefix & streak bonuses)
+      subsequenceScore(query, target) {
+        const q = query.toLowerCase();
+        const t = target.toLowerCase();
+        let qi = 0;
+        let score = 0;
+        let streak = 0;
+        for (let i = 0; i < t.length && qi < q.length; i++) {
+          if (t[i] === q[qi]) {
+            qi++;
+            streak++;
+            score += 2 + streak;
+            if (i === 0) score += 3;
+          } else {
+            streak = 0;
+          }
+        }
+        if (qi < q.length) return 0;
+        if (t.startsWith(q)) score += 20 - Math.min(10, t.length - q.length);
+        return score;
+      },
+
+      // ---------- storage ----------
+      loadVocab() {
+        try { return JSON.parse(localStorage.getItem(this.VOCAB_KEY)) || {}; } catch (e) { return {}; }
+      },
+
+      vocabScore(meta) {
+        const days = (Date.now() - (meta.t || 0)) / 86400000;
+        return (meta.f || 1) / (1 + Math.max(0, days));
+      },
+
+      saveVocab(vocab) {
+        let entries = Object.entries(vocab);
+        if (entries.length > this.VOCAB_CAP) {
+          entries.sort((a, b) => this.vocabScore(b[1]) - this.vocabScore(a[1]));
+          entries = entries.slice(0, this.VOCAB_CAP);
+        }
+        const out = {};
+        for (const [w, meta] of entries) out[w] = meta;
+        try { localStorage.setItem(this.VOCAB_KEY, JSON.stringify(out)); } catch (e) { /* quota */ }
+      },
+
+      rememberText(text) {
+        const clean = String(text || '').replace(/\/\S+/g, ' ');
+        const words = clean.toLowerCase().match(/[\p{L}\p{N}][\p{L}\p{N}'’-]{2,}/gu) || [];
+        if (!words.length) return;
+        const vocab = this.loadVocab();
+        for (const w of words) {
+          vocab[w] = { f: ((vocab[w] && vocab[w].f) || 0) + 1, t: Date.now() };
+        }
+        this.saveVocab(vocab);
+      },
+
+      lexiconSet() {
+        const set = new Set(this.BUILTIN_LEXICON);
+        try {
+          const learned = JSON.parse(localStorage.getItem(this.LEXICON_KEY)) || {};
+          for (const w of Object.keys(learned)) set.add(w.toLowerCase());
+        } catch (e) { /* ignore */ }
+        return set;
+      },
+
+      learnCorrection(word) {
+        try {
+          const learned = JSON.parse(localStorage.getItem(this.LEXICON_KEY)) || {};
+          learned[word.toLowerCase()] = (learned[word.toLowerCase()] || 0) + 1;
+          localStorage.setItem(this.LEXICON_KEY, JSON.stringify(learned));
+        } catch (e) { /* ignore */ }
+      },
+
+      isEnabled() {
+        return localStorage.getItem(this.AC_KEY) !== 'off';
+      },
+
+      setEnabled(v) {
+        localStorage.setItem(this.AC_KEY, v ? 'on' : 'off');
+      },
+
+      // ---------- correction core ----------
+      // Mask code fences & URLs so corrections never touch them.
+      protectSegments(text) {
+        const masked = [];
+        // Sentinel must be unambiguous: bare-number placeholders made restore()
+        // EAT user digits (e.g. '2+2' -> '+'). Use a control-char sentinel.
+        const stash = (m) => { masked.push(m); return '\u0000' + (masked.length - 1) + '\u0000'; };
+        let out = text.replace(/```[\s\S]*?(?:```|$)/g, stash);
+        out = out.replace(/https?:\/\/\S+|www\.\S+/gi, stash);
+        // Protect math/expressions with digits and operators from autocorrect
+        out = out.replace(/\d+(?:\s*[+\-*/=^%]\s*\d+)+/g, stash);
+        return {
+          text: out,
+          masked,
+          restore: (s) => s.replace(/\u0000(\d+)\u0000/g, (_, i) => masked[+i] !== undefined ? masked[+i] : ''),
+        };
+      },
+
+      matchCase(word, candidate) {
+        if (word[0] === word[0].toUpperCase() && word[0] !== word[0].toLowerCase() && word.slice(1) === word.slice(1).toLowerCase()) {
+          return candidate[0].toUpperCase() + candidate.slice(1);
+        }
+        return candidate;
+      },
+
+      // Unique best candidate within edit distance budget, else null.
+      correctWord(word, dict) {
+        if (word.length < 5 || dict.has(word)) return null;
+        const maxDist = word.length >= 8 ? 2 : 1;
+        let best = null;
+        let bestDist = maxDist + 1;
+        let ties = 0;
+        for (const cand of dict) {
+          if (Math.abs(cand.length - word.length) > maxDist) continue;
+          const d = this.levenshtein(word, cand);
+          if (d < bestDist) { bestDist = d; best = cand; ties = 1; }
+          else if (d === bestDist && cand !== best) ties++;
+        }
+        if (best && bestDist <= maxDist && ties === 1) return best;
+        return null;
+      },
+
+      // '/hist' → '/history', '/модел' → '/models' (prefix → translit → fuzzy)
+      fixCommand(token) {
+        if (!token || !token.startsWith('/')) return null;
+        const raw = token.slice(1).toLowerCase();
+        if (!raw) return null;
+        if (this.COMMANDS.includes(raw)) return null;
+        let target = raw;
+        if (this.TRANSLIT[target]) target = this.TRANSLIT[target];
+        if (this.COMMANDS.includes(target) && target !== raw) return '/' + target;
+        const pref = this.COMMANDS.filter((c) => c.startsWith(target));
+        if (pref.length === 1) return '/' + pref[0];
+        const maxDist = target.length >= 4 ? 2 : 1;
+        let best = null;
+        let bestDist = maxDist + 1;
+        let ties = 0;
+        for (const c of this.COMMANDS) {
+          if (c[0] !== target[0]) continue;
+          const d = this.levenshtein(target, c);
+          if (d < bestDist) { bestDist = d; best = c; ties = 1; }
+          else if (d === bestDist) ties++;
+        }
+        return best && bestDist <= maxDist && ties === 1 ? '/' + best : null;
+      },
+
+      // Punctuation spacing (never touches masked segments; safe for "3.14", "19:10", "e.g")
+      normalizePunct(text) {
+        return text
+          .replace(/[ \t]+([,.!?;:%)])/g, '$1')
+          .replace(/([,;:])(?=[^\s\d)])/g, '$1 ')
+          .replace(/([!?])(?=[^\s\d)])/g, '$1 ')
+          .replace(/([а-яёіїєґa-z]{2,})\.([А-ЯЁЄІЇҐA-Z])/g, '$1. $2')
+          .replace(/[ \t]{2,}/g, ' ')
+          .replace(/[ \t]+$/gm, '');
+      },
+
+      // Main pass: command expansion + punctuation + word-level correction.
+      // Returns { text, fixes: [{from, to}] }. Never alters code fences / URLs.
+      autocorrect(text) {
+        const fixes = [];
+        if (!text || !text.trim()) return { text, fixes };
+        const prot = this.protectSegments(text);
+        let out = prot.text;
+
+        // (c) partial command expansion on first token only
+        const cmdMatch = out.match(/^\s*(\/[^\s]+)/);
+        if (cmdMatch) {
+          const fixed = this.fixCommand(cmdMatch[1]);
+          if (fixed) {
+            fixes.push({ from: cmdMatch[1], to: fixed });
+            out = fixed + out.slice(out.indexOf(cmdMatch[1]) + cmdMatch[1].length);
+          }
+        }
+
+        // (b) punctuation / spacing normalization
+        out = this.normalizePunct(out);
+
+        // (d) word-level Levenshtein correction against vocab + lexicon
+        const dict = this.lexiconSet();
+        const vocab = this.loadVocab();
+        for (const w of Object.keys(vocab)) dict.add(w.toLowerCase());
+        out = out.split(/(\d+)/g).map((seg) => {
+          if (/^\d+$/.test(seg)) return seg;
+          return seg.replace(/[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu, (w, offset) => {
+            // never touch slash-command tokens (e.g. '/hist', '/voices')
+            if (offset > 0 && seg[offset - 1] === '/') return w;
+            const lw = w.toLowerCase();
+            if (lw.length < 5 || dict.has(lw)) return w;
+            const c = this.correctWord(lw, dict);
+            if (c) {
+              const fixedWord = this.matchCase(w, c);
+              fixes.push({ from: w, to: fixedWord });
+              this.learnCorrection(c);
+              return fixedWord;
+            }
+            return w;
+          });
+        }).join('');
+
+        return { text: prot.restore(out), fixes };
+      },
+
+      // ---------- autocomplete suggestions ----------
+      // Returns [{text, source:'cmd'|'mem', desc}] ranked by prefix/subsequence score.
+      suggest(text, caret) {
+        const pos = (caret === undefined || caret === null) ? text.length : caret;
+        const before = text.slice(0, pos);
+
+        // trigger: '/' at word start → commands
+        const cmdM = before.match(/(?:^|\s)(\/[\w?]{0,24})$/);
+        if (cmdM) {
+          const frag = cmdM[1].slice(1).toLowerCase();
+          return this.COMMANDS
+            .map((c) => ({ c, s: frag === '' ? 1 : (c.startsWith(frag) ? 100 : this.subsequenceScore(frag, c)) }))
+            .filter((x) => x.s > 0)
+            .sort((a, b) => b.s - a.s || a.c.localeCompare(b.c))
+            .slice(0, 8)
+            .map((x) => ({
+              text: '/' + x.c,
+              source: 'cmd',
+              desc: (this.CMD_DESC[x.c] || {})[state.lang] || (this.CMD_DESC[x.c] || {}).en || '',
+            }));
+        }
+
+        // trigger: 2+ typed chars → learned vocabulary words
+        const wM = before.match(/([\p{L}\p{N}][\p{L}\p{N}'’-]{1,})$/u);
+        if (wM && wM[1].length >= 2) {
+          const frag = wM[1].toLowerCase();
+          const vocab = this.loadVocab();
+          const items = [];
+          for (const w of Object.keys(vocab)) {
+            const wl = w.toLowerCase();
+            if (wl === frag) continue;
+            const s = wl.startsWith(frag) ? 100 + this.vocabScore(vocab[w]) : this.subsequenceScore(frag, wl);
+            if (s > 0) items.push({ text: w, source: 'mem', desc: '', s });
+          }
+          items.sort((a, b) => b.s - a.s);
+          return items.slice(0, 6).map((i) => ({ text: i.text, source: 'mem', desc: '' }));
+        }
+        return [];
+      },
+    };
+
+    function showToast(text) {
+      const wrap = document.getElementById('toast-wrap');
+      if (!wrap) return;
+      const el = document.createElement('div');
+      el.className = 'toast';
+      el.textContent = text;
+      wrap.appendChild(el);
+      requestAnimationFrame(() => el.classList.add('show'));
+      setTimeout(() => {
+        el.classList.remove('show');
+        setTimeout(() => el.remove(), 300);
+      }, 2600);
+    }
+
+    const I18N = {
+      en: {
+        statusOnline: 'ONLINE',
+        statusBusy: 'BUSY',
+        statusOffline: 'OFFLINE',
+        ping: 'Ping:',
+        mesh: 'Mesh:',
+        live: 'Live:',
+        model: 'Model:',
+        mode: 'Mode:',
+        pool: '... (/models)',
+        lang: 'Lang:',
+        commands: 'Commands:',
+        databases: 'Databases:',
+        databasesValue: 'checking ...',
+        load: 'Load:',
+        greeting: 'Connecting to evabot.online ...',
+        connected: 'Connected to evabot.online',
+        placeholder: 'Type a message or command (/help)...',
+        modalTitle: 'MODEL CATALOG',
+        modalClose: '[CLOSE]',
+        filterAll: 'All',
+        filterFree: 'Free',
+        filterPaid: 'Paid',
+        loadingModels: 'Loading models...',
+        noModels: 'No models in this category.',
+        modelSelected: 'Selected model: ',
+        help: `SYSTEM COMMANDS:
+  /about                  - EvaBot & EvaLine passport, cluster architecture & EU hub
+  /top [free|paid|speed]  - Top models leaderboard by quality and recency
+  /models                 - Full interactive model catalog
+  /info <model>           - Technical passport, context limits & token pricing
+  /company [evaline|free] - 10-Agent Autonomous AI Corporation
+  /evaline                - EvaLine Enterprise Business Swarm (Mats, SCM, 24/7 Support)
+  /cost                   - Financial ledger, token burn & cluster OpEx
+  /lang [en|uk|ru]        - Instant language switch (English, Ukrainian, Russian)
+  /mcp                    - Active 21 MCP tool servers status
+  /lsp                    - Active 4 Language Server Protocol daemons
+  /free, /paid            - Filter models by tariff tier
+  /mode [solo|consilium]  - Toggle single model or multi-agent consilium
+  /consilium [topic]      - Run multi-agent deliberation and synthesis
+  /clear                  - Clear terminal screen
+  /history                - Show recent conversation history
+  /memory                 - Memory stats: KB docs, FTS chunks, chat DB
+  /search <query>         - Full-text search across chats and knowledge base
+  /find <query>           - Alias of /search
+  /translate <to> <text>  - Google Translate: /translate uk Привіт світ (500k chars/mo free)
+  /services               - Systemd/docker services and DB backends status
+  /servers                - Cluster: evabot-agent-vm + evaline-micro-vm
+  /autocorrect [on|off]   - Smart typo auto-correction (learned lexicon)
+  /voice [on|off|eva|adam]- Voice input mic & TTS persona (Eva/Adam)
+  /tts [on|off]           - Speak assistant replies aloud
+  /voices [uk|ru|en]      - TTS voice catalog (Chirp3-HD/Wavenet free), /voices set eva|adam <voice>
+  /settings               - Current settings table (locale, model, TTS/STT/translate usage)
+  /agents                 - Roster: 18 corporate roles + 10 Sephirot nodes
+  /emoji [on|off]         - Emoji rendering in replies (off = strip, default)
+  /add db <title> | <content> - Add knowledge base document
+  /add link <url>         - Add URL to the knowledge base
+  /add context <text>     - Add raw context note
+  /add bot <name>         - Register bot persona
+  /add human <name>       - Register human contact
+  /add agent <name> [prompt] - Register agent persona (optional prompt)
+  /add file, /add media, /file - Upload files to the knowledge base
+  /idea <topic>           - AI consilium brainstorm (7 specialists + Eva synthesis)
+  /error <description>    - Register an error report for the ops team
+  /bug <description>      - Register a bug report for the ops team
+  /errors                 - Show recent system errors
+  /help , /?              - Display this guide`,
+        addHelp: `ADD COMMAND — ingest into the knowledge base:
+  /add db <title> | <content>    - Add knowledge base document
+  /add link <url>                - Fetch & index a web page
+  /add context <text>            - Append free-form context to memory
+  /add bot <name>                - Register bot persona
+  /add human <name>              - Register human contact
+  /add agent <name> [prompt]     - Register agent (optional system prompt)
+  /add file, /add media, /file   - Upload files via picker (multipart)
+Examples:
+  /add db Mats spec | Cellular rubber 3mm, EPDM, -40..+90C
+  /add link https://evaline.eu/products
+  /file`,
+        switched: 'Language switched to English (EN). Interface updated instantly.',
+        cleared: 'Screen cleared.',
+        unknownCmd: 'Unknown command: {cmd}. Type /help for assistance.',
+        modeSwitched: 'Mode switched: ',
+        consiliumReady: 'Mode switched to CONSILIUM. Please send your query/topic.',
+        consiliumErr: 'Consilium error: ',
+        execErr: 'Execution error: ',
+        fixedToast: 'fixed: {from} -> {to}',
+        autocorrectOn: 'Auto-correction ENABLED.',
+        autocorrectOff: 'Auto-correction disabled.',
+        voiceOn: 'Voice input enabled. Click [ MIC ] to dictate.',
+        voiceOff: 'Voice input disabled.',
+        voicePersona: 'TTS persona set to ',
+        voiceUnsupported: 'Speech recognition not supported (use Chrome/Edge).',
+        voiceListening: 'Listening...',
+        voiceDenied: 'Microphone access denied. Allow it via the icon in the address bar.',
+        voiceNoMic: 'No microphone found.',
+        voiceNoSpeech: 'No speech detected. Try again.',
+        voiceRecording: 'Recording 6 s for server recognition...',
+        voiceSttErr: 'Voice recognition failed: ',
+        ttsOn: 'TTS enabled — Eva will speak replies.',
+        ttsOff: 'TTS muted.',
+        historyEmpty: 'No conversation history yet.',
+        historyHeader: 'RECENT HISTORY (last {n}):',
+      },
+      uk: {
+        statusOnline: 'ОНЛАЙН',
+        statusBusy: 'ЗАЙНЯТИЙ',
+        statusOffline: 'ОФЛАЙН',
+        ping: 'Пінг:',
+        mesh: 'Mesh:',
+        live: 'Live:',
+        model: 'Модель:',
+        mode: 'Режим:',
+        pool: '... (/models)',
+        lang: 'Мова:',
+        commands: 'Команди:',
+        databases: 'Бази даних:',
+        databasesValue: 'перевірка ...',
+        load: 'Навантаження:',
+        greeting: 'Підключено до evabot.online. Введіть повідомлення або команду (/help).',
+        connected: 'Підключено до evabot.online',
+        placeholder: 'Введіть повідомлення або команду (/help)...',
+        modalTitle: 'КАТАЛОГ МОДЕЛЕЙ',
+        modalClose: '[ЗАКРИТИ]',
+        filterAll: 'Всі',
+        filterFree: 'Безкоштовні',
+        filterPaid: 'Платні',
+        loadingModels: 'Завантаження моделей...',
+        noModels: 'Немає моделей у даній категорії.',
+        modelSelected: 'Вибрано модель: ',
+        help: `СИСТЕМНІ КОМАНДИ:
+  /about                  - Паспорт EvaBot & EvaLine, архітектура кластера та єврохаб
+  /top [free|paid|speed]  - Рейтинг моделей за якістю та новизною
+  /models                 - Повний інтерактивний каталог моделей
+  /info <model>           - Технічний паспорт, контекстне вікно та тарифи
+  /company [evaline|free] - Ростер 10 автономних ШІ-агентів компанії
+  /evaline                - Бізнес-система агентів EvaLine (Автоковрики, SCM, 24/7 Сапорт)
+  /cost                   - Бухгалтерія, витрати токенів та собівартість OpEx
+  /lang [en|uk|ru]        - Миттєва зміна мови (English, Українська, Русский)
+  /mcp                    - Статус пулу з 21 MCP-сервера
+  /lsp                    - Статус 4 глобальних мовних серверів LSP
+  /free, /paid            - Фільтри моделей за тарифом
+  /mode [solo|consilium]  - Перемикання режиму solo / консиліум
+  /consilium [тема]       - Колегіальний аналіз та синтез консиліуму
+  /clear                  - Очистити екран термінала
+  /history                - Показати нещодавню історію діалогу
+  /memory                 - Статистика памʼяті: база знань, FTS чанки, чат-БД
+  /search <запит>         - Полнотекстовий пошук по чатах і базі знань
+  /find <запит>           - Синонім /search
+  /services               - Статус systemd/docker сервісів і бекендів БД
+  /servers                - Кластер: evabot-agent-vm + evaline-micro-vm
+  /autocorrect [on|off]   - Розумна автокорекція описок (лексикон, що навчається)
+  /voice [on|off|eva|adam]- Голосовий ввід та персона озвучки (Єва/Адам)
+  /tts [on|off]           - Озвучення відповідей асистента
+  /voices [uk|ru|en]      - Каталог голосів TTS (Chirp3-HD/Wavenet free), /voices set eva|adam <голос>
+  /settings               - Таблиця поточних налаштувань (мова, модель, ліміти TTS/STT/перекладу)
+  /agents                 - Ростер: 18 корпоративних ролей + 10 вузлів Сефірот
+  /emoji [on|off]         - Емодзі у відповідях (off = вирізати, за замовчуванням)
+  /add db <назва> | <вміст>   - Додати документ у базу знань
+  /add link <url>         - Додати посилання до бази знань
+  /add context <текст>    - Додати довільний контекст у пам'ять
+  /add bot <ім'я>         - Зареєструвати персону бота
+  /add human <ім'я>       - Зареєструвати контакт людини
+  /add agent <ім'я> [промпт] - Зареєструвати агента (опціональний промпт)
+  /add file, /add media, /file - Завантажити файли у базу знань
+  /idea <тема>            - ШІ-консиліум-штурм (7 спеціалістів + синтез Єви)
+  /error <опис>           - Зареєструвати звіт про помилку для команди
+  /bug <опис>             - Зареєструвати звіт про баг для команди
+  /errors                 - Показати останні системні помилки
+  /help , /?              - Ця довідка`,
+        addHelp: `КОМАНДА ADD — додавання у базу знань:
+  /add db <назва> | <вміст>      - Додати документ у базу знань
+  /add link <url>                - Завантажити та індексувати сторінку
+  /add context <текст>           - Додати довільний контекст у пам'ять
+  /add bot <ім'я>                - Зареєструвати персону бота
+  /add human <ім'я>              - Зареєструвати контакт людини
+  /add agent <ім'я> [промпт]     - Зареєструвати агента (системний промпт опціонально)
+  /add file, /add media, /file   - Завантажити файли через вибір файлів
+Приклади:
+  /add db Специфікація килимків | Комірчаста гума 3мм, EPDM, -40..+90C
+  /add link https://evaline.eu/products
+  /file`,
+        switched: 'Мову перемкнено на українську (UK). Інтерфейс оновлено миттєво.',
+        cleared: 'Екран очищено.',
+        unknownCmd: 'Невідома команда: {cmd}. Введіть /help для довідки.',
+        modeSwitched: 'Режим перемкнено: ',
+        consiliumReady: 'Режим перемкнено на КОНСИЛІУМ. Тепер надішліть ваше запитання.',
+        consiliumErr: 'Помилка консиліуму: ',
+        execErr: 'Помилка виконання: ',
+        fixedToast: 'виправлено: {from} -> {to}',
+        autocorrectOn: 'Автокорекцію УВІМКНЕНО.',
+        autocorrectOff: 'Автокорекцію вимкнено.',
+        voiceOn: 'Голосовий ввід увімкнено. Натисніть [ MIC ] для диктування.',
+        voiceOff: 'Голосовий ввід вимкнено.',
+        voicePersona: 'Персону озвучки змінено на ',
+        voiceUnsupported: 'Розпізнавання мови не підтримується (використовуйте Chrome/Edge).',
+        voiceListening: 'Слухаю...',
+        voiceDenied: 'Доступ до мікрофона заборонено. Дозвольте його через іконку в адресному рядку.',
+        voiceNoMic: 'Мікрофон не знайдено.',
+        voiceNoSpeech: 'Мовлення не розпізнано. Спробуйте ще раз.',
+        voiceRecording: 'Запис 6 с для серверного розпізнавання...',
+        voiceSttErr: 'Помилка розпізнавання: ',
+        ttsOn: 'Озвучення увімкнено — Єва озвучуватиме відповіді.',
+        ttsOff: 'Озвучення вимкнено.',
+        historyEmpty: 'Історія діалогу порожня.',
+        historyHeader: 'НЕЩОДАВНЯ ІСТОРІЯ (останні {n}):',
+      },
+      ru: {
+        statusOnline: 'ОНЛАЙН',
+        statusBusy: 'ЗАНЯТ',
+        statusOffline: 'ОФФЛАЙН',
+        ping: 'Пинг:',
+        mesh: 'Mesh:',
+        live: 'Live:',
+        model: 'Модель:',
+        mode: 'Режим:',
+        pool: '... (/models)',
+        lang: 'Язык:',
+        commands: 'Команды:',
+        databases: 'Базы данных:',
+        databasesValue: 'проверка ...',
+        load: 'Нагрузка:',
+        greeting: 'Подключено к evabot.online. Введите сообщение или команду (/help).',
+        connected: 'Подключено к evabot.online',
+        placeholder: 'Введите сообщение или команду (/help)...',
+        modalTitle: 'КАТАЛОГ МОДЕЛЕЙ',
+        modalClose: '[ЗАКРЫТЬ]',
+        filterAll: 'Все',
+        filterFree: 'Бесплатные',
+        filterPaid: 'Платные',
+        loadingModels: 'Загрузка моделей...',
+        noModels: 'Нет моделей в данной категории.',
+        modelSelected: 'Выбрана модель: ',
+        help: `СИСТЕМНЫЕ КОМАНДЫ:
+  /about                  - Паспорт EvaBot & EvaLine, архитектура кластера и еврохаб
+  /top [free|paid|speed]  - Топ моделей по качеству и новизне
+  /models                 - Полный интерактивный каталог моделей
+  /info <model>           - Паспорт, контекстное окно и квоты модели
+  /company [evaline|free] - Ростер 10 автономных ИИ-агентов компании EvaLine
+  /evaline                - Бизнес-система агентов EvaLine (Автоковрики, SCM, 24/7 Саппорт)
+  /cost                   - Бухгалтерия, токены и себестоимость OpEx
+  /lang [en|uk|ru]        - Мгновенное переключение языка (English, Украинский, Русский)
+  /mcp                    - Пул из 21 активного MCP-сервера
+  /lsp                    - Статус 4 языковых демонов LSP
+  /free, /paid            - Фильтры моделей по тарифу
+  /mode [solo|consilium]  - Смена режима solo / консилиум
+  /consilium [тема]       - Запуск коллегиального анализа моделей
+  /clear                  - Очистить экран терминала
+  /history                - Показать недавнюю историю диалога
+  /memory                 - Статистика памяти: база знаний, FTS чанки, чат-БД
+  /search <запрос>        - Полнотекстовый поиск по чатам и базе знаний
+  /find <запрос>          - Синоним /search
+  /services               - Статус systemd/docker сервисов и бекендов БД
+  /servers                - Кластер: evabot-agent-vm + evaline-micro-vm
+  /autocorrect [on|off]   - Умная автокоррекция опечаток (обучаемый лексикон)
+  /voice [on|off|eva|adam]- Голосовой ввод и персона озвучки (Ева/Адам)
+  /tts [on|off]           - Озвучивание ответов ассистента
+  /voices [uk|ru|en]      - Каталог голосов TTS (Chirp3-HD/Wavenet free), /voices set eva|adam <голос>
+  /settings               - Таблица текущих настроек (язык, модель, лимиты TTS/STT/перевода)
+  /agents                 - Ростер: 18 корпоративных ролей + 10 узлов Сфирот
+  /emoji [on|off]         - Эмодзи в ответах (off = вырезать, по умолчанию)
+  /add db <название> | <содержимое> - Добавить документ в базу знаний
+  /add link <url>         - Добавить ссылку в базу знаний
+  /add context <текст>    - Добавить произвольный контекст в память
+  /add bot <имя>          - Зарегистрировать персону бота
+  /add human <имя>        - Зарегистрировать контакт человека
+  /add agent <имя> [промпт] - Зарегистрировать агента (опциональный промпт)
+  /add file, /add media, /file - Загрузить файлы в базу знаний
+  /idea <тема>            - ИИ-консилиум-штурм (7 специалистов + синтез Евы)
+  /error <описание>       - Зарегистрировать отчёт об ошибке для команды
+  /bug <описание>         - Зарегистрировать отчёт о баге для команды
+  /errors                 - Показать последние системные ошибки
+  /help , /?              - Эта справка`,
+        addHelp: `КОМАНДА ADD — добавление в базу знаний:
+  /add db <название> | <содержимое> - Добавить документ в базу знаний
+  /add link <url>                - Загрузить и проиндексировать страницу
+  /add context <текст>           - Добавить произвольный контекст в память
+  /add bot <имя>                 - Зарегистрировать персону бота
+  /add human <имя>               - Зарегистрировать контакт человека
+  /add agent <имя> [промпт]      - Зарегистрировать агента (системный промпт опционально)
+  /add file, /add media, /file   - Загрузить файлы через выбор файлов
+Примеры:
+  /add db Спецификация ковриков | Сотовая резина 3мм, EPDM, -40..+90C
+  /add link https://evaline.eu/products
+  /file`,
+        switched: 'Язык переключен на русский (RU). Интерфейс обновлен мгновенно.',
+        cleared: 'Экран очищен.',
+        unknownCmd: 'Неизвестная команда: {cmd}. Введите /help для справки.',
+        modeSwitched: 'Режим переключен: ',
+        consiliumReady: 'Режим переключен на КОНСИЛИУМ. Теперь отправьте ваш вопрос.',
+        consiliumErr: 'Ошибка консилиума: ',
+        execErr: 'Ошибка выполнения: ',
+        fixedToast: 'исправлено: {from} -> {to}',
+        autocorrectOn: 'Автокоррекция ВКЛЮЧЕНА.',
+        autocorrectOff: 'Автокоррекция выключена.',
+        voiceOn: 'Голосовой ввод включен. Нажмите [ MIC ] для диктовки.',
+        voiceOff: 'Голосовой ввод отключен.',
+        voicePersona: 'Персона озвучки изменена на ',
+        voiceUnsupported: 'Распознавание речи не поддерживается (используйте Chrome/Edge).',
+        voiceListening: 'Слушаю...',
+        voiceDenied: 'Доступ к микрофону запрещен. Разрешите его через значок в адресной строке.',
+        voiceNoMic: 'Микрофон не найден.',
+        voiceNoSpeech: 'Речь не распознана. Попробуйте еще раз.',
+        voiceRecording: 'Запись 6 с для серверного распознавания...',
+        voiceSttErr: 'Ошибка распознавания: ',
+        ttsOn: 'Озвучивание включено — Ева будет озвучивать ответы.',
+        ttsOff: 'Озвучивание выключено.',
+        historyEmpty: 'История диалога пуста.',
+        historyHeader: 'НЕДАВНЯЯ ИСТОРИЯ (последние {n}):',
+      }
+    };
+
+    function setLanguage(lang, silent = false) {
+      const targetLang = (lang === 'uk' || lang === 'ua' || lang === 'ukr' || lang === 'ukrainian') ? 'uk' :
+                         (lang === 'ru' || lang === 'rus' || lang === 'russian') ? 'ru' : 'en';
+      state.lang = targetLang;
+      localStorage.setItem('evabot_lang', targetLang);
+
+      const d = I18N[targetLang] || I18N.en;
+
+      const lblPing = document.getElementById('lbl-ping');
+      if (lblPing) lblPing.textContent = d.ping;
+
+      const lblModel = document.getElementById('lbl-model');
+      if (lblModel) lblModel.textContent = d.model;
+
+      const lblMode = document.getElementById('lbl-mode');
+      if (lblMode) lblMode.textContent = d.mode;
+
+      const lblPool = document.getElementById('lbl-pool');
+      if (lblPool) lblPool.textContent = d.pool;
+
+      const lblLang = document.getElementById('lbl-lang');
+      if (lblLang) lblLang.textContent = d.lang;
+
+      const lblCommands = document.getElementById('lbl-commands');
+      if (lblCommands) lblCommands.textContent = d.commands;
+
+      const lblDatabases = document.getElementById('lbl-databases');
+      if (lblDatabases) lblDatabases.textContent = d.databases;
+
+      const dbValues = document.getElementById('db-values');
+      if (dbValues) dbValues.textContent = d.databasesValue;
+
+      const lblLoad = document.getElementById('lbl-load');
+      if (lblLoad) lblLoad.textContent = d.load;
+
+      const lEn = document.getElementById('lang-en');
+      const lUk = document.getElementById('lang-uk');
+      const lRu = document.getElementById('lang-ru');
+      if (lEn && lUk && lRu) {
+        lEn.className = targetLang === 'en' ? 'cmd-link bold c-ok' : 'cmd-link';
+        lEn.textContent = targetLang === 'en' ? '[EN]' : 'EN';
+        lUk.className = targetLang === 'uk' ? 'cmd-link bold c-ok' : 'cmd-link';
+        lUk.textContent = targetLang === 'uk' ? '[UK]' : 'UK';
+        lRu.className = targetLang === 'ru' ? 'cmd-link bold c-ok' : 'cmd-link';
+        lRu.textContent = targetLang === 'ru' ? '[RU]' : 'RU';
+      }
+
+      if (userInput) {
+        userInput.placeholder = d.placeholder;
+      }
+
+      const modalTitle = document.getElementById('modal-title');
+      if (modalTitle) modalTitle.textContent = d.modalTitle;
+
+      const modalClose = document.getElementById('modal-close');
+      if (modalClose) modalClose.textContent = d.modalClose;
+
+      const filterAll = document.getElementById('filter-all');
+      if (filterAll) filterAll.textContent = d.filterAll;
+
+      const filterFree = document.getElementById('filter-free');
+      if (filterFree) filterFree.textContent = d.filterFree;
+
+      const filterPaid = document.getElementById('filter-paid');
+      if (filterPaid) filterPaid.textContent = d.filterPaid;
+
+      const modelListLoading = document.getElementById('model-list-loading');
+      if (modelListLoading) modelListLoading.textContent = d.loadingModels;
+
+      if (modelsLink && state.models && state.models.length) {
+        modelsLink.textContent = targetLang === 'en'
+          ? `${state.models.length} models (/models)`
+          : `${state.models.length} моделей (/models)`;
+      }
+
+      if (typeof syncDrawerState === 'function') {
+        syncDrawerState();
+      }
+
+      const bootMsg = document.getElementById('boot-msg');
+      if (bootMsg && chatContainer && chatContainer.children.length === 1) {
+        const alreadyConnected = bootMsg.textContent && !bootMsg.textContent.includes('Connecting');
+        bootMsg.textContent = alreadyConnected ? (d.connected || d.greeting) : d.greeting;
+      }
+
+      setStatus(true, state.isGenerating);
+
+      if (!silent) {
+        addMessage('system', d.switched);
+      }
+
+      fetch('/api/models/command', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: `/lang ${targetLang}` })
+      }).catch(() => {});
+    }
+    window.setLanguage = setLanguage;
+
+    // =======================================================================
+    // Display modes — three-state styling switch (was: binary NOCSS toggle).
+    // 'off'  — no styles: every <style>/<link rel=stylesheet> gets media
+    //          swapped to 'not all' (prev value stashed in data-css-media);
+    //          data-nocss attr set. Plain text flow, content always visible.
+    // 'term' — default: terminal styling exactly as before, data-mode='term'.
+    // 'web'  — terminal styling PLUS the #web-layer enhancement block
+    //          (scoped under html[data-mode='web']): message cards, rounded
+    //          code blocks, centered readability column, web folds.
+    // State persisted in localStorage 'evabot_css' ('off'|'term'|'web',
+    // legacy 'on' migrates to 'term'; default 'term').
+    // =======================================================================
+    const CSS_MODES = ['off', 'term', 'web'];
+
+    function getDisplayMode() {
+      let v = null;
+      try { v = localStorage.getItem('evabot_css'); } catch (e) { /* private mode */ }
+      if (v === 'on') v = 'term'; // legacy migration
+      return CSS_MODES.includes(v) ? v : 'term';
+    }
+
+    function setStyleSheetsEnabled(on) {
+      const els = document.querySelectorAll('style, link[rel="stylesheet"]');
+      for (const el of els) {
+        if (on) {
+          const prev = el.getAttribute('data-css-media');
+          if (prev !== null) {
+            if (prev === 'all' && !el.hasAttribute('data-css-had-media')) el.removeAttribute('media');
+            else el.setAttribute('media', prev);
+            el.removeAttribute('data-css-media');
+            el.removeAttribute('data-css-had-media');
+          }
+        } else if (!el.hasAttribute('data-css-media')) {
+          if (el.hasAttribute('media')) el.setAttribute('data-css-had-media', '1');
+          el.setAttribute('data-css-media', el.getAttribute('media') || 'all');
+          el.setAttribute('media', 'not all');
+        }
+      }
+    }
+
+    // Web-mode message folds: bodies longer than WEB_FOLD_CHARS are wrapped in
+    // a collapsible .web-fold (first ~8 lines visible) with a [▼ more] toggle.
+    const WEB_FOLD_CHARS = 600;
+
+    function applyWebFolds(root) {
+      if (document.documentElement.getAttribute('data-mode') !== 'web') return;
+      const bodies = (root || document).querySelectorAll('.msg-body:not([data-folded])');
+      for (const body of bodies) {
+        if ((body.textContent || '').length <= WEB_FOLD_CHARS) continue;
+        body.setAttribute('data-folded', '1');
+        const fold = document.createElement('div');
+        fold.className = 'web-fold';
+        while (body.firstChild) fold.appendChild(body.firstChild);
+        const toggle = document.createElement('span');
+        toggle.className = 'web-fold-toggle';
+        toggle.textContent = '[▼ more]';
+        toggle.addEventListener('click', () => {
+          const open = fold.classList.toggle('open');
+          toggle.textContent = open ? '[▲ less]' : '[▼ more]';
+        });
+        body.appendChild(fold);
+        body.appendChild(toggle);
+      }
+    }
+
+    // Switching away from web mode → unfold everything and drop the folds.
+    function unfoldWebFolds() {
+      document.querySelectorAll('.web-fold').forEach((fold) => {
+        const body = fold.parentNode;
+        if (!body) return;
+        while (fold.firstChild) body.insertBefore(fold.firstChild, fold);
+        fold.remove();
+        const t = body.querySelector('.web-fold-toggle');
+        if (t) t.remove();
+        body.removeAttribute('data-folded');
+      });
+    }
+
+    function applyWebMode() {
+      if (document.documentElement.getAttribute('data-mode') === 'web') {
+        applyWebFolds(document);
+      } else {
+        unfoldWebFolds();
+      }
+    }
+
+    function applyDisplayMode(mode) {
+      const on = mode !== 'off';
+      setStyleSheetsEnabled(on);
+      if (on) document.documentElement.removeAttribute('data-nocss');
+      else document.documentElement.setAttribute('data-nocss', '1');
+      if (on) document.documentElement.setAttribute('data-mode', mode);
+      else document.documentElement.removeAttribute('data-mode');
+      const btn = document.getElementById('css-toggle');
+      if (btn) {
+        btn.textContent = mode === 'off' ? '[CSS:OFF]' : mode === 'web' ? '[CSS:WEB]' : '[CSS:TERM]';
+        btn.className = mode === 'off' ? 'cmd-link c-wrn' : 'cmd-link';
+        btn.title = 'Display mode: off / term / web (click to cycle)';
+      }
+      applyWebMode();
+    }
+
+    // Cycle: off → term → web → off (HTML onclick stays toggleCss).
+    function toggleCss() {
+      const cur = getDisplayMode();
+      const next = cur === 'off' ? 'term' : cur === 'term' ? 'web' : 'off';
+      try { localStorage.setItem('evabot_css', next); } catch (e) { /* private mode */ }
+      applyDisplayMode(next);
+    }
+    window.toggleCss = toggleCss;
+
+    function getTimeStr() {
+      const now = new Date();
+      return '[' + now.toTimeString().split(' ')[0] + ']';
+    }
+
+    document.getElementById('boot-time').textContent = getTimeStr();
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function renderMarkdown(md) {
+      if (!md) return '';
+      // 1. Extract and preserve code blocks
+      const codeBlocks = [];
+      let text = md.replace(/```([a-zA-Z0-9_-]*)\n?([\s\S]*?)```/g, (match, lang, code) => {
+        const id = `__CODE_BLOCK_${codeBlocks.length}__`;
+        codeBlocks.push({ lang: lang.trim(), code });
+        return id;
+      });
+
+      // 2. Escape HTML
+      text = escapeHtml(text);
+
+      // 3. Inline formatting
+      text = text.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+      text = text.replace(/\*\*([^*]+)\*\*/g, '<strong class="bold c-fg">$1</strong>');
+      text = text.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="c-dim">$1</em>');
+      text = text.replace(/^(#{1,6})\s+(.+)$/gm, '<div class="md-heading bold c-ok">$2</div>');
+      text = text.replace(/^>\s+(.+)$/gm, '<div class="md-quote">&gt; $1</div>');
+      text = text.replace(/^[\*\-]\s+(.+)$/gm, '<div class="md-bullet">• $1</div>');
+      text = text.replace(/^(\d+)\.\s+(.+)$/gm, '<div class="md-bullet">$1. $2</div>');
+      text = text.replace(/^[-*_]{3,}$/gm, '<hr style="border:0;border-top:1px solid var(--dim);margin:8px 0;">');
+      text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" class="interactive-link">$1</a>');
+      text = text.replace(/<\/div>\n/g, '</div>');
+      text = text.replace(/\n/g, '<br>');
+
+      // 4. Restore code blocks safely escaped
+      for (let i = 0; i < codeBlocks.length; i++) {
+        const { lang, code } = codeBlocks[i];
+        const langStr = lang ? escapeHtml(lang.toUpperCase()) : 'CODE';
+        const blockHtml = `<div class="code-block"><div class="code-header"><span class="code-lang">${langStr}</span><button type="button" class="code-copy-btn" onclick="copyCode(this)" title="Copy code">[COPY]</button></div><pre class="code-content"><code>${escapeHtml(code.trim())}</code></pre></div>`;
+        text = text.replace(`__CODE_BLOCK_${i}__`, blockHtml);
+      }
+
+      return text;
+    }
+
+    function copyCode(btn) {
+      const codeEl = btn.closest('.code-block')?.querySelector('code');
+      if (codeEl) {
+        navigator.clipboard.writeText(codeEl.innerText).then(() => {
+          const old = btn.textContent;
+          btn.textContent = '[COPIED]';
+          btn.style.color = 'var(--green)';
+          setTimeout(() => { btn.textContent = old; btn.style.color = ''; }, 1600);
+        }).catch(() => {
+          btn.textContent = '[OK]';
+        });
+      }
+    }
+
+    // =====================================================================
+    // Defensive emoji renderer (task 1): evabot_emoji=off by default.
+    // User-typed text is kept intact; rendered replies (assistant/system/
+    // command output) get emoji stripped or replaced by ASCII equivalents.
+    // Box-drawing + geometric symbols (─│┌┐└┘├┤┬┴┼═║╔╗╚╝ ●○◆■□▪▫) survive.
+    // =====================================================================
+    const EMOJI_ASCII = {
+      '\u{1F3A4}': '[ MIC ]',
+      '\u{1F50A}': '[ TTS:ON ]',
+      '\u{1F507}': '[ TTS:OFF ]',
+      '\u2705': '[OK]',
+      '\u274C': '[X]',
+      '\u2714': '[OK]',
+      '\u2716': '[X]',
+      '\u26A0': '[WRN]',
+      '\u1F512': '[LOCK]',
+      '\u1F513': '[UNLOCK]',
+      '\u231B': '[WAIT]',
+      '\u1F41B': '[DBG]',
+      '\u1F333': '[=]',
+      '\u1F4E1': '>',
+      '\u1F4F0': 'NEWS',
+      '\u1F916': '[BOT]',
+      '\u1F464': '[USER]',
+      '\u26A1': '*',
+      '\u2699': '*',
+      '\u2605': '*',
+      '\u2665': '*',
+      '\u2696': '*',
+    };
+
+    function stripEmoji(s) {
+      if (!s) return '';
+      return String(s).replace(
+        /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE00}-\u{FE0F}\u{200D}\u{20E3}\u{1F1E6}-\u{1F1FF}]/gu,
+        (m) => EMOJI_ASCII[m] !== undefined ? EMOJI_ASCII[m] : '',
+      );
+    }
+
+    // 'off' is the default → emoji shown only when evabot_emoji === 'on'.
+    function emojiOn() {
+      return localStorage.getItem('evabot_emoji') === 'on';
+    }
+
+    let msgCounter = 0;
+
+    function attachVoiceBar(msgDiv, msgId, text) {
+      if (!msgDiv || !text || !text.trim() || text === '...') return;
+      let bar = msgDiv.querySelector('.msg-voice-bar');
+      if (!bar) {
+        bar = document.createElement('div');
+        bar.className = 'msg-voice-bar';
+        bar.id = `vbar-${msgId}`;
+        msgDiv.appendChild(bar);
+      }
+      bar.setAttribute('data-speak-text', text);
+      bar.innerHTML = `
+        <button type="button" class="voice-btn voice-btn-play" id="btn-play-${msgId}" onclick="VoiceEngine.playMessage('${msgId}')" title="Play speech [▶]">[▶ Speak]</button>
+        <button type="button" class="voice-btn voice-btn-pause" id="btn-pause-${msgId}" onclick="VoiceEngine.pauseMessage('${msgId}')" title="Pause speech [⏸]" style="display:none;">[⏸ Pause]</button>
+        <button type="button" class="voice-btn voice-btn-stop" id="btn-stop-${msgId}" onclick="VoiceEngine.stopMessage('${msgId}')" title="Stop speech [■]" style="display:none;">[■ Stop]</button>
+        <span class="voice-visualizer" id="viz-${msgId}" style="display:none;">[ ▂▃▅▆▇▆▅▃▂ ]</span>
+        <span class="voice-status c-dim" id="vstatus-${msgId}"></span>
+      `;
+    }
+
+    function addMessage(role, text) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'msg';
+      const msgId = 'msg-' + (++msgCounter);
+      msgDiv.id = msgId;
+      msgDiv.setAttribute('data-msg-id', msgId);
+
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'msg-time';
+      timeSpan.textContent = getTimeStr();
+
+      const roleSpan = document.createElement('span');
+      roleSpan.className = `msg-sender ${role}`;
+      roleSpan.textContent = `${role} :`;
+
+      const bodySpan = document.createElement('span');
+      bodySpan.className = 'msg-body';
+      // Defensive renderer: strip emoji from rendered replies (user-typed text stays intact).
+      bodySpan.innerHTML = renderMarkdown((emojiOn() || role === 'user') ? text : stripEmoji(text));
+
+      msgDiv.appendChild(timeSpan);
+      msgDiv.appendChild(roleSpan);
+      msgDiv.appendChild(bodySpan);
+
+      if (role !== 'user' && role !== 'system' && text && text !== '...') {
+        attachVoiceBar(msgDiv, msgId, text);
+      }
+
+      chatContainer.appendChild(msgDiv);
+      // Web display mode: fold long message bodies into a [▼ more] accordion.
+      applyWebFolds(msgDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      window.scrollTo(0, document.body.scrollHeight);
+      return bodySpan;
+    }
+
+    function setStatus(online, busy = false) {
+      const d = I18N[state.lang] || I18N.en;
+      if (!online) {
+        statusLight.style.color = 'var(--red)';
+        statusText.textContent = d.statusOffline;
+        statusText.className = 'c-err';
+        statusLight.classList.remove('pulse');
+      } else if (busy) {
+        statusLight.style.color = 'var(--yellow)';
+        statusText.textContent = d.statusBusy;
+        statusText.className = 'c-wrn';
+        statusLight.classList.add('pulse');
+      } else {
+        statusLight.style.color = 'var(--green)';
+        statusText.textContent = d.statusOnline;
+        statusText.className = 'c-ok';
+        statusLight.classList.add('pulse');
+      }
+    }
+
+    const pulseFrames = ['', '', '', '', '', ''];
+    let pulseIdx = 0;
+    let heartRate = 72;
+
+    function makeBar(pct, length = 8) {
+      const safe = Math.max(0, Math.min(100, Math.round(pct || 0)));
+      const filled = Math.round((safe / 100) * length);
+      return '[' + '■'.repeat(filled) + '□'.repeat(length - filled) + ']';
+    }
+
+    async function checkPing() {
+      const t0 = performance.now();
+      pulseIdx = (pulseIdx + 1) % pulseFrames.length;
+      const pulseEl = document.getElementById('pulse-indicator');
+      if (pulseEl) pulseEl.textContent = pulseFrames[pulseIdx];
+
+      heartRate = 70 + Math.floor(Math.sin(Date.now() / 2500) * 5 + (Math.random() * 3));
+      const heartEl = document.getElementById('heartbeat-indicator');
+      if (heartEl) heartEl.innerHTML = `<span style="color:var(--red)">*</span> ${heartRate}bpm`;
+
+      try {
+        const res = await fetch('/api/health');
+        if (res.ok) {
+          const data = await res.json();
+          const lat = Math.round(performance.now() - t0);
+          pingText.textContent = lat + 'ms';
+
+          // Transition boot message from "Connecting..." to "Connected"
+          const bootMsg = document.getElementById('boot-msg');
+          if (bootMsg && bootMsg.textContent && bootMsg.textContent.includes('Connecting')) {
+            const d = I18N[state.lang] || I18N.en;
+            bootMsg.textContent = d.connected || d.greeting;
+            bootMsg.style.color = 'var(--green)';
+          }
+          if (lat < 100) pingText.className = 'c-ok bold';
+          else if (lat < 250) pingText.className = 'c-wrn bold';
+          else pingText.className = 'c-err bold';
+
+          // Live database status line (Chroma / FTS5 / MemoryKB / MCP)
+          if (data.databases) {
+            const db = data.databases;
+            const parts = [];
+            if (db.chroma) parts.push(`Chroma Vector (${db.chroma.count} embeddings) [${db.chroma.status}]`);
+            if (db.fts) parts.push(`SQLite FTS5 (${db.fts.count} chunks) [${db.fts.status}]`);
+            if (db.memoryKb) parts.push(`Memory KB (${db.memoryKb.count} docs) [${db.memoryKb.status}]`);
+            if (db.mcp) parts.push(`MCP [${db.mcp.status}]`);
+            const dbValues = document.getElementById('db-values');
+            if (dbValues && parts.length) {
+              const localized = state.lang === 'en' ? parts : parts.map(p =>
+                p.replace('embeddings', state.lang === 'uk' ? 'ембедінгів' : 'эмбеддингов')
+                 .replace('chunks', state.lang === 'uk' ? 'чанків' : 'чанков')
+                 .replace('docs', state.lang === 'uk' ? 'док' : 'док'));
+              dbValues.textContent = localized.join(' · ');
+            }
+          }
+
+          if (data.telemetry) {
+            const f = data.telemetry.frankfurt;
+            const i = data.telemetry.iowa;
+            const m = data.telemetry.meshLatencyMs;
+            const frankfurtEl = document.getElementById('metrics-frankfurt');
+            const iowaEl = document.getElementById('metrics-iowa');
+            const meshPingEl = document.getElementById('mesh-ping');
+
+            if (meshPingEl && m !== undefined) {
+              meshPingEl.textContent = m + 'ms';
+              meshPingEl.className = m < 150 ? 'c-ok' : (m < 250 ? 'c-wrn' : 'c-err');
+            }
+
+            if (frankfurtEl && f) {
+              const memUsed = parseFloat(f.memUsedGb) || 4.7;
+              const memTotal = parseFloat(f.memTotalGb) || 31;
+              const ramPct = Math.round((memUsed / memTotal) * 100);
+              frankfurtEl.innerHTML = `Brain(Frankfurt) CPU ${makeBar(f.cpuPct || 25, 6)} <span class="c-ok">${f.cpuPct || 25}%</span> · RAM ${makeBar(ramPct, 6)} <span class="c-ok">${ramPct}%</span> ${memUsed}/${memTotal}GB`;
+            }
+
+            if (iowaEl && i) {
+              const iowaCpu = i.cpuPct || 2;
+              const ramPct = Math.round((i.memUsedMb / (i.memTotalMb || 964)) * 100);
+              iowaEl.innerHTML = `Face(Iowa) CPU ${makeBar(iowaCpu, 6)} <span class="c-ok">${iowaCpu}%</span> · RAM ${makeBar(ramPct, 6)} <span class="c-ok">${ramPct}%</span> ${i.memUsedMb}MB`;
+            }
+          }
+        }
+      } catch (e) {
+        pingText.textContent = 'ERR';
+        pingText.className = 'c-err bold';
+      }
+    }
+
+    // 10s poll: /api/health 60 req/min was wasteful — 6 req/min is enough.
+    setInterval(checkPing, 10000);
+    checkPing();
+
+    function setModel(model) {
+      state.currentModel = model.id;
+      // Provider is derived server-side from the model id (openrouter/free,
+      // omni/*, bare google ids, ':free' suffix). Sending an explicit provider
+      // here would FORCE wrong routing (e.g. 'openrouter/free' → google API)
+      // and hang the chat — never send one from the client.
+      state.currentProvider = undefined;
+      const isFree = model.pricing && model.pricing.freeTierStatus === '100% Free Quota Available';
+      const badge = isFree ? '<span class="c-ok">[FREE]</span>' : '<span class="c-wrn">[PAID]</span>';
+      modelPill.innerHTML = `${escapeHtml(model.name)} ${badge}`;
+    }
+
+    function toggleMode() {
+      if (state.currentMode === 'solo') {
+        state.currentMode = 'consilium';
+        addMessage('system', '* Активирован режим КОНСИЛИУМ. Запросы анализируются несколькими моделями с итоговым синтезом.');
+      } else {
+        state.currentMode = 'solo';
+        addMessage('system', 'Режим переключен на SOLO (диалог с активной моделью).');
+      }
+      currentModeEl.textContent = state.currentMode;
+    }
+
+    async function sendConsiliumMessage(text) {
+      addMessage('user', text);
+      const waitNotice = addMessage('system', '* Запуск консилиума моделей... Выполняется коллегиальный анализ.');
+      setStatus(true, true);
+      state.isGenerating = true;
+
+      try {
+        const response = await fetch('/api/consilium', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: text,
+            mode: 'consilium',
+            models: ['gemini-2.5-pro', 'gemini-2.5-flash', 'deepseek/deepseek-r1:free'],
+            useKnowledgeBase: true,
+          })
+        });
+
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const data = await response.json();
+        const res = data.result;
+
+        if (res && Array.isArray(res.turns)) {
+          for (const turn of res.turns) {
+            addMessage(turn.model || turn.name, turn.content);
+          }
+        }
+
+        if (res && res.synthesis) {
+          addMessage('evabot [КОНСЕНСУС]', res.synthesis);
+          state.history.push({ role: 'model', content: res.synthesis });
+        }
+
+        setStatus(true, false);
+      } catch (err) {
+        addMessage('error', `Ошибка консилиума: ${err.message}`);
+        setStatus(false);
+      } finally {
+        state.isGenerating = false;
+      }
+    }
+
+    async function sendMessage() {
+      const raw = userInput.value.trim();
+      if (!raw || state.isGenerating) return;
+
+      userInput.value = '';
+      userInput.style.height = 'auto';
+
+      // SmartInput: auto-correct + vocabulary learning (never breaks commands/code/URLs)
+      let text = raw;
+      try {
+        if (SmartInput.isEnabled()) {
+          const res = SmartInput.autocorrect(raw);
+          text = res.text;
+          const dI18n = I18N[state.lang] || I18N.en;
+          for (const f of res.fixes) {
+            showToast(dI18n.fixedToast.replace('{from}', f.from).replace('{to}', f.to));
+          }
+        }
+        SmartInput.rememberText(text);
+      } catch (e) {
+        console.warn('SmartInput error:', e);
+        text = raw;
+      }
+
+      if (text.startsWith('/')) {
+        await handleCommand(text);
+        return;
+      }
+
+      if (state.currentMode === 'consilium') {
+        await sendConsiliumMessage(text);
+        return;
+      }
+
+      addMessage('user', text);
+      const botBody = addMessage('evabot', '...');
+      setStatus(true, true);
+      state.isGenerating = true;
+
+      try {
+        const controller = new AbortController();
+        const response = await fetch('/api/chat/stream', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: text,
+            model: state.currentModel,
+            history: state.history.slice(-10)
+          }),
+          signal: controller.signal
+        });
+
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let buffer = '';
+        let accumulatedText = '';
+
+        // Watchdog: a silent provider stream must never wedge the chat in the
+        // '...' state. Abort when no chunk arrives for 60s (or 120s total).
+        let lastActivity = Date.now();
+        const watchdog = setInterval(() => {
+          if (Date.now() - lastActivity > 60000) controller.abort();
+        }, 5000);
+        const totalTimer = setTimeout(() => controller.abort(), 120000);
+
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            lastActivity = Date.now();
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || '';
+
+            for (const line of lines) {
+              const trimmed = line.trim();
+              if (trimmed.startsWith('data: ')) {
+                try {
+                  const data = JSON.parse(trimmed.slice(6));
+                  if (data.chunk) {
+                    accumulatedText += data.chunk;
+                    botBody.innerHTML = renderMarkdown(accumulatedText);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                    window.scrollTo(0, document.body.scrollHeight);
+                  }
+                  if (data.done) {
+                    // Persona from the backend (eva|adam) drives the TTS voice.
+                    window.__lastPersona = data.persona === 'adam' ? 'adam' : 'eva';
+                  }
+                } catch (e) {}
+              }
+            }
+          }
+        } finally {
+          clearInterval(watchdog);
+          clearTimeout(totalTimer);
+        }
+
+        if (!accumulatedText.trim()) {
+          throw new Error('Model returned empty response (fallback exhausted)');
+        }
+
+        state.history.push({ role: 'user', content: text });
+        state.history.push({ role: 'model', content: accumulatedText });
+        setStatus(true, false);
+        attachVoiceBar(botBody.parentElement, botBody.parentElement.id, accumulatedText);
+      } catch (error) {
+        botBody.innerHTML = `<span class="c-err">[ERROR] ${escapeHtml(error.message)}</span>`;
+        setStatus(false);
+      } finally {
+        state.isGenerating = false;
+      }
+    }
+
+    async function handleCommand(cmd) {
+      const lower = cmd.toLowerCase().trim();
+
+      if (lower.startsWith('/lang') || lower.startsWith('/language') || lower.startsWith('/locale')) {
+        const parts = lower.split(' ');
+        setLanguage(parts[1] || 'en', false);
+        return;
+      }
+
+      if (lower === '/clear' || lower === '/cls') {
+        chatContainer.innerHTML = '';
+        const d = I18N[state.lang] || I18N.en;
+        addMessage('system', d.cleared);
+        return;
+      }
+
+      if (lower === '/help' || lower === '/?') {
+        const d = I18N[state.lang] || I18N.en;
+        addMessage('system', d.help);
+        return;
+      }
+
+      if (lower === '/history') {
+        const d = I18N[state.lang] || I18N.en;
+        const recent = state.history.slice(-10);
+        if (!recent.length) {
+          addMessage('system', d.historyEmpty);
+          return;
+        }
+        let out = d.historyHeader.replace('{n}', recent.length) + '\n';
+        for (const m of recent) {
+          const preview = m.content.length > 200 ? m.content.slice(0, 200) + '…' : m.content;
+          out += (m.role === 'user' ? '> ' : '< ') + preview + '\n';
+        }
+        addMessage('system', out);
+        return;
+      }
+
+      if (lower.startsWith('/autocorrect')) {
+        const d = I18N[state.lang] || I18N.en;
+        const arg = lower.split(/\s+/)[1];
+        if (arg === 'on') {
+          SmartInput.setEnabled(true);
+          addMessage('system', d.autocorrectOn);
+        } else if (arg === 'off') {
+          SmartInput.setEnabled(false);
+          addMessage('system', d.autocorrectOff);
+        } else {
+          addMessage('system', SmartInput.isEnabled() ? d.autocorrectOn : d.autocorrectOff);
+        }
+        return;
+      }
+
+      // /voices (модельные голоса) идёт на сервер; /voice on|off — локальный
+      // тумблер. Проверка точного совпадения, иначе /voices перехватывается.
+      if (lower.startsWith('/voice ') || lower === '/voice' || lower.startsWith('/voiceon') || (lower.startsWith('/voice') && !lower.startsWith('/voices'))) {
+        const d = I18N[state.lang] || I18N.en;
+        const parts = lower.split(/\s+/);
+        const arg = parts[1];
+        if (arg === 'on' || arg === 'off') {
+          localStorage.setItem('evabot_voice', arg);
+          VoiceEngine.applyVoiceEnabled();
+          addMessage('system', arg === 'on' ? d.voiceOn : d.voiceOff);
+        } else if (arg === 'eva' || arg === 'adam') {
+          VoiceEngine.setPersona(arg);
+          addMessage('system', d.voicePersona + (arg === 'eva' ? 'EVA (female)' : 'ADAM (male)'));
+        } else if (arg === 'autosend' && (parts[2] === 'on' || parts[2] === 'off')) {
+          VoiceEngine.setAutosend(parts[2] === 'on');
+          addMessage('system', 'Voice auto-send: ' + parts[2]);
+        } else {
+          addMessage('system', (VoiceEngine.enabled() ? d.voiceOn : d.voiceOff) + ' | persona: ' + VoiceEngine.persona.toUpperCase());
+        }
+        return;
+      }
+
+      if (lower.startsWith('/tts')) {
+        const d = I18N[state.lang] || I18N.en;
+        const arg = lower.split(/\s+/)[1];
+        if (arg === 'on' || arg === 'off') {
+          VoiceEngine.setTts(arg === 'on');
+          addMessage('system', arg === 'on' ? d.ttsOn : d.ttsOff);
+        } else {
+          addMessage('system', VoiceEngine.ttsOn ? d.ttsOn : d.ttsOff);
+        }
+        return;
+      }
+
+      if (lower === '/mode' || lower.startsWith('/mode ')) {
+        const d = I18N[state.lang] || I18N.en;
+        const parts = lower.split(' ');
+        if (parts[1]) {
+          state.currentMode = parts[1];
+          currentModeEl.textContent = state.currentMode;
+          addMessage('system', `${d.modeSwitched}${state.currentMode}`);
+        } else {
+          toggleMode();
+        }
+        return;
+      }
+
+      if (lower.startsWith('/consilium')) {
+        const d = I18N[state.lang] || I18N.en;
+        const prompt = cmd.slice(10).trim();
+        if (!prompt) {
+          state.currentMode = 'consilium';
+          currentModeEl.textContent = state.currentMode;
+          addMessage('system', d.consiliumReady);
+        } else {
+          await sendConsiliumMessage(prompt);
+        }
+        return;
+      }
+
+      if (lower.startsWith('/emoji')) {
+        const arg = lower.split(/\s+/)[1];
+        const next = arg === 'on' ? 'on' : arg === 'off' ? 'off' : (emojiOn() ? 'off' : 'on');
+        localStorage.setItem('evabot_emoji', next);
+        addMessage('system', next === 'on'
+          ? 'Emoji mode: ON (emoji preserved in rendered replies).'
+          : 'Emoji mode: OFF (emoji stripped from rendered replies, default).');
+        return;
+      }
+
+      // /add — knowledge ingestion. Local handling: help text and the file
+      // picker (/add file|media, /file). Everything else (/add db|link|
+      // context|bot|human|agent) falls through to the server delegate below.
+      if (lower === '/add' || lower === '/add help' || lower === '/file') {
+        const d = I18N[state.lang] || I18N.en;
+        addMessage('system', d.addHelp);
+        return;
+      }
+
+      if (lower === '/add file' || lower === '/add media') {
+        triggerFileUpload();
+        return;
+      }
+
+      // Delegate every remaining /command to the server command registry
+      // (ModelCommand.execute handles aliases, unknown commands and errors itself).
+      if (lower.startsWith('/')) {
+        try {
+          const res = await fetch('/api/models/command', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ command: cmd, lang: state.lang })
+          });
+          if (!res.ok) {
+            addMessage('error', res.status === 429
+              ? '[WAIT] Rate limit — повторите через 10-15 сек.'
+              : '[ERROR] HTTP ' + res.status);
+            return;
+          }
+          const data = await res.json();
+          addMessage('system', data.result || 'OK');
+        } catch (e) {
+          const d = I18N[state.lang] || I18N.en;
+          addMessage('error', `${d.execErr}${e.message}`);
+        }
+        return;
+      }
+
+      const d = I18N[state.lang] || I18N.en;
+      addMessage('error', d.unknownCmd.replace('{cmd}', escapeHtml(cmd)));
+    }
+
+    // =======================================================================
+    // /add file, /add media, /file — multipart uploads to POST /api/upload.
+    // The hidden #file-input picker is opened on demand; each selected file
+    // is sent as FormData (field name 'file') and its result echoed in-chat.
+    // =======================================================================
+    function triggerFileUpload() {
+      const inp = document.getElementById('file-input');
+      if (!inp) return;
+      inp.value = '';
+      inp.click();
+    }
+
+    async function uploadFiles(files) {
+      for (const file of Array.from(files)) {
+        const waitMsg = addMessage('system', '[WAIT] Uploading ' + file.name + '...');
+        try {
+          const fd = new FormData();
+          fd.append('file', file);
+          const res = await fetch('/api/upload', { method: 'POST', body: fd });
+          if (!res.ok) {
+            waitMsg.textContent = '[ERROR] Upload ' + file.name + ': HTTP ' + res.status;
+            continue;
+          }
+          const data = await res.json().catch(() => null);
+          const result = data && (data.result || data.message) ? String(data.result || data.message) : 'uploaded';
+          waitMsg.textContent = '[OK] ' + file.name + ': ' + result;
+        } catch (e) {
+          waitMsg.textContent = '[ERROR] Upload ' + file.name + ': ' + (e && e.message ? e.message : 'network');
+        }
+      }
+    }
+
+    const fileInput = document.getElementById('file-input');
+    if (fileInput) {
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files && fileInput.files.length) uploadFiles(fileInput.files);
+      });
+    }
+
+    // =======================================================================
+    // VoiceEngine — Web Speech recognition + TTS (ported from
+    // frontend/src/app.ts:626-796 conventions, adapted to the live TUI).
+    // Storage: 'evabot_voice' (on|off), 'evabot_tts' (on|off),
+    // 'evabot_tts_persona' (eva|adam), 'evabot_voice_autosend' (on|off).
+    // =======================================================================
+    function normalizeVoiceText(text) {
+      return String(text || '').toLowerCase().replace(/^[,.\s]+|[.!?…]+$/g, '').replace(/\s+/g, ' ').trim();
+    }
+
+    // single-word / short-phrase voice commands (all 3 UI languages)
+    const VOICE_COMMAND_WORDS = {
+      'очистить': '/clear', 'очисти': '/clear', 'очистити': '/clear', 'clear': '/clear',
+      'очисти экран': '/clear', 'очистити екран': '/clear', 'clear screen': '/clear',
+      'история': '/history', 'історія': '/history', 'history': '/history',
+      'помощь': '/help', 'справка': '/help', 'довідка': '/help', 'help': '/help',
+      'модели': '/models', 'моделі': '/models', 'models': '/models',
+      'топ': '/top', 'top': '/top',
+      'cost': '/cost', 'витрати': '/cost', 'затраты': '/cost',
+      'консилиум': '/mode consilium', 'консиліум': '/mode consilium', 'consilium': '/mode consilium',
+    };
+
+    // Returns true if the transcript was consumed as a voice command.
+    function handleVoiceTranscript(text) {
+      let rest = normalizeVoiceText(text);
+      // wake-word prefixes: 'ева', 'єва', 'eva', 'адам', 'adam' (optional trailing comma)
+      rest = rest.replace(/^(ева|єва|eva|адам|adam)[,]?\s*/u, '').trim();
+      if (!rest) return true; // bare wake word — consumed, no-op
+      // explicit 'команда ...' / 'command ...' prefix
+      rest = rest.replace(/^(команда|команди|command)\s+/u, '').trim();
+      if (rest.startsWith('/')) {
+        const res = SmartInput.autocorrect(rest);
+        handleCommand(res.text.trim());
+        return true;
+      }
+      const direct = VOICE_COMMAND_WORDS[rest];
+      if (direct) {
+        handleCommand(direct);
+        return true;
+      }
+      return false;
+    }
+
+    const VoiceEngine = {
+      recognition: null,
+      listening: false,
+      baseText: '',
+      persona: localStorage.getItem('evabot_tts_persona') === 'adam' ? 'adam' : 'eva',
+      ttsOn: localStorage.getItem('evabot_tts') !== 'off',
+      autosend: localStorage.getItem('evabot_voice_autosend') !== 'off',
+      // Queue guard + currently playing audio so mute/new-reply cancel cleanly.
+      speakSeq: 0,
+      activeAudio: null,
+
+      langCode() {
+        return state.lang === 'uk' ? 'uk-UA' : state.lang === 'ru' ? 'ru-RU' : 'en-US';
+      },
+
+      init() {
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const mic = document.getElementById('mic-btn');
+        if (!SR) {
+          if (mic) {
+            // Server-side STT fallback is available (start() launches it when
+            // recognition is missing), so the mic stays fully usable.
+            mic.title = 'Browser speech recognition unavailable — server STT fallback via POST /api/stt';
+          }
+        } else {
+          try {
+            const rec = new SR();
+            rec.continuous = false;
+            rec.interimResults = true;
+            rec.maxAlternatives = 1;
+            rec.onstart = () => {
+              this.listening = true;
+              const m = document.getElementById('mic-btn');
+              if (m) m.classList.add('recording');
+            };
+            rec.onresult = (e) => this.onResult(e);
+            rec.onerror = (e) => {
+              console.warn('Speech recognition error:', e.error);
+              this.stop();
+              // Surface every failure class to the user (was: console only).
+              const d = I18N[state.lang] || I18N.en;
+              if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+                showToast(d.voiceDenied);
+              } else if (e.error === 'audio-capture') {
+                showToast(d.voiceNoMic);
+              } else if (e.error === 'no-speech') {
+                showToast(d.voiceNoSpeech);
+              } else if (e.error && e.error !== 'aborted') {
+                this.fallbackServerStt();
+              }
+            };
+            rec.onend = () => this.stop();
+            this.recognition = rec;
+          } catch (e) {
+            console.warn('SpeechRecognition init failed:', e);
+          }
+        }
+        // warm up the TTS voice list
+        if (window.speechSynthesis) {
+          window.speechSynthesis.getVoices();
+          window.speechSynthesis.onvoiceschanged = () => {};
+        }
+        this.updateTtsToggle();
+        this.applyVoiceEnabled();
+      },
+
+      enabled() {
+        return localStorage.getItem('evabot_voice') !== 'off';
+      },
+
+      // Server-side STT via POST /api/stt (WEBM_OPUS / OGG_OPUS).
+      // Records up to 6 s with MediaRecorder and sends the raw body;
+      // every failure is surfaced via toast (never silent). Returns false
+      // when the recording path is unavailable in this browser.
+      async fallbackServerStt() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') return false;
+        const d = I18N[state.lang] || I18N.en;
+        const mime = ['audio/webm;codecs=opus', 'audio/ogg;codecs=opus', 'audio/webm', 'audio/ogg']
+          .find((m) => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)) || '';
+        const encoding = mime.indexOf('ogg') !== -1 ? 'OGG_OPUS' : 'WEBM_OPUS';
+        let stream;
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        } catch (err) {
+          const name = err && err.name ? err.name : '';
+          if (name === 'NotAllowedError' || name === 'PermissionDeniedError' || name === 'SecurityError') {
+            showToast(d.voiceDenied);
+          } else if (name === 'NotFoundError' || name === 'DevicesNotFoundError') {
+            showToast(d.voiceNoMic);
+          } else {
+            showToast(d.voiceSttErr + (name || 'getUserMedia failed'));
+          }
+          return false;
+        }
+        const mic = document.getElementById('mic-btn');
+        if (mic) mic.classList.add('recording');
+        showToast(d.voiceRecording);
+        const recorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+        const chunks = [];
+        recorder.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
+        recorder.onstop = async () => {
+          stream.getTracks().forEach((t) => t.stop());
+          if (mic) mic.classList.remove('recording');
+          const type = (mime || recorder.mimeType || 'audio/webm').split(';')[0];
+          try {
+            const res = await fetch('/api/stt?lang=' + encodeURIComponent(this.langCode()) + '&encoding=' + encoding + '&sampleRate=48000', {
+              method: 'POST',
+              headers: { 'Content-Type': type },
+              body: new Blob(chunks, { type: type }),
+            });
+            const data = await res.json().catch(() => null);
+            if (!res.ok) {
+              showToast(d.voiceSttErr + (data && data.error ? String(data.error).slice(0, 90) : 'HTTP ' + res.status));
+              return;
+            }
+            if (!data || !data.transcript) {
+              showToast(d.voiceNoSpeech);
+              return;
+            }
+            userInput.value = (userInput.value ? userInput.value.replace(/\s+$/, '') + ' ' : '') + data.transcript;
+            userInput.focus();
+            if (this.autosend) {
+              setTimeout(() => sendMessage(), 250);
+            }
+          } catch (err) {
+            showToast(d.voiceSttErr + (err && err.message ? err.message : 'network'));
+          }
+        };
+        recorder.start();
+        setTimeout(() => { if (recorder.state !== 'inactive') recorder.stop(); }, 6000);
+        return true;
+      },
+
+      applyVoiceEnabled() {
+        const mic = document.getElementById('mic-btn');
+        if (mic) mic.style.opacity = this.enabled() ? '1' : '0.35';
+      },
+
+      toggle() {
+        if (!this.enabled()) {
+          const d = I18N[state.lang] || I18N.en;
+          showToast(d.voiceOff);
+          return;
+        }
+        if (this.listening) {
+          this.stop();
+        } else {
+          this.start();
+        }
+      },
+
+      start() {
+        const d = I18N[state.lang] || I18N.en;
+        if (!this.recognition) {
+          // No SpeechRecognition in this browser → record 6 s and use the
+          // server STT (POST /api/stt) instead of only showing a warning.
+          this.fallbackServerStt().then((started) => {
+            if (!started) showToast(d.voiceUnsupported);
+          });
+          return;
+        }
+        // keep whatever the user already typed; dictation appends to it
+        this.baseText = userInput.value ? userInput.value.replace(/\s+$/, '') + ' ' : '';
+        try {
+          this.recognition.lang = this.langCode();
+          this.recognition.start();
+          showToast(d.voiceListening);
+        } catch (e) {
+          console.warn('Failed to start speech recognition:', e);
+          this.stop();
+        }
+      },
+
+      stop() {
+        this.listening = false;
+        const mic = document.getElementById('mic-btn');
+        if (mic) mic.classList.remove('recording');
+        try {
+          if (this.recognition) this.recognition.stop();
+        } catch (e) { /* ignore */ }
+      },
+
+      onResult(event) {
+        let interim = '';
+        let final = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const t = event.results[i][0].transcript;
+          if (event.results[i].isFinal) final += t;
+          else interim += t;
+        }
+        if (interim) {
+          userInput.value = this.baseText + interim;
+        }
+        if (final && final.trim()) {
+          this.stop();
+          const text = (this.baseText + final.trim()).trim();
+          const consumed = handleVoiceTranscript(text);
+          if (!consumed) {
+            userInput.value = text;
+            if (this.autosend) {
+              setTimeout(() => sendMessage(), 250);
+            }
+          }
+        }
+      },
+
+      setTts(v) {
+        this.ttsOn = !!v;
+        localStorage.setItem('evabot_tts', this.ttsOn ? 'on' : 'off');
+        this.updateTtsToggle();
+        if (!this.ttsOn) {
+          this.speakSeq++; // cancel any queued speak chain
+          if (this.activeAudio) { try { this.activeAudio.pause(); } catch (e) {} this.activeAudio = null; }
+          if (window.speechSynthesis) window.speechSynthesis.cancel();
+        }
+      },
+
+      toggleTtsMute() {
+        this.setTts(!this.ttsOn);
+        const d = I18N[state.lang] || I18N.en;
+        showToast(this.ttsOn ? d.ttsOn : d.ttsOff);
+      },
+
+      updateTtsToggle() {
+        const el = document.getElementById('tts-toggle');
+        if (el) {
+          el.textContent = this.ttsOn ? '[ TTS:ON ]' : '[ TTS:OFF ]';
+          el.className = this.ttsOn ? 'cmd-link' : 'cmd-link c-dim';
+        }
+      },
+
+      setPersona(p) {
+        this.persona = p === 'adam' ? 'adam' : 'eva';
+        localStorage.setItem('evabot_tts_persona', this.persona);
+      },
+
+      setAutosend(v) {
+        this.autosend = !!v;
+        localStorage.setItem('evabot_voice_autosend', this.autosend ? 'on' : 'off');
+      },
+
+      // Persona voice heuristics: prefer known female/male voice names
+      pickVoice(utterLang) {
+        if (!window.speechSynthesis) return null;
+        const voices = window.speechSynthesis.getVoices() || [];
+        const femaleRe = /female|woman|alice|milena|tatyana|yuri|alena|katya|zira|susan|katia|olesya|svetlana|valentina|natalia|zofia|polina/i;
+        const maleRe = /male|man|dmitri|pavel|alex|david|daniel|maxim|oleg|artem|ostap|marek/i;
+        const wantFemale = this.persona !== 'adam';
+        const primary = voices.filter((v) => v.lang && v.lang.toLowerCase().startsWith(utterLang.slice(0, 2).toLowerCase()));
+        const fallback = voices.filter((v) => v.lang && v.lang.toLowerCase().startsWith('en'));
+        const pool = primary.length ? primary : fallback;
+        const re = wantFemale ? femaleRe : maleRe;
+        return pool.find((v) => re.test(v.name)) || pool[0] || null;
+      },
+
+      // Text-language detection mirroring the server (src/core/LocalePolicy.ts):
+      detectLang(text) {
+        if (!text || !text.trim()) return 'en-US';
+        const lower = text.toLowerCase();
+        if (/[\u0400-\u04FF]/.test(text)) {
+          const ukMarks = (lower.match(/[іїєґ]/g) || []).length;
+          const ruMarks = (lower.match(/[ыэъё]/g) || []).length;
+          if (ukMarks > 0 && ruMarks === 0) return 'uk-UA';
+          if (ruMarks > 0 && ukMarks === 0) return 'ru-RU';
+          const ukWords = ['привіт', 'дякую', 'будь ласка', 'скажи', 'що', 'виготовлення', 'замовлення', 'київ', 'україна', 'дуже', 'зараз'];
+          const ruWords = ['привет', 'спасибо', 'пожалуйста', 'как', 'что', 'это', 'производство', 'заказ', 'киев', 'украина', 'очень', 'сейчас'];
+          const ukScore = ukMarks * 3 + ukWords.filter((w) => lower.includes(w)).length;
+          const ruScore = ruMarks * 3 + ruWords.filter((w) => lower.includes(w)).length;
+          if (ukScore > ruScore) return 'uk-UA';
+          return 'ru-RU';
+        }
+        const plMarks = (lower.match(/[ąćęłńóśźż]/g) || []).length;
+        const plWords = ['jest', 'bardzo', 'proszę', 'dziękuję', 'dzień', 'dobry', 'witam'];
+        if (plMarks > 0 || plWords.filter((w) => lower.includes(w)).length >= 2) return 'pl-PL';
+        return 'en-US';
+      },
+
+      activeMsgId: null,
+      paused: false,
+      vizInterval: null,
+
+      cleanForSpeech(text) {
+        return String(text || '')
+          .replace(/```[\s\S]*?```/g, ' [Code omitted] ')
+          .replace(/`([^`]+)`/g, '$1')
+          .replace(/[*_#~>|┌┐└┘├┤─│═]+/g, ' ')
+          .replace(/https?:\/\/\S+/g, ' ')
+          .replace(/\[[^\]]*\]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+      },
+
+      setUiState(msgId, state) {
+        const btnPlay = document.getElementById(`btn-play-${msgId}`);
+        const btnPause = document.getElementById(`btn-pause-${msgId}`);
+        const btnStop = document.getElementById(`btn-stop-${msgId}`);
+        const viz = document.getElementById(`viz-${msgId}`);
+        if (!btnPlay) return;
+
+        if (state === 'idle') {
+          btnPlay.style.display = 'inline-block';
+          btnPlay.textContent = '[▶ Speak]';
+          btnPlay.className = 'voice-btn voice-btn-play';
+          if (btnPause) btnPause.style.display = 'none';
+          if (btnStop) btnStop.style.display = 'none';
+          if (viz) viz.style.display = 'none';
+        } else if (state === 'loading') {
+          btnPlay.style.display = 'inline-block';
+          btnPlay.textContent = '[▶ Loading...]';
+          btnPlay.className = 'voice-btn voice-btn-play c-yellow';
+          if (btnPause) btnPause.style.display = 'none';
+          if (btnStop) btnStop.style.display = 'inline-block';
+          if (viz) viz.style.display = 'none';
+        } else if (state === 'playing') {
+          btnPlay.style.display = 'none';
+          if (btnPause) {
+            btnPause.style.display = 'inline-block';
+            btnPause.textContent = '[⏸ Pause]';
+          }
+          if (btnStop) btnStop.style.display = 'inline-block';
+          if (viz) viz.style.display = 'inline-block';
+        } else if (state === 'paused') {
+          btnPlay.style.display = 'inline-block';
+          btnPlay.textContent = '[▶ Resume]';
+          btnPlay.className = 'voice-btn voice-btn-play';
+          if (btnPause) btnPause.style.display = 'none';
+          if (btnStop) btnStop.style.display = 'inline-block';
+          if (viz) viz.style.display = 'none';
+        }
+      },
+
+      startVisualizer(msgId) {
+        this.stopVisualizer();
+        const viz = document.getElementById(`viz-${msgId}`);
+        if (!viz) return;
+        viz.style.display = 'inline-block';
+        const frames = [' ', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
+        this.vizInterval = setInterval(() => {
+          let s = '';
+          for (let i = 0; i < 9; i++) {
+            s += frames[Math.floor(Math.random() * frames.length)];
+          }
+          viz.textContent = `[ ${s} ]`;
+        }, 110);
+      },
+
+      stopVisualizer() {
+        if (this.vizInterval) {
+          clearInterval(this.vizInterval);
+          this.vizInterval = null;
+        }
+        if (this.activeMsgId) {
+          const viz = document.getElementById(`viz-${this.activeMsgId}`);
+          if (viz) viz.style.display = 'none';
+        }
+      },
+
+      playMessage(msgId, customText) {
+        if (!this.ttsOn) {
+          const d = I18N[state.lang] || I18N.en;
+          showToast(d.ttsOff);
+          return;
+        }
+
+        if (this.activeMsgId === msgId && this.paused) {
+          this.resumeMessage(msgId);
+          return;
+        }
+
+        if (this.activeMsgId) {
+          this.stopMessage(this.activeMsgId);
+        }
+
+        const bar = document.getElementById(`vbar-${msgId}`);
+        const text = customText || (bar ? bar.getAttribute('data-speak-text') : '') || '';
+        const cleanText = this.cleanForSpeech(text);
+        if (!cleanText) {
+          showToast('No text available for speech');
+          return;
+        }
+
+        this.activeMsgId = msgId;
+        this.paused = false;
+        this.setUiState(msgId, 'loading');
+
+        const persona = window.__lastPersona || this.persona;
+        const lang = this.detectLang(cleanText);
+
+        fetch('/api/tts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: cleanText, persona, lang }),
+        })
+        .then((r) => r.json())
+        .then((data) => {
+          if (this.activeMsgId !== msgId) return;
+          if (data && data.ok && data.audioBase64) {
+            const audio = new Audio('data:audio/mp3;base64,' + data.audioBase64);
+            this.activeAudio = audio;
+            audio.onplay = () => {
+              if (this.activeMsgId === msgId) {
+                this.setUiState(msgId, 'playing');
+                this.startVisualizer(msgId);
+              }
+            };
+            audio.onpause = () => {
+              if (this.activeMsgId === msgId && this.paused) {
+                this.setUiState(msgId, 'paused');
+                this.stopVisualizer();
+              }
+            };
+            audio.onended = () => {
+              if (this.activeMsgId === msgId) {
+                this.stopMessage(msgId);
+              }
+            };
+            audio.onerror = () => {
+              if (this.activeMsgId === msgId) {
+                this.speakBrowser(cleanText, lang, msgId);
+              }
+            };
+            audio.play().catch(() => {
+              this.speakBrowser(cleanText, lang, msgId);
+            });
+          } else {
+            this.speakBrowser(cleanText, lang, msgId);
+          }
+        })
+        .catch(() => {
+          if (this.activeMsgId === msgId) {
+            this.speakBrowser(cleanText, lang, msgId);
+          }
+        });
+      },
+
+      pauseMessage(msgId) {
+        if (this.activeMsgId !== msgId) return;
+        this.paused = true;
+        if (this.activeAudio) {
+          try { this.activeAudio.pause(); } catch (e) {}
+        } else if (window.speechSynthesis) {
+          try { window.speechSynthesis.pause(); } catch (e) {}
+        }
+        this.setUiState(msgId, 'paused');
+        this.stopVisualizer();
+      },
+
+      resumeMessage(msgId) {
+        if (this.activeMsgId !== msgId) return;
+        this.paused = false;
+        if (this.activeAudio) {
+          try { this.activeAudio.play(); } catch (e) {}
+        } else if (window.speechSynthesis) {
+          try { window.speechSynthesis.resume(); } catch (e) {}
+        }
+        this.setUiState(msgId, 'playing');
+        this.startVisualizer(msgId);
+      },
+
+      stopMessage(msgId) {
+        const id = msgId || this.activeMsgId;
+        if (this.activeAudio) {
+          try {
+            this.activeAudio.pause();
+            this.activeAudio.currentTime = 0;
+          } catch (e) {}
+          this.activeAudio = null;
+        }
+        if (window.speechSynthesis) {
+          try { window.speechSynthesis.cancel(); } catch (e) {}
+        }
+        this.stopVisualizer();
+        this.paused = false;
+        if (id) {
+          this.setUiState(id, 'idle');
+        }
+        this.activeMsgId = null;
+      },
+
+      speakBrowser(cleanText, lang, msgId) {
+        if (!this.ttsOn || !window.speechSynthesis) {
+          if (msgId) this.stopMessage(msgId);
+          return;
+        }
+        window.speechSynthesis.cancel();
+        const spokenSlice = cleanText.length > 500 ? `${cleanText.slice(0, 500)}...` : cleanText;
+        const utterance = new SpeechSynthesisUtterance(spokenSlice);
+        utterance.lang = lang || this.langCode();
+        utterance.rate = 1.05;
+        utterance.pitch = this.persona === 'adam' ? 0.85 : 1.12;
+        const voice = this.pickVoice(utterance.lang);
+        if (voice) utterance.voice = voice;
+        utterance.onstart = () => {
+          if (msgId && this.activeMsgId === msgId) {
+            this.setUiState(msgId, 'playing');
+            this.startVisualizer(msgId);
+          }
+        };
+        utterance.onend = () => {
+          if (msgId && this.activeMsgId === msgId) this.stopMessage(msgId);
+        };
+        utterance.onerror = () => {
+          if (msgId && this.activeMsgId === msgId) this.stopMessage(msgId);
+        };
+        window.speechSynthesis.speak(utterance);
+      },
+
+      speak(text) {
+        // Provided for compatibility; on-demand playback via playMessage() is preferred
+        const clean = this.cleanForSpeech(text);
+        if (clean) this.playMessage('legacy-speak', clean);
+      },
+    };
+    window.VoiceEngine = VoiceEngine;
+
+    // Drawer and Navigation Handlers
+    function toggleBurgerMenu() {
+      const drawer = document.getElementById('burger-drawer');
+      const backdrop = document.getElementById('burger-backdrop');
+      if (!drawer) return;
+      const isOpen = drawer.classList.contains('open');
+      if (isOpen) {
+        closeBurgerMenu();
+      } else {
+        syncDrawerState();
+        drawer.classList.add('open');
+        if (backdrop) backdrop.classList.add('open');
+      }
+    }
+
+    function closeBurgerMenu() {
+      const drawer = document.getElementById('burger-drawer');
+      const backdrop = document.getElementById('burger-backdrop');
+      if (drawer) drawer.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('open');
+    }
+
+    function scrollToSettings() {
+      closeBurgerMenu();
+      const el = document.getElementById('screen-settings');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function scrollToChat() {
+      const el = document.getElementById('screen-chat');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function syncDrawerState() {
+      const dModel = document.getElementById('drawer-model-pill');
+      if (dModel) {
+        const m = state.currentModel || '...';
+        dModel.textContent = m.length > 20 ? m.slice(0, 18) + '...' : m;
+      }
+      const dMode = document.getElementById('drawer-current-mode');
+      if (dMode) dMode.textContent = state.currentMode;
+      const dEva = document.getElementById('drawer-persona-eva');
+      const dAdam = document.getElementById('drawer-persona-adam');
+      if (dEva && dAdam) {
+        const isAdam = VoiceEngine.persona === 'adam';
+        dEva.className = !isAdam ? 'cmd-link bold c-ok' : 'cmd-link';
+        dEva.textContent = !isAdam ? '[Eva]' : 'Eva';
+        dAdam.className = isAdam ? 'cmd-link bold c-ok' : 'cmd-link';
+        dAdam.textContent = isAdam ? '[Adam]' : 'Adam';
+      }
+      const lEn = document.getElementById('drawer-lang-en');
+      const lUk = document.getElementById('drawer-lang-uk');
+      const lRu = document.getElementById('drawer-lang-ru');
+      if (lEn && lUk && lRu) {
+        lEn.className = state.lang === 'en' ? 'cmd-link bold c-ok' : 'cmd-link';
+        lEn.textContent = state.lang === 'en' ? '[EN]' : 'EN';
+        lUk.className = state.lang === 'uk' ? 'cmd-link bold c-ok' : 'cmd-link';
+        lUk.textContent = state.lang === 'uk' ? '[UK]' : 'UK';
+        lRu.className = state.lang === 'ru' ? 'cmd-link bold c-ok' : 'cmd-link';
+        lRu.textContent = state.lang === 'ru' ? '[RU]' : 'RU';
+      }
+    }
+
+    async function loadModels() {
+      try {
+        const res = await fetch('/api/models');
+        const data = await res.json();
+        state.models = data.models || [];
+        state.filteredModels = state.models;
+        modelsLink.textContent = state.lang === 'en'
+          ? `${data.stats.total} models (/models)`
+          : `${data.stats.total} моделей (/models)`;
+
+        // Auto-select the reliable interactive default (openrouter/free
+        // meta-router) on entry; 'smartest' models may be reasoning-only and
+        // return empty content, so they must not be forced as chat default.
+        const targetId = data.defaultModel || data.smartestFreeModel?.id || 'openrouter/free';
+        const bestModel = state.models.find(m => m.id === targetId) || state.models.find(m => m.pricing?.freeTierStatus === '100% Free Quota Available') || state.models[0];
+        if (bestModel) {
+          setModel(bestModel);
+        }
+      } catch (e) {
+        console.error('Failed to load models:', e);
+      }
+    }
+
+    function renderModelList() {
+      if (!state.filteredModels.length) {
+        const d = I18N[state.lang] || I18N.en;
+        modelList.innerHTML = `<div class="c-dim">${d.noModels}</div>`;
+        return;
+      }
+
+      let html = '';
+      state.filteredModels.forEach((m, idx) => {
+        const isFree = m.pricing && m.pricing.freeTierStatus === '100% Free Quota Available';
+        const isActive = m.id === state.currentModel;
+        const badge = isFree ? '<span class="c-ok bold">[FREE]</span>' : '<span class="c-wrn">[PAID]</span>';
+        const rating = m.rating ? `${m.rating.composite}/100` : '-';
+        const ctx = m.contextWindow ? `${(m.contextWindow/1000).toFixed(0)}k ctx` : '';
+        const isFrontier = m.rating && m.rating.recency >= 98;
+        const frontierTag = isFrontier ? ' <span class="c-ok bold">[2026 FRONTIER]</span>' : '';
+
+        html += `
+          <div class="model-row ${isActive ? 'active' : ''}" onclick="selectModel('${m.id}')">
+            <div>
+              <span class="c-dim">#${idx + 1}</span> <strong>${escapeHtml(m.name)}</strong>
+              <span class="c-dim">(${escapeHtml(m.provider)} · ${ctx} · Rating: ${rating})</span>${frontierTag}
+            </div>
+            <div>${badge}</div>
+          </div>
+        `;
+      });
+      modelList.innerHTML = html;
+    }
+
+    function filterModels(f) {
+      state.currentFilter = f;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector(`[data-filter="${f}"]`)?.classList.add('active');
+
+      if (f === 'all') state.filteredModels = state.models;
+      else if (f === 'free') state.filteredModels = state.models.filter(m => m.pricing && m.pricing.freeTierStatus === '100% Free Quota Available');
+      else if (f === 'paid') state.filteredModels = state.models.filter(m => m.pricing && m.pricing.freeTierStatus === 'Paid / Pay-As-You-Go Only');
+      renderModelList();
+    }
+
+    function selectModel(id) {
+      const model = state.models.find(m => m.id === id);
+      if (model) {
+        setModel(model);
+        const d = I18N[state.lang] || I18N.en;
+        addMessage('system', `${d.modelSelected}${model.name}`);
+        closeModelModal();
+      }
+    }
+
+    function openModelModal() {
+      modelModal.style.display = 'block';
+      if (!state.models.length) {
+        loadModels().then(renderModelList);
+      } else {
+        renderModelList();
+      }
+    }
+
+    function closeModelModal() {
+      modelModal.style.display = 'none';
+    }
+
+    // ===== SmartInput autocomplete UI (attached to #user-input) =====
+    const acState = { items: [], idx: 0, open: false };
+    let acTimer = null;
+
+    function scheduleAc() {
+      clearTimeout(acTimer);
+      acTimer = setTimeout(updateAc, 80);
+    }
+
+    function updateAc() {
+      try {
+        acState.items = SmartInput.suggest(userInput.value, userInput.selectionStart);
+      } catch (e) {
+        acState.items = [];
+      }
+      acState.idx = 0;
+      acState.open = acState.items.length > 0;
+      paintAc();
+    }
+
+    function paintAc() {
+      const box = document.getElementById('ac-box');
+      if (!box) return;
+      if (!acState.open || !acState.items.length) {
+        box.classList.remove('open');
+        box.innerHTML = '';
+        return;
+      }
+      box.innerHTML = acState.items.map((it, i) => `
+        <div class="ac-item ${i === acState.idx ? 'active' : ''}" data-idx="${i}">
+          <span class="ac-badge ${it.source}">${it.source === 'cmd' ? 'cmd' : 'mem'}</span>
+          <span class="ac-text">${escapeHtml(it.text)}</span>${it.desc ? `<span class="ac-desc">— ${escapeHtml(it.desc)}</span>` : ''}
+        </div>`).join('');
+      box.classList.add('open');
+      box.querySelectorAll('.ac-item').forEach((el) => {
+        el.addEventListener('mousedown', (ev) => {
+          ev.preventDefault();
+          acState.idx = parseInt(el.dataset.idx, 10) || 0;
+          acceptAc();
+        });
+      });
+    }
+
+    function acceptAc() {
+      const it = acState.items[acState.idx];
+      if (!it) return;
+      const caret = userInput.selectionStart === null ? userInput.value.length : userInput.selectionStart;
+      const before = userInput.value.slice(0, caret);
+      const after = userInput.value.slice(caret);
+      const m = before.match(/(\/[\w?]*|[\p{L}\p{N}][\p{L}\p{N}'’-]*)$/u);
+      const start = caret - (m ? m[0].length : 0);
+      userInput.value = before.slice(0, start) + it.text + ' ' + after;
+      const np = start + it.text.length + 1;
+      userInput.setSelectionRange(np, np);
+      closeAc();
+      userInput.focus();
+      userInput.style.height = 'auto';
+      userInput.style.height = userInput.scrollHeight + 'px';
+    }
+
+    function closeAc() {
+      acState.open = false;
+      acState.items = [];
+      paintAc();
+    }
+
+    // Auto-resize textarea & Enter to send (with autocomplete key handling)
+    userInput.addEventListener('keydown', (e) => {
+      if (acState.open && acState.items.length) {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          acState.idx = (acState.idx + 1) % acState.items.length;
+          paintAc();
+          return;
+        }
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          acState.idx = (acState.idx - 1 + acState.items.length) % acState.items.length;
+          paintAc();
+          return;
+        }
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          acceptAc();
+          return;
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeAc();
+          return;
+        }
+      }
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        closeAc();
+        sendMessage();
+      }
+    });
+
+    userInput.addEventListener('input', () => {
+      userInput.style.height = 'auto';
+      userInput.style.height = userInput.scrollHeight + 'px';
+      scheduleAc();
+    });
+
+    userInput.addEventListener('blur', () => {
+      setTimeout(closeAc, 150);
+    });
+
+    // Start
+    applyDisplayMode(getDisplayMode());
+    setLanguage(state.lang, true);
+    loadModels();
+    setStatus(true);
+    VoiceEngine.init();
+
+    function switchTab(tab) {
+      const chatPanel = document.getElementById('chat-panel');
+      const metricsPanel = document.getElementById('metrics-panel');
+      const tabTerminal = document.getElementById('tab-terminal');
+      const tabMetrics = document.getElementById('tab-metrics');
+
+      if (tab === 'terminal') {
+        if (chatPanel) chatPanel.style.display = 'flex';
+        if (metricsPanel) metricsPanel.style.display = 'none';
+        if (tabTerminal) tabTerminal.className = 'cmd-link bold c-ok tui-tab active';
+        if (tabMetrics) tabMetrics.className = 'cmd-link tui-tab';
+        const input = document.getElementById('user-input');
+        if (input) input.focus();
+      } else {
+        if (chatPanel) chatPanel.style.display = 'none';
+        if (metricsPanel) metricsPanel.style.display = 'flex';
+        if (tabTerminal) tabTerminal.className = 'cmd-link tui-tab';
+        if (tabMetrics) tabMetrics.className = 'cmd-link bold c-ok tui-tab active';
+        refreshMetricsPanel();
+      }
+    }
+
+    function refreshMetricsPanel() {
+      const container = document.getElementById('metrics-container');
+      if (!container) return;
+      fetch('/api/health')
+        .then(r => r.json())
+        .then(data => {
+          const fCpu = data.telemetry?.frankfurt?.cpuPct || 25;
+          const fMemUsed = parseFloat(data.telemetry?.frankfurt?.memUsedGb) || 4.7;
+          const fMemTot = parseFloat(data.telemetry?.frankfurt?.memTotalGb) || 31;
+          const fRam = Math.round((fMemUsed / fMemTot) * 100);
+
+          const iCpu = data.telemetry?.iowa?.cpuPct || 2;
+          const iMemUsed = data.telemetry?.iowa?.memUsedMb || 440;
+          const iMemTot = data.telemetry?.iowa?.memTotalMb || 964;
+          const iRam = Math.round((iMemUsed / iMemTot) * 100);
+
+          const uptimeHours = Math.floor((data.uptimeSeconds || 0) / 3600);
+          const uptimeMins = Math.floor(((data.uptimeSeconds || 0) % 3600) / 60);
+
+          let html = '<div class="msg"><pre>';
+          html += '┌── EVALINE CLUSTER TELEMETRY // REALTIME DUAL-NODE METRICS ───────────────────┐\n';
+          html += '│ Status: [' + (data.status || 'ONLINE').toUpperCase() + ']  │  Uptime: ' + uptimeHours + 'h ' + uptimeMins + 'm  │  Mesh Latency: ' + (data.telemetry?.meshLatencyMs || 122) + 'ms RTT\n';
+          html += '├───────────────────────────────────────────────────────────────────────────────┤\n';
+          html += '│ NODE 1: EVABRAIN (Compute Core · Франкфурт · 8 vCPU Intel · 32GB RAM)         │\n';
+          html += '│   • CPU : ' + makeBar(fCpu, 10) + ' ' + fCpu + '% (Load: ' + (data.telemetry?.frankfurt?.load || '2.34') + ')\n';
+          html += '│   • RAM : ' + makeBar(fRam, 10) + ' ' + fMemUsed + '/' + fMemTot + ' GB (' + fRam + '%)\n';
+          html += '│   • Role: AI Вычислительное ядро, консилиум 94 моделей, векторная память     │\n';
+          html += '├───────────────────────────────────────────────────────────────────────────────┤\n';
+          html += '│ NODE 2: EVAFACE (Edge Ingress · Айова, США · 2 vCPU e2-micro · 1GB RAM)       │\n';
+          html += '│   • CPU : ' + makeBar(iCpu, 10) + ' ' + iCpu + '% (Load: ' + (data.telemetry?.iowa?.load || '0.15') + ')\n';
+          html += '│   • RAM : ' + makeBar(iRam, 10) + ' ' + iMemUsed + '/' + iMemTot + ' MB (' + iRam + '%)\n';
+          html += '│   • Role: HTTP/3 QUIC шлюз, Caddy Reverse Proxy, WireGuard туннель США<->ФРГ │\n';
+          html += '├───────────────────────────────────────────────────────────────────────────────┤\n';
+          html += '│ DATABASES & STORAGE BACKENDS:                                                 │\n';
+          if (data.databases) {
+            for (const [key, db] of Object.entries(data.databases)) {
+              const countStr = db.count !== undefined ? ' (' + db.count + ' records)' : '';
+              html += '│   • ' + (db.name || key).padEnd(28) + countStr.padEnd(22) + ' [' + (db.status || 'OK') + ']\n';
+            }
+          }
+          html += '├───────────────────────────────────────────────────────────────────────────────┤\n';
+          html += '│ ACTIVE CONSILIUM ENGINES & PLUGINS:                                           │\n';
+          if (data.plugins?.list) {
+            data.plugins.list.forEach(p => {
+              html += '│   • ' + p.name.padEnd(32) + ('v' + p.version).padEnd(10) + ' [' + (p.enabled ? 'ACTIVE' : 'OFF') + ']\n';
+            });
+          }
+          html += '└───────────────────────────────────────────────────────────────────────────────┘\n';
+          html += '</pre></div>';
+          container.innerHTML = html;
+        })
+        .catch(err => {
+          container.innerHTML = '<div class="msg" style="color: var(--red);">Error loading metrics: ' + err.message + '</div>';
+        });
+    }
+
+  </script>
+</body>
+</html>
